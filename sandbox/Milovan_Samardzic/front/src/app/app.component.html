@@ -1,35 +1,36 @@
-<div class="container d-flex flex-row">
+<div class="container d-flex flex-row h-100">
   <div class="col-8">
-    <form class="w-100">
+    <form class="w-100" #form="ngForm" (ngSubmit)="onSubmit()">
       <div class="row w-100">
         <label>User</label>
-        <input type="text" name="taskUser">
+        <input type="text" name="taskUser" [(ngModel)]="task.taskUser">
       </div>
       <div class="row w-100">
         <label>Title</label>
-        <input type="text" name="taskTitle">
+        <input type="text" name="taskTitle" [(ngModel)]="task.taskTitle">
       </div>
       <div class="row w-100">
         <label>Description</label>
-        <input type="text" name="taskDescription">
+        <input type="text" name="taskDescription"
+          [(ngModel)]="task.taskDescription">
       </div>
       <div class="row w-100">
         <button class="btn btn-primary">Dodaj Task</button>
       </div>
     </form>
   </div>
-  <div class="col-4">
+  <div class="col-4" *ngFor="let task of tasks">
     <div class="row">
       <p>Naslov</p>
-      <p>Brkica Droga</p>
+      <p>{{task.taskTitle}}</p>
     </div>
     <div class="row">
       <p>User</p>
-      <p>Brkica</p>
+      <p>{{task.taskUser}}</p>
     </div>
     <div class="row">
       <p>Opis</p>
-      <p>Okupaj dete</p>
+      <p>{{task.taskDescription}}</p>
     </div>
   </div>
 </div>
