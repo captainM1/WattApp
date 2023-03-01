@@ -11,7 +11,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DataContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseSqlite(builder.Configuration["ConnectionStrings:DefaultConnection"]);
 });
 builder.Services.AddCors(options => options.AddPolicy(name: "SuperHeroOrigins",
     policy =>
