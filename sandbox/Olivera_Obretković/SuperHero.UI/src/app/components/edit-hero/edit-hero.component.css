@@ -31,3 +31,9 @@ div{
     text-align:center;
     align-items: center;
 }
+
+label {
+    display: inline-block;
+    width: 100px;
+    text-align: right;
+  }
