@@ -1,6 +1,4 @@
 export interface Task {
-    id: string;
-    taskUser: string;
-    taskTitle: string;
+    taskID: string;
     taskDescription: string;
 }

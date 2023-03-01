@@ -27,14 +27,6 @@ namespace API.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("TaskTitle")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("TaskUser")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.HasKey("TaskID");
 
                     b.ToTable("Tasks");

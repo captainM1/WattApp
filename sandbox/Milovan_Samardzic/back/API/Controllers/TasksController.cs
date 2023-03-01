@@ -48,8 +48,6 @@ public class TasksController:ControllerBase
         var existingTask = await _taskDbContext.Tasks.FirstOrDefaultAsync(x => x.TaskID == id);
         if (existingTask == null) return NotFound("Task not found");
         existingTask.TaskDescription = task.TaskDescription;
-        existingTask.TaskTitle = task.TaskTitle;
-        existingTask.TaskUser = task.TaskUser;
         await _taskDbContext.SaveChangesAsync();
         return Ok(existingTask);
 

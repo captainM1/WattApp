@@ -16,8 +16,6 @@ namespace API.Data.Migrations
                 columns: table => new
                 {
                     TaskID = table.Column<Guid>(type: "TEXT", nullable: false),
-                    TaskUser = table.Column<string>(type: "TEXT", nullable: false),
-                    TaskTitle = table.Column<string>(type: "TEXT", nullable: false),
                     TaskDescription = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>

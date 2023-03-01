@@ -16,7 +16,13 @@ export class TasksService {
     return this.http.get<Task[]>(this.baseUrl)
   }
   addCard(task: Task): Observable<Task> {
-    task.id = '00000000-0000-0000-0000-000000000000';
+    task.taskID = '00000000-0000-0000-0000-000000000000';
     return this.http.post<Task>(this.baseUrl, task);
+  }
+  deleteTask(id: string): Observable<Task> {
+    return this.http.delete<Task>(this.baseUrl + '/' + id);
+  }
+  updateTask(task: Task): Observable<Task> {
+    return this.http.put<Task>(this.baseUrl + '/' + task.taskID, task)
   }
 }
