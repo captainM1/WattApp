@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-6">
             <form>
-                <form #from="ngForm" >
+                <form #from="ngForm" (ngSubmit)="updateEmployee()">
                     <div class="mb-3">
                         <label for="id" class="form-label">Id</label>
                         <input type="text" class="form-control" id="id" readonly
@@ -41,4 +41,4 @@
         </div>
     </div>
     
-</div>>
+</div>
