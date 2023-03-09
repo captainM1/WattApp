@@ -5,7 +5,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
-import { SingupComponent } from './components/singup/singup.component';
+import { SignupComponent } from './components/signup/signup.component';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -16,7 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
   declarations: [
     AppComponent,
     LoginComponent,
-    SingupComponent
+    SignupComponent
   ],
   imports: [
     BrowserModule,
