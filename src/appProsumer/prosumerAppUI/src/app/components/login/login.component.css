@@ -67,3 +67,21 @@ button:active {
     color:#026670;
     font-size: 15px;
 }
+.user-icon{
+    background: url("/assets/icons/user.png") no-repeat right;
+}
+.openeye-icon{
+    background: url("/assets/icons/eye.png") no-repeat right;
+}
+
+.icon{
+    padding-right: 25px;
+    background-size: 20px;
+    background-color: white;
+    background-position:95%;
+}
+
+.page{
+    background: rgb(2,102,112);
+    background: linear-gradient(180deg, rgba(2,102,112,1) 11%, rgba(159,237,215,1) 100%);
+}
