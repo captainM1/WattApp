@@ -84,7 +84,12 @@ p{
     background-color: white;
     background-position:95%;
 }
-.page{
-    background: rgb(2,102,112);
-    background: linear-gradient(180deg, rgba(2,102,112,1) 11%, rgba(159,237,215,1) 100%);
+.container{
+    height: 100% !important;
 }
+.centriranje{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.col{min-height: 1000px !important;}
