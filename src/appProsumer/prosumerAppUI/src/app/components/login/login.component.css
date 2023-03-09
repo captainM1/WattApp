@@ -20,24 +20,28 @@ h3{
     font-weight: 900;
 }
 
-h4{
-    color:black;
-    font-family: font1;
-    font-size: 14px;
-    font-weight: bold;
-}
-
 input{
-    border:1px solid #026670;
+    border:2px solid #026670;
     border-radius: 5px;
     font-style: italic;
     font-size: 12px;
+    height: 50px;
+}
+
+input::placeholder{
+    color:rgba(2, 102, 112, 0.5);
 }
 
 a{
     color:#026670;
-    font-style: 13px;
+    
 }
+
+.forgotten{
+    font-size: 13px;
+    font-style: italic;
+}
+
 div{
     text-align: left;
 }
@@ -47,7 +51,9 @@ button{
     text-transform: uppercase;
     text-align: center;
     border-radius: 8px;
-    filter:drop-shadow(0px 8px 4px rgba(0,0,0,0.25))
+    filter:drop-shadow(0px 8px 4px rgba(0,0,0,0.25));
+    letter-spacing: 3px;
+    height: 40px;
 }
 
 button:hover {
@@ -59,5 +65,5 @@ button:active {
 
 .account{
     color:#026670;
+    font-size: 15px;
 }
-

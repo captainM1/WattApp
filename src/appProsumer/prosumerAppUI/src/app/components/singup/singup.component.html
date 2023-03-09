@@ -1,4 +1,6 @@
-
+<link rel="stylesheet" 
+          href=
+"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <div class="outer">
     <div class="container">
         <div class="row">
@@ -8,46 +10,40 @@
                         Get started 
                     </h3>
                     <p>Create your account now.</p>
-                    <div class="panel-body p-3">
-                        <form [formGroup] = "loginForm" (ngSubmit)="onSubmit()">
-                            <div class="form-group pt-3">
-                                    <label>Username</label>
+                    <div class="panel-body">
+                        <form class="text-center" [formGroup] = "loginForm" (ngSubmit)="onSubmit()">
+                            <div class="form-group pt-2">
                                     <!-- <span class="fa fa-user p-2"></span> -->
-                                    <input class = "form-control"  [ngClass] = "{'is-invalid' : submitted && fields['username'].errors}" formControlName = "username" type="text" placeholder="Username">
+                                    <input class = "form-control user-icon icon"  [ngClass] = "{'is-invalid' : submitted && fields['username'].errors}" formControlName = "username" type="text" placeholder="Username">
                                     <div class="invalid-feedback">
                                         <span class="text-danger" *ngIf="submitted && fields['username'].errors?.['required']">*Username is required!</span>
                                     </div>
                             </div>
-                            <div class="form-group pt-3">
-                                <label>Email</label>
-                                <!-- <span class="fa fa-user p-2"></span> -->
-                                <input class = "form-control"  [ngClass] = "{'is-invalid' : submitted && fields['email'].errors}" formControlName = "email" type="text" placeholder="example@example.com">
+                            <div class="form-group pt-4">
+                                <input class = "email-icon form-control email-icon icon"  [ngClass] = "{'is-invalid' : submitted && fields['email'].errors}" formControlName = "email" type="text" placeholder="Email">
                                 <div class="invalid-feedback">
-                                    <span class= "text-danger" *ngIf="submitted && fields['email'].errors?.['required']">*Username is required!</span>
+                                    <span class= "text-danger" *ngIf="submitted && fields['email'].errors?.['required']">*Email is required!</span>
                                     <span class = "text-danger" *ngIf="fields['email'].errors?.['email']">*Please provide a valid email address</span>
                                 </div>
                             </div>
-                            <div class="form-group pt-3">
-                                <label>Address</label>
+                            <div class="form-group pt-4">
                                 <!-- <span class="fa fa-user p-2"></span> -->
-                                <input class = "form-control"  [ngClass] = "{'is-invalid' : submitted && fields['address'].errors}" formControlName = "address" type="text" placeholder="Address">
+                                <input class = "form-control address-icon icon"  [ngClass] = "{'is-invalid' : submitted && fields['address'].errors}" formControlName = "address" type="text" placeholder="Address">
                                 <div class="invalid-feedback">
                                     <span class="text-danger" *ngIf="submitted && fields['address'].errors?.['required']">*Address is required!</span>
                                 </div>
                         </div>
-                        <div class="form-group pt-3">
-                            <label>Phone Number</label>
+                        <div class="form-group pt-4">
                             <!-- <span class="fa fa-user p-2"></span> -->
-                            <input class = "form-control"  [ngClass] = "{'is-invalid' : submitted && fields['phonenumber'].errors}" formControlName = "phonenumber" type="text" placeholder="Phone Number">
+                            <input class = "form-control phone-icon icon"  [ngClass] = "{'is-invalid' : submitted && fields['phonenumber'].errors}" formControlName = "phonenumber" type="text" placeholder="Phone number">
                             <div class="invalid-feedback">
                                 <span class="text-danger" *ngIf="submitted && fields['phonenumber'].errors?.['required']">*Phone Number is required!</span>
                             </div>
                         </div>
                     
-                            <div class="form-group pt-3">
-                                <label>Password</label>
+                            <div class="form-group pt-4">
                                     <!-- <span class="fa fa-lock p-2"></span> -->
-                                    <input class = "form-control" [ngClass] = "{'is-invalid' : submitted && fields['password'].errors}" formControlName = "password" [type]="type" placeholder="******">
+                                    <input class = "form-control openeye-icon icon" [ngClass] = "{'is-invalid' : submitted && fields['password'].errors}" formControlName = "password" [type]="type" placeholder="Password">
                                     <!-- <span (click) = "hideShowPass()" class="fa {{eyeIcon}}"></span> -->
                                     <div class="invalid-feedback">
                                         <span class= "text-danger" *ngIf="submitted && fields['password'].errors?.['required']">*Password is required!</span>
@@ -57,9 +53,9 @@
                             
                             
 
-                            <button type="submit" class="btn btn-primary btn-lock mt-4 w-100">Sing Up</button>
+                            <button type="submit" class="btn btn-primary btn-lock mt-4 w-50">Sign Up</button>
                             
-                            <div class="text-center pt-4 text-muted">
+                            <div class="already text-center pt-4">
                                 Already registered? <a id="forget" routerLink="/login">Login</a>
                             </div>
                         </form>
