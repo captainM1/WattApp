@@ -6,6 +6,7 @@
     background-color: #F6F5F3;
     border-radius: 17px;
     filter: drop-shadow(0px 13px 26px rgba(0,0,0,0.25));
+    padding: 20px 60px;
 }
 
 h3{
@@ -15,6 +16,42 @@ h3{
     font-weight: 900;
 }
 
+input{
+    border:2px solid #026670;
+    border-radius: 5px;
+    font-style: italic;
+    font-size: 12px;
+    height: 50px;
+}
+
+input::placeholder{
+    color:rgba(2, 102, 112, 0.5);
+}
+
+button{
+    background-color: #026670;
+    text-align: center;
+    border-radius: 8px;
+    filter:drop-shadow(0px 8px 4px rgba(0,0,0,0.25));
+    height: 40px;
+    width: 40px;
+}
+
+button:hover {
+    background-color: #227982;;
+}
+button:active {
+    background-color: #026670;
+}
+button:focus{
+    background-color: #026670;
+}
+
+a{
+    color:#026670;
+    
+}
+
 p{
     color:black;
     font-family: font1;
@@ -22,9 +59,32 @@ p{
     font-weight: bold;
 }
 
-input{
-    border:1px solid #026670;
-    border-radius: 5px;
-    font-style: italic;
-    font-size: 12px;
+.already{
+    color:#026670;
+}
+.user-icon{
+    background: url("/assets/icons/user.png") no-repeat right;
+}
+.email-icon{
+    background: url("/assets/icons/email.png") no-repeat right;
+}
+.address-icon{
+    background: url("/assets/icons/location.png") no-repeat right;
+}
+.phone-icon{
+    background: url("/assets/icons/telephone-call.png") no-repeat right;
+}
+.openeye-icon{
+    background: url("/assets/icons/eye.png") no-repeat right;
+}
+
+.icon{
+    padding-right: 25px;
+    background-size: 20px;
+    background-color: white;
+    background-position:95%;
+}
+.page{
+    background: rgb(2,102,112);
+    background: linear-gradient(180deg, rgba(2,102,112,1) 11%, rgba(159,237,215,1) 100%);
 }
