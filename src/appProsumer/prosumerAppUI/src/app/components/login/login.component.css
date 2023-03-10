@@ -81,7 +81,12 @@ button:active {
     background-position:95%;
 }
 
-.page{
-    background: rgb(2,102,112);
-    background: linear-gradient(180deg, rgba(2,102,112,1) 11%, rgba(159,237,215,1) 100%);
+.outer{
+    background: linear-gradient(179.99deg, #026670 -47%, #9FEDD7 99.99%);
+    color: #026670;
+}
+.centriranje{
+    display:flex;
+    justify-content: center;
+    align-items: center;
 }
