@@ -5,31 +5,33 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using prosumerAppBack.Helper;
 
 namespace prosumerAppBack.Controllers;
 
 [ApiController]
 public class UserController : ControllerBase
 {
-    [HttpPost("authentiacate")]
-    public async Task<IActionResult> Authenticate()
+    private readonly IPasswordHasher _passwordHasher;
+    private readonly IUserRepository _userRepository;
+
+    public UserController(IPasswordHasher passwordHasher, IUserRepository userRepository)
     {
-        User user = new User()
+        _passwordHasher = passwordHasher;
+        _userRepository = userRepository;
+    }
+
+    [HttpPost("register")]
+    public async Task<IActionResult> Register([FromBody] UserInputDto userInputDto)
+    {
+        if (!ModelState.IsValid)
         {
-            Id = 1,
-            FirstName = "Milovan",
-            LastName = "Samardzic",
-            Email = "77-2020@pmf.kg.ac.rs",
-            Role = "Admin",
-            UserName = "77-2020",
-            Password = "123",
-        };
-        user.Token = CreateJwt(user);
-        return Ok(new
-        {
-            Token = user.Token,
-            Message = "Crated Token"
-        });
+            return BadRequest(ModelState);
+        }
+
+        await _userRepository.CreateUser(userInputDto);
+
+        return Ok(new { message = "User registered successfully" });
     }
     private string CreateJwt(User user)
     {

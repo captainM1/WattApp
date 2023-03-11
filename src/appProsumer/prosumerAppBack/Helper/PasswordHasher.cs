@@ -2,13 +2,13 @@
 
 namespace prosumerAppBack.Helper;
 
-public class PasswordHasher
+public class PasswordHasher:IPasswordHasher
 {
     private const int SaltSize = 16;
     private const int HashSize = 32;
     private const int Iterations = 10000;
     
-    public static (byte[] salt, byte[] hash) HashPassword(string password)
+    public (byte[] salt, byte[] hash) HashPassword(string password)
     {
         byte[] salt = new byte[SaltSize];
         using (var rng = RandomNumberGenerator.Create())
@@ -25,7 +25,7 @@ public class PasswordHasher
         return (salt, hash);
     }
     
-    public static bool VerifyPassword(string password, byte[] salt, byte[] hash)
+    public bool VerifyPassword(string password, byte[] salt, byte[] hash)
     {
         byte[] testHash = new byte[HashSize];
         using (var pbkdf2 = new Rfc2898DeriveBytes(password, salt, Iterations, HashAlgorithmName.SHA256))
