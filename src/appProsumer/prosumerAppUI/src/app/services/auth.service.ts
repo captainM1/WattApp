@@ -30,21 +30,11 @@ export class AuthService {
     })
   }
 
-
-
-  storeToken(tokenValue:string)
-  {
-    localStorage.setItem('token', tokenValue);
-  }
-
-  getToken()
-  {
-    return localStorage.getItem('token');
-  }
-
-  isloggedIn():boolean
-  {
-    return !!localStorage.getItem('token');
+  validateJwt(token : string) : Observable<boolean>{
+    var headers = new HttpHeaders().set("Authorization", "Bearer " + token);
+    return this.http.post<boolean>(environment.apiUrl + "/auth/validate", {}, {
+      headers : headers
+    });
   }
 
 }
