@@ -1,0 +1,49 @@
+
+<div class="outer" style="position: fixed; top: 0px; left: 0px; width: 100%; height: 100%;">
+    <div class="container-fluid">
+        <div class="row centriranje">
+            <div class="centriranje" style="padding:60px;">
+            <img src="/assets/icons/logo-white.png" width="30%">
+            </div>
+        </div>
+        <div class="row centriranje">
+                <div class="forma panel border bg-white" style="width:30%;">
+                    <h3 class="pt-3 m">
+                        Sign in
+                    </h3>
+                    <div class="panel-body">
+                        <form [formGroup] = "loginForm" (ngSubmit)="onSubmit()">
+                            <div class="input-group form-group pt-4">   
+                                <input class = "form-control"  [ngClass] = "{'is-invalid' : submitted && fields['email'].errors}" formControlName = "email" type="text" placeholder="Username/Email">
+                                <span class="input-group-addon addon-icon"><i class="fa fa-user"></i></span>
+                                    <div class="invalid-feedback">
+                                        <span class= "text-danger" *ngIf="submitted && fields['email'].errors?.['required']">*Username is required!</span>
+                                        <span class = "text-danger" *ngIf="fields['email'].errors?.['email']">*Please provide a valid email address</span>
+                                    </div>
+                                </div>
+                                
+                            
+                            <div class="input-group form-group pt-4">
+                                    <input class = "form-control" [ngClass] = "{'is-invalid' : submitted && fields['password'].errors}" formControlName = "password" [type]="type" placeholder="Password">
+                                    <span  class="input-group-addon addon-icon"><i (click) = "hideShowPass()" class="fa {{eyeIcon}}"></i></span>
+                                    <div class="invalid-feedback">
+                                        <span class= "text-danger" *ngIf="submitted && fields['password'].errors?.['required']">*Password is required!</span>
+                                        <span class = "text-danger" *ngIf="fields['password'].errors?.['minLength']">*Please provide a valid password!</span>
+                                    </div>
+                                </div>
+                            
+                            <div class="form-inline fr mt-2 text-center">
+                                <a id = "forget" class="forgotten font-weight-bold font-italic" onclick="">Forgot Password?</a>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-lock mt-2 w-100">Login</button>
+                            
+                            <div class="account text-center pt-4 pb-2">
+                                Don't have an account? <a id="forget"routerLink="/signup">Sign up here</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>

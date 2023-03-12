@@ -1,5 +1,11 @@
+<<<<<<< src/appProsumer/prosumerAppBack/Program.cs
 using Microsoft.EntityFrameworkCore;
 using prosumerAppBack.DataAccess;
+=======
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+>>>>>>> src/appProsumer/prosumerAppBack/Program.cs
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,9 +15,27 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+<<<<<<< src/appProsumer/prosumerAppBack/Program.cs
 builder.Services.AddDbContext<DataContext>(option =>
     option.UseSqlite(builder.Configuration.GetConnectionString("Default")));
 
+=======
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(x =>
+{
+    x.RequireHttpsMetadata = false;
+    x.SaveToken = true;
+    x.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("veryverysceret.....")),
+        ValidateAudience = false,
+        ValidateIssuer = false
+    };
+});
 
 var app = builder.Build();
 
@@ -23,6 +47,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
