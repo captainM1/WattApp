@@ -72,3 +72,13 @@ public class UserController : ControllerBase
         return jwtTokenHandler.WriteToken(token);
     }
 }
+        var tokenDescription = new SecurityTokenDescriptor()
+        {
+            Subject = identity,
+            Expires = DateTime.Now.AddDays(1),
+            SigningCredentials = credentials
+        };
+        var token = jwtTokenHandler.CreateToken(tokenDescription);
+        return jwtTokenHandler.WriteToken(token);
+    }
+}
