@@ -36,6 +36,19 @@ public class UserController : ControllerBase
         return Ok(new { message = "User registered successfully" });
     }
 
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] UserInputDto userInputDto)
+    {
+        var user = await _userRepository.GetUserByUsernameAndPasswordAsync(userInputDto.Username, userInputDto.Password);
+        if (user == null)
+        {
+            return BadRequest("Invalid username or password");
+        }
+
+        var token = CreateJwt(user);
+        return Ok( token );
+    }
+
 
     private string CreateJwt(User user)
     {
