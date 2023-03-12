@@ -25,14 +25,10 @@ public class UserController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] UserInputDto userInputDto)
     {
-        var user = await _userRepository.GetUserByUsernameAndPasswordAsync(userInputDto.Username, userInputDto.Password);
-        if (user)
+        var user = await _userRepository.GetUserByUsernameAsync(userInputDto.Username);
+        if (user != null)
         {
-
-        }
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
+            return BadRequest("username already exist");
         }
 
         await _userRepository.CreateUser(userInputDto);
@@ -40,20 +36,7 @@ public class UserController : ControllerBase
         return Ok(new { message = "User registered successfully" });
     }
 
-    [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] User user)
-    {
-        if (_context.User.Any(u => u.UserName == user.UserName))
-        {
-            return BadRequest("Username already exists");
-        }
 
-        user.Role = "user";
-        _context.User.Add(user);
-        await _context.SaveChangesAsync();
-
-        return Ok(new { message = "Registration successful" });
-    }
     private string CreateJwt(User user)
     {
         var jwtTokenHandler = new JwtSecurityTokenHandler();
