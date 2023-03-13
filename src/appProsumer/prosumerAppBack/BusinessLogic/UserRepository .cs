@@ -81,4 +81,29 @@ public class UserRepository : IUserRepository
 
         return users;
     }
+
+    public async Task<User> UpdateUser(int id, UserUpdateDto userUpdateDto)
+    {
+        User user = await this.GetUserByIdAsync(id);
+
+        if(user == null)
+        {
+            return null;
+        }
+
+        user.UserName = userUpdateDto.Username;
+        user.FirstName = userUpdateDto.FirstName;
+        user.LastName = userUpdateDto.LastName;
+        user.Address = userUpdateDto.Address;
+        user.City = userUpdateDto.City;
+        user.Country = userUpdateDto.Country;
+        user.Email = userUpdateDto.Email;
+        user.PhoneNumber = userUpdateDto.PhoneNumber;
+        // da li da dodam u istoj funkciji promenu lozinke
+
+        _dbContext.Users.Update(user);
+        await _dbContext.SaveChangesAsync();
+
+        return user;
+    }
 }
