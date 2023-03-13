@@ -6,9 +6,9 @@ using prosumerAppBack.Helper;
 public class UserRepository : IUserRepository
 {
     private readonly DataContext _dbContext;
-    private readonly PasswordHasher _passwordHasher;
+    private readonly IPasswordHasher _passwordHasher;
 
-    public UserRepository(DataContext dbContext,PasswordHasher passwordHasher)
+    public UserRepository(DataContext dbContext,IPasswordHasher passwordHasher)
     {
         _dbContext = dbContext;
         _passwordHasher = passwordHasher;
@@ -47,19 +47,23 @@ public class UserRepository : IUserRepository
         return user;
     }
 
-    public async Task<User> CreateUser(UserInputDto userInputDto)
+    public async Task<User> CreateUser(UserRegisterDto userRegisterDto)
     {
         byte[] salt;
         byte[] hash;
-        (salt,hash)= _passwordHasher.HashPassword(userInputDto.Password);
+        (salt,hash)= _passwordHasher.HashPassword(userRegisterDto.Password);
         var newUser = new User
         {
-            UserName = userInputDto.Username,
-            PhoneNumber = userInputDto.PhoneNumber,
-            Email = userInputDto.Email,
-            Address = userInputDto.Address,
+            UserName = userRegisterDto.Username,
+            PhoneNumber = userRegisterDto.PhoneNumber,
+            Email = userRegisterDto.Email,
+            Address = userRegisterDto.Address.Split(",")[0],
+            City = userRegisterDto.Address.Split(",")[1],
+            Country = userRegisterDto.Address.Split(",")[2],
             Salt = salt,
-            PasswordHash = hash
+            PasswordHash = hash,
+            Role = "1",
+            ID = Guid.NewGuid(),
         };
         _dbContext.Users.Add(newUser);
         await _dbContext.SaveChangesAsync();

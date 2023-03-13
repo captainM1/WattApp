@@ -7,6 +7,7 @@ using prosumerAppBack.DataAccess;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using prosumerAppBack.Helper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,30 +25,17 @@ builder.Services.AddAuthentication(x =>
     x.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("veryverysceret.....")),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("SecretKey10125779374235322")),
         ValidateAudience = false,
         ValidateIssuer = false
     };
 });
 builder.Services.AddDbContext<DataContext>(option =>
-    option.UseSqlite(builder.Configuration.GetConnectionString("Default")));
+    option.UseSqlite(builder.Configuration.GetConnectionString("WebApiDatabase")));
 
-builder.Services.AddAuthentication(x =>
-{
-    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(x =>
-{
-    x.RequireHttpsMetadata = false;
-    x.SaveToken = true;
-    x.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("veryverysceret.....")),
-        ValidateAudience = false,
-        ValidateIssuer = false
-    };
-});
+builder.Services.AddScoped<IUserRepository,UserRepository>();
+builder.Services.AddScoped<IPasswordHasher,PasswordHasher>();
+builder.Services.AddScoped<ITokenMaker,TokenMaker>();
 
 var app = builder.Build();
 

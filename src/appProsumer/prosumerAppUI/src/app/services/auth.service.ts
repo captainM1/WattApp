@@ -14,14 +14,14 @@ export class AuthService {
   constructor(private http: HttpClient, private router:Router) { }
 
   login(email : string, password : string) : Observable<string>{
-    return this.http.post<string>(environment.apiUrl + "/authenticate", {
+    return this.http.post<string>(environment.apiUrl + "/signin", {
       email : email,
       password : password
     })
   }
 
   register(username: string, email : string,  address: string, number : string, password : string) : Observable<string>{
-    return this.http.post<string>(environment.apiUrl + "/register", {
+    return this.http.post<string>(environment.apiUrl + "/signup", {
       username : username,
       email : email,
       address : address,

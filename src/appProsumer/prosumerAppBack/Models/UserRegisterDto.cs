@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace prosumerAppBack.Models;
 
-public class UserInputDto
+public class UserRegisterDto
 {
     [Required]
     public string Username { get; set; }

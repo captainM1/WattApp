@@ -40,7 +40,7 @@ export class LoginComponent implements OnInit{
     if(this.loginForm.invalid){
       return;
     }else{
-      //this.router.navigate('singup')
+      this.router.navigate(['signin'])
     }
     
   }
