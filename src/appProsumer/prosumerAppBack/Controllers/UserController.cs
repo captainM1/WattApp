@@ -43,4 +43,16 @@ public class UserController : ControllerBase
         var token = _tokenMaker.CreateJwt(user);
         return Ok( token );
     }
+
+    [HttpGet("users/{id}")]
+    public async Task<ActionResult<User>> GetUser(int id)
+    {
+        var user = await _userRepository.GetUserByIdAsync(id);
+        if(user == null)
+        {
+            return BadRequest("User not found");
+        }
+
+        return Ok(user);
+    }
 }
