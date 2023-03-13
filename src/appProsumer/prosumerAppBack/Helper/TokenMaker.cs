@@ -7,26 +7,18 @@ using System.Text;
 namespace prosumerAppBack.Helper;
 
 public class TokenMaker: ITokenMaker{
-    public string CreateJwt(User user)
+    public string GenerateToken(User user)
     {
-        var jwtTokenHandler = new JwtSecurityTokenHandler();
+        var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes("SecretKey10125779374235322");
-        var identity = new ClaimsIdentity(new Claim[]
+        var tokenDescriptor = new SecurityTokenDescriptor
         {
-            new Claim(ClaimTypes.Role, user.Role),
-            new Claim(ClaimTypes.Name,user.ID.ToString())
-        });
-
-        var credentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256);
-
-        var tokenDescription = new SecurityTokenDescriptor()
-        {
-            Subject = identity,
-            Expires = DateTime.Now.AddDays(1),
-            SigningCredentials = credentials
+            Subject = new ClaimsIdentity(new[] { new Claim("id", user.ID.ToString()) }),
+            Expires = DateTime.UtcNow.AddMinutes(30),
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
-        var token = jwtTokenHandler.CreateToken(tokenDescription);
-        return jwtTokenHandler.WriteToken(token);
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+        return tokenHandler.WriteToken(token);
     }
     public int? ValidateToken(string token)
     {
