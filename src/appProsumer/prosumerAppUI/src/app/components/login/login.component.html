@@ -13,7 +13,7 @@
                     </h3>
                     <div class="panel-body">
                         <form [formGroup] = "loginForm" (ngSubmit)="onSubmit()">
-                            <div class="input-group form-group pt-4">   
+                            <div class="input-group form-group pt-4">
                                 <input class = "form-control"  [ngClass] = "{'is-invalid' : submitted && fields['email'].errors}" formControlName = "email" type="text" placeholder="Username/Email">
                                 <span class="input-group-addon addon-icon"><i class="fa fa-user"></i></span>
                                     <div class="invalid-feedback">
@@ -21,8 +21,8 @@
                                         <span class = "text-danger" *ngIf="fields['email'].errors?.['email']">*Please provide a valid email address</span>
                                     </div>
                                 </div>
-                                
-                            
+
+
                             <div class="input-group form-group pt-4">
                                     <input class = "form-control" [ngClass] = "{'is-invalid' : submitted && fields['password'].errors}" formControlName = "password" [type]="type" placeholder="Password">
                                     <span  class="input-group-addon addon-icon"><i (click) = "hideShowPass()" class="fa {{eyeIcon}}"></i></span>
@@ -31,13 +31,13 @@
                                         <span class = "text-danger" *ngIf="fields['password'].errors?.['minLength']">*Please provide a valid password!</span>
                                     </div>
                                 </div>
-                            
+
                             <div class="form-inline fr mt-2 text-center">
-                                <a id = "forget" class="forgotten font-weight-bold font-italic" onclick="">Forgot Password?</a>
+                                <a id = "forget" data-bs-toggle="modal" data-bs-target="#exampleModal" class="forgotten font-weight-bold font-italic" >Forgot Password?</a>
                             </div>
 
                             <button type="submit" class="btn btn-primary btn-lock mt-2 w-100">Login</button>
-                            
+
                             <div class="account text-center pt-4 pb-2">
                                 Don't have an account? <a id="forget"routerLink="/signup">Sign up here</a>
                             </div>
@@ -46,4 +46,35 @@
                 </div>
         </div>
     </div>
+</div>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <p class="modal-title" id="exampleModalLabel">
+          <span style="color: #026670; font-size: 25px; font-weight: 700;"> Forgot your password? </span><br>
+          <small>Enter your email and we will send you a link to reset your password.</small>
+        </p>
+
+        <button type="button" id="closeBtn" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+      </div>
+      <div class="modal-body">
+        <div class="form-group pt-3">
+              <div class="input-group form-group ">
+                      <input class="form-control" type="text" placeholder="Email">
+                      <span class="input-group-addon addon-icon"><i class="fa fa-user"></i></span>
+
+              </div>
+
+            </div>
+        <small class="text-danger">*Email is required!</small>
+        <small class="text-danger">*Email is invalid!</small>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" >Send</button>
+      </div>
+    </div>
+  </div>
 </div>

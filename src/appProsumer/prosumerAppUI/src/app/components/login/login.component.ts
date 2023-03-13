@@ -14,15 +14,17 @@ export class LoginComponent implements OnInit{
   eyeIcon: string = "fa-eye-slash";
   isText: boolean = false;
   loginForm!: FormGroup;
-  
+  public resetPasswordEmail !: string;
+  public isValidEmail !: boolean;
+
   constructor(private fb: FormBuilder, private router : Router){}
-  
+
   ngOnInit(): void {
     this.loginForm = this.fb.group({
       email : ['', [Validators.required, Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     })
-    
+
   }
 
   hideShowPass(){
@@ -34,7 +36,7 @@ export class LoginComponent implements OnInit{
   get fields(){
     return this.loginForm.controls;
   }
-  
+
   onSubmit(){
     this.submitted = true;
     if(this.loginForm.invalid){
@@ -42,7 +44,7 @@ export class LoginComponent implements OnInit{
     }else{
       this.router.navigate(['signin'])
     }
-    
+
   }
 
   private validateAllFormFields(formGroup : FormGroup){
@@ -51,13 +53,14 @@ export class LoginComponent implements OnInit{
         const control = formGroup.get(field);
         if(control instanceof FormControl){
           console.log(control.value);
-          
+
           control?.markAsDirty({onlySelf: true})
         }else if(control instanceof FormGroup){
           this.validateAllFormFields(control);
         }
       })
     }
+
 
 }
 
