@@ -12,9 +12,10 @@ public class UserController : ControllerBase
     private readonly IUserRepository _userRepository;
     private readonly ITokenMaker _tokenMaker;
 
-    public UserController(IUserRepository userRepository)
+    public UserController(IUserRepository userRepository,ITokenMaker tokenMaker)
     {
         _userRepository = userRepository;
+        _tokenMaker = tokenMaker;
     }
 
     [HttpPost("signup")]
@@ -40,7 +41,7 @@ public class UserController : ControllerBase
             return BadRequest("Invalid username or password");
         }
 
-        var token = _tokenMaker.CreateJwt(user);
+        var token = _tokenMaker.GenerateToken(user);
         return Ok( token );
     }
 }
