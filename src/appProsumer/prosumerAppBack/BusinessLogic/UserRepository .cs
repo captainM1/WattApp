@@ -69,4 +69,16 @@ public class UserRepository : IUserRepository
         await _dbContext.SaveChangesAsync();
         return newUser;
     }
+
+    public async Task<IEnumerable<User>> GetUsersAsync()
+    {
+        var users = (IEnumerable<User>)_dbContext.Users.ToListAsync();
+
+        if (users == null)
+        {
+            return null;
+        }
+
+        return users;
+    }
 }

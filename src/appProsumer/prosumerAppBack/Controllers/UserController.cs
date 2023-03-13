@@ -55,4 +55,17 @@ public class UserController : ControllerBase
 
         return Ok(user);
     }
+
+    [HttpGet("users")]
+    public async Task<IActionResult> GetUsers()
+    {
+        var users = await _userRepository.GetUsersAsync();
+
+        if(users == null)
+        {
+            return BadRequest("Theres no users in the database");
+        }
+
+        return Ok(users);
+    }
 }
