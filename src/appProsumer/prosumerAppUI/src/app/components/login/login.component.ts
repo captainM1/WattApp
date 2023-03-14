@@ -62,6 +62,14 @@ export class LoginComponent implements OnInit{
     }
 
 
+    checkValidEmail(event:string)
+    {
+      const value = event;
+      const pattern = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,3}$/;
+      this.isValidEmail = pattern.test(value);
+      return this.isValidEmail;
+    }
+
 }
 
 

@@ -64,14 +64,14 @@
       <div class="modal-body">
         <div class="form-group pt-3">
               <div class="input-group form-group ">
-                      <input class="form-control" type="text" placeholder="Email">
+                      <input class="form-control" [(ngModel)]="resetPasswordEmail" (ngModelChange)="checkValidEmail($event)" type="text" placeholder="Email">
                       <span class="input-group-addon addon-icon"><i class="fa fa-user"></i></span>
 
               </div>
 
             </div>
-        <small class="text-danger">*Email is required!</small>
-        <small class="text-danger">*Email is invalid!</small>
+        <small *ngIf="!resetPasswordEmail" class="text-danger">*Email is required!</small>
+        <small *ngIf="!isValidEmail && resetPasswordEmail" class="text-danger">*Email is invalid!</small>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" >Send</button>
       </div>
