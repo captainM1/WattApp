@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
+import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { AuthGuard } from './guards/auth.guard';
 import { NotauthGuard } from './guards/notauth.guard';
@@ -11,6 +12,8 @@ const routes: Routes = [
   },
   {
     path:'signup', component: SignupComponent
+  },{
+    path:'sidenav', component: SidenavComponent
   }
 ];
 
