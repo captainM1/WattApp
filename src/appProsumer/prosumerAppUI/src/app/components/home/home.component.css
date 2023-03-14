@@ -1,0 +1,18 @@
+*{
+    background-color: #EDEAE5;
+}
+h1{
+    color: #026670;
+    font-weight: 600;
+}
+button{
+    background-color: #026670;
+    color: #EDEAE5;
+    border-radius: 5px;
+    width: 200px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+  align-items: center;
+    
+}

@@ -1,7 +1,7 @@
 export const navbarData = [
 
     {
-        routeLink: '/',
+        routeLink: '/home',
         icon : 'fa fa-home',
         label : 'Home'
     },
@@ -21,7 +21,7 @@ export const navbarData = [
         label : 'Notification'
     },
     {
-        routeLink:'/signout',
+        routeLink:'/signup',
         icon: 'fa fa-sign-out',
         label: 'Sign out'
     }
