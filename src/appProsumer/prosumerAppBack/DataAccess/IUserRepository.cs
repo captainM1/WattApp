@@ -6,4 +6,5 @@ public interface IUserRepository
     Task<User> GetUserByUsernameAndPasswordAsync(string username, string password);
     Task<User> CreateUser(UserRegisterDto userRegisterDto);
     Task<User> GetUserByUsernameAsync(string username);
+    public Task<List<User>> GetAllUsers();
 }

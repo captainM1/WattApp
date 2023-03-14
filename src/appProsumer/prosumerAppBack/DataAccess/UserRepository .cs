@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using prosumerAppBack.DataAccess;
 using prosumerAppBack.Models;
@@ -14,7 +16,6 @@ public class UserRepository : IUserRepository
         _passwordHasher = passwordHasher;
 
     }
-
     public async Task<User> GetUserByIdAsync(int id)
     {
         return await _dbContext.Users.FindAsync(id);
@@ -46,7 +47,7 @@ public class UserRepository : IUserRepository
 
         return user;
     }
-
+    
     public async Task<User> CreateUser(UserRegisterDto userRegisterDto)
     {
         byte[] salt;
@@ -62,11 +63,16 @@ public class UserRepository : IUserRepository
             Country = userRegisterDto.Address.Split(",")[2],
             Salt = salt,
             PasswordHash = hash,
-            Role = "1",
+            Role = "RegularUser",
             ID = Guid.NewGuid(),
         };
         _dbContext.Users.Add(newUser);
         await _dbContext.SaveChangesAsync();
         return newUser;
+    }
+
+    public Task<List<User>> GetAllUsers()
+    {
+        return _dbContext.Users.ToListAsync();
     }
 }
