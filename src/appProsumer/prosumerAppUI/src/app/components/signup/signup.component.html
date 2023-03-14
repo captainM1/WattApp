@@ -8,7 +8,7 @@
             <div class="col-sm centriranje" style=" background:#EDEAE5;">
                 <div class="forma panel border" style="width: 497px;">
                     <h3 class="pt-3 font-weight-bold">
-                        Get started 
+                        Get started
                     </h3>
                     <p>Create your account now.</p>
                     <div class="panel-body">
@@ -42,7 +42,7 @@
                                 <span class="text-danger" *ngIf="submitted && fields['phonenumber'].errors?.['required']">*Phone Number is required!</span>
                             </div>
                         </div>
-                    
+
                             <div class="input-group form-group pt-4">
                                     <input class = "form-control" [ngClass] = "{'is-invalid' : submitted && fields['password'].errors}" formControlName = "password" [type]="type" placeholder="Password">
                                     <span  class="input-group-addon addon-icon"><i (click) = "hideShowPass()" class="fa {{eyeIcon}}"></i></span>
@@ -51,11 +51,11 @@
                                         <span class = "text-danger" *ngIf="fields['password'].errors?.['minLength']">*Please provide a valid password!</span>
                                     </div>
                                 </div>
-                            
-                            
+
+
 
                             <button type="submit" class="btn btn-primary btn-lock mt-4 w-50">Sign Up</button>
-                            
+
                             <div class="already text-center pt-4">
                                 Already registered? <a id="forget" routerLink="/login">Login</a>
                             </div>

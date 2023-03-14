@@ -34,7 +34,7 @@ input::placeholder{
 
 a{
     color:#026670;
-    
+
 }
 
 .forgotten{
@@ -91,11 +91,11 @@ button:active {
     transition: all 0.2s ease-in-out;
     border-radius:0 5px 5px 0 !important;
 }
-  
+
 .addon-icon i {
     color: #6c757d;
 }
-  
+
 .form-control {
     position:relative;
     transition: all 0.2s ease-in-out;
@@ -113,10 +113,20 @@ button:active {
     border:2px solid #026670;
     border-right: none;
     box-shadow: none;
-} 
+}
 .form-control:focus + .addon-icon {
     border:2px solid #026670;
     border-left:none;
     border-radius: 5px;
 }
 
+#closeBtn, #closeBtn:active
+{
+  background-color: transparent !important;
+  border: transparent !important;
+}
+
+.modal-content
+{
+  border-radius: 17px !important;
+}
