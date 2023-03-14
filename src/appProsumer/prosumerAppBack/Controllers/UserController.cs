@@ -69,5 +69,16 @@ public class UserController : ControllerBase
         return Ok(users);
     }
 
-    
+    [HttpPost("users/{id}")]
+    public async Task<IActionResult> UpdateUser(int id, [FromBody] UserUpdateDto userUpdateDto)
+    {
+        var user = _userRepository.UpdateUser(id, userUpdateDto);
+
+        if(user == null)
+        {
+            return BadRequest("cannot update user");
+        }
+
+        return Ok(new { message = "user updated successfully" });
+    }
 }
