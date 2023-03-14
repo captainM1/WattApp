@@ -1,9 +1,8 @@
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using prosumerAppBack.DataAccess;
-using prosumerAppBack.Models;
 using prosumerAppBack.Helper;
+using prosumerAppBack.Models;
+
+namespace prosumerAppBack.DataAccess;
 
 public class UserRepository : IUserRepository
 {
