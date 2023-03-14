@@ -70,6 +70,19 @@ export class LoginComponent implements OnInit{
       return this.isValidEmail;
     }
 
+    confirmToSend()
+    {
+      if(this.checkValidEmail(this.resetPasswordEmail))
+      {
+        console.log(this.resetPasswordEmail);
+        this.resetPasswordEmail = "";
+        const buttnoRef = document.getElementById("closeBtn");
+        buttnoRef?.click();
+
+        //API call to be done
+      }
+    }
+
 }
 
 

@@ -74,7 +74,7 @@
         <small *ngIf="!isValidEmail && resetPasswordEmail" class="text-danger">*Email is invalid!</small>
     </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" >Send</button>
+          <button type="button" class="btn btn-primary" (click)="confirmToSend()">Send</button>
         </div>
   </div>
 </div>
