@@ -17,7 +17,7 @@
                                 <input class = "form-control"  [ngClass] = "{'is-invalid' : submitted && fields['email'].errors}" formControlName = "email" type="text" placeholder="Email">
                                 <span class="input-group-addon addon-icon"><i class="fa fa-user"></i></span>
                                     <div class="invalid-feedback">
-                                        <span class= "text-danger" *ngIf="submitted && fields['email'].errors?.['required']">*Username is required!</span>
+                                        <span class= "text-danger" *ngIf="submitted && fields['email'].errors?.['required']">*Email is required!</span>
                                         <span class = "text-danger" *ngIf="fields['email'].errors?.['email']">*Please provide a valid email address</span>
                                     </div>
                                 </div>
