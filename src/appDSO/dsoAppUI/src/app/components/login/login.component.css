@@ -5,12 +5,30 @@ color: #026670;
 */
 @font-face {
     font-family: font1;
-    src: url(/assets/fonts/Chivo-Regular.ttf);
+    src: url(/assets/fonts/Inter-Regular.ttf);
  }
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.slika{
+    width: 40%;
+    min-width: 400px;
+}
 .forma{
     border-radius: 17px;
-    filter: drop-shadow(0px 13px 26px rgba(0,0,0,0.25));
+    filter: drop-shadow(0px 4px 4px rgba(0,0,0,0.25))
+            drop-shadow(-3px -1px 4px rgba(0,0,0,0.25))
+            drop-shadow(2px -2px 4px rgba(0,0,0,0.25));
     padding: 20px 60px;
+    background-color: #EDEAE5;
+    min-width: 400px;
+}
+form{
+    text-align: center;
 }
 
 h3{
@@ -27,24 +45,17 @@ input{
     font-size: 12px;
     height: 50px;
 }
+input[type=text]{
+    padding-left: 15px;
+    font-size: 15px;
+}
+input[type=password]{
+    padding-left: 15px;
+    font-size: 15px;
+}
 
 input::placeholder{
     color:rgba(2, 102, 112, 0.5);
-}
-
-a{
-    color:#026670;
-
-}
-
-.forgotten{
-    font-size: 13px;
-    font-style: italic;
-    cursor: pointer;
-}
-
-div{
-    text-align: left;
 }
 
 button{
@@ -52,9 +63,11 @@ button{
     text-transform: uppercase;
     text-align: center;
     border-radius: 8px;
-    filter:drop-shadow(0px 8px 4px rgba(0,0,0,0.25));
-    letter-spacing: 3px;
+    filter:drop-shadow(0px 8px 4px rgba(0,0,0,0.30));
+    letter-spacing: 2px;
     height: 40px;
+    font-family: font1;
+    font-weight: bold;
 }
 
 button:hover {
@@ -63,22 +76,19 @@ button:hover {
 button:active {
     background-color: #026670;
 }
-
-.account{
-    color:#026670;
-    font-size: 15px;
+button:focus{
+    background-color: #026670;
 }
 
 .outer{
-    background: linear-gradient(179.99deg, #026670 -47%, #9FEDD7 99.99%);
-    color: #026670;
+    height: 100vh;
+    background-color: #EDEAE5;
 }
 .centriranje{
     display:flex;
     justify-content: center;
     align-items: center;
 }
-
 
 .addon-icon {
     display: flex;
@@ -92,11 +102,11 @@ button:active {
     transition: all 0.2s ease-in-out;
     border-radius:0 5px 5px 0 !important;
 }
-
+  
 .addon-icon i {
     color: #6c757d;
 }
-
+  
 .form-control {
     position:relative;
     transition: all 0.2s ease-in-out;
@@ -114,20 +124,10 @@ button:active {
     border:2px solid #026670;
     border-right: none;
     box-shadow: none;
-}
+} 
 .form-control:focus + .addon-icon {
     border:2px solid #026670;
     border-left:none;
     border-radius: 5px;
 }
 
-#closeBtn, #closeBtn:active
-{
-  background-color: transparent !important;
-  border: transparent !important;
-}
-
-.modal-content
-{
-  border-radius: 17px !important;
-}

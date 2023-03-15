@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NgToastService } from 'ng-angular-popup';
 
 @Component({
   selector: 'app-signup',
@@ -14,14 +15,18 @@ export class SignupComponent  implements OnInit{
   isText: boolean = false;
   loginForm!: FormGroup;
   
-  constructor(private fb: FormBuilder, private router : Router){}
+  constructor(
+    private fb: FormBuilder, 
+    private router : Router,
+    private toast : NgToastService
+    ){}
   
   ngOnInit(): void {
     this.loginForm = this.fb.group({
       username: ['', Validators.required],
       email : ['', [Validators.required, Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
       address: ['', Validators.required],
-      phonenumer: ['', Validators.required],
+      phonenumber: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]]
     })
     
@@ -40,8 +45,11 @@ export class SignupComponent  implements OnInit{
   onSubmit(){
     this.submitted = true;
     if(this.loginForm.invalid){
+      this.toast.error({detail:"Error", summary:"Something went wrong!", duration:3000 })
+      this.router.navigate(['singup']);
       return;
     }else if(this.loginForm.valid){
+      this.toast.success({detail:"Success", summary: "Login successful!", duration:3000});
       this.router.navigate(['home']);
     }
     
