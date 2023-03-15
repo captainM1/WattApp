@@ -13,17 +13,21 @@ public class TokenMaker: ITokenMaker{
         var key = Encoding.ASCII.GetBytes("SecretKey10125779374235322");
         var tokenDescriptor = new SecurityTokenDescriptor
         {
-            Subject = new ClaimsIdentity(new[] { new Claim("id", user.ID.ToString()) }),
+            Subject = new ClaimsIdentity(new[]
+            {
+                new Claim(ClaimTypes.Name, user.ID.ToString()),
+                new Claim("role",user.Role)
+            }),
             Expires = DateTime.UtcNow.AddMinutes(30),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
         var token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);
     }
-    public int? ValidateToken(string token)
+    public (int?, string?) ValidateToken(string token)
     {
         if (token == null) 
-            return null;
+            return (null,null);
 
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes("SecretKey10125779374235322");
@@ -39,13 +43,14 @@ public class TokenMaker: ITokenMaker{
             }, out SecurityToken validatedToken);
 
             var jwtToken = (JwtSecurityToken)validatedToken;
-            var userId = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
+            var userId = int.Parse(jwtToken.Claims.First(x => x.Type == "Name").Value);
+            var role = int.Parse(jwtToken.Claims.First(x => x.Type == "role").Value);
 
-            return userId;
+            return (userId,role.ToString());
         }
         catch
         {
-            return null;
+            return (null,null);
         }
     }
 }

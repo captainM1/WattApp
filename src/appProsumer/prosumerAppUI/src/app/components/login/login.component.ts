@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NgToastService } from 'ng-angular-popup';
 import { AuthUserService } from 'src/app/services/auth-user.service';
 
 @Component({
@@ -16,9 +17,13 @@ export class LoginComponent implements OnInit{
   loginForm!: FormGroup;
   public resetPasswordEmail !: string;
   public isValidEmail !: boolean;
-
-  constructor(private fb: FormBuilder, private router : Router){}
-
+  
+  constructor(
+    private fb: FormBuilder, 
+    private router : Router,
+    private toast : NgToastService
+    ){}
+  
   ngOnInit(): void {
     this.loginForm = this.fb.group({
       email : ['', [Validators.required, Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
@@ -39,9 +44,12 @@ export class LoginComponent implements OnInit{
 
   onSubmit(){
     this.submitted = true;
-    if(this.loginForm.invalid){
+    if(this.loginForm.valid){
+      this.toast.success({detail:"Success", summary: "Login successful!", duration:3000});
+      this.router.navigate(['home']);
       return;
     }else{
+      this.toast.error({detail:"Error", summary:"Something went wrong!", duration:3000 })
       this.router.navigate(['signin'])
     }
 
