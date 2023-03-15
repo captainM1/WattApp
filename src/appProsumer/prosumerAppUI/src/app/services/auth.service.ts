@@ -14,14 +14,14 @@ export class AuthService {
   constructor(private http: HttpClient, private router:Router) { }
 
   login(email : string, password : string) : Observable<string>{
-    return this.http.post<string>(environment.apiUrl + "/signin", {
+    return this.http.post<string>(environment.apiUrl + "/api/User/signin", {
       email : email,
       password : password
     })
   }
 
   register(username: string, email : string,  address: string, number : string, password : string) : Observable<string>{
-    return this.http.post<string>(environment.apiUrl + "/signup", {
+    return this.http.post<string>(environment.apiUrl + "/api/User/signup", {
       username : username,
       email : email,
       address : address,
@@ -32,7 +32,7 @@ export class AuthService {
 
   validateJwt(token : string) : Observable<boolean>{
     var headers = new HttpHeaders().set("Authorization", "Bearer " + token);
-    return this.http.post<boolean>(environment.apiUrl + "/auth/validate", {}, {
+    return this.http.post<boolean>(environment.apiUrl + "/api/User/validate-token", {}, {
       headers : headers
     });
   }

@@ -7,7 +7,7 @@ import { NotauthGuard } from './guards/notauth.guard';
 
 const routes: Routes = [
   {
-  path: 'signin', component: LoginComponent, canActivate:[NotauthGuard]
+    path: 'signin', component: LoginComponent, canActivate:[NotauthGuard]
   },
   {
     path:'signup', component: SignupComponent
