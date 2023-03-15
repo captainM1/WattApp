@@ -80,6 +80,7 @@
     width: 100%;
     margin: 0.8px;
     padding: 4px;
+    font-size: 20px;
     
 }
 .sidenav-nav-link{
@@ -116,4 +117,8 @@
 }
 .sidenav-link-icon:hover{
     color: #026670;
+}
+*{
+    overflow: hidden;
+    
 }
