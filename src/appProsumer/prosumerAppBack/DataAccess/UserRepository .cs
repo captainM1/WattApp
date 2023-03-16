@@ -1,6 +1,9 @@
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using prosumerAppBack.Helper;
 using prosumerAppBack.Models;
+using System.Security.Cryptography;
 
 namespace prosumerAppBack.DataAccess;
 
@@ -46,7 +49,19 @@ public class UserRepository : IUserRepository
 
         return user;
     }
-    
+
+    public async Task<User> GetUserByEmailAsync(string email)
+    {
+        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
+
+        if (user == null)
+        {
+            return null;
+        }
+
+        return user;
+    }
+
     public async Task<User> CreateUser(UserRegisterDto userRegisterDto)
     {
         byte[] salt;
@@ -73,5 +88,33 @@ public class UserRepository : IUserRepository
     public Task<List<User>> GetAllUsers()
     {
         return _dbContext.Users.ToListAsync();
+    }
+
+    public async Task<User> CreateUserPasswordResetTokenAsync(User user)
+    {
+        user.PasswordResetToken = CreateRandomToken();
+        user.ResetTokenExpires = DateTime.Now.AddDays(1);
+        await _dbContext.SaveChangesAsync();
+
+        return user;
+    }
+
+    private string CreateRandomToken()
+    {
+        return Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
+    }
+    public async Task<User> GetUserByPasswordResetToken(string token)
+    {
+        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.PasswordResetToken == token);
+        if(user.ResetTokenExpires < DateTime.Now)
+        {
+            user = null;
+        }
+        if (user == null)
+        {
+            return null;
+        }
+
+        return user;
     }
 }
