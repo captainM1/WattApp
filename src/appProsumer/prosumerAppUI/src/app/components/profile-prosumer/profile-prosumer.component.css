@@ -1,0 +1,50 @@
+.container{
+    position: absolute;
+    width: 1200px;
+    height: 440px;
+    left: 220px;
+    top: 20px;
+    
+   
+}
+.row{
+    background-color: #026670;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px;
+    padding-bottom: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.icon-name{
+    color:#EDEAE5;
+    text-align: center;
+    margin: 20px;
+}
+.icon-name h1{
+    padding-left: 10px;
+}
+form{
+    margin: 0px;
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 10px;
+    
+    
+}
+.form-group{
+    padding-bottom: 20px;
+}
+.profile-img{
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #EDEAE5;
+    
+}
+img{
+    height: 200px;
+    width: 200px;
+}
