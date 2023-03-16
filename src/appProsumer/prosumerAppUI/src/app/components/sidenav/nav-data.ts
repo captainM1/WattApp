@@ -23,6 +23,7 @@ export const navbarData = [
     {
         routeLink:'/signup',
         icon: 'fa fa-sign-out',
-        label: 'Sign out'
+        label: 'Sign out',
+        onclick: 'signOut'
     }
 ];

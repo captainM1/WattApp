@@ -20,9 +20,9 @@ public class UserRepository : IUserRepository
         return await _dbContext.Users.FindAsync(id);
     }
 
-    public async Task<User> GetUserByUsernameAndPasswordAsync(string username, string password)
+    public async Task<User> GetUserByEmailAndPasswordAsync(string email, string password)
     {
-        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.UserName == username);
+        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
 
         if (user == null)
         {
@@ -35,9 +35,9 @@ public class UserRepository : IUserRepository
         return user;
     }
 
-    public async Task<User> GetUserByUsernameAsync(string username)
+    public async Task<User> GetUserByEmailAsync(string email)
     {
-        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.UserName == username);
+        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
 
         if (user == null)
         {
@@ -73,5 +73,15 @@ public class UserRepository : IUserRepository
     public Task<List<User>> GetAllUsers()
     {
         return _dbContext.Users.ToListAsync();
+    }
+
+    public async Task<string> GetUsernameByIdAsync(string id)
+    {
+        var user = new User();
+        if (Guid.TryParse(id, out Guid guid))
+        {
+            user = await _dbContext.Users.FindAsync(guid);
+        }
+        return user.UserName;
     }
 }

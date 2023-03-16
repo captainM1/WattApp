@@ -1,5 +1,6 @@
 ﻿using prosumerAppBack.Models;
 using System;
+using System.Text.Json;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,20 +25,20 @@ public class UserController : ControllerBase
         _userService = userService;
     }
 
-    [HttpGet, Authorize]
+    [HttpGet("username")]
     public ActionResult<string> GetData()
     {
         var id = _userService.GetID();
-        var role = _userService.GetRole();
-        return Ok(new {id,role});
+        var username = _userRepository.GetUsernameByIdAsync(id);
+        return Ok(JsonSerializer.Serialize(username));
     }
     [HttpPost("signup")]
     public async Task<IActionResult> Register([FromBody] UserRegisterDto userRegisterDto)
     {
-        var user = await _userRepository.GetUserByUsernameAsync(userRegisterDto.Username);
+        var user = await _userRepository.GetUserByEmailAsync(userRegisterDto.Email);
         if (user != null)
         {
-            return BadRequest("username already exist");
+            return BadRequest("email already exist");
         }
 
         await _userRepository.CreateUser(userRegisterDto);
@@ -48,14 +49,14 @@ public class UserController : ControllerBase
     [HttpPost("signin")]
     public async Task<IActionResult> Login([FromBody] UserLoginDto userLoginDto)
     {
-        var user = await _userRepository.GetUserByUsernameAndPasswordAsync(userLoginDto.Username, userLoginDto.Password);
+        var user = await _userRepository.GetUserByEmailAndPasswordAsync(userLoginDto.Email, userLoginDto.Password);
         if (user == null)
         {
-            return BadRequest("Invalid username or password");
+            return BadRequest("Invalid email or password");
         }
 
         var token = _tokenMaker.GenerateToken(user);
-        return Ok( token );
+        return Ok( JsonSerializer.Serialize(token) );
     }
 
     [HttpGet("users"),Authorize(Roles = "RegularUser")]
@@ -68,20 +69,13 @@ public class UserController : ControllerBase
     public ActionResult<object> ValidateToken([FromBody] object body)
     {
         string token = body.ToString();
-        (int?, string?) result = _tokenMaker.ValidateToken(token);
+        var result = _tokenMaker.ValidateJwtToken(token);
 
-        if (result.Item1 == null)
+        if (!result)
         {
             return BadRequest("Invalid token");
         }
         
-        Task<User> user = _userRepository.GetUserByIdAsync((int)result.Item1);
-
-        if (user == null)
-        {
-            return BadRequest("User not found" + user.Id);
-        }
-
-        return new { userId = result.Item1, role = result.Item2 };
+        return true;
     }
 }

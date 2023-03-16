@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { navbarData } from './nav-data';
+import { CookieService } from "ngx-cookie-service"
 
 @Component({
   selector: 'app-sidenav',
@@ -7,6 +8,8 @@ import { navbarData } from './nav-data';
   styleUrls: ['./sidenav.component.css']
 })
 export class SidenavComponent {
+
+  constructor(private cookie: CookieService) { }
 
   collapsed = false;
   navData = navbarData;
@@ -16,5 +19,8 @@ export class SidenavComponent {
   }
   closeSidenav():void{
     this.collapsed = false;
+  }
+  signOut(){
+    this.cookie.delete('jwtToken');
   }
 }
