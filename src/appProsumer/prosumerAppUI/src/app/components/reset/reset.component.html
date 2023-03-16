@@ -11,9 +11,9 @@
                       Reset password
                   </h3>
                   <div class="panel-body">
-                      <form [formGroup] = "resetForm">
+                      <form [formGroup] = "resetForm" (ngSubmit)="onReset()">
                           <div class="input-group form-group pt-4">
-                              <input class = "form-control" [ngClass] = "{'is-invalid' : submitted && fields['password'].errors}"  formControlName = "password" type="text" placeholder="New Password">
+                              <input class = "form-control" [ngClass] = "{'is-invalid' : submitted && fields['password'].errors}"  formControlName = "password" [type]="type" placeholder="New Password">
                               <span  class="input-group-addon addon-icon"><i (click) = "hideShowPass()" class="fa {{eyeIcon}}"></i></span>
                                   <div class="invalid-feedback">
                                       <span class= "text-danger" *ngIf="submitted && fields['password'].errors?.['required']">*New password is required!</span>
@@ -22,16 +22,17 @@
                               </div>
 
 
-                          <div class="input-group form-group pt-4 pb-5">
-                                  <input class = "form-control" [ngClass] = "{'is-invalid' : submitted && fields['password'].errors}" formControlName = "confirmPassword"  placeholder="Confirm Password">
-                                  <span  class="input-group-addon addon-icon"><i (click) = "hideShowPass()" class="fa {{eyeIcon}}"></i></span>
+                   <div class="input-group form-group pt-4 pb-5">
+                                  <input class = "form-control" [ngClass] = "{'is-invalid' : submitted && fields['confirmPassword'].errors}" formControlName = "confirmPassword" [type]="type2"  placeholder="Confirm Password">
+                                  <span  class="input-group-addon addon-icon"><i (click) = "hideShowPass2()" class="fa {{eyeIcon2}}"></i></span>
                                   <div class="invalid-feedback">
-                                      <span class= "text-danger" *ngIf="submitted && fields['password'].errors?.['required']" >*Confirm password is required!</span>
-                                      <span class = "text-danger" *ngIf="fields['password'].errors?.['minLength']">*Please provide a valid password!</span>
-                                  </div>
-                              </div>
+                                      <span class= "text-danger" *ngIf="submitted && fields['confirmPassword'].errors?.['required']" >*Confirm password is required!</span>
+                                      <span class = "text-danger" *ngIf="fields['confirmPassword'].errors?.['minLength']">*Please provide a valid password!</span>
 
-                          <button type="submit" class="btn btn-primary btn-lock mb-4 w-100">Reset</button>
+                                  </div>
+                     </div>
+
+                     <button type="submit" class="btn btn-primary btn-lock mb-4 w-100" >Reset</button>
 
 
                       </form>
