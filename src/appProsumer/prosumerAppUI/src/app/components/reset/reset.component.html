@@ -28,7 +28,7 @@
                                   <div class="invalid-feedback">
                                       <span class= "text-danger" *ngIf="submitted && fields['confirmPassword'].errors?.['required']" >*Confirm password is required!</span>
                                       <span class = "text-danger" *ngIf="fields['confirmPassword'].errors?.['minLength']">*Please provide a valid password!</span>
-
+                                      <span class= "text-danger" *ngIf="resetForm.hasError('confirmPasswordValidator', 'confirmPassword')" >*Password doesn't match!</span>
                                   </div>
                      </div>
 
