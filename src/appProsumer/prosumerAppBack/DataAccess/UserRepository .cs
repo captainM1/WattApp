@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using prosumerAppBack.Helper;
-using prosumerAppBack.Models;
+
 
 namespace prosumerAppBack.DataAccess;
 
@@ -69,7 +69,6 @@ public class UserRepository : IUserRepository
         await _dbContext.SaveChangesAsync();
         return newUser;
     }
-
     public Task<List<User>> GetAllUsers()
     {
         return _dbContext.Users.ToListAsync();
@@ -83,5 +82,41 @@ public class UserRepository : IUserRepository
             user = await _dbContext.Users.FindAsync(guid);
         }
         return user.UserName;
+    }
+    public async Task<IEnumerable<User>> GetUsersAsync()
+    {
+        var users = (IEnumerable<User>)_dbContext.Users.ToListAsync();
+
+        if (users == null)
+        {
+            return null;
+        }
+
+        return users;
+    }
+
+    public async Task<User> UpdateUser(int id, UserUpdateDto userUpdateDto)
+    {
+        User user = await this.GetUserByIdAsync(id);
+
+        if(user == null)
+        {
+            return null;
+        }
+
+        user.UserName = userUpdateDto.Username;
+        user.FirstName = userUpdateDto.FirstName;
+        user.LastName = userUpdateDto.LastName;
+        user.Address = userUpdateDto.Address;
+        user.City = userUpdateDto.City;
+        user.Country = userUpdateDto.Country;
+        user.Email = userUpdateDto.Email;
+        user.PhoneNumber = userUpdateDto.PhoneNumber;
+        // da li da dodam u istoj funkciji promenu lozinke
+
+        _dbContext.Users.Update(user);
+        await _dbContext.SaveChangesAsync();
+
+        return user;
     }
 }
