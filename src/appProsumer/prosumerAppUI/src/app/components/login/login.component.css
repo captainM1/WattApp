@@ -70,6 +70,9 @@ button:hover {
 button:active {
     background-color: #026670;
 }
+button:focus{
+    background-color: #026670;
+}
 
 .account{
     color:#026670;
@@ -127,6 +130,16 @@ button:active {
     border:2px solid #026670;
     border-left:none;
     border-radius: 5px;
+}
+
+.invalid-input {
+    border: 2px solid #dc3545;
+    border-right: none;
+}
+  
+.invalid-icon {
+    border: 2px solid #dc3545;
+    border-left: none;
 }
 
 #closeBtn, #closeBtn:active

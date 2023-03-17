@@ -117,6 +117,16 @@ p{
     border-radius: 5px;
 }
 
+.invalid-input {
+    border: 2px solid #dc3545;
+    border-right: none;
+}
+  
+.invalid-icon {
+    border: 2px solid #dc3545;
+    border-left: none;
+}
+
 .centriranje{
     display: flex;
     justify-content: center;
