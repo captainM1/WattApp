@@ -18,6 +18,9 @@ import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { HomeComponent } from './components/home/home.component';
 import { ResetComponent } from './components/reset/reset.component';
 
+import { ProfileProsumerComponent } from './components/profile-prosumer/profile-prosumer.component';
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -25,7 +28,8 @@ import { ResetComponent } from './components/reset/reset.component';
     SignupComponent,
     SidenavComponent,
     HomeComponent,
-    ResetComponent
+    ResetComponent,
+    ProfileProsumerComponent
   ],
   imports: [
     BrowserModule,

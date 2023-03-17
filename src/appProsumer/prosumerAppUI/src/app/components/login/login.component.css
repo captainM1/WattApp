@@ -10,7 +10,14 @@ color: #026670;
 .forma{
     border-radius: 17px;
     filter: drop-shadow(0px 13px 26px rgba(0,0,0,0.25));
-    padding: 20px 60px;
+    padding: 20px 5%;
+    min-width: 350px;
+    
+}
+
+.slika{
+    width: 30%;
+    min-width: 350px;
 }
 
 h3{
@@ -63,6 +70,9 @@ button:hover {
 button:active {
     background-color: #026670;
 }
+button:focus{
+    background-color: #026670;
+}
 
 .account{
     color:#026670;
@@ -70,6 +80,7 @@ button:active {
 }
 
 .outer{
+    height:100vh;
     background: linear-gradient(179.99deg, #026670 -47%, #9FEDD7 99.99%);
     color: #026670;
 }
@@ -119,6 +130,16 @@ button:active {
     border:2px solid #026670;
     border-left:none;
     border-radius: 5px;
+}
+
+.invalid-input {
+    border: 2px solid #dc3545;
+    border-right: none;
+}
+  
+.invalid-icon {
+    border: 2px solid #dc3545;
+    border-left: none;
 }
 
 #closeBtn, #closeBtn:active
