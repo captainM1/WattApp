@@ -19,7 +19,7 @@ const routes: Routes = [
     path:'sidenav', component: SidenavComponent
   },
   {
-    path:'home',component: HomeComponent
+    path:'home',component: HomeComponent, canActivate:[AuthGuard]
   },
   {
     path:'reset', component: ResetComponent
