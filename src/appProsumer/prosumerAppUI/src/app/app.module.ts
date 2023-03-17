@@ -16,6 +16,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { HomeComponent } from './components/home/home.component';
+import { ProfileProsumerComponent } from './components/profile-prosumer/profile-prosumer.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { HomeComponent } from './components/home/home.component';
     LoginComponent,
     SignupComponent,
     SidenavComponent,
-    HomeComponent
+    HomeComponent,
+    ProfileProsumerComponent
   ],
   imports: [
     BrowserModule,

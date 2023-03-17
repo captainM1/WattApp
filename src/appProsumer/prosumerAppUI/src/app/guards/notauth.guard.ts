@@ -26,7 +26,6 @@ export class NotauthGuard  {
       else{
         return true;
       }
-
   }
 
 }

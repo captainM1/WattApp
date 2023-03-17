@@ -64,4 +64,24 @@ public class UserController : ControllerBase
         var users = await _userRepository.GetAllUsers();
         return Ok(users);
     }
+    [HttpPost("validate-token")]
+    public ActionResult<object> ValidateToken([FromBody] object body)
+    {
+        string token = body.ToString();
+        (int?, string?) result = _tokenMaker.ValidateToken(token);
+
+        if (result.Item1 == null)
+        {
+            return BadRequest("Invalid token");
+        }
+        
+        Task<User> user = _userRepository.GetUserByIdAsync((int)result.Item1);
+
+        if (user == null)
+        {
+            return BadRequest("User not found" + user.Id);
+        }
+
+        return new { userId = result.Item1, role = result.Item2 };
+    }
 }
