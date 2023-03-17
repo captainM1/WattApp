@@ -8,24 +8,88 @@ color: #026670;
     src: url(/assets/fonts/Inter-Regular.ttf);
  }
 
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+@media (max-width: 767px) {
+
+}
+
+@media (min-width: 768px) {
+    .forma{
+        width: 30%;
+    }
+}
+
+@media (min-width: 1280px) and (min-height: 800px) 
+{
+    .slika{
+        width: 50%;
+    }
+    .red{
+        padding: 20px;
+    }
+}
+
+@media (min-width: 1024px) and (min-height: 600px) /*Nest Hub*/
+{
+    .slika{
+        width: 50%;
+    }
+    .red{
+        padding: 20px;
+    }
+}
+
+@media (min-width: 1280px) and (min-height: 800px) /*Nest Hub Max*/
+{
+    .slika{
+        width: 50%;
+    }
+    .red{
+        padding: 20px;
+    }
+}
+
+@media (min-width: 768px) and (min-height: 1024px) /*iPad mini*/
+{
+    .slika{
+        width: 50%;
+    }
+    .red{
+        padding: 20px;
+    }
+}
+
+@media (min-width: 820px) and (min-height: 1180px) /*iPad Air*/
+{
+    .slika{
+        width: 50%;
+    }
+    .red{
+        padding: 20px;
+    }
+}
+
+@media (min-width: 768px){
+
+}
+
+@media (max-width: 280px){
+    .forma{
+        width: 270px;
+    }
+
 }
 
 .slika{
     width: 40%;
     min-width: 350px;
 }
+
 .forma{
     border-radius: 17px;
     filter: drop-shadow(0px 4px 4px rgba(0,0,0,0.25))
             drop-shadow(-3px -1px 4px rgba(0,0,0,0.25))
             drop-shadow(2px -2px 4px rgba(0,0,0,0.25));
-    padding: 20px 4%;
     background-color: #EDEAE5;
-    min-width: 350px;
 }
 form{
     text-align: center;
