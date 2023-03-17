@@ -21,11 +21,10 @@ export class AuthGuard  {
         if(this.cookie.check("token")){
           var token = this.cookie.get("token");
           console.log(token);
-          //return this.auth.validateJwt(token);
-          return true;
+          return this.auth.validateJwt(token);
         }
         else{
-          this.router.navigate(["login"]);
+          this.router.navigate(["signin"]);
           return false;
         }
     }
