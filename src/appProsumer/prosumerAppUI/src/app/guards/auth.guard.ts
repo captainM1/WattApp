@@ -18,10 +18,9 @@ export class AuthGuard  {
       route: ActivatedRouteSnapshot,
       state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
-        if(this.cookie.check("token")){
-          var token = this.cookie.get("token");
-          console.log(token);
-          return this.auth.validateJwt(token);
+        if(this.cookie.check("jwtToken")){
+          var token = this.cookie.get("jwtToken");
+          return true
         }
         else{
           this.router.navigate(["signin"]);

@@ -24,13 +24,11 @@ public class TokenMaker: ITokenMaker{
         var token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);
     }
-    public (int?, string?) ValidateToken(string token)
+    public bool ValidateJwtToken(string token)
     {
-        if (token == null) 
-            return (null,null);
-
-        var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes("SecretKey10125779374235322");
+        var tokenHandler = new JwtSecurityTokenHandler();
+        
         try
         {
             tokenHandler.ValidateToken(token, new TokenValidationParameters
@@ -41,16 +39,12 @@ public class TokenMaker: ITokenMaker{
                 ValidateAudience = false,
                 ClockSkew = TimeSpan.Zero
             }, out SecurityToken validatedToken);
-
-            var jwtToken = (JwtSecurityToken)validatedToken;
-            var userId = int.Parse(jwtToken.Claims.First(x => x.Type == "Name").Value);
-            var role = int.Parse(jwtToken.Claims.First(x => x.Type == "role").Value);
-
-            return (userId,role.ToString());
+            
+            return true;
         }
         catch
         {
-            return (null,null);
+            return false;
         }
     }
 }
