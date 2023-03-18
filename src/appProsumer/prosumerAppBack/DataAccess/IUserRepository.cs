@@ -6,6 +6,7 @@ public interface IUserRepository
     Task<User> GetUserByEmailAndPasswordAsync(string email, string password);
     Task<User> CreateUser(UserRegisterDto userRegisterDto);
     Task<User> GetUserByEmailAsync(string email);
-    public Task<List<User>> GetAllUsers();
+    Task<List<User>> GetAllUsers();
     Task<string> GetUsernameByIdAsync(string id);
+    Task<Boolean> UpdatePassword(int id, string newPassword);
 }
