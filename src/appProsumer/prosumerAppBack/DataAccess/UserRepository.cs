@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using prosumerAppBack.Helper;
-
+using prosumerAppBack.Models;
 
 namespace prosumerAppBack.DataAccess;
 
@@ -112,11 +112,32 @@ public class UserRepository : IUserRepository
         user.Country = userUpdateDto.Country;
         user.Email = userUpdateDto.Email;
         user.PhoneNumber = userUpdateDto.PhoneNumber;
-        // da li da dodam u istoj funkciji promenu lozinke
+        
 
         _dbContext.Users.Update(user);
         await _dbContext.SaveChangesAsync();
 
         return user;
+    }
+
+    public async Task<Boolean> UpdatePassword(int id, string newPassword)
+    {
+        var user = await this.GetUserByIdAsync(id);
+
+        if (user == null)
+        {
+            return false;
+        }
+
+        byte[] salt;
+        byte[] hash;
+        (salt, hash) = _passwordHasher.HashPassword(newPassword);
+
+        user.Salt = salt;
+        user.PasswordHash = hash;
+
+        await _dbContext.SaveChangesAsync();
+
+        return true;
     }
 }

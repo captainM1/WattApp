@@ -17,12 +17,14 @@ public class UserController : ControllerBase
     private readonly IUserRepository _userRepository;
     private readonly ITokenMaker _tokenMaker;
     private readonly IUserService _userService;
+    private readonly IEmailService _emailService;
 
-    public UserController(IUserRepository userRepository,ITokenMaker tokenMaker, IUserService userService)
+    public UserController(IUserRepository userRepository,ITokenMaker tokenMaker, IUserService userService, EmailService emailService)
     {
         _userRepository = userRepository;
         _tokenMaker = tokenMaker;
         _userService = userService;
+        _emailService = emailService;
     }
 
     [HttpGet("username")]
@@ -115,5 +117,57 @@ public class UserController : ControllerBase
         }
 
         return Ok(new { message = "user updated successfully" });
+    }
+
+    [HttpPost("send-reset-email")]
+    public async Task<IActionResult> SendResetEmail([FromBody] ResetPasswordEmailDto resetPasswordEmailDto)
+    {
+        var user = await _userRepository.GetUserByEmailAsync(resetPasswordDto.Email);
+
+        if (user == null)
+        {
+            return BadRequest("Invalid email address");
+        }
+
+        var token = _tokenMaker.GenerateToken(user);
+        var resetPasswordUrl = $"https://localhost:7182/api/user/reset-password?token={token}";
+        var message = $"Please click the following link to reset your password: {resetPasswordUrl}";
+        await _emailService.SendEmailAsync(user.Email, "Reset password", message);
+
+        return Ok(new { message = "Reset password link has been sent to your email" });
+    }
+
+    [HttpPost("reset-password")]
+    public async Task<IActionResult> ResetPassword([FromQuery] string token [FromBody] ResetPasswordDto resetPasswordDto)
+    {
+        (int?, string?) result = _tokenMaker.ValidateToken(token);
+
+        if (result.Item1 == null)
+        {
+            return BadRequest("Invalid token");
+        }
+
+        Task<User> user = _userRepository.GetUserByIdAsync((int)result.Item1);
+
+        if (user == null)
+        {
+            return BadRequest("User not found" + user.Id);
+        }
+
+        var userCheck = _userRepository.GetUserByEmailAsync(resetPasswordDto.Email);
+
+        if (userCheck == null || resetPasswordDto.Email != user.Email)
+        {
+            return BadRequest("Invalid email address");
+        }
+
+        Boolean action = _userRepository.UpdatePassword(user.Id, resetPasswordDto.Password);
+
+        if (!action)
+        {
+            return BadRequest("Action failed");
+        }
+
+        return Ok(new { message = "Password changed" });
     }
 }
