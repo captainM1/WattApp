@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AddDeviceComponent } from './components/add-device/add-device.component';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { ProfileProsumerComponent } from './components/profile-prosumer/profile-prosumer.component';
@@ -23,6 +24,9 @@ const routes: Routes = [
   },
   {
     path: 'profileConsumer', component: ProfileProsumerComponent
+  },
+  {
+    path: 'addDevice', component: AddDeviceComponent
   }
 ];
 
