@@ -9,4 +9,6 @@ public interface IUserRepository
     Task<List<User>> GetAllUsers();
     Task<string> GetUsernameByIdAsync(string id);
     Task<Boolean> UpdatePassword(int id, string newPassword);
+    Task<IEnumerable<User>> GetUsersAsync();
+    Task<User> UpdateUser(int id, UserUpdateDto userUpdateDto);
 }

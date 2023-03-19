@@ -30,12 +30,13 @@ const routes: Routes = [
     path:'reset', component: ResetComponent
   },
   {
-    path:'home',component:HomeComponent
+    path: 'profileConsumer', component: ProfileProsumerComponent
   },
   {
     path: 'profileConsumer', component: ProfileProsumerComponent
   },
   {
+>>>>>>> src/appProsumer/prosumerAppUI/src/app/app-routing.module.ts
     path:'home',component:HomeComponent,canActivate:[AuthGuard]
   }
 ];

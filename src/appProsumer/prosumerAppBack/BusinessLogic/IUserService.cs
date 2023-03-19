@@ -2,6 +2,7 @@ namespace prosumerAppBack.BusinessLogic;
 
 public interface IUserService
 {
-    public string GetID();
-    public string GetRole();
+    string GetID();
+    string GetRole();
+    Task<IEnumerable<object>> GetCoordinatesForAllUsers();
 }
