@@ -24,20 +24,14 @@ const routes: Routes = [
     path:'sidenav', component: SidenavComponent
   },
   {
-    path:'home',component: HomeComponent, canActivate:[AuthGuard]
-  },
-  {
-    path:'reset', component: ResetComponent
-  },
-  {
-    path:'home',component:HomeComponent
-  },
-  {
     path: 'profileConsumer', component: ProfileProsumerComponent
   },
   {
     path:'home',component:HomeComponent,canActivate:[AuthGuard]
-  }
+  },
+  {
+    path:'reset', component: ResetComponent
+  },
 ];
 
 @NgModule({
