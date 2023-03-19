@@ -20,7 +20,7 @@ export class NotauthGuard  {
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
       if(this.cookie.check("token")){
-        this.router.navigate(["signup"]);
+        this.router.navigate(["home"]);
         return false;
       }
       else{
