@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-
+import { CookieService } from "ngx-cookie-service"
 
 
 @Injectable({
@@ -11,7 +11,7 @@ import { environment } from 'src/environments/environment';
 })
 export class AuthService {
 
-  constructor(private http: HttpClient, private router:Router) { }
+  constructor(private http: HttpClient, private router:Router, private cookie: CookieService) { }
 
   login(email : string, password : string) : Observable<string>{
     return this.http.post<string>(environment.apiUrl + "/api/User/signin", {
@@ -35,6 +35,9 @@ export class AuthService {
     return this.http.post<boolean>(environment.apiUrl + "/api/User/validate-token", {}, {
       headers : headers
     });
+  }
+  getData(){
+    return this.http.get<any>("http://localhost:5172/api/User/username", { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
   }
 
 }

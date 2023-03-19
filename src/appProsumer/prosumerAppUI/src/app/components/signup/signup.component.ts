@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-signup',
@@ -18,7 +19,8 @@ export class SignupComponent  implements OnInit{
   constructor(
     private fb: FormBuilder, 
     private router : Router,
-    private toast : NgToastService
+    private toast : NgToastService,
+    private auth: AuthService
     ){}
   
   ngOnInit(): void {
@@ -44,15 +46,24 @@ export class SignupComponent  implements OnInit{
   
   onSubmit(){
     this.submitted = true;
-    if(this.loginForm.invalid){
-      this.toast.error({detail:"Error", summary:"Something went wrong!", duration:3000 })
-      this.router.navigate(['singup']);
-      return;
-    }else if(this.loginForm.valid){
-      this.toast.success({detail:"Success", summary: "Login successful!", duration:3000});
-      this.router.navigate(['home']);
+    if(this.loginForm.valid){
+      this.auth.register(this.loginForm.get('username')?.value, this.loginForm.get('email')?.value,this.loginForm.get('address')?.value,this.loginForm.get('number')?.value,this.loginForm.get('password')?.value)
+      .subscribe(
+        (response) => {
+          this.toast.success({detail:"Success", summary:"Account created", duration:3000 })
+          this.auth.login(this.loginForm.get('email')?.value, this.loginForm.get('password')?.value)
+        },
+        (error) => {
+          if (error.status === 400) {
+            this.toast.error({detail:"Error", summary:error.error, duration:3000 })
+            this.router.navigate(['signin'])
+          }
+        }
+      );
+    }else{
+      this.toast.error({detail:"Error", summary:"Form data is not valid", duration:3000 })
+      this.router.navigate(['signin'])
     }
-    
   }
 
   private validateAllFormFields(formGroup : FormGroup){

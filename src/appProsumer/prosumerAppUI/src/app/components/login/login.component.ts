@@ -3,6 +3,8 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
 import { AuthUserService } from 'src/app/services/auth-user.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { CookieService } from "ngx-cookie-service"
 
 @Component({
   selector: 'app-login',
@@ -21,7 +23,9 @@ export class LoginComponent implements OnInit{
   constructor(
     private fb: FormBuilder, 
     private router : Router,
-    private toast : NgToastService
+    private toast : NgToastService,
+    private auth: AuthService,
+    private cookie: CookieService
     ){}
   
   ngOnInit(): void {
@@ -45,14 +49,26 @@ export class LoginComponent implements OnInit{
   onSubmit(){
     this.submitted = true;
     if(this.loginForm.valid){
-      this.toast.success({detail:"Success", summary: "Login successful!", duration:3000});
-      this.router.navigate(['home']);
-      return;
+      this.auth.login(this.loginForm.get('email')?.value, this.loginForm.get('password')?.value)
+      .subscribe(
+        (response) => {
+          this.cookie.set('jwtToken', response);
+          this.toast.success({detail:"Success", summary:"Logged in", duration:3000 })
+          setTimeout(() => {
+            this.router.navigate(['home'])
+          }, 2000);
+        },
+        (error) => {
+          if (error.status === 400) {
+            this.toast.error({detail:"Error", summary:error.error, duration:3000 })
+            this.router.navigate(['signin'])
+          }
+        }
+      );
     }else{
-      this.toast.error({detail:"Error", summary:"Something went wrong!", duration:3000 })
+      this.toast.error({detail:"Error", summary:"Form data is not valid", duration:3000 })
       this.router.navigate(['signin'])
     }
-
   }
 
   private validateAllFormFields(formGroup : FormGroup){
