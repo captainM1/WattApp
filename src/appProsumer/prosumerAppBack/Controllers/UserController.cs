@@ -61,12 +61,6 @@ public class UserController : ControllerBase
         return Ok( JsonSerializer.Serialize(token) );
     }
 
-    [HttpGet("users"),Authorize(Roles = "RegularUser")]
-    public async Task<IActionResult> GetUsers()
-    {
-        var users = await _userRepository.GetAllUsers();
-        return Ok(users);
-    }
     [HttpPost("validate-token")]
     public ActionResult<object> ValidateToken([FromBody] object body)
     {
@@ -94,9 +88,9 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("users")]
-    public async Task<IActionResult> GetUsers()
+    public async Task<ActionResult<IEnumerable<User>>> GetUsers()
     {
-        var users = await _userRepository.GetUsersAsync();
+        var users = await _userRepository.GetAllUsers();
 
         if(users == null)
         {
@@ -122,7 +116,7 @@ public class UserController : ControllerBase
     [HttpPost("send-reset-email")]
     public async Task<IActionResult> SendResetEmail([FromBody] ResetPasswordEmailDto resetPasswordEmailDto)
     {
-        var user = await _userRepository.GetUserByEmailAsync(resetPasswordDto.Email);
+        var user = await _userRepository.GetUserByEmailAsync(resetPasswordEmailDto.Email);
 
         if (user == null)
         {
@@ -138,16 +132,18 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("reset-password")]
-    public async Task<IActionResult> ResetPassword([FromQuery] string token [FromBody] ResetPasswordDto resetPasswordDto)
+    public async Task<IActionResult> ResetPassword([FromQuery] string token,[FromBody] ResetPasswordDto resetPasswordDto)
     {
-        (int?, string?) result = _tokenMaker.ValidateToken(token);
+        bool result = _tokenMaker.ValidateJwtToken(token);
 
-        if (result.Item1 == null)
+        if (result == false)
         {
             return BadRequest("Invalid token");
         }
 
-        Task<User> user = _userRepository.GetUserByIdAsync((int)result.Item1);
+
+        var id = _userService.GetID();
+        Task<User> user = _userRepository.GetUserByIdAsync(Int32.Parse(id));
 
         if (user == null)
         {
@@ -156,12 +152,12 @@ public class UserController : ControllerBase
 
         var userCheck = _userRepository.GetUserByEmailAsync(resetPasswordDto.Email);
 
-        if (userCheck == null || resetPasswordDto.Email != user.Email)
+        if (userCheck == null || resetPasswordDto.Email != user.Result.Email)
         {
             return BadRequest("Invalid email address");
         }
 
-        Boolean action = _userRepository.UpdatePassword(user.Id, resetPasswordDto.Password);
+        var action = _userRepository.UpdatePassword(user.Id, resetPasswordDto.Password).GetAwaiter().GetResult();
 
         if (!action)
         {
@@ -169,5 +165,19 @@ public class UserController : ControllerBase
         }
 
         return Ok(new { message = "Password changed" });
+    }
+    [HttpGet("coordinates")]
+    public async Task<ActionResult<IEnumerable<object>>> GetCoordinatesForAllUsers()
+    {
+        try
+        {
+            var results = await _userService.GetCoordinatesForAllUsers();
+
+            return Ok(results);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 }

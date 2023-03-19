@@ -69,9 +69,9 @@ public class UserRepository : IUserRepository
         await _dbContext.SaveChangesAsync();
         return newUser;
     }
-    public Task<List<User>> GetAllUsers()
+    public async Task<List<User>> GetAllUsers()
     {
-        return _dbContext.Users.ToListAsync();
+        return await _dbContext.Users.ToListAsync();
     }
 
     public async Task<string> GetUsernameByIdAsync(string id)
