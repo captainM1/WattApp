@@ -47,3 +47,16 @@ button{
     text-transform: uppercase;
     margin: 30px 0;
 }
+
+button:hover {
+    background-color: #227982;
+    
+}
+button:active {
+    background-color: #227982;
+    color: white;
+}
+button:focus{
+    background-color: #227982;
+    color: white;
+}
