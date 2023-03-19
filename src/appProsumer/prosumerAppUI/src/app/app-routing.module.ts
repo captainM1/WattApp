@@ -27,10 +27,10 @@ const routes: Routes = [
     path: 'profileConsumer', component: ProfileProsumerComponent
   },
   {
-    path:'home',component:HomeComponent,canActivate:[AuthGuard]
+    path:'reset', component: ResetComponent
   },
   {
-    path:'reset', component: ResetComponent
+    path:'home',component:HomeComponent,canActivate:[AuthGuard]
   },
 ];
 
