@@ -1,9 +1,6 @@
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using prosumerAppBack.Helper;
 using prosumerAppBack.Models;
-using System.Security.Cryptography;
 
 namespace prosumerAppBack.DataAccess;
 
@@ -23,9 +20,9 @@ public class UserRepository : IUserRepository
         return await _dbContext.Users.FindAsync(id);
     }
 
-    public async Task<User> GetUserByUsernameAndPasswordAsync(string username, string password)
+    public async Task<User> GetUserByEmailAndPasswordAsync(string email, string password)
     {
-        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.UserName == username);
+        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
 
         if (user == null)
         {
@@ -35,18 +32,6 @@ public class UserRepository : IUserRepository
         {
             return null;
         }
-        return user;
-    }
-
-    public async Task<User> GetUserByUsernameAsync(string username)
-    {
-        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.UserName == username);
-
-        if (user == null)
-        {
-            return null;
-        }
-
         return user;
     }
 
@@ -61,7 +46,7 @@ public class UserRepository : IUserRepository
 
         return user;
     }
-
+    
     public async Task<User> CreateUser(UserRegisterDto userRegisterDto)
     {
         byte[] salt;
@@ -84,37 +69,75 @@ public class UserRepository : IUserRepository
         await _dbContext.SaveChangesAsync();
         return newUser;
     }
-
-    public Task<List<User>> GetAllUsers()
+    public async Task<List<User>> GetAllUsers()
     {
-        return _dbContext.Users.ToListAsync();
+        return await _dbContext.Users.ToListAsync();
     }
 
-    public async Task<User> CreateUserPasswordResetTokenAsync(User user)
+    public async Task<string> GetUsernameByIdAsync(string id)
     {
-        user.PasswordResetToken = CreateRandomToken();
-        user.ResetTokenExpires = DateTime.Now.AddDays(1);
+        var user = new User();
+        if (Guid.TryParse(id, out Guid guid))
+        {
+            user = await _dbContext.Users.FindAsync(guid);
+        }
+        return user.UserName;
+    }
+    public async Task<IEnumerable<User>> GetUsersAsync()
+    {
+        var users = (IEnumerable<User>)_dbContext.Users.ToListAsync();
+
+        if (users == null)
+        {
+            return null;
+        }
+
+        return users;
+    }
+
+    public async Task<User> UpdateUser(int id, UserUpdateDto userUpdateDto)
+    {
+        User user = await this.GetUserByIdAsync(id);
+
+        if(user == null)
+        {
+            return null;
+        }
+
+        user.UserName = userUpdateDto.Username;
+        user.FirstName = userUpdateDto.FirstName;
+        user.LastName = userUpdateDto.LastName;
+        user.Address = userUpdateDto.Address;
+        user.City = userUpdateDto.City;
+        user.Country = userUpdateDto.Country;
+        user.Email = userUpdateDto.Email;
+        user.PhoneNumber = userUpdateDto.PhoneNumber;
+        
+
+        _dbContext.Users.Update(user);
         await _dbContext.SaveChangesAsync();
 
         return user;
     }
 
-    private string CreateRandomToken()
+    public async Task<Boolean> UpdatePassword(int id, string newPassword)
     {
-        return Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
-    }
-    public async Task<User> GetUserByPasswordResetToken(string token)
-    {
-        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.PasswordResetToken == token);
-        if(user.ResetTokenExpires < DateTime.Now)
-        {
-            user = null;
-        }
+        var user = await this.GetUserByIdAsync(id);
+
         if (user == null)
         {
-            return null;
+            return false;
         }
 
-        return user;
+        byte[] salt;
+        byte[] hash;
+        (salt, hash) = _passwordHasher.HashPassword(newPassword);
+
+        user.Salt = salt;
+        user.PasswordHash = hash;
+
+        await _dbContext.SaveChangesAsync();
+
+        return true;
     }
 }

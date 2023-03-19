@@ -10,6 +10,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { NotauthGuard } from './guards/notauth.guard';
 
 const routes: Routes = [
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
   {
     path: 'signin', component: LoginComponent, canActivate:[NotauthGuard]
   },
@@ -20,10 +21,13 @@ const routes: Routes = [
     path:'sidenav', component: SidenavComponent
   },
   {
-    path:'home',component:HomeComponent
+    path: 'profileConsumer', component: ProfileProsumerComponent
   },
   {
     path: 'profileConsumer', component: ProfileProsumerComponent
+  },
+  {
+    path:'home',component:HomeComponent,canActivate:[AuthGuard]
   },
   {
     path: 'addDevice', component: AddDeviceComponent

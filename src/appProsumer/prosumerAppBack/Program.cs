@@ -52,6 +52,8 @@ builder.Services.AddScoped<IUserRepository,UserRepository>();
 builder.Services.AddScoped<IPasswordHasher,PasswordHasher>();
 builder.Services.AddScoped<ITokenMaker,TokenMaker>();
 builder.Services.AddScoped<IUserService,UserService>();
+builder.Services.AddTransient<EmailService>();
+builder.Services.AddHttpClient<UserService>();
 
 var app = builder.Build();
 
