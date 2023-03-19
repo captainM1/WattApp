@@ -1,0 +1,16 @@
+<div class="outer centriranje">
+    <div class="container">
+        <h3 class="align-center">Add New Device</h3>
+        <div class="forma">
+            <div class="row red1 align-center">
+                <div class="col-sm"><button type="button" (click)="showConsumer=true">Consumer</button></div>
+                <div class="col-sm"><button type="button">Producer</button></div>
+                <div class="col-sm"><button type="button">Storage</button></div>
+            </div>
+            <div class="row red2" *ngIf="showConsumer">
+                <app-add-consumer></app-add-consumer>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary font-weight-bold btn-lock mt-4 mt-2">ADD</button>
+    </div>
+</div>
