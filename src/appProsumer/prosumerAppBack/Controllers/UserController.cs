@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using prosumerAppBack.Helper;
 using Microsoft.EntityFrameworkCore;
 using prosumerAppBack.BusinessLogic;
+using System.Security.Cryptography;
+using prosumerAppBack.DataAccess;
 
 namespace prosumerAppBack.Controllers;
 
@@ -59,6 +61,31 @@ public class UserController : ControllerBase
 
         var token = _tokenMaker.GenerateToken(user);
         return Ok( JsonSerializer.Serialize(token) );
+    }
+
+    [HttpPost("forgot-password")]
+    public async Task<IActionResult> ForgotPassword([FromBody] string email)
+    {
+        var user = await _userRepository.GetUserByEmailAsync(email);
+        if(user == null)
+        {
+            return BadRequest("Email not found");
+        }
+        user = await _userRepository.CreateUserPasswordResetTokenAsync(user);
+
+        return Ok("Reset token created successfully");
+    }
+
+    [HttpPost("reset-password")]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+    {
+        var user = await _userRepository.GetUserByPasswordResetToken(request.PasswordResetToken);
+        if(user == null)
+        {
+            return BadRequest("Reset token not found or expired");
+        }
+        //dodati da se kreira nova sifra i da se reset token vrati na null
+        return Ok("User verified");
     }
 
     [HttpPost("validate-token")]
