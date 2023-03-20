@@ -10,12 +10,12 @@ namespace prosumerAppBack.DataAccess
 
         public MongoDataContext(IConfiguration configuration)
         {
-            var connectionString = configuration.GetConnectionString("MongoConnectionString");
+            var connectionString = configuration.GetConnectionString("mongodb://localhost:27017");
             var client = new MongoClient(connectionString);
-            _mongoDatabase = client.GetDatabase("ime baze");
+            _mongoDatabase = client.GetDatabase("data");    
         }
 
-        public IMongoCollection<Device> Devices => _mongoDatabase.GetCollection<Device>("devices");
+        public IMongoCollection<Device> Devices => _mongoDatabase.GetCollection<Device>("powerusage");
     }
 }
 

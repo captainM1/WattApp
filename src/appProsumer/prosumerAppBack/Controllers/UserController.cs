@@ -76,18 +76,6 @@ public class UserController : ControllerBase
         return Ok("Reset token created successfully");
     }
 
-    [HttpPost("reset-password")]
-    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
-    {
-        var user = await _userRepository.GetUserByPasswordResetToken(request.PasswordResetToken);
-        if(user == null)
-        {
-            return BadRequest("Reset token not found or expired");
-        }
-        //dodati da se kreira nova sifra i da se reset token vrati na null
-        return Ok("User verified");
-    }
-
     [HttpPost("validate-token")]
     public ActionResult<object> ValidateToken([FromBody] object body)
     {
