@@ -1,0 +1,127 @@
+.container{
+    box-sizing: border-box;
+    max-width: 980px;
+    color: white;
+    background-color: #026670;
+    border-radius: 10px;
+    height: 680px;
+    backdrop-filter: blur(8px); 
+    
+}
+#edit-profile{
+  
+    text-align: center;
+    display: contents;
+    color: white;
+
+}
+.row{
+    background: #026670;
+    border-radius: 7px;
+    color: black;
+   
+    
+}
+#notification-component{
+    
+}
+
+label{
+    font-size: 14px;
+    font-weight: 500;
+    padding-left: 5px;
+    color: #026670;
+    font-weight: 500;
+}
+input{
+    font-size: 15px;
+    font-style: oblique;
+    
+}
+input placeholder{
+  color: #026670;
+}
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 21px;
+ 
+  }
+  
+  .switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 13px;
+    width: 14px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  input:checked + .slider {
+    background-color: #026670;
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px #026670;
+  }
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+  
+  
+  .slider.round {
+    border-radius: 34px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }
+.col{
+    padding-top: 30px;
+}
+
+img{
+    margin-left: 16px;
+    border-radius: 10px;
+    margin-top: 10px;
+    border: white 2px solid;
+    
+}
+#image-container{
+    box-shadow: 2 px2px 2px 2px rgba(0, 0, 0, 0.25);
+    margin-top: 10px;
+    border-radius: 10px;
+    padding-top: 0px;
+}
+
+.form-group{
+    padding-top: 7px;
+    padding-bottom: 7px;
+} 
+
