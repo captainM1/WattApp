@@ -1,5 +1,105 @@
 
-<app-sidenav></app-sidenav>
+<div class="float-md-none " style="
+margin-left: 300px;
+max-width: 1300px;
+display: flex;
+margin-top: 120px;
+justify-content: center;
+" id = "outer">
+
+<div class="container-md" style="
+box-sizing: border-box;
+max-width: 980px;
+color: white; 
+background-color: #026670;
+border-radius: 10px;
+height: 660px;
+backdrop-filter: blur(8px); 
+
+">
+
+<div class="row" id="user-info" 
+style="background-color: #026670;
+border-radius: 10px;">
+<div class="col-sm-4 " id="main-info" style="
+                      display: block ruby;
+                      position: relative;
+                      text-align: center;
+                      width: 1000px;
+                      margin-top: 10px;
+                      color: white;
+                      border-radius: 10px;
+                      display: flex;
+justify-content: center;">
+<i class="fa fa-user fa-2x" style="padding-right: 5px; margin-top: 10px;
+               "></i>
+<h1 style="margin-bottom: 0;">Name</h1>
+</div>
+<small style="color: #fff;
+font-style: italic;
+width: 100%;
+text-align: center;
+margin-top: 0;
+padding-bottom: 5px;">User #ID</small>
+</div>
+<div class="row" style="background-color: #EDEAE5; margin: 10px; border-radius: 10px;
+padding-left: 10px;
+padding-top: 20px;
+margin-top: 0px;
+padding-right: 10px;
+padding-bottom: 20px;
+height: 500px;">
+<div class="col-sm-7 " id="form-col" style="margin-top: 25px;">
+<form>
+<div class="form-group">
+<span class="fa fa-envelope p-2" aria-hidden="true"></span>
+<input type="text" class="form-control" id="Email" aria-describedby="emailHelp" placeholder="Enter email">
+</div>
+<div class="form-group">
+<span class="fa fa-lock p-2"></span>
+<input type="password" class="form-control" id="password" placeholder="Password">
+</div>
+<div class="form-group">
+<span class="fa fa-phone-square p-2"></span>
+<input type="text" class="form-control" id="contant-number" placeholder="Contant number">
+</div>
+<div class="form-group">
+<span class="fa fa-location-arrow p-2"></span>
+<input type="text" class="form-control" id="address" placeholder="Address">
+</div>
+<div class="form-group">
+<span class="fa fa-globe p-2"></span>
+<input type="text" class="form-control" id="country" placeholder="Country">
+</div>
+<div class="form-group">
+<span class="fa fa-clock-o  p-2"></span>
+<input type="text" class="form-control" id="timezone" placeholder="Timezone">
+</div>
+
+
+
+</form>
+</div>
+<div class="col-sm-4 " id = "img-section" style="align-self: center; margin-left: 30px;">
+<img src = "../../../assets/icons/images.jpg">
+<br>
+
+<button type="button" class="navigation-btn">SEND REQUEST TO DSO
+for data share</button>
+</div>
+
+</div>
+<div style="text-align: center;">
+<button type="submit" class="btn-edit" routerLink="/editProfile">Edit</button>
+</div>
+</div>
+</div>
+
+
+
+
+<!-- 
+
 <div class="container">
   <div class="row" id="user-info">
           <div class="col" id="main-info" style="display: block ruby;">
@@ -44,4 +144,4 @@
           <button type="button" class="navigation-btn">SEND REQUEST TO DSO
             for data share</button>
     </div>
-  </div>
+  </div> -->
