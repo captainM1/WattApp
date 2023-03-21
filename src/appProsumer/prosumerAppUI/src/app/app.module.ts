@@ -22,6 +22,9 @@ import { ProfileProsumerComponent } from './components/profile-prosumer/profile-
 import { AddDeviceComponent } from './components/add-device/add-device.component';
 import { AddConsumerComponent } from './components/add-consumer/add-consumer.component';
 
+import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
+
+
 
 @NgModule({
   declarations: [
@@ -34,7 +37,9 @@ import { AddConsumerComponent } from './components/add-consumer/add-consumer.com
     AddDeviceComponent,
     AddConsumerComponent,
     ResetComponent,
-    ProfileProsumerComponent
+    ProfileProsumerComponent,
+    EditProfileComponent
+
   ],
   imports: [
     BrowserModule,

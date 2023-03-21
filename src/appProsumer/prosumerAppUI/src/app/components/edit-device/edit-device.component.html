@@ -1,0 +1,60 @@
+<!-- 
+<app-sidenav></app-sidenav> -->
+<div class="container">
+    <div class="row" id="edit-title">
+        <h1 >EDIT DEVICE DETAILS</h1>
+    </div>
+    <div class="row" style="background-color: #EDEAE5;">
+        <div class="col" id="form-col">
+          <form>
+            <div class="form-group">
+              <h4>DEVICE MANUFACTURER</h4>
+              <input type="text" class="form-control" id="manufacturer"  placeholder="SELECT DEVICE MANUFACTURER">
+            </div>
+            <div class="form-group">
+              <h4>WATTAGE</h4>
+              <input type="text" class="form-control" id="wattage"  placeholder="INSERT WATTAGE">
+            </div>
+            <div class="form-group">
+              <h4>USAGE FREQUENCY</h4>
+              <input type="text" class="form-control" id="frequency"  placeholder="INSERT USAGE FREQUENCY">
+            </div>
+            <div class="form-group">
+              <h4>DEVICE MAC ADDRESS</h4>
+              <input type="text" class="form-control" id="mac-address"  placeholder="INSERT DEVICE MAC ADDRESS">
+            </div>
+          </form>
+        </div>
+        <div class="col" id="form-col2">
+          <form>
+            <div class="form-group">
+              <h4>DEVICE NAME</h4>
+              <input type="text" class="form-control" id="manufacturer"  placeholder="INSERT NAME OF DEVICE">
+            </div>
+            <div class="form-group">
+              <h4>USAGE TIME</h4>
+              <input type="text" class="form-control" id="wattage"  placeholder="INSERT USAGE TIME">
+            </div>
+            <div class="form-group">
+              <h4>AGE OF DEVICE</h4>
+              <input type="text" class="form-control" id="frequency"  placeholder="INSERT AGE OF THE DEVICE">
+            </div>
+            <div class="form-group" id="premissions">
+              <h4 class="text-center font-weight-bold pb-2" for="toggle-buttons">Permissions</h4>
+              <hr id="line">
+              <div id="toggle-buttons">
+                  <div class="form-check form-switch pt-3 d-flex justify-content-center">
+                      <label class="form-check-label" id="labela1" for="toggle-button-1">Allow DSO To Collect Data</label>
+                      <input class="form-check-input" type="checkbox" id="toggle-button-1">
+                  </div>
+                  <div class="form-check form-switch d-flex justify-content-center">
+                      <label class="form-check-label" id="labela2" for="toggle-button-2">Allow DSO To Control Consumtion Time</label>
+                      <input class="form-check-input" type="checkbox" id="toggle-button-2">
+                  </div>
+              </div>
+            </div>
+          </form>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary font-weight-bold btn-lock mt-4 mt-2">EDIT</button>
+</div>
