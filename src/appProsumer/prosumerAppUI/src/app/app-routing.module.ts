@@ -14,6 +14,8 @@ import { AuthGuard } from './guards/auth.guard';
 import { NotauthGuard } from './guards/notauth.guard';
 import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
 
+
+
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   {
@@ -26,7 +28,9 @@ const routes: Routes = [
     path:'sidenav', component: SidenavComponent
   },
   {
+
     path: 'profle-prosumer', component: ProfileProsumerComponent
+
   },
   {
     path:'reset', component: ResetComponent
