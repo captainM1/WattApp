@@ -26,7 +26,7 @@ const routes: Routes = [
     path:'sidenav', component: SidenavComponent
   },
   {
-    path: 'profleProsumer', component: ProfileProsumerComponent
+    path: 'profle-prosumer', component: ProfileProsumerComponent
   },
   {
     path:'reset', component: ResetComponent
@@ -35,10 +35,10 @@ const routes: Routes = [
     path:'home',component:HomeComponent,canActivate:[AuthGuard]
   },
   {
-    path: 'addDevice', component: AddDeviceComponent
+    path: 'add-device', component: AddDeviceComponent
   },
   {
-    path: 'editProfile', component: EditProfileComponent
+    path: 'edit-profile', component: EditProfileComponent
   }
 ];
 
