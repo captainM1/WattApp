@@ -2,19 +2,25 @@
     <div class="container">
         <h3 class="align-center">Add New Device</h3>
         <div class="forma">
-            <div class="row red1 align-center">
+            <div class="row align-center">
                 <div class="col-sm"><button type="button" (click)="showConsumer=true; showProducer=false; showStorage=false">Consumer</button></div>
                 <div class="col-sm"><button type="button" (click)="showConsumer=false; showProducer=true; showStorage=false">Producer</button></div>
                 <div class="col-sm"><button type="button" (click)="showConsumer=false; showProducer=false; showStorage=true">Storage</button></div>
             </div>
-            <div class="row red2" *ngIf="showConsumer">
+            <div *ngIf="showConsumer">
+                <form [formGroup]="addConsumerForm" (ngSubmit)="onSubmit()">
                 <app-add-consumer></app-add-consumer>
+                </form>
             </div>
-            <div class="row red2" *ngIf="showProducer">
-                <app-add-producer></app-add-producer>
+            <div *ngIf="showProducer">
+                <form [formGroup]="addProducerForm" (ngSubmit)="onSubmit()">
+                    <app-add-producer></app-add-producer>
+                </form>    
             </div>
-            <div class="row red2" *ngIf="showStorage">
-                <app-add-storage></app-add-storage>
+            <div *ngIf="showStorage">
+                <form [formGroup]="addStorageForm" (ngSubmit)="onSubmit()">
+                    <app-add-storage></app-add-storage>
+                </form>
             </div>
         </div>
         <button type="submit" class="btn btn-primary font-weight-bold btn-lock mt-4 mt-2">ADD</button>
