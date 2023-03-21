@@ -118,11 +118,16 @@ public class UserController : ControllerBase
     [HttpPost("users/{id}")]
     public async Task<IActionResult> UpdateUser(int id, [FromBody] UserUpdateDto userUpdateDto)
     {
-        var user = _userRepository.UpdateUser(id, userUpdateDto);
+        int user = await _userRepository.UpdateUser(id, userUpdateDto);
 
-        if(user == null)
+        if(user == 0)
         {
             return BadRequest("cannot update user");
+        }
+
+        if (user == 1)
+        {
+            return BadRequest("username already exists");
         }
 
         return Ok(new { message = "user updated successfully" });
@@ -156,7 +161,6 @@ public class UserController : ControllerBase
             return BadRequest("Invalid token");
         }
 
-
         var id = _userService.GetID();
         Task<User> user = _userRepository.GetUserByIdAsync(Int32.Parse(id));
 
@@ -181,6 +185,7 @@ public class UserController : ControllerBase
 
         return Ok(new { message = "Password changed" });
     }
+
     [HttpGet("coordinates")]
     public async Task<ActionResult<IEnumerable<object>>> GetCoordinatesForAllUsers()
     {
@@ -195,4 +200,40 @@ public class UserController : ControllerBase
             return StatusCode(500, ex.Message);
         }
     }
+
+    [HttpPost("update-user")]
+    [Authorize]
+    public async Task<IActionResult> UpdateUserInformation([FromBody] UserUpdateDto userUpdateDto)
+    {
+        int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+        User user = await _userRepository.GetUserByIdAsync(userId);
+
+        if(user == null)
+        {
+            return BadRequest("user not found");
+        }
+
+        int check = await _userRepository.UpdateUser(userId, userUpdateDto);
+
+        if(check == 0)
+        {
+            return BadRequest("user cannot be updated");
+        }
+
+        if(check == 1)
+        {
+            return BadRequest("username already exists");
+        }
+
+        return Ok(new { message = "user updated successfully" });
+    }
+
+    [HttpPost("update-user/update-password")]
+    [Authorize]
+    public async Task<IActionResult> UpdateUserPassword(int id, [FromBody] UserUpdateDto userUpdateDto)
+    {
+
+    }
+
 }
