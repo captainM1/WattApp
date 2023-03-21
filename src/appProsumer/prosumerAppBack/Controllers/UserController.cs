@@ -229,11 +229,6 @@ public class UserController : ControllerBase
         return Ok(new { message = "user updated successfully" });
     }
 
-    [HttpPost("update-user/update-password")]
-    [Authorize]
-    public async Task<IActionResult> UpdateUserPassword(int id, [FromBody] UserUpdateDto userUpdateDto)
-    {
 
-    }
 
 }
