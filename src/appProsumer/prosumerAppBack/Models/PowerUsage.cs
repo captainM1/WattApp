@@ -1,12 +1,14 @@
 using System;
+using MongoDB.Bson.Serialization.Attributes;
+
 namespace prosumerAppBack.Models
 {
 	public class PowerUsage
-	{
-		public Guid ID { get; set; }
-		public string? Name { get; set; }
-		public string? OwnerName { get; set; }
-		public string? Manufacurer { get; set; }
+    {
+        [BsonId]
+        public Guid Id { get; set; }
+        public string DeviceName { get; set; }
+        public List<TimestampPowerPair> TimestampPowerPairs { get; set; }
     }
 }
 

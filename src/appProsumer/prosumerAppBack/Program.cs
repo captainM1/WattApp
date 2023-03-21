@@ -60,6 +60,7 @@ builder.Services.AddScoped<IUserRepository,UserRepository>();
 builder.Services.AddScoped<IPasswordHasher,PasswordHasher>();
 builder.Services.AddScoped<ITokenMaker,TokenMaker>();
 builder.Services.AddScoped<IUserService,UserService>();
+builder.Services.AddScoped<IPowerUsageRepository,PowerUsageRepository>();
 builder.Services.AddTransient<EmailService>();
 builder.Services.AddHttpClient<UserService>();
 

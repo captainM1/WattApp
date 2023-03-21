@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 using prosumerAppBack.Models;
 
@@ -8,14 +8,13 @@ namespace prosumerAppBack.DataAccess
 	{
 		private readonly IMongoDatabase _mongoDatabase;
 
-        public MongoDataContext(IConfiguration configuration)
+        public MongoDataContext()
         {
-            var connectionString = configuration.GetConnectionString("mongodb://localhost:27017");
-            var client = new MongoClient(connectionString);
-            _mongoDatabase = client.GetDatabase("data");    
+            var client = new MongoClient("mongodb://localhost:27017");
+            _mongoDatabase = client.GetDatabase("data");
         }
-
-        public IMongoCollection<Device> Devices => _mongoDatabase.GetCollection<Device>("powerusage");
+        public IMongoCollection<PowerUsage> PowerUsage => _mongoDatabase.GetCollection<PowerUsage>("PowerUsage");
+        public IMongoCollection<Device> Devices => _mongoDatabase.GetCollection<Device>("Devices");
     }
 }
 
