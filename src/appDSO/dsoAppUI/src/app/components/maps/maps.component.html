@@ -1,1 +1,7 @@
-<p>maps works!</p>
+<google-map height="400px"
+            width="750px"
+            [center]="center"
+            [zoom]="zoom"
+            (mapClick)="moveMap($event)"
+            (mapMousemove)="move($event)">
+</google-map>
