@@ -18,6 +18,7 @@ import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { HomeComponent } from './components/home/home.component';
 import { ResetComponent } from './components/reset/reset.component';
 
+
 import { ProfileProsumerComponent } from './components/profile-prosumer/profile-prosumer.component';
 import { AddDeviceComponent } from './components/add-device/add-device.component';
 import { AddConsumerComponent } from './components/add-consumer/add-consumer.component';
@@ -58,7 +59,6 @@ import { EditProfileComponent } from './components/edit-profile/edit-profile.com
     MatIconModule,
     FormsModule,
     NgToastModule
-
   ],
   providers: [],
   bootstrap: [AppComponent]
