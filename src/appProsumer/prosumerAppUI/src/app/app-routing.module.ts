@@ -29,9 +29,7 @@ const routes: Routes = [
     path:'sidenav', component: SidenavComponent
   },
   {
-
     path: 'profile-prosumer', component: ProfileProsumerComponent
-
   },
   {
     path:'reset', component: ResetComponent

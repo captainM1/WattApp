@@ -1,74 +1,103 @@
-*{
-    overflow: hidden;
+@font-face {
+    font-family: regular;
+    src: url(../../../assets/fonts/Inter-Regular.ttf);
+}
+#outer{
+    display: flex;
+    width: 1500px;
 }
 
-
-.btn #btn-edit{
-    border-color: 2px solid white;
-}
-img{
-    width: 100%;
-    border-radius: 20px ;
-}
-
-/* Button - send request to DSO for data share */
-.navigation-btn{
-    background-color: #026670;
-    border-radius: 5px;
-    border-style: none;
+#container {
     box-sizing: border-box;
-    color: #FFFFFF;
-    cursor: pointer;
-    width: 60%;
-    font-size: 16px;
-    font-weight: 500;
-    padding-top: 2px;
-    padding: 2px;
-    text-align: center;
-    transition: all .5s;
-    margin-top: 30px;
-    margin-left: 55px;
-}
-    
-.navigation-btn:hover {
-    color: #026670;
-    background-color: white;
-    transition-duration: .1s;
-}
-.btn-edit [_ngcontent-ywm-c56]{
-    overflow:auto;
-}
-.btn-edit{
-           /* position: relative;
-            top: 95px; 
-            left: 435px;
-            */
-            border: 2px solid whitesmoke;
-            padding: 5px;
-            border-radius: 10px;
-            font-weight: 700;
-            /* margin-left: 450px;
-            margin-top:10px; */
-            width: 120px;
-            background-color: #fff;
-            color: #026670;
-            
-            text-align: center;
-            
-}
-.btn-edit:hover{
-    color: #fff;
+    max-width: 1000px;
+    color: white; 
     background-color: #026670;
-    
+    border-radius: 10px;
+    height: 680px;
+    backdrop-filter: blur(8px); 
+    margin-top: 30px;
+    margin-left: 300px;
+    font-family: regular;
 }
 
-/* Forma */
+/* header */
+#user-info{
+    background-color: #026670;
+    border-radius: 10px;
+}
+
+#main-info{
+    display: block ruby;
+    position: relative;
+    text-align: center;
+    width: 1000px;
+    margin-top: 10px;
+    color: white;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+h1{
+    margin: 0;
+    padding-left: 0;
+}
+
+#icon-name{
+    padding-right: 15px; 
+    margin-top: 10px;
+}
+
+.user-id{
+    color: #fff;
+    font-style: italic;
+    width: 100%;
+    text-align: center;
+    margin-top: 0;
+    padding-bottom: 5px;
+}
+
+/* main */
+.row{
+    background-color: #EDEAE5; 
+    margin: 10px; 
+    border-radius: 8px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    max-width: 1000px;
+}
+/* form */
+#form-col{
+    margin-top: 25px;
+}
+form .form-group{
+    margin-top: 0;
+    margin-bottom: 15px;
+    margin-left: 20px;
+}
+
+.form-group label{
+    font-size: 13px;
+	font-weight: 600;
+    color: black;
+    padding-bottom: 5px;
+}
 .form-group input{
     border-radius: 5px;
-    background-color: #f2f2f2;
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
-    font-size: 18px;
-    width: 100%;
+    background-color: #FFFFFF;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    height: 50px;
+    width: 430px;
+    height: fit-content;
+    text-align: center;
+}
+
+.form-group input::placeholder{
+    color: black;
+    font-style: italic;
+    font-size: 12px;
+    opacity: 0.8;
 }
 .form-group input[type = "text"]{
     padding-left: 30px;
@@ -79,7 +108,13 @@ img{
 .form-group span {
     position: absolute;
     left: 0px;
-    top:5px
+    top: 30px;
+    color: black;
+    opacity: 0.7;
+    left: 7px
+}
+.form-group span :focus{
+    display: none;
 }
 input:focus {
     outline: none;
@@ -98,121 +133,60 @@ input:focus {
 .form-group ::placeholder{
     color: #026670;
 }
-/* 
-#user-info{
-    text-align: center;
-}
-*{
-	overflow: hidden;
-}
-#main-info{
-    color: #fff;
-    padding: 10px;
-    padding-bottom: 0px;
-}
-#main-info h1{
-    padding-left: 10px;
-}
-.container{
-    position: absolute;
-    left: 200px;
-    top: 20px;
-    bottom: 40px;
-    background-color: #026670;
-    border-radius: 10px;
-    width: 1180px;
-    height: 700px;
-}
-#user-info{
-    padding: 0;
-}
-.row{
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    
-    margin-left: 45px;
-    margin-right: 45px; 
-    padding-top: 20px;
-    
-    
-}
 
+/* user - user-img */
 img{
-    top: 10px;
-    width: 75%;
-    padding-left: 40px;
-    border-radius: 20px ;
-   
-}
-form{
     width: 100%;
-    margin: 0;
-    
-}
-#form-col {
-    padding-left: 40px;
-    padding-top: 20px;
-    padding-bottom: 20px;
-    padding-right: 40px;
-    margin-left: 40px;
-}
-
-.form-group{
-    color:#026670;
-    font-size: 14px;
-    padding-bottom: 28px;
-    position: relative;
-}
-.form-group ::placeholder{
-    color: #026670;
-}
-.form-group input{
-    border-radius: 5px;
-    background-color: #f2f2f2;
-    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
-    font-size: 18px;
-}
-.form-group input[type = "text"]{
-    padding-left: 30px;
-}
-.form-group input[type = "password"]{
-    padding-left: 30px;
-}
-.form-group span {
-    position: absolute;
-    left: 0px;
-    top:5px
-}
-input:focus {
-    outline: none;
-    box-shadow: 0 0 2px 1px #026670;     
+    border-radius: 20px ;
+    border: 2px solid white;
+    margin-top: 20px;
 }
 
 .navigation-btn{
-
-      background-color: #026670;
-      border-radius: 5px;
-      border-style: none;
-      box-sizing: border-box;
-      color: #FFFFFF;
-      cursor: pointer;
-      width: 50%;
-      font-size: 16px;
-      font-weight: 500;
-      padding-top: 2px;
-      padding: 2px;
-      text-align: center;
-      transition: all .5s;
-      margin-left: 90px;
-      margin-top: 10px;
+    background-color: #026670;
+    border-radius: 10px;
+    border-style: none;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    width: 60%;
+    font-size: 16px;
+    padding: 3px;
+    text-align: center;
+    transition: all .5s;
+    margin-top: 20px;
+    margin-left: 55px;
 }
     
 .navigation-btn:hover {
-      color: #026670;
-      background-color: cadetblue;
-      transition-duration: .1s;
+    color: #026670;
+    background-color: white;
+    transition-duration: .1s;
 }
-    
 
- */
+.btn-edit [_ngcontent-ywm-c56]{
+    overflow:auto;
+}
+
+.btn-edit{
+    border-radius: 17px;
+    background-color:white;
+    color:#026670;
+    font-weight: 600;
+    font-size: 18px;
+    text-transform: uppercase;
+    border: none;
+    filter:drop-shadow(0px 2px 2px rgba(0,0,0,0.25));
+    width: 150px;
+    height: 40px;
+    text-align: center;
+    padding-top: 5px 5px;
+}
+
+.btn-edit:hover{
+    color: #fff;
+    border: 2px solid white;
+    background-color: #026670;
+}
+
+
