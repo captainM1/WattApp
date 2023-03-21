@@ -12,7 +12,10 @@ import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { AuthGuard } from './guards/auth.guard';
 import { NotauthGuard } from './guards/notauth.guard';
+import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
 import { EditDeviceComponent } from './components/edit-device/edit-device.component';
+
+
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -26,9 +29,7 @@ const routes: Routes = [
     path:'sidenav', component: SidenavComponent
   },
   {
-
     path: 'profile-prosumer', component: ProfileProsumerComponent
-
   },
   {
     path:'reset', component: ResetComponent
@@ -38,6 +39,9 @@ const routes: Routes = [
   },
   {
     path: 'add-device', component: AddDeviceComponent
+  },
+  {
+    path: 'edit-profile', component: EditProfileComponent
   },
   {
     path: 'edit-device', component: EditDeviceComponent

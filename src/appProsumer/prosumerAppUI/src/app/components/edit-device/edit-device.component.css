@@ -60,6 +60,7 @@ form
   color: black;
   font-style: italic;
   font-size: 12px;
+  opacity: 0.5;
 }
 
 .form-group input{
