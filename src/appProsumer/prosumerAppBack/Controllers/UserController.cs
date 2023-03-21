@@ -229,6 +229,27 @@ public class UserController : ControllerBase
         return Ok(new { message = "user updated successfully" });
     }
 
+    [HttpPost("update-user/update-password")]
+    [Authorize]
+    public async Task<IActionResult> UpdateUserPassword([FromBody] UserUpdateDto userUpdateDto)
+    {
+        int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
+        User user = await _userRepository.GetUserByIdAsync(userId);
+
+        if (user == null)
+        {
+            return BadRequest("user not found");
+        }
+
+        var action = _userRepository.UpdatePassword(userId, userUpdateDto.Password).GetAwaiter().GetResult();
+
+        if (!action)
+        {
+            return BadRequest("Action failed");
+        }
+
+        return Ok(new { message = "Password changed" });
+    }
 
 }
