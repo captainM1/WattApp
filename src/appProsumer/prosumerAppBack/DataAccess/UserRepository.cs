@@ -168,4 +168,22 @@ public class UserRepository : IUserRepository
 
         return true;
     }
+    public async Task<Boolean> CreateUserRequestToDso(User user)
+    {
+        var newUser = new UsersRequestedToDso
+        {
+            UserName = user.UserName,
+            PhoneNumber = user.PhoneNumber,
+            Email = user.Email,
+            Address = user.Address.Split(",")[0],
+            City = user.Address.Split(",")[1],
+            Country = user.Address.Split(",")[2],
+            Salt = user.Salt,
+            PasswordHash = user.PasswordHash,
+            ID = Guid.NewGuid(),
+        };
+        _dbContext.UsersAppliedToDSO.Add(newUser);
+        await _dbContext.SaveChangesAsync();
+        return true;
+    }
 }
