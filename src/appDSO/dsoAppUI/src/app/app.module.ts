@@ -12,8 +12,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MapsComponent } from './components/maps/maps.component';
+
 import { GoogleMapsModule } from '@angular/google-maps';
+import { MapsComponent } from './components/maps/maps.component';
+
 
 @NgModule({
   declarations: [
