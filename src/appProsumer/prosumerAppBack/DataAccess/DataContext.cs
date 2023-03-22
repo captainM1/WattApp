@@ -11,5 +11,6 @@ namespace prosumerAppBack.DataAccess
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<UsersRequestedToDso> UsersAppliedToDSO { get; set; }
     }
 }
