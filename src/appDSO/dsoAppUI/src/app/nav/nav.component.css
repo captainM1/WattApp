@@ -27,5 +27,11 @@ i{
 }
 small{
     color: white;
-    
+    font-weight: 500;   
+}
+.container{
+    float: flex;
+}
+ul{
+    text-align: right;
 }

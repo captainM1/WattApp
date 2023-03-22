@@ -6,7 +6,7 @@ export const navData = [
         label : 'Home'
     },
     {
-        routeLink: '/',
+        routeLink: '/dashboard',
         icon : 'fa fa-tachometer fa-lg',
         label : 'Dashboard'
     },
