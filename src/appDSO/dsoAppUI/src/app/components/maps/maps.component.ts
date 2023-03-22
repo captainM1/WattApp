@@ -7,8 +7,8 @@ declare var google: any;
   template: '<div #mapContainer class="map-container"></div>',
   styles: [`
     .map-container {
-      height: 400px;
-      width: 750px;
+      height: 300px;
+      width: 500px;
     }
   `]
 })
