@@ -8,6 +8,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using MongoDB.Driver;
 using prosumerAppBack.BusinessLogic;
 using prosumerAppBack.Helper;
 using prosumerAppBack.Models;
@@ -60,8 +61,15 @@ builder.Services.AddScoped<IUserRepository,UserRepository>();
 builder.Services.AddScoped<IPasswordHasher,PasswordHasher>();
 builder.Services.AddScoped<ITokenMaker,TokenMaker>();
 builder.Services.AddScoped<IUserService,UserService>();
+builder.Services.AddScoped<IPowerUsageRepository,PowerUsageRepository>();
 builder.Services.AddTransient<EmailService>();
 builder.Services.AddHttpClient<UserService>();
+builder.Services.AddSingleton<IMongoDatabase>(provider =>
+{
+    var client = new MongoClient("mongodb://localhost:27017");
+    return client.GetDatabase("data");
+});
+builder.Services.AddSingleton<MongoDataContext>();
 
 var app = builder.Build();
 
