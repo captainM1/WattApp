@@ -51,7 +51,7 @@
     
     .sidenav{
         position: absolute;
-        /* height: 100vh; */
+        height: 100vh; 
         background-color: #026670;
         padding: .2rem .2rem;
         transition: all 0.3s ease;

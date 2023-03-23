@@ -12,10 +12,10 @@
                     <div class="panel-body">
                         <form [formGroup] = "loginForm" (ngSubmit)="onSubmit()">
                             <div class="input-group form-group pt-4">
-                                <input class = "form-control"  [ngClass] = "{'is-invalid invalid-input' : submitted && fields['email'].errors}" formControlName = "email" type="text" placeholder="Username/Email">
+                                <input class = "form-control"  [ngClass] = "{'is-invalid invalid-input' : submitted && fields['email'].errors}" formControlName = "email" type="text" placeholder="Email">
                                 <span class="input-group-addon addon-icon" [ngClass]="{'invalid-icon': submitted && fields['email'].errors}"><i class="fa fa-user"></i></span>
                                     <div class="invalid-feedback">
-                                        <span class= "text-danger" *ngIf="submitted && fields['email'].errors?.['required']">*Username is required!</span>
+                                        <span class= "text-danger" *ngIf="submitted && fields['email'].errors?.['required']">*Email is required!</span>
                                         <span class = "text-danger" *ngIf="fields['email'].errors?.['email']">*Please provide a valid email address</span>
                                     </div>
                             </div>
