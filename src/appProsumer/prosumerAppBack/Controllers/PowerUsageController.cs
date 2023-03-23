@@ -12,10 +12,15 @@ public class PowerUsageController : ControllerBase
 {
     private readonly IPowerUsageRepository _powerUsage;
 
-    [HttpGet("power-usage")]
-    public IActionResult GetAll()
+    public PowerUsageController(IPowerUsageRepository powerUsage)
     {
-        var powerUsages = _powerUsage.Get(new ExpressionFilterDefinition<PowerUsage>(null));
+        _powerUsage = powerUsage;
+    }
+
+    [HttpGet("power-usage")]
+    public ActionResult<IEnumerable<PowerUsage>> GetAll()
+    {
+        var powerUsages = _powerUsage.Get();
         return Ok(powerUsages);
     }
 }

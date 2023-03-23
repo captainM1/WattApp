@@ -1,5 +1,6 @@
 import json
 import random
+import uuid
 from datetime import datetime, timedelta
 
 # Define the average power usage of each appliance in watts
@@ -16,8 +17,8 @@ average_power_usages = {
 start_date = datetime(year=2023, month=1, day=1)
 end_date = datetime(year=2023, month=12, day=31)
 
-# Create a dictionary to store the power usage data for each appliance
-power_usage_data = {}
+# Create a list to store the power usage data for each device
+power_usage_data = []
 
 # Simulate power usage for each appliance
 for appliance in average_power_usages:
@@ -28,19 +29,30 @@ for appliance in average_power_usages:
         # Get the average power usage for the current appliance
         average_power_usage = average_power_usages[appliance]
         
-        # Add some random variation to the power usage (between -10% and +10%)
-        power_usage = average_power_usage * random.uniform(0.9, 1.1)
-        
-        # Add the timestamp and power usage pair to the list for every hour
+        # Loop over all 24 hours of the day, generating a timestamp-power usage pair for each hour
         for i in range(24):
-            timestamp = current_date.replace(hour=i, minute=0, second=0, microsecond=0).isoformat()
-            timestamp_power_pairs.append({"timestamp": timestamp, "power_usage": power_usage / 24})
+            # Check if the device is off during this hour
+            is_off = False
+            for start_off_period in range(0, 24, 6):
+                if i >= start_off_period and i < start_off_period+6 and random.random() < 0.2:
+                    is_off = True
+                    break
+            
+            # If the device is off during this hour, set the power usage to 0
+            if is_off:
+                timestamp_power_pairs.append({"timestamp": current_date.replace(hour=i, minute=0, second=0, microsecond=0).isoformat(), "power_usage": 0})
+            else:
+                # Add some random variation to the power usage (between -10% and +10%)
+                power_usage = average_power_usage * random.uniform(0.9, 1.1)
+                
+                # Add the timestamp and power usage pair to the list
+                timestamp_power_pairs.append({"timestamp": current_date.replace(hour=i, minute=0, second=0, microsecond=0).isoformat(), "power_usage": power_usage / 24})
         
         # Move to the next day
         current_date += timedelta(days=1)
     
-    # Add the list of timestamp and power usage pairs to the power usage data dictionary
-    power_usage_data[hash(appliance)] = {"device_id": hash(appliance), "device_name":appliance,"timestamp_power_pairs": timestamp_power_pairs}
+    # Add the dictionary with device id and timestamp/power usage pairs to the power usage data list
+    power_usage_data.append({"device_id": str(uuid.uuid4()),"timestamp_power_pairs": timestamp_power_pairs})
 
 # Write the power usage data to a JSON file
 with open("power_usage_data.json", "w") as f:
