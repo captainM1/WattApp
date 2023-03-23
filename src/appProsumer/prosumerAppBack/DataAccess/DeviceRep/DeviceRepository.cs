@@ -1,10 +1,7 @@
-﻿using System;
-using MongoDB.Bson;
-using MongoDB.Driver;
-using prosumerAppBack.DataAccess;
+﻿using MongoDB.Driver;
 using prosumerAppBack.Models;
 
-namespace prosumerAppBack.BusinessLogic
+namespace prosumerAppBack.DataAccess
 {
 	public class DeviceRepository
 	{

@@ -201,6 +201,27 @@ public class UserController : ControllerBase
         }
     }
 
+    [HttpPost("send-request-to-dso/{id}")]
+    public async Task<IActionResult> CreateRequestForDso(int id)
+    {
+        var user = await _userRepository.GetUserByIdAsync(id);
+        if (user == null) 
+        {
+            return BadRequest("User not found");
+        }
+
+        try
+        {
+            var result = await _userRepository.CreateUserRequestToDso(user);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
     [HttpPost("update-user")]
     [Authorize]
     public async Task<IActionResult> UpdateUserInformation([FromBody] UserUpdateDto userUpdateDto)
