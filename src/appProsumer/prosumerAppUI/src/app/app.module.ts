@@ -46,7 +46,8 @@ import { NavComponent } from './components/nav/nav.component';
     EditDeviceComponent,
     AddProducerComponent,
     AddStorageComponent,
-    NavComponent
+    NavComponent,
+    EditProfileComponent
 
   ],
   imports: [
