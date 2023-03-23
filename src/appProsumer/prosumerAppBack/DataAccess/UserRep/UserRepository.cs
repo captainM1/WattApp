@@ -138,7 +138,6 @@ public class UserRepository : IUserRepository
 
         return user;
     }
-
     public async Task<int> UpdateUser(int id, UserUpdateDto userUpdateDto)
     {
         User user = await this.GetUserByIdAsync(id);

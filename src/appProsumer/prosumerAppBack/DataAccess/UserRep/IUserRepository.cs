@@ -1,3 +1,5 @@
+using prosumerAppBack.Models;
+
 
 public interface IUserRepository
 {
@@ -10,6 +12,6 @@ public interface IUserRepository
     Task<List<User>> GetAllUsers();
     Task<string> GetUsernameByIdAsync(string id);
     Task<Boolean> UpdatePassword(int id, string newPassword);
-    Task<User> UpdateUser(int id, UserUpdateDto userUpdateDto);
+    Task<int> UpdateUser(int id, UserUpdateDto userUpdateDto);
     Task<Boolean> CreateUserRequestToDso(User user);
 }
