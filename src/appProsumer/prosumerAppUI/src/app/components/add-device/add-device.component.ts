@@ -7,4 +7,6 @@ import { Component } from '@angular/core';
 })
 export class AddDeviceComponent {
   showConsumer: boolean = true;
+  showStorage: boolean = false;
+  showProducer: boolean = false;
 }
