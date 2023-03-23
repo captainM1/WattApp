@@ -70,6 +70,7 @@ public class UserRepository : IUserRepository
         await _dbContext.SaveChangesAsync();
         return newUser;
     }
+
     public async Task<List<User>> GetAllUsers()
     {
         return await _dbContext.Users.ToListAsync();
@@ -88,6 +89,7 @@ public class UserRepository : IUserRepository
     {
         return Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
     }
+
     public async Task<User> GetUserByPasswordResetToken(string token)
     {
         var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.PasswordResetToken == token);
@@ -102,6 +104,7 @@ public class UserRepository : IUserRepository
 
         return user;
     }
+
     public async Task<string> GetUsernameByIdAsync(string id)
     {
         var user = new User();
@@ -111,6 +114,7 @@ public class UserRepository : IUserRepository
         }
         return user.UserName;
     }
+
     public async Task<IEnumerable<User>> GetUsersAsync()
     {
         var users = (IEnumerable<User>)_dbContext.Users.ToListAsync();
@@ -123,20 +127,36 @@ public class UserRepository : IUserRepository
         return users;
     }
 
-    public async Task<User> UpdateUser(int id, UserUpdateDto userUpdateDto)
+    public async Task<User> GetUserByUsername(string username)
+    {
+        var user = await _dbContext.Users.FirstOrDefaultAsync(un => un.UserName == username);
+
+        if (user == null)
+        {
+            return null;
+        }
+
+        return user;
+    }
+
+    public async Task<int> UpdateUser(int id, UserUpdateDto userUpdateDto)
     {
         User user = await this.GetUserByIdAsync(id);
 
         if(user == null)
         {
-            return null;
+            return 0;
         }
 
+        var usernameCheck = this.GetUserByUsername(userUpdateDto.Username);
+        if(usernameCheck != null)
+        {
+            return 1; // zauzeto username
+        }
         user.UserName = userUpdateDto.Username;
         user.FirstName = userUpdateDto.FirstName;
         user.LastName = userUpdateDto.LastName;
         user.Address = userUpdateDto.Address;
-        user.City = userUpdateDto.City;
         user.Country = userUpdateDto.Country;
         user.Email = userUpdateDto.Email;
         user.PhoneNumber = userUpdateDto.PhoneNumber;
@@ -145,7 +165,7 @@ public class UserRepository : IUserRepository
         _dbContext.Users.Update(user);
         await _dbContext.SaveChangesAsync();
 
-        return user;
+        return 2; // sve je proslo kako treba
     }
 
     public async Task<Boolean> UpdatePassword(int id, string newPassword)

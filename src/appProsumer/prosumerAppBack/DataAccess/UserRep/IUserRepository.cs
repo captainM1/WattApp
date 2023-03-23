@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
-using prosumerAppBack.Models;
 
 public interface IUserRepository
 {
