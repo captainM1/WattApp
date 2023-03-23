@@ -63,7 +63,6 @@ export class SignupComponent  implements OnInit{
             this.loginForm.reset();
             this.cookie.set("token", token);
             this.toast.success({detail:"Success", summary: "Register successful!", duration:3000});
-            this.router.navigate(['signin']);
         }
       );
     }

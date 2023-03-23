@@ -27,6 +27,7 @@ import { EditDeviceComponent } from './components/edit-device/edit-device.compon
 import { AddProducerComponent } from './components/add-producer/add-producer.component';
 import { AddStorageComponent } from './components/add-storage/add-storage.component';
 import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
+import { DeviceListComponent } from './components/device-list/device-list.component';
 
 
 
@@ -44,7 +45,8 @@ import { EditProfileComponent } from './components/edit-profile/edit-profile.com
     ProfileProsumerComponent,
     EditDeviceComponent,
     AddProducerComponent,
-    AddStorageComponent
+    AddStorageComponent,
+    DeviceListComponent
 
   ],
   imports: [

@@ -38,7 +38,7 @@ export class AuthService {
     });
   }
   getData(){
-    return this.http.get<any>("http://localhost:5172/api/User/username", { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
+    return this.http.get<any>(environment.apiUrl +"/api/User/username", { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
   }
 
 }
