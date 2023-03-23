@@ -1,37 +1,26 @@
-﻿using MongoDB.Driver;
+﻿using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 using prosumerAppBack.Models;
 
 namespace prosumerAppBack.DataAccess
 {
 	public class DeviceRepository
-	{
-		private readonly MongoDataContext _mongoDataContext;
+    {
+        private readonly DataContext _dbContext;
 
-        public DeviceRepository(MongoDataContext mongoDataContext)
+        public DeviceRepository(DataContext dbContext)
         {
-            _mongoDataContext = mongoDataContext;
+            _dbContext = dbContext;
         }
 
         public async Task<Device> GetDeviceByIdAsync(Guid id)
         {
-            var device = await _mongoDataContext.Devices.Find(d => d.ID == id).FirstOrDefaultAsync();
-            if(device == null)
-            {
-                return null;
-            }
-
-            return device;
+            return await _dbContext.Devices.FirstOrDefaultAsync(d => d.ID == id);
         }
 
         public async Task<List<Device>> GetAllDevices()
         {
-            var devices = await _mongoDataContext.Devices.Find(_ => true).ToListAsync();
-            if(devices == null)
-            {
-                return null;
-            }
-
-            return devices;
+            return await _dbContext.Devices.ToListAsync();
         }
     }
 }

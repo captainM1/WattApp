@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { Router } from '@angular/router';
 import { NgToastService } from 'ng-angular-popup';
 import { AuthService } from 'src/app/services/auth.service';
+import { CookieService } from "ngx-cookie-service"
 
 @Component({
   selector: 'app-signup',
@@ -20,7 +21,8 @@ export class SignupComponent  implements OnInit{
     private fb: FormBuilder, 
     private router : Router,
     private toast : NgToastService,
-    private auth: AuthService
+    private auth: AuthService,
+    private cookie: CookieService
     ){}
   
   ngOnInit(): void {
@@ -46,23 +48,24 @@ export class SignupComponent  implements OnInit{
   
   onSubmit(){
     this.submitted = true;
-    if(this.loginForm.valid){
-      this.auth.register(this.loginForm.get('username')?.value, this.loginForm.get('email')?.value,this.loginForm.get('address')?.value,this.loginForm.get('number')?.value,this.loginForm.get('password')?.value)
-      .subscribe(
-        (response) => {
-          this.toast.success({detail:"Success", summary:"Account created", duration:3000 })
-          this.auth.login(this.loginForm.get('email')?.value, this.loginForm.get('password')?.value)
-        },
-        (error) => {
-          if (error.status === 400) {
-            this.toast.error({detail:"Error", summary:error.error, duration:3000 })
-            this.router.navigate(['signin'])
-          }
+    if(this.loginForm.invalid){
+
+      console.log(this.loginForm.value);
+      this.toast.error({detail:"Error", summary:"Something went wrong!", duration:3000 })
+      this.validateAllFormFields(this.loginForm);
+      this.router.navigate(['signup']);
+      return;
+    }else if(this.loginForm.valid){
+      console.log(this.loginForm.value);
+      this.auth.register(this.loginForm.get('username')?.value,this.loginForm.get('email')?.value,this.loginForm.get('address')?.value, this.loginForm.get('phonenumber')?.value, this.loginForm.get('password')?.value,)
+      .subscribe((token) =>
+        {
+            this.loginForm.reset();
+            this.cookie.set("token", token);
+            this.toast.success({detail:"Success", summary: "Register successful!", duration:3000});
+            this.router.navigate(['signin']);
         }
       );
-    }else{
-      this.toast.error({detail:"Error", summary:"Form data is not valid", duration:3000 })
-      this.router.navigate(['signin'])
     }
   }
 

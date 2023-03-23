@@ -17,6 +17,41 @@ namespace prosumerAppBack.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.3");
 
+            modelBuilder.Entity("prosumerAppBack.Models.Device", b =>
+                {
+                    b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("DeviceAge")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("MacAdress")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Manufacurer")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("OwnerId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("UsageFrequency")
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("Wattage")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Devices");
+                });
+
             modelBuilder.Entity("prosumerAppBack.Models.User", b =>
                 {
                     b.Property<Guid>("ID")
