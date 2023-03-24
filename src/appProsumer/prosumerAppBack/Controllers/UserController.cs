@@ -91,7 +91,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("users/{id}")]
-    public async Task<ActionResult<User>> GetUser(int id)
+    public async Task<ActionResult<User>> GetUser(Guid id)
     {
         var user = await _userRepository.GetUserByIdAsync(id);
         if(user == null)
@@ -116,7 +116,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("users/{id}")]
-    public async Task<IActionResult> UpdateUser(int id, [FromBody] UserUpdateDto userUpdateDto)
+    public async Task<IActionResult> UpdateUser(Guid id, [FromBody] UserUpdateDto userUpdateDto)
     {
         var user = _userRepository.UpdateUser(id, userUpdateDto);
 
@@ -147,7 +147,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("reset-password")]
-    public async Task<IActionResult> ResetPassword([FromQuery] string token,[FromBody] ResetPasswordDto resetPasswordDto)
+   /* public async Task<IActionResult> ResetPassword([FromQuery] string token,[FromBody] ResetPasswordDto resetPasswordDto)
     {
         bool result = _tokenMaker.ValidateJwtToken(token);
 
@@ -180,7 +180,7 @@ public class UserController : ControllerBase
         }
 
         return Ok(new { message = "Password changed" });
-    }
+    }*/
     [HttpGet("coordinates")]
     public async Task<ActionResult<IEnumerable<object>>> GetCoordinatesForAllUsers()
     {
@@ -197,7 +197,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("send-request-to-dso/{id}")]
-    public async Task<IActionResult> CreateRequestForDso(int id)
+    public async Task<IActionResult> CreateRequestForDso(Guid id)
     {
         var user = await _userRepository.GetUserByIdAsync(id);
         if (user == null) 
