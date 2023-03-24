@@ -12,6 +12,7 @@ namespace prosumerAppBack.Models
 		public string? MacAdress { get; set; }
 		public bool Status { get; set; }
 		public int DeviceAge { get; set; }
+        public TimeSpan UsageTime { get; set; }
     }
 }
 

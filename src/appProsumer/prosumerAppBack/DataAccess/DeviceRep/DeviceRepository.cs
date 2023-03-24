@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 using prosumerAppBack.Models;
+using prosumerAppBack.Models.Device;
 
 namespace prosumerAppBack.DataAccess
 {
@@ -21,6 +22,24 @@ namespace prosumerAppBack.DataAccess
         public async Task<List<Device>> GetAllDevices()
         {
             return await _dbContext.Devices.ToListAsync();
+        }
+
+        public async Task<Device> AddDevice(Models.Device.AddDeviceDto addDeviceDto)
+        {
+            var newDevice = new Device
+            {
+                ID = Guid.NewGuid(),
+                Name = addDeviceDto.Name,
+                Manufacurer = addDeviceDto.Manufacurer,
+                Wattage = addDeviceDto.Wattage,
+                UsageFrequency = addDeviceDto.UsageFrequency,
+                MacAdress = addDeviceDto.MacAdress,
+                UsageTime = addDeviceDto.UsageTime
+            };
+
+            _dbContext.Devices.Add(newDevice);
+            await _dbContext.SaveChangesAsync();
+            return newDevice;
         }
     }
 }

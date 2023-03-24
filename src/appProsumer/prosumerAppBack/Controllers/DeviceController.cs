@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using prosumerAppBack.BusinessLogic;
 using prosumerAppBack.Models;
+using prosumerAppBack.Models.Device;
 
 namespace prosumerAppBack.Controllers
 {
@@ -38,6 +39,19 @@ namespace prosumerAppBack.Controllers
 
 			return Ok(devices);
 		}
-	}
+
+        [HttpPost("devices/add-new")]
+        public async Task<IActionResult> AddDevice([FromBody] Models.Device.AddDeviceDto addDeviceDto)
+        {
+            var check = await _deviceRepository.AddDevice(addDeviceDto);
+
+            if (check)
+            {
+                return BadRequest("Cannot add device");
+            }
+
+            return Ok(new { message = "Device added" });
+        }
+    }
 }
 
