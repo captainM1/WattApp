@@ -24,6 +24,7 @@
 }
 i{
     color: white;
+    
 }
 small{
     color: white;
@@ -34,4 +35,10 @@ small{
 }
 ul{
     text-align: right;
+}
+a{
+    cursor: pointer;
+}
+@media(min-width: 320px) and (max-width : 480px){
+    
 }
