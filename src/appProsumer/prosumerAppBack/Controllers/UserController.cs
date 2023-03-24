@@ -39,14 +39,13 @@ public class UserController : ControllerBase
     [HttpPost("signup")]
     public async Task<IActionResult> Register([FromBody] UserRegisterDto userRegisterDto)
     {
-        var user = await _userRepository.GetUserByEmailAsync(userRegisterDto.Email);
+
+        var user = await _userRepository.CreateUser(userRegisterDto);
+ 
         if (user != null)
         {
             return BadRequest("email already exist");
         }
-
-        await _userRepository.CreateUser(userRegisterDto);
-
         return Ok(new { message = "User registered successfully" });
     }
 
@@ -61,19 +60,6 @@ public class UserController : ControllerBase
 
         var token = _tokenMaker.GenerateToken(user);
         return Ok( JsonSerializer.Serialize(token) );
-    }
-
-    [HttpPost("forgot-password")]
-    public async Task<IActionResult> ForgotPassword([FromBody] string email)
-    {
-        var user = await _userRepository.GetUserByEmailAsync(email);
-        if(user == null)
-        {
-            return BadRequest("Email not found");
-        }
-        user = await _userRepository.CreateUserPasswordResetTokenAsync(user);
-
-        return Ok("Reset token created successfully");
     }
 
     [HttpPost("validate-token")]
@@ -147,7 +133,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("reset-password")]
-   /* public async Task<IActionResult> ResetPassword([FromQuery] string token,[FromBody] ResetPasswordDto resetPasswordDto)
+    public async Task<IActionResult> ResetPassword([FromQuery] string token,[FromBody] ResetPasswordDto resetPasswordDto)
     {
         bool result = _tokenMaker.ValidateJwtToken(token);
 
@@ -158,21 +144,21 @@ public class UserController : ControllerBase
 
 
         var id = _userService.GetID();
-        Task<User> user = _userRepository.GetUserByIdAsync(Int32.Parse(id));
+        User user = await _userRepository.GetUserByIdAsync(Guid.Parse(id));
 
         if (user == null)
         {
-            return BadRequest("User not found" + user.Id);
+            return BadRequest("User not found" + user.ID);
         }
 
         var userCheck = _userRepository.GetUserByEmailAsync(resetPasswordDto.Email);
 
-        if (userCheck == null || resetPasswordDto.Email != user.Result.Email)
+        if (userCheck == null || resetPasswordDto.Email != user.Email)
         {
             return BadRequest("Invalid email address");
         }
 
-        var action = _userRepository.UpdatePassword(user.Id, resetPasswordDto.Password).GetAwaiter().GetResult();
+        var action = _userRepository.UpdatePassword(user.ID, resetPasswordDto.Password).GetAwaiter().GetResult();
 
         if (!action)
         {
@@ -180,7 +166,7 @@ public class UserController : ControllerBase
         }
 
         return Ok(new { message = "Password changed" });
-    }*/
+    }
     [HttpGet("coordinates")]
     public async Task<ActionResult<IEnumerable<object>>> GetCoordinatesForAllUsers()
     {
