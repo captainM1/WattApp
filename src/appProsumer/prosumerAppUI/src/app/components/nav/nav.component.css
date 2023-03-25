@@ -1,0 +1,44 @@
+.logo{
+    border: none;
+    background-color: #026670;
+}
+.logo img{
+    text-align: center;
+    width: 3rem;
+    min-width: 3rem;
+    height: fit-content;
+    border-radius: 0.4rem;
+    padding: 0.4rem;
+    font-size: 24px;
+    font-weight: 900;
+    cursor: pointer;
+    border: none;
+    background-color: #026670;
+    transition: transform .7s ease-in-out;
+}
+.logo img:hover{
+    transform: rotate(360deg);
+}
+#nav-style{
+    background-color: #026670;
+}
+i{
+    color: white;
+    
+}
+small{
+    color: white;
+    font-weight: 500;   
+}
+.container{
+    float: flex;
+}
+ul{
+    text-align: right;
+}
+a{
+    cursor: pointer;
+}
+@media(min-width: 320px) and (max-width : 480px){
+    
+}

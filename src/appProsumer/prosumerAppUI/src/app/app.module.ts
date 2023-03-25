@@ -26,6 +26,7 @@ import { EditDeviceComponent } from './components/edit-device/edit-device.compon
 import { AddProducerComponent } from './components/add-producer/add-producer.component';
 import { AddStorageComponent } from './components/add-storage/add-storage.component';
 import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
+import { NavComponent } from './components/nav/nav.component';
 
 import { MobNavComponent } from './components/mob-nav/mob-nav.component';
 
@@ -45,13 +46,13 @@ import { MobNavComponent } from './components/mob-nav/mob-nav.component';
     ProfileProsumerComponent,
     EditDeviceComponent,
     AddProducerComponent,
-
     AddStorageComponent,
-
     AddStorageComponent,
-
     EditProfileComponent,
-    MobNavComponent
+    MobNavComponent,
+    AddStorageComponent,
+    NavComponent,
+    EditProfileComponent
 
 
   ],
