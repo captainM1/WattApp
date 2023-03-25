@@ -194,12 +194,12 @@ public class UserRepository : IUserRepository
             UserName = user.UserName,
             PhoneNumber = user.PhoneNumber,
             Email = user.Email,
-            Address = user.Address.Split(",")[0],
-            City = user.Address.Split(",")[1],
-            Country = user.Address.Split(",")[2],
+            Address = user.Address,
+            City = user.City,
+            Country = user.Country,
             Salt = user.Salt,
             PasswordHash = user.PasswordHash,
-            ID = Guid.NewGuid(),
+            ID = user.ID,
         };
         _dbContext.UsersAppliedToDSO.Add(newUser);
         await _dbContext.SaveChangesAsync();

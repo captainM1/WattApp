@@ -1,5 +1,6 @@
 ﻿using System;
 using prosumerAppBack.Models;
+using prosumerAppBack.Models.Device;
 
 namespace prosumerAppBack.BusinessLogic
 {
@@ -7,6 +8,7 @@ namespace prosumerAppBack.BusinessLogic
 	{
 		Task<Device> GetDeviceByIdAsync(Guid id);
 		Task<Device> GetAllDevices();
-	}
+        Task<Boolean> UpdateDevice(Guid id,UpdateDeviceDto updateDeviceDto);
+    }
 }
 

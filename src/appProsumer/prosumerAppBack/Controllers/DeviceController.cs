@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using prosumerAppBack.BusinessLogic;
 using prosumerAppBack.Models;
+using prosumerAppBack.Models.Device;
 
 namespace prosumerAppBack.Controllers
 {
@@ -38,6 +39,19 @@ namespace prosumerAppBack.Controllers
 
 			return Ok(devices);
 		}
-	}
+
+        [HttpPost("devices/update{id}")]
+        public async Task<IActionResult> UpdateDevice(Guid id,[FromBody] UpdateDeviceDto updateDeviceDto)
+        {
+            var check = await _deviceRepository.UpdateDevice(id, updateDeviceDto);
+
+            if (check)
+            {
+                return BadRequest("Device not updated");
+            }
+
+            return Ok(new { message = "Device updated" });
+        }
+    }
 }
 
