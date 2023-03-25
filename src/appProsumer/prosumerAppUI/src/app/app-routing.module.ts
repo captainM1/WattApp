@@ -14,6 +14,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { NotauthGuard } from './guards/notauth.guard';
 import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
 import { EditDeviceComponent } from './components/edit-device/edit-device.component';
+import { NavComponent } from './components/nav/nav.component';
 
 
 
@@ -45,6 +46,9 @@ const routes: Routes = [
   },
   {
     path: 'edit-device', component: EditDeviceComponent
+  },
+  {
+    path:'nav', component:NavComponent
   }
 ];
 
