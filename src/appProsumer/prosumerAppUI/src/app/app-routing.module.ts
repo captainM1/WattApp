@@ -41,15 +41,12 @@ const routes: Routes = [
   },
   {
     path: 'edit-device', component: EditDeviceComponent
-<<<<<<< Updated upstream
-=======
+
   },
-  {
-    path:'nav', component:NavComponent
-  },
+  
   {
     path:'mob-nav', component:MobNavComponent
->>>>>>> Stashed changes
+
   }
 ];
 

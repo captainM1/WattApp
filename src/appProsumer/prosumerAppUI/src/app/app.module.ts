@@ -26,11 +26,9 @@ import { EditDeviceComponent } from './components/edit-device/edit-device.compon
 import { AddProducerComponent } from './components/add-producer/add-producer.component';
 import { AddStorageComponent } from './components/add-storage/add-storage.component';
 import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
-<<<<<<< Updated upstream
-=======
-import { NavComponent } from './components/nav/nav.component';
+
 import { MobNavComponent } from './components/mob-nav/mob-nav.component';
->>>>>>> Stashed changes
+
 
 
 
@@ -47,14 +45,14 @@ import { MobNavComponent } from './components/mob-nav/mob-nav.component';
     ProfileProsumerComponent,
     EditDeviceComponent,
     AddProducerComponent,
-<<<<<<< Updated upstream
-    AddStorageComponent
-=======
+
     AddStorageComponent,
-    NavComponent,
+
+    AddStorageComponent,
+
     EditProfileComponent,
     MobNavComponent
->>>>>>> Stashed changes
+
 
   ],
   imports: [
