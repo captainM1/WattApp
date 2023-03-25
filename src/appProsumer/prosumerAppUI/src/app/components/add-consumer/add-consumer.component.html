@@ -5,13 +5,9 @@
                 <label for="manufacturer">Device Manufacturer</label>
                 <input class = "form-control" formControlName = "manufacturer" type="text" placeholder="Select manufacturer">
             </div>
-            <div class="form-group pt-3">
-                <label for="wattage">Wattage</label>
-                <input class = "form-control" formControlName = "wattage" type="text" placeholder="Insert wattage">
-            </div>
-            <div class="form-group pt-3">
-                <label for="frequency">Usage Frequency</label>
-                <input class = "form-control" formControlName = "frequency" type="text" placeholder="Insert Usage Frequency">
+            <div class="form-group text-right pt-3">
+                <label for="name">Device Name</label>
+                <input class = "form-control" formControlName = "name" type="text" placeholder="Insert Name of Device">
             </div>
             <div class="form-group pt-3">
                 <label for="mac-address">Device Mac Address</label>
@@ -20,16 +16,6 @@
         </div>
     </div>
     <div class="col-sm pb-4 mb-3">
-        <div class="inputi ">
-            <div class="form-group text-right pt-3">
-                <label for="name">Device Name</label>
-                <input class = "form-control" formControlName = "name" type="text" placeholder="Insert Name of Device">
-            </div>
-            <div class="form-group pt-3">
-                <label for="time">Usage Time</label>
-                <input class = "form-control" formControlName = "time" type="text" placeholder="Insert Usage Time">
-            </div>
-        </div>
         <div class="text-center form-group mt-4 pt-3 pb-3 bg-white permissions mx-auto">
             <label class="text-center font-weight-bold pb-2" for="toggle-buttons">Permissions</label>
             <hr>
@@ -45,6 +31,10 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div>
+            <button>Add New Rule</button>
+            <button>Add New Requirement</button>
         </div>
     </div>
 </div>
