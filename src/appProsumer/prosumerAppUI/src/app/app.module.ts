@@ -14,7 +14,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { HomeComponent } from './components/home/home.component';
 import { ResetComponent } from './components/reset/reset.component';
 
@@ -27,6 +26,11 @@ import { EditDeviceComponent } from './components/edit-device/edit-device.compon
 import { AddProducerComponent } from './components/add-producer/add-producer.component';
 import { AddStorageComponent } from './components/add-storage/add-storage.component';
 import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
+<<<<<<< Updated upstream
+=======
+import { NavComponent } from './components/nav/nav.component';
+import { MobNavComponent } from './components/mob-nav/mob-nav.component';
+>>>>>>> Stashed changes
 
 
 
@@ -35,7 +39,6 @@ import { EditProfileComponent } from './components/edit-profile/edit-profile.com
     AppComponent,
     LoginComponent,
     SignupComponent,
-    SidenavComponent,
     HomeComponent,
     ProfileProsumerComponent,
     AddDeviceComponent,
@@ -44,7 +47,14 @@ import { EditProfileComponent } from './components/edit-profile/edit-profile.com
     ProfileProsumerComponent,
     EditDeviceComponent,
     AddProducerComponent,
+<<<<<<< Updated upstream
     AddStorageComponent
+=======
+    AddStorageComponent,
+    NavComponent,
+    EditProfileComponent,
+    MobNavComponent
+>>>>>>> Stashed changes
 
   ],
   imports: [
