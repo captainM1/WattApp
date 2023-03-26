@@ -7,5 +7,7 @@ namespace prosumerAppBack.BusinessLogic
 	public interface IPowerUsageRepository
 	{
 		public IEnumerable<PowerUsage> Get();
-	}
+		public IEnumerable<PowerUsage> PreviousSevenDays();
+
+    }
 }
