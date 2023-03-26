@@ -28,6 +28,7 @@ import { AddProducerComponent } from './components/add-producer/add-producer.com
 import { AddStorageComponent } from './components/add-storage/add-storage.component';
 import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
 import { NavComponent } from './components/nav/nav.component';
+import { MyDevicesComponent } from './components/my-devices/my-devices.component';
 
 
 
@@ -47,7 +48,8 @@ import { NavComponent } from './components/nav/nav.component';
     AddProducerComponent,
     AddStorageComponent,
     NavComponent,
-    EditProfileComponent
+    EditProfileComponent,
+    MyDevicesComponent
 
   ],
   imports: [
