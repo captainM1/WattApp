@@ -16,7 +16,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { HomeComponent } from './components/home/home.component';
 import { ResetComponent } from './components/reset/reset.component';
 
@@ -32,6 +31,9 @@ import { EditProfileComponent } from './components/edit-profile/edit-profile.com
 import { NavComponent } from './components/nav/nav.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { MobNavComponent } from './components/mob-nav/mob-nav.component';
+
+
 
 
 @NgModule({
@@ -39,7 +41,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AppComponent,
     LoginComponent,
     SignupComponent,
-    SidenavComponent,
     HomeComponent,
     ProfileProsumerComponent,
     AddDeviceComponent,
@@ -49,8 +50,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     EditDeviceComponent,
     AddProducerComponent,
     AddStorageComponent,
+    AddStorageComponent,
+    EditProfileComponent,
+    MobNavComponent,
+    AddStorageComponent,
     NavComponent,
     EditProfileComponent
+
 
   ],
   imports: [
