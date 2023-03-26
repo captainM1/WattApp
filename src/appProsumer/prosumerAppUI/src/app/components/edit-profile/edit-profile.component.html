@@ -10,16 +10,16 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row" id = "main-form">
             <div class="col-sm-6"  id = "top" style="margin-top: 30px; margin-bottom: 20px;">
                 <form class="p-3 border" id = "form-user-enter">
                     <div class="form-group" >
                         <label for="username">First Name:</label>
-                        <input style = "width: 100%" type="text" class="form-control" id="first-name" aria-describedby="First Namse" placeholder="Enetr your username">
+                        <input style = "width: 100%" type="text" class="form-control" id="first-name" aria-describedby="First Namse" placeholder="Enetr your first name">
                     </div>
                     <div class="form-group">
                         <label for="First Name">Last Name:</label>
-                        <input style = "width: 100%" type="text" class="form-control" id="last-name" placeholder="Enetr your first name">
+                        <input style = "width: 100%" type="text" class="form-control" id="last-name" placeholder="Enter your last name">
                     </div>
                 </form>
                 <div class="row" id = "img-btn" >
@@ -27,7 +27,7 @@
                         <img src="../../../assets/icons/images.jpg">
                     </div>
                     <div class="row" id="row-img-btn">
-                        <button class="btn-add-img"  type="button"x>Add image</button>
+                        <button class="btn-add-img"  type="button">Add image</button>
                     </div>
                 </div>
             </div>
@@ -55,14 +55,14 @@
                         <input style = "width: 100%" type="text" class="form-control" id="time-zone" placeholder="Select your time zone">
                     </div>
                     <div class="form-group" id = "change-pass">
-                        <button type="submit" id = "change" style="background-color: #026670;
-                        color: white;">Change Password</button>
+                        <button id = "btnbtn"type="button" id = "change" style="background-color: #026670;
+                        color: white;" routerLink="/reset-password">Change Password</button>
                     </div>
                 </form>
             </div>
             
             <div class="row-2"id = "btn-save">
-                <div class="col-sm-6" id="col-img-btn" >
+                <div class="col-sm-6" id="col-img-btn-main" >
                     <button id = "save" type="submit">Save Changes</button>
                 </div>
             </div>
