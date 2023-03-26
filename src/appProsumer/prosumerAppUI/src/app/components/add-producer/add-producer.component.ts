@@ -10,6 +10,7 @@ import { NgToastService } from 'ng-angular-popup';
 export class AddProducerComponent {
   submitted = false;
   addProducerForm!: FormGroup;
+  toggle2Checked = false;
 
   constructor(
     private fb: FormBuilder, 

@@ -1,4 +1,4 @@
-<div class="row pb-3" style="margin-top: 50px;">
+<div class="row pb-4">
     <div class="col-sm">
         <div class="inputi">
             <div class="form-group pt-3">
@@ -26,15 +26,15 @@
                         <input class="form-check-input" type="checkbox" id="toggle-button-1">
                     </div>
                     <div class="form-check form-switch d-flex justify-content-center">
-                        <label class="form-check-label me-4" for="toggle-button-2">Allow DSO To Control Consumtion Time</label>
-                        <input class="form-check-input" type="checkbox" id="toggle-button-2">
+                        <label class="form-check-label me-4" for="toggle-button-2">Allow DSO To Control Consumption Time</label>
+                        <input class="form-check-input" type="checkbox" id="toggle-button-2" [(ngModel)]="toggle2Checked">
                     </div>
                 </div>
             </div>
         </div>
-        <div>
-            <button>Add New Rule</button>
-            <button>Add New Requirement</button>
+        <div class="pt-4">
+            <button class="mx-2">Add New Rule</button>
+            <button class="mx-2" [disabled]="!toggle2Checked">Add New Requirement</button>
         </div>
     </div>
 </div>

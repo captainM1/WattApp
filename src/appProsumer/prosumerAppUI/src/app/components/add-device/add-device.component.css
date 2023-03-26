@@ -107,3 +107,8 @@ button:hover {
     color:white;
     
 }
+
+button:focus{
+    background-color: #227982;
+    color: white;
+}

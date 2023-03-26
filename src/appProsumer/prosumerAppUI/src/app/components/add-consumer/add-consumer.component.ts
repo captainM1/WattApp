@@ -11,12 +11,14 @@ import { NgToastService } from 'ng-angular-popup';
 export class AddConsumerComponent {
   submitted = false;
   addConsumerForm!: FormGroup;
+  toggle2Checked = false;
 
   constructor(
     private fb: FormBuilder, 
     private router : Router,
     private toast : NgToastService
   ){}
+  
 
   onSubmit(){
     this.submitted = true;
