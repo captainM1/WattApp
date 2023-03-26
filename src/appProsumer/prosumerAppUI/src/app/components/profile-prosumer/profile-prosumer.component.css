@@ -2,10 +2,21 @@
     font-family: regular;
     src: url(../../../assets/fonts/Inter-Regular.ttf);
 }
-#outer{
-    display: flex;
-    width: 1500px;
+    /* mobile */
+@media(max-width: 480px) {
+    .mobile{
+        display: contents;
+    }
+    .desktop{
+        display: none;
+    }
 }
+    /* desktop */
+@media(min-width: 481px){
+    .mobile{
+        display: none;
+    }
+
 
 #container {
     box-sizing: border-box;
@@ -19,78 +30,55 @@
     margin-left: 300px;
     font-family: regular;
 }
+    .desktop{
+        display: contents;
+    }
+    .container{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin-top: 0px;
+       
+    }
+
+}
+   
+    
+
 
 /* header */
 #user-info{
     background-color: #026670;
     border-radius: 10px;
-}
-
-#main-info{
-    display: block ruby;
-    position: relative;
+    color: #EDEAE5;
     text-align: center;
-    width: 1000px;
-    margin-top: 10px;
-    color: white;
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
+    padding: 10px;
+   
 }
 
-h1{
-    margin: 0;
-    padding-left: 0;
-}
-
-#icon-name{
-    padding-right: 15px; 
-    margin-top: 10px;
-}
-
-.user-id{
-    color: #fff;
-    font-style: italic;
-    width: 100%;
-    text-align: center;
-    margin-top: 0;
-    padding-bottom: 5px;
-}
 
 /* main */
-.row{
-    background-color: #EDEAE5; 
-    margin: 10px; 
-    border-radius: 8px;
-    padding-left: 10px;
-    padding-right: 10px;
-    padding-bottom: 10px;
-    max-width: 1000px;
-}
+
 /* form */
-#form-col{
-    margin-top: 25px;
-}
-form .form-group{
-    margin-top: 0;
-    margin-bottom: 15px;
-    margin-left: 20px;
+.form-group{
+   margin: 10px;
+   margin-top: 20px;
+   text-align: start;
 }
 
 .form-group label{
-    font-size: 13px;
-	font-weight: 600;
     color: black;
+    font-family: regular;
     padding-bottom: 5px;
+    padding-left: 5px;
 }
 .form-group input{
     border-radius: 5px;
     background-color: #FFFFFF;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-    height: 50px;
-    width: 430px;
-    height: fit-content;
-    text-align: center;
+    width: 650px;
+    
 }
 
 .form-group input::placeholder{
@@ -98,6 +86,7 @@ form .form-group{
     font-style: italic;
     font-size: 12px;
     opacity: 0.8;
+    text-align: start;
 }
 .form-group input[type = "text"]{
     padding-left: 30px;
@@ -105,14 +94,7 @@ form .form-group{
 .form-group input[type = "password"]{
     padding-left: 30px;
 }
-.form-group span {
-    position: absolute;
-    left: 0px;
-    top: 30px;
-    color: black;
-    opacity: 0.7;
-    left: 7px
-}
+
 .form-group span :focus{
     display: none;
 }
@@ -124,22 +106,27 @@ input:focus {
 .form-group{
     color:#026670;
     font-size: 14px;
-    position: relative;
-    width: 100%;
-    height: auto;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    
 }
 .form-group ::placeholder{
     color: #026670;
 }
+.col{
+    background-color: #EDEAE5;
+    border-radius: 15px;
+
+}
 
 /* user - user-img */
 img{
-    width: 100%;
+    width: 40%;
     border-radius: 20px ;
     border: 2px solid white;
     margin-top: 20px;
+}
+small{
+    color: #026670;
+    margin-right: 10px;
 }
 
 .navigation-btn{
@@ -188,5 +175,3 @@ img{
     border: 2px solid white;
     background-color: #026670;
 }
-
-
