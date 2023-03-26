@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
+using prosumerAppBack.BusinessLogic;
 using prosumerAppBack.Models;
 using prosumerAppBack.Models.Device;
 
 namespace prosumerAppBack.DataAccess
 {
-	public class DeviceRepository
+	public class DeviceRepository: IDeviceRepository
     {
         private readonly DataContext _dbContext;
 
@@ -19,9 +20,10 @@ namespace prosumerAppBack.DataAccess
             return await _dbContext.Devices.FirstOrDefaultAsync(d => d.ID == id);
         }
 
-        public async Task<List<Device>> GetAllDevices()
+        public async Task<Device> GetAllDevices()
         {
-            return await _dbContext.Devices.ToListAsync();
+            return null;
+            //return await _dbContext.Devices.ToListAsync();
         }
         public async Task<Boolean> UpdateDevice(Guid id, UpdateDeviceDto deviceUpdateDto)
         {
@@ -31,7 +33,6 @@ namespace prosumerAppBack.DataAccess
                 return false;
             }
             updatedDevice.Manufacturer = deviceUpdateDto.Manufacturer;
-            updatedDevice.UsageFrequency = deviceUpdateDto.UsageFrequency;
             updatedDevice.MacAdress = deviceUpdateDto.MacAdress;
             updatedDevice.Name = deviceUpdateDto.Name;
             updatedDevice.DeviceAge = deviceUpdateDto.DeviceAge;
@@ -43,6 +44,15 @@ namespace prosumerAppBack.DataAccess
             await _dbContext.SaveChangesAsync();
 
             return true;
+        }
+        public IEnumerable<Device> GetDevicesForUser(Guid userID)
+        {
+            var devices = from deviceOwner in _dbContext.Set<DeviceOwners>()
+                join device in _dbContext.Set<Device>() on deviceOwner.DeviceID equals device.ID
+                where deviceOwner.UserID == userID
+                select device;
+                      
+            return devices.ToList();
         }
     }
 }

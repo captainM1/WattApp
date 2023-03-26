@@ -8,6 +8,7 @@ using prosumerAppBack.Helper;
 using Microsoft.EntityFrameworkCore;
 using prosumerAppBack.BusinessLogic;
 using System.Security.Cryptography;
+using prosumerAppBack.BusinessLogic.DeviceService;
 using prosumerAppBack.DataAccess;
 
 namespace prosumerAppBack.Controllers;
@@ -20,19 +21,23 @@ public class UserController : ControllerBase
     private readonly ITokenMaker _tokenMaker;
     private readonly IUserService _userService;
     private readonly IEmailService _emailService;
+    private readonly IDeviceService _deviceService;
 
-    public UserController(IUserRepository userRepository,ITokenMaker tokenMaker, IUserService userService, EmailService emailService)
+    public UserController(IUserRepository userRepository,ITokenMaker tokenMaker, IUserService userService, IEmailService emailService, IDeviceService deviceService)
     {
         _userRepository = userRepository;
         _tokenMaker = tokenMaker;
         _userService = userService;
         _emailService = emailService;
+        _deviceService = deviceService;
     }
 
     [HttpGet("username")]
     public ActionResult<string> GetData()
     {
         var id = _userService.GetID();
+        if (id == null)
+            return BadRequest("Username not found");
         var username = _userRepository.GetUsernameByIdAsync(id);
         return Ok(JsonSerializer.Serialize(username));
     }
@@ -272,5 +277,16 @@ public class UserController : ControllerBase
 
         return Ok(new { message = "Password changed" });
     }
+    [HttpGet("{userID}/devices")]
+    public IActionResult GetDevicesForUser(Guid userID)
+    {
+        var devices = _deviceService.GetDevicesForUser(userID);
 
+        if (devices == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(devices);
+    }
 }

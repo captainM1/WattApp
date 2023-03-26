@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace prosumerAppBack.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,11 +16,10 @@ namespace prosumerAppBack.Migrations
                 columns: table => new
                 {
                     ID = table.Column<Guid>(type: "TEXT", nullable: false),
+                    DeviceID = table.Column<int>(type: "INTEGER", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: true),
-                    OwnerId = table.Column<string>(type: "TEXT", nullable: true),
-                    Manufacurer = table.Column<string>(type: "TEXT", nullable: true),
+                    Manufacturer = table.Column<string>(type: "TEXT", nullable: true),
                     Wattage = table.Column<double>(type: "REAL", nullable: false),
-                    UsageFrequency = table.Column<double>(type: "REAL", nullable: false),
                     MacAdress = table.Column<string>(type: "TEXT", nullable: true),
                     Status = table.Column<bool>(type: "INTEGER", nullable: false),
                     DeviceAge = table.Column<int>(type: "INTEGER", nullable: false)
@@ -74,19 +73,52 @@ namespace prosumerAppBack.Migrations
                 {
                     table.PrimaryKey("PK_UsersAppliedToDSO", x => x.ID);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "DeviceOwners",
+                columns: table => new
+                {
+                    DeviceID = table.Column<Guid>(type: "TEXT", nullable: false),
+                    UserID = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ID = table.Column<Guid>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DeviceOwners", x => new { x.DeviceID, x.UserID });
+                    table.ForeignKey(
+                        name: "FK_DeviceOwners_Devices_DeviceID",
+                        column: x => x.DeviceID,
+                        principalTable: "Devices",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DeviceOwners_Users_UserID",
+                        column: x => x.UserID,
+                        principalTable: "Users",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DeviceOwners_UserID",
+                table: "DeviceOwners",
+                column: "UserID");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "DeviceOwners");
+
+            migrationBuilder.DropTable(
+                name: "UsersAppliedToDSO");
+
+            migrationBuilder.DropTable(
                 name: "Devices");
 
             migrationBuilder.DropTable(
                 name: "Users");
-
-            migrationBuilder.DropTable(
-                name: "UsersAppliedToDSO");
         }
     }
 }

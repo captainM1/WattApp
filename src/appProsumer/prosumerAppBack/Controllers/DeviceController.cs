@@ -9,11 +9,11 @@ namespace prosumerAppBack.Controllers
 	[ApiController]
 	public class DeviceController : ControllerBase
 	{
-		private readonly IDevicesRepossitory _deviceRepository;
+		private readonly IDeviceRepository _deviceRepository;
 
-		public DeviceController(IDevicesRepossitory devicesRepossitory)
+		public DeviceController(IDeviceRepository deviceRepository)
 		{
-			_deviceRepository = devicesRepossitory;
+			_deviceRepository = deviceRepository;
 		}
 
 		[HttpGet("devices/{id}")]
