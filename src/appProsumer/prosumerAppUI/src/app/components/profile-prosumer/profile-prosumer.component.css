@@ -16,11 +16,13 @@
     .mobile{
         display: none;
     }
+    .desktop{
+        display: contents;
+    }
 
+}
 
-
-
-#container {
+/* #container {
     box-sizing: border-box;
     max-width: 1000px;
     color: white; 
@@ -31,20 +33,16 @@
     margin-top: 30px;
     margin-left: 300px;
     font-family: regular;
-}
-    .desktop{
-        display: contents;
-    }
+} */
+    
     .container{
         display: flex;
         justify-content: center;
         align-items: center;
         height: 100vh;
-        margin-top: 0px;
        
     }
 
-}
    
     
 

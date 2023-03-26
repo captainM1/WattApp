@@ -26,9 +26,6 @@ const routes: Routes = [
     path:'signup', component: SignupComponent
   },
   {
-    path: 'profile-prosumer', component: ProfileProsumerComponent
-  },
-  {
     path:'reset', component: ResetComponent
   },
   {
@@ -49,6 +46,9 @@ const routes: Routes = [
   },
   {
     path:'nav', component:NavComponent
+  },
+  {
+    path:'profile-prosumer', component:ProfileProsumerComponent
   }
 ];
 
