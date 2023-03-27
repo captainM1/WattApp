@@ -18,7 +18,10 @@ import { MapsComponent } from './components/maps/maps.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { NgChartsModule } from 'ng2-charts';
 import * as CanvasJSAngularChart from '../assets/canvasjs.angular.component';
-import { NavComponent } from './nav/nav.component';
+import { NavComponent } from './components/nav/nav.component';
+import { HomeComponent } from './components/home/home.component';
+import {MatTableModule} from '@angular/material/table';
+import { TableComponent } from './components/table/table.component';
 var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
 
 
@@ -29,7 +32,9 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     MapsComponent,
     DashboardComponent,
     CanvasJSChart,
-    NavComponent
+    NavComponent,
+    HomeComponent,
+    TableComponent
   ],
   imports: [
     BrowserModule,

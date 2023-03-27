@@ -9,11 +9,11 @@ namespace prosumerAppBack.Controllers
 	[ApiController]
 	public class DeviceController : ControllerBase
 	{
-		private readonly IDevicesRepossitory _deviceRepository;
+		private readonly IDeviceRepository _deviceRepository;
 
-		public DeviceController(IDevicesRepossitory devicesRepossitory)
+		public DeviceController(IDeviceRepository deviceRepository)
 		{
-			_deviceRepository = devicesRepossitory;
+			_deviceRepository = deviceRepository;
 		}
 
 		[HttpGet("devices/{id}")]
@@ -34,11 +34,25 @@ namespace prosumerAppBack.Controllers
 			var devices = await _deviceRepository.GetAllDevices();
 			if(devices == null)
 			{
-				return BadRequest("Not found");
+				return BadRequest("Not devices foundd");
 			}
 
 			return Ok(devices);
 		}
+
+        [HttpPost("devices/update{id}")]
+        public async Task<IActionResult> UpdateDevice(Guid id,[FromBody] UpdateDeviceDto updateDeviceDto)
+        {
+            var check = await _deviceRepository.UpdateDevice(id, updateDeviceDto);
+
+            if (check)
+            {
+                return BadRequest("Device not updated");
+            }
+
+            return Ok(new { message = "Device updated" });
+        }
+    }
 
         [HttpPost("devices/add-new")]
         public async Task<IActionResult> AddDevice([FromBody] Models.Device.AddDeviceDto addDeviceDto)

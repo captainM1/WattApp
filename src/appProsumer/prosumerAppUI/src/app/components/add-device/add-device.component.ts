@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NgToastService } from 'ng-angular-popup';
+import { MessageService } from 'primeng/api';
+//import { NgToastService } from 'ng-angular-popup';
 @Component({
   selector: 'app-add-device',
   templateUrl: './add-device.component.html',
@@ -20,7 +21,8 @@ export class AddDeviceComponent {
   constructor(
     private fb: FormBuilder, 
     private router : Router,
-    private toast : NgToastService
+    //private toast : NgToastService
+    private messageService: MessageService
   ){}
 
   onSubmit(){/* Ovo nije dobro;

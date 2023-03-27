@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using prosumerAppBack.Models.Device;
 
 namespace prosumerAppBack.Models
 {
@@ -19,5 +20,7 @@ namespace prosumerAppBack.Models
         public string? Country { get; set; }
         public string? Role { get; set; }
         public string? Email { get; set; }
+
+        public virtual ICollection<DeviceOwners> DeviceOwners { get; set; }
     }
 }

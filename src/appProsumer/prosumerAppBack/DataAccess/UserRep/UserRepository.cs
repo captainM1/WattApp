@@ -16,7 +16,7 @@ public class UserRepository : IUserRepository
         _passwordHasher = passwordHasher;
 
     }
-    public async Task<User> GetUserByIdAsync(int id)
+    public async Task<User> GetUserByIdAsync(Guid id)
     {
         return await _dbContext.Users.FindAsync(id);
     }
@@ -105,13 +105,9 @@ public class UserRepository : IUserRepository
         return user;
     }
 
-    public async Task<string> GetUsernameByIdAsync(string id)
-    {
-        var user = new User();
-        if (Guid.TryParse(id, out Guid guid))
-        {
-            user = await _dbContext.Users.FindAsync(guid);
-        }
+    public async Task<string> GetUsernameByIdAsync(Guid id)
+    { 
+        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.ID == id);
         return user.UserName;
     }
 
@@ -138,7 +134,7 @@ public class UserRepository : IUserRepository
 
         return user;
     }
-    public async Task<int> UpdateUser(int id, UserUpdateDto userUpdateDto)
+    public async Task<int> UpdateUser(Guid id, UserUpdateDto userUpdateDto)
     {
         User user = await this.GetUserByIdAsync(id);
 
@@ -167,7 +163,7 @@ public class UserRepository : IUserRepository
         return 2; // sve je proslo kako treba
     }
 
-    public async Task<Boolean> UpdatePassword(int id, string newPassword)
+    public async Task<Boolean> UpdatePassword(Guid id, string newPassword)
     {
         var user = await this.GetUserByIdAsync(id);
 
@@ -194,12 +190,12 @@ public class UserRepository : IUserRepository
             UserName = user.UserName,
             PhoneNumber = user.PhoneNumber,
             Email = user.Email,
-            Address = user.Address.Split(",")[0],
-            City = user.Address.Split(",")[1],
-            Country = user.Address.Split(",")[2],
+            Address = user.Address,
+            City = user.City,
+            Country = user.Country,
             Salt = user.Salt,
             PasswordHash = user.PasswordHash,
-            ID = Guid.NewGuid(),
+            ID = user.ID,
         };
         _dbContext.UsersAppliedToDSO.Add(newUser);
         await _dbContext.SaveChangesAsync();

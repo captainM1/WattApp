@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NgToastService } from 'ng-angular-popup';
+//import { NgToastService } from 'ng-angular-popup';
 import { AuthService } from 'src/app/services/auth.service';
 import { CookieService } from "ngx-cookie-service"
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-signup',
@@ -20,7 +21,8 @@ export class SignupComponent  implements OnInit{
   constructor(
     private fb: FormBuilder, 
     private router : Router,
-    private toast : NgToastService,
+    //private toast : NgToastService,
+    private messageService:MessageService,
     private auth: AuthService,
     private cookie: CookieService
     ){}
@@ -50,20 +52,17 @@ export class SignupComponent  implements OnInit{
     this.submitted = true;
     if(this.loginForm.invalid){
 
-      console.log(this.loginForm.value);
-      this.toast.error({detail:"Error", summary:"Something went wrong!", duration:3000 })
+      this.messageService.add({ severity: 'error', summary: 'Invalid data', detail: 'Invalid data format' });  
       this.validateAllFormFields(this.loginForm);
       this.router.navigate(['signup']);
       return;
     }else if(this.loginForm.valid){
-      console.log(this.loginForm.value);
       this.auth.register(this.loginForm.get('username')?.value,this.loginForm.get('email')?.value,this.loginForm.get('address')?.value, this.loginForm.get('phonenumber')?.value, this.loginForm.get('password')?.value,)
-      .subscribe((token) =>
+      .subscribe((message) =>
         {
             this.loginForm.reset();
-            this.cookie.set("token", token);
-            this.toast.success({detail:"Success", summary: "Register successful!", duration:3000});
-            this.router.navigate(['signin']);
+            this.messageService.add({ severity: 'success', summary: 'Register success', detail: message });
+            this.router.navigate(['signin'])
         }
       );
     }

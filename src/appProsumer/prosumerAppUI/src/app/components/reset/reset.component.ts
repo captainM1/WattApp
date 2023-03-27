@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControlOptions, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NgToastService } from 'ng-angular-popup';
+import { MessageService } from 'primeng/api';
+//import { NgToastService } from 'ng-angular-popup';
 import { ConfirmPasswordValidator } from 'src/app/helpers/confirm-password.validator';
 
 @Component({
@@ -23,7 +24,8 @@ export class ResetComponent implements OnInit
   constructor(
     private fb: FormBuilder,
     private router : Router,
-    private toast : NgToastService
+    //private toast : NgToastService
+    private messageService:MessageService
   ){}
 
   ngOnInit(): void {
@@ -57,11 +59,11 @@ export class ResetComponent implements OnInit
   {
     this.submitted = true;
     if(this.resetForm.valid){
-      this.toast.success({detail:"Success", summary: "Password reset successfully!", duration:3000});
+      this.messageService.add({ severity: 'error', summary: 'Success', detail: 'Password reset successfully!' });
       this.router.navigate(['signin']);
       return;
     }else{
-      this.toast.error({detail:"Error", summary:"Something went wrong!", duration:3000 })
+      this.messageService.add({ severity: 'error', summary: 'Error reseting password', detail: 'Try again' });
       this.router.navigate(['reset'])
     }
   }
