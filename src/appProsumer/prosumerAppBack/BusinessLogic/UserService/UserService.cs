@@ -18,21 +18,27 @@ public class UserService:IUserService
         _httpClient = httpClient;
         _dbContext = dbContext;
     }
-    public string GetID()
+
+    public Guid? GetID()
     {
         var token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
         var handler = new JwtSecurityTokenHandler();
         try
         {
             var jwtToken = handler.ReadJwtToken(token);
-            var userIdClaim = jwtToken.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Name);
+            var userIdClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "unique_name");
             if (userIdClaim != null)
             {
-                return userIdClaim.Value;
+                Guid userIdGuid;
+                if (Guid.TryParse(userIdClaim.Value, out userIdGuid))
+                {
+                    return userIdGuid;
+                }
             }
+
             return null;
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             // Log the exception
             return null;

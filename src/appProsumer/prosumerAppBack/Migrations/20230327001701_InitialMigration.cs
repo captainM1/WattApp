@@ -21,8 +21,7 @@ namespace prosumerAppBack.Migrations
                     Manufacturer = table.Column<string>(type: "TEXT", nullable: true),
                     Wattage = table.Column<double>(type: "REAL", nullable: false),
                     MacAdress = table.Column<string>(type: "TEXT", nullable: true),
-                    Status = table.Column<bool>(type: "INTEGER", nullable: false),
-                    DeviceAge = table.Column<int>(type: "INTEGER", nullable: false)
+                    Status = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {

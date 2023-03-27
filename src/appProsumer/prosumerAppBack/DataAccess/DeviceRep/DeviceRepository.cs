@@ -17,13 +17,12 @@ namespace prosumerAppBack.DataAccess
 
         public async Task<Device> GetDeviceByIdAsync(Guid id)
         {
-            return await _dbContext.Devices.FirstOrDefaultAsync(d => d.ID == id);
+            return await _dbContext.Devices.FindAsync(id);
         }
 
-        public async Task<Device> GetAllDevices()
+        public async Task<List<Device>> GetAllDevices()
         {
-            return null;
-            //return await _dbContext.Devices.ToListAsync();
+            return await _dbContext.Devices.ToListAsync();
         }
         public async Task<Boolean> UpdateDevice(Guid id, UpdateDeviceDto deviceUpdateDto)
         {
@@ -35,7 +34,6 @@ namespace prosumerAppBack.DataAccess
             updatedDevice.Manufacturer = deviceUpdateDto.Manufacturer;
             updatedDevice.MacAdress = deviceUpdateDto.MacAdress;
             updatedDevice.Name = deviceUpdateDto.Name;
-            updatedDevice.DeviceAge = deviceUpdateDto.DeviceAge;
             updatedDevice.Wattage = deviceUpdateDto.Wattage;
 
 

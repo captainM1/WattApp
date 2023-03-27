@@ -16,8 +16,7 @@ namespace prosumerAppBack.Models.Device
 		public string? MacAdress { get; set; }
 		
 		public bool Status { get; set; }
-		public int DeviceAge { get; set; }
-		
+
 		public virtual ICollection<DeviceOwners> DeviceOwners { get; set; }
     }
 }
