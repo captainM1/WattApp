@@ -10,7 +10,7 @@ public interface IUserRepository
     Task<User> CreateUserPasswordResetTokenAsync(User user);
     Task<User> GetUserByPasswordResetToken(string token);
     Task<List<User>> GetAllUsers();
-    Task<string> GetUsernameByIdAsync(string id);
+    Task<string> GetUsernameByIdAsync(Guid id);
     Task<Boolean> UpdatePassword(Guid id, string newPassword);
     Task<int> UpdateUser(Guid id, UserUpdateDto userUpdateDto);
     Task<Boolean> CreateUserRequestToDso(User user);

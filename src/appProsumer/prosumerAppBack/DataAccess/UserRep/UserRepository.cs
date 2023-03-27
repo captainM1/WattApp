@@ -105,13 +105,9 @@ public class UserRepository : IUserRepository
         return user;
     }
 
-    public async Task<string> GetUsernameByIdAsync(string id)
-    {
-        var user = new User();
-        if (Guid.TryParse(id, out Guid guid))
-        {
-            user = await _dbContext.Users.FindAsync(guid);
-        }
+    public async Task<string> GetUsernameByIdAsync(Guid id)
+    { 
+        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.ID == id);
         return user.UserName;
     }
 

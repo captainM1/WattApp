@@ -35,10 +35,16 @@ public class UserController : ControllerBase
     [HttpGet("username")]
     public async Task<ActionResult<string>> Username()
     {
-        var id = _userService.GetID();
-        if (id == null)
-            return BadRequest("Username not found");
-        var username = await _userRepository.GetUsernameByIdAsync(id);
+        Guid? nullableGuid = _userService.GetID();
+
+        if (nullableGuid == null)
+        {
+            return BadRequest("Guid is null.");
+        }
+
+        Guid nonNullableGuid = nullableGuid.Value;
+        Console.WriteLine(nonNullableGuid);
+        var username = await _userRepository.GetUsernameByIdAsync(nonNullableGuid);
         return Ok(JsonSerializer.Serialize(username));
     }
     [HttpPost("signup")]
@@ -166,8 +172,7 @@ public class UserController : ControllerBase
             return BadRequest("Invalid token");
         }
 
-        //var id = _userService.GetID();
-        Guid id = Guid.NewGuid();
+        var id = _userService.GetID().Value;
         Task<User> user = _userRepository.GetUserByIdAsync(id);
 
         if (user == null)
@@ -182,12 +187,12 @@ public class UserController : ControllerBase
             return BadRequest("Invalid email address");
         }
 
-        //var action = _userRepository.UpdatePassword(user.Id, resetPasswordDto.Password).GetAwaiter().GetResult();
+        var action = _userRepository.UpdatePassword(user.Result.ID, resetPasswordDto.Password).GetAwaiter().GetResult();
 
-        //if (!action)
-        //{
-        //    return BadRequest("Action failed");
-        //}
+        if (!action)
+        {
+            return BadRequest("Action failed");
+        }
 
         return Ok(new { message = "Password changed" });
     }
@@ -232,8 +237,7 @@ public class UserController : ControllerBase
     [Authorize]
     public async Task<IActionResult> UpdateUserInformation([FromBody] UserUpdateDto userUpdateDto)
     {
-        //int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-        var userId = new Guid();
+        Guid userId = _userService.GetID().Value;
 
         User user = await _userRepository.GetUserByIdAsync(userId);
 
@@ -261,9 +265,7 @@ public class UserController : ControllerBase
     [Authorize]
     public async Task<IActionResult> UpdateUserPassword([FromBody] UserUpdateDto userUpdateDto)
     {
-        //int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-        var userId = new Guid();
+        Guid userId = _userService.GetID().Value;
 
         User user = await _userRepository.GetUserByIdAsync(userId);
 
