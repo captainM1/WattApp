@@ -8,6 +8,6 @@ namespace prosumerAppBack.BusinessLogic
 	{
 		public IEnumerable<PowerUsage> Get();
 		public IEnumerable<PowerUsage> PreviousSevenDays();
-
+        public IEnumerable<PowerUsage> NextSevenDays();
     }
 }

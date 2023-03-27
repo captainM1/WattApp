@@ -30,4 +30,11 @@ public class PowerUsageController : ControllerBase
         var powerUsages = _powerUsage.PreviousSevenDays();
         return Ok(powerUsages);
     }
+
+    [HttpGet("power-usage/next-week")]
+    public ActionResult<IEnumerable<PowerUsage>> GetDeviceConsumptionNextWeek()
+    {
+        var powerUsages = _powerUsage.NextSevenDays();
+        return Ok(powerUsages);
+    }
 }

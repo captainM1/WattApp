@@ -72,4 +72,35 @@ public class PowerUsageRepository:IPowerUsageRepository
 
         return previousSevenDaysUsage;
     }
+
+    public IEnumerable<PowerUsage> NextSevenDays()
+    {
+        DateTime endDate = DateTime.Now.Date.AddDays(1);
+        DateTime startDate = endDate.AddDays(6);
+
+        List<PowerUsage> nextSevenDaysUsage = new List<PowerUsage>();
+
+        for (DateTime date = startDate; date <= endDate; date = date.AddDays(1))
+        {
+            var oneDayPowerPairs = new List<TimestampPowerPair>();
+            foreach (var powerUsage in mongoCollection.AsQueryable())
+            {
+                foreach (var pair in powerUsage.TimestampPowerPairs)
+                {
+                    if (pair.Timestamp == date.Date)
+                    {
+                        oneDayPowerPairs.Add(pair);
+                    }
+                }
+
+                nextSevenDaysUsage.Add(new PowerUsage
+                {
+                    Id = powerUsage.Id,
+                    TimestampPowerPairs = oneDayPowerPairs
+                });
+            }
+        }
+
+        return nextSevenDaysUsage;
+    }
 }
