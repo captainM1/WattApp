@@ -77,8 +77,8 @@ button{
 }
 
 button:hover {
-    background-color: white;
-    color:#227982;    
+    background-color: #0394a2;
+    color:white;    
 }
 
 button:disabled{
