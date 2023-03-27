@@ -71,9 +71,13 @@ public class UserRepository : IUserRepository
         return newUser;
     }
 
-    public async Task<List<User>> GetAllUsers()
+    public async Task<List<User>> GetAllUsersAsync(int pageNumber, int pageSize)
     {
-        return await _dbContext.Users.ToListAsync();
+        var pagedData = await _dbContext.Users
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+        return pagedData;
     }
     
     public async Task<User> CreateUserPasswordResetTokenAsync(User user)
