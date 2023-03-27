@@ -19,16 +19,33 @@
 .logo img:hover{
     transform: rotate(360deg);
 }
+
+.text-reset:hover
+{
+  background-color: #fff;
+}
+
+.fa
+{
+  padding: 10px;
+
+}
+
+.fa:hover {
+  color: #026670;
+
+}
+
 #nav-style{
     background-color: #026670;
 }
 i{
     color: white;
-    
+
 }
 small{
     color: white;
-    font-weight: 500;   
+    font-weight: 500;
 }
 .container{
     float: flex;
@@ -40,5 +57,7 @@ a{
     cursor: pointer;
 }
 @media(min-width: 320px) and (max-width : 480px){
-    
+
 }
+
+
