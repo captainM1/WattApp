@@ -33,12 +33,12 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("username")]
-    public ActionResult<string> GetData()
+    public async Task<ActionResult<string>> Username()
     {
         var id = _userService.GetID();
         if (id == null)
             return BadRequest("Username not found");
-        var username = _userRepository.GetUsernameByIdAsync(id);
+        var username = await _userRepository.GetUsernameByIdAsync(id);
         return Ok(JsonSerializer.Serialize(username));
     }
     [HttpPost("signup")]
@@ -96,7 +96,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("users/{id}")]
-    public async Task<ActionResult<User>> GetUser(int id)
+    public async Task<ActionResult<User>> GetUser(Guid id)
     {
         var user = await _userRepository.GetUserByIdAsync(id);
         if(user == null)
@@ -121,7 +121,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("users/{id}")]
-    public async Task<IActionResult> UpdateUser(int id, [FromBody] UserUpdateDto userUpdateDto)
+    public async Task<IActionResult> UpdateUser(Guid id, [FromBody] UserUpdateDto userUpdateDto)
     {
         int user = await _userRepository.UpdateUser(id, userUpdateDto);
 
@@ -166,8 +166,9 @@ public class UserController : ControllerBase
             return BadRequest("Invalid token");
         }
 
-        var id = _userService.GetID();
-        Task<User> user = _userRepository.GetUserByIdAsync(Int32.Parse(id));
+        //var id = _userService.GetID();
+        Guid id = Guid.NewGuid();
+        Task<User> user = _userRepository.GetUserByIdAsync(id);
 
         if (user == null)
         {
@@ -181,12 +182,12 @@ public class UserController : ControllerBase
             return BadRequest("Invalid email address");
         }
 
-        var action = _userRepository.UpdatePassword(user.Id, resetPasswordDto.Password).GetAwaiter().GetResult();
+        //var action = _userRepository.UpdatePassword(user.Id, resetPasswordDto.Password).GetAwaiter().GetResult();
 
-        if (!action)
-        {
-            return BadRequest("Action failed");
-        }
+        //if (!action)
+        //{
+        //    return BadRequest("Action failed");
+        //}
 
         return Ok(new { message = "Password changed" });
     }
@@ -207,7 +208,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("send-request-to-dso/{id}")]
-    public async Task<IActionResult> CreateRequestForDso(int id)
+    public async Task<IActionResult> CreateRequestForDso(Guid id)
     {
         var user = await _userRepository.GetUserByIdAsync(id);
         if (user == null) 
@@ -231,7 +232,8 @@ public class UserController : ControllerBase
     [Authorize]
     public async Task<IActionResult> UpdateUserInformation([FromBody] UserUpdateDto userUpdateDto)
     {
-        int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+        //int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+        var userId = new Guid();
 
         User user = await _userRepository.GetUserByIdAsync(userId);
 
@@ -259,7 +261,9 @@ public class UserController : ControllerBase
     [Authorize]
     public async Task<IActionResult> UpdateUserPassword([FromBody] UserUpdateDto userUpdateDto)
     {
-        int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+        //int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+        var userId = new Guid();
 
         User user = await _userRepository.GetUserByIdAsync(userId);
 

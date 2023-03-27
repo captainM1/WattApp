@@ -34,7 +34,7 @@ namespace prosumerAppBack.Controllers
 			var devices = await _deviceRepository.GetAllDevices();
 			if(devices == null)
 			{
-				return BadRequest("Not found");
+				return BadRequest("Not devices found");
 			}
 
 			return Ok(devices);

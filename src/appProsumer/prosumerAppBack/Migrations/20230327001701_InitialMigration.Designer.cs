@@ -11,7 +11,7 @@ using prosumerAppBack.DataAccess;
 namespace prosumerAppBack.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230325202441_InitialMigration")]
+    [Migration("20230327001701_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -25,9 +25,6 @@ namespace prosumerAppBack.Migrations
                     b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
-
-                    b.Property<int>("DeviceAge")
-                        .HasColumnType("INTEGER");
 
                     b.Property<int>("DeviceID")
                         .HasColumnType("INTEGER");
