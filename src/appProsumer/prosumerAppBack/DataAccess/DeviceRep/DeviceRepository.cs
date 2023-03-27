@@ -52,6 +52,24 @@ namespace prosumerAppBack.DataAccess
                       
             return devices.ToList();
         }
+
+        public async Task<Device> AddDevice(Models.Device.AddDeviceDto addDeviceDto)
+        {
+            var newDevice = new Device
+            {
+                ID = Guid.NewGuid(),
+                Name = addDeviceDto.Name,
+                Manufacurer = addDeviceDto.Manufacurer,
+                Wattage = addDeviceDto.Wattage,
+                UsageFrequency = addDeviceDto.UsageFrequency,
+                MacAdress = addDeviceDto.MacAdress,
+                UsageTime = addDeviceDto.UsageTime
+            };
+
+            _dbContext.Devices.Add(newDevice);
+            await _dbContext.SaveChangesAsync();
+            return newDevice;
+        }
     }
 }
 
