@@ -14,6 +14,8 @@ export class AddDeviceComponent {
   showProducer: boolean = false;
 
   submitted = false;
+
+  selectedOption = 'consumer';
   addConsumerForm!: FormGroup;
   addProducerForm!: FormGroup;
   addStorageForm!: FormGroup;
@@ -24,6 +26,28 @@ export class AddDeviceComponent {
     //private toast : NgToastService
     private messageService: MessageService
   ){}
+
+  onSelect(selectedValue: string) {
+    switch (selectedValue) {
+      case 'consumer':
+        this.showConsumer = true;
+        this.showProducer = false;
+        this.showStorage = false;
+        break;
+      case 'producer':
+        this.showConsumer = false;
+        this.showProducer = true;
+        this.showStorage = false;
+        break;
+      case 'storage':
+        this.showConsumer = false;
+        this.showProducer = false;
+        this.showStorage = true;
+        break;
+    }
+  }
+
+  
 
   onSubmit(){/* Ovo nije dobro;
     this.submitted = true;

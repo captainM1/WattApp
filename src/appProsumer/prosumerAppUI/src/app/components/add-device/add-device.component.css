@@ -7,34 +7,77 @@
 @media (max-width: 280px) /*Fold*/
 { 
     .container{
-        width:90%;
+        width: 85%;
+        background-color: white;
     }
+    
+    h3{
+        color: #026670;
+        text-transform: none;
+        margin-top: 25px;
+    }
+
+    .forma{
+        background-color:white;
+        filter:drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
+        width: 97%;
+    }
+
     button{
         margin-top: 10px;
         margin-bottom: 20px;
         width: 80%;
         text-align: center;
     }
+
+
 }
 
 @media (min-width: 281px) and (max-width: 480px) /*Phones*/
 {
     .container{
         width: 85%;
+        background-color: white;
     }
+
+    h3{
+        color: #026670;
+        text-transform: none;
+        margin-top: 25px;
+    }
+
+    .forma{
+        background-color:white;
+        filter:drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
+        width: 97%;
+    }
+
     button{
         margin-top: 10px;
         margin-bottom: 20px;
         width: 80%;
         text-align: center;
     }
+
 }
  
 @media (min-width: 481px) and (max-width: 1023px)  /*Tablet*/
 {
     .container{
         width: 80%;
+        background-color: #026670;
     }
+    h3{
+        color:white;
+        text-transform: uppercase;
+        margin: 25px 0;
+    }
+
+    .forma{
+        background-color:#EDEAE5;
+        width: 90%;
+    }
+
     button{
         margin-top: 10px;
         margin-bottom: 20px;
@@ -50,6 +93,18 @@
 {
     .container{
         width: 70%;
+        background-color: #026670;
+    }
+
+    h3{
+        color:white;
+        text-transform: uppercase;
+        margin: 25px 0;
+    }
+
+    .forma{
+        background-color:#EDEAE5;
+        width: 90%;
     }
 
     button{
@@ -59,8 +114,15 @@
     }
 }
 
+.dodavanje{
+    color: #026670;
+    background-color: white;
+    font-size: 16px;
+}
+
+
+
 .container{
-    background-color: #026670;
     border-radius: 17px;
     margin: auto;
     text-align: center;
@@ -75,16 +137,11 @@
 }
 
 h3{
-    text-transform: uppercase;
     font-size: 24px;
-    color:white;
-    padding: 25px 0;
     font-weight: bold;
 }
 
 .forma{
-    background-color:#EDEAE5;
-    width: 90%;
     margin: auto;
     border-radius: 17px;
 }
@@ -92,18 +149,40 @@ h3{
 
 button{
     border-radius: 17px;
-    background-color:white;
-    color:#026670;
+    background-color:#026670;
+    color:white;
     font-weight: bold;
     font-size: 20px;
     border: none;
     filter:drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
     padding: 5px 25px;
-    text-transform: uppercase;
 }
 
 button:hover {
-    background-color: #227982;
-    color:white;
-    
+    background-color: #0394a2;
+    color:white;    
+}
+
+button:focus{
+    background-color: #0394a2;
+    color: white;
+}
+
+select {
+    color: white;
+    background-color: #026670;
+    width:75%;
+    margin-top: 15px;
+    margin-bottom: 25px;
+    font-weight: bold;
+    font-size: 13px;
+    text-transform: uppercase;
+    border-radius: 10px;
+    text-align: center;
+    padding: 10px;
+}
+
+select option:not(:checked) {
+    color: #026670;
+    background-color: white;
 }

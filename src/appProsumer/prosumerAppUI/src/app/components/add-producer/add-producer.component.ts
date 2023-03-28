@@ -11,6 +11,7 @@ import { MessageService } from 'primeng/api';
 export class AddProducerComponent {
   submitted = false;
   addProducerForm!: FormGroup;
+  toggle2Checked = false;
 
   constructor(
     private fb: FormBuilder, 

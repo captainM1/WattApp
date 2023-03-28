@@ -47,7 +47,7 @@ label{
     margin-right: auto;
 }
 
-.toggle-buttons > .form-check > label{
+#toggle-buttons > .form-check > label{
     text-transform: none;
 }
 
@@ -60,4 +60,25 @@ hr{
 
 .form-check-input:checked {
   background-color: #026670;
+}
+
+button{
+    border-radius: 17px;
+    background-color:#026670;
+    color:white;
+    font-weight: bold;
+    font-size: 12px;
+    border: none;
+    filter:drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
+    padding: 5px 25px;
+}
+
+button:hover {
+    background-color: #0394a2;
+    color:white;     
+}
+
+button:disabled{
+    background-color: grey;
+    color: white;
 }

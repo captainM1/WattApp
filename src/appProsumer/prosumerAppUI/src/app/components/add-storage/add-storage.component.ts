@@ -11,6 +11,7 @@ import { MessageService } from 'primeng/api';
 export class AddStorageComponent {
   submitted = false;
   addStorageForm!: FormGroup;
+  toggle2Checked = false;
 
   constructor(
     private fb: FormBuilder, 
