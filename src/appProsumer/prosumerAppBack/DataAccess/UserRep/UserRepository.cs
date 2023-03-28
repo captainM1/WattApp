@@ -75,35 +75,6 @@ public class UserRepository : IUserRepository
     {
         return await _dbContext.Users.ToListAsync();
     }
-    
-    public async Task<User> CreateUserPasswordResetTokenAsync(User user)
-    {
-        user.PasswordResetToken = CreateRandomToken();
-        user.ResetTokenExpires = DateTime.Now.AddDays(1);
-        await _dbContext.SaveChangesAsync();
-
-        return user;
-    }
-
-    private string CreateRandomToken()
-    {
-        return Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
-    }
-
-    public async Task<User> GetUserByPasswordResetToken(string token)
-    {
-        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.PasswordResetToken == token);
-        if(user.ResetTokenExpires < DateTime.Now)
-        {
-            user = null;
-        }
-        if (user == null)
-        {
-            return null;
-        }
-
-        return user;
-    }
 
     public async Task<string> GetUsernameByIdAsync(Guid id)
     { 
@@ -143,8 +114,8 @@ public class UserRepository : IUserRepository
             return 0;
         }
 
-        var usernameCheck = this.GetUserByUsername(userUpdateDto.Username);
-        if(usernameCheck != null)
+        var usernameCheck = await this.GetUserByUsername(userUpdateDto.Username);
+        if (usernameCheck != null)
         {
             return 1; // zauzeto username
         }
