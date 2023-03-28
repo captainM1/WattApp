@@ -1,0 +1,35 @@
+@font-face {
+  font-family: regular;
+  src: url(../../../assets/fonts/Inter-Regular.ttf);
+}
+@media(max-width: 480px) {
+  .mobile{
+      display: contents;
+  }
+  .desktop{
+      display: none;
+  }
+  .container
+  {
+    margin-top: 20px;
+  }
+
+}
+
+@media(min-width: 481px){
+  .mobile{
+      display: none;
+  }
+  .desktop{
+      display: contents;
+  }
+  .container
+  {
+    margin-top: 80px;
+  }
+
+
+
+}
+
+

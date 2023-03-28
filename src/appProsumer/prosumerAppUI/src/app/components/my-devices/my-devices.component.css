@@ -108,6 +108,7 @@ button:focus{
   .container
   {
       width: 30%;
+      margin-left: 40px;
   }
 
   button{
