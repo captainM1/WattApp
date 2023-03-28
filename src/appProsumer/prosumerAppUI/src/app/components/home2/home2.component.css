@@ -15,10 +15,53 @@
   }
 
   img
-{
-  width: 15%;
-}
+  {
+    width: 15%;
+    padding: 8px;
+  }
 
+  label
+  {
+    font-size: 14px;
+    font-weight: bold;
+    width: 70%;
+    margin-left: 20%;
+  }
+
+  #kolone
+  {
+    margin-right: 20px;
+    width: 90%;
+    margin-left: 20px;
+    margin-bottom: 20px;
+  }
+
+  #prvi
+  {
+    background-color: white;
+    border-radius: 10px;
+    margin-top: 10px;
+    filter:drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
+    color: orange;
+  }
+
+  #drugi
+  {
+    background-color: white;
+    border-radius: 10px;
+    margin-top: 10px;
+    filter:drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
+    color: #026670;
+  }
+
+  #treci
+  {
+    background-color: white;
+    border-radius: 10px;
+    margin-top: 10px;
+    filter:drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
+    color: red;
+  }
 
 }
 
@@ -34,52 +77,55 @@
     margin-top: 90px;
   }
 
-#kolone
-{
-  float:right;
-  margin-right: 50px;
-  width: 42%;
-  margin-top: 40px;
-}
+  #kolone
+  {
+    float:right;
+    margin-right: 50px;
+    width: 42%;
+    margin-top: 40px;
+  }
 
-label
-{
-  font-size: 18px;
-  font-weight: bold;
-  width: 60%;
-  margin-left: 28%;
-}
-#prvi
-{
-  margin-top: 5px;
-  background-color: white;
-  border-radius: 10px;
-  padding: 10px;
-  color: orange;
-}
-#drugi
-{
-  margin-top: 50px;
-  background-color: white;
-  border-radius: 10px;
-  padding: 10px;
-  color: #026670;
-}
+  label
+  {
+    font-size: 18px;
+    font-weight: bold;
+    width: 60%;
+    margin-left: 28%;
+  }
+  #prvi
+  {
+    margin-top: 5px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 10px;
+    filter:drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
+    color: orange;
+  }
+  #drugi
+  {
+    margin-top: 50px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 10px;
+    filter:drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
+    color: #026670;
+  }
 
-#treci
-{
-  margin-top: 50px;
-  background-color: white;
-  border-radius: 10px;
-  padding: 10px;
-  color:red;
-}
+  #treci
+  {
+    margin-top: 50px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 10px;
+    filter:drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
+    color:red;
+  }
 
-img
-{
-  width: 15%;
-  padding-top: 10px;
-}
+  img
+  {
+    width: 15%;
+    padding-top: 10px;
+  }
 
 
 
