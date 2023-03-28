@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
 using prosumerAppBack.BusinessLogic;
+using prosumerAppBack.BusinessLogic.DeviceService;
 using prosumerAppBack.Helper;
 using prosumerAppBack.Models;
 using Swashbuckle.AspNetCore.Filters;
@@ -60,9 +61,12 @@ builder.Services.AddDbContext<DataContext>(option =>
 builder.Services.AddScoped<IUserRepository,UserRepository>();
 builder.Services.AddScoped<IPasswordHasher,PasswordHasher>();
 builder.Services.AddScoped<ITokenMaker,TokenMaker>();
-builder.Services.AddScoped<IUserService,UserService>();
 builder.Services.AddScoped<IPowerUsageRepository,PowerUsageRepository>();
-builder.Services.AddTransient<EmailService>();
+builder.Services.AddScoped<IDeviceRepository,DeviceRepository>();
+builder.Services.AddScoped<IDeviceService,DeviceService>();
+builder.Services.AddScoped<IUserService,UserService>();
+builder.Services.AddScoped<IEmailService,EmailService>();
+
 builder.Services.AddHttpClient<UserService>();
 builder.Services.AddSingleton<IMongoDatabase>(provider =>
 {

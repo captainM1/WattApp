@@ -17,32 +17,26 @@ namespace prosumerAppBack.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.3");
 
-            modelBuilder.Entity("prosumerAppBack.Models.Device", b =>
+            modelBuilder.Entity("prosumerAppBack.Models.Device.Device", b =>
                 {
                     b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("DeviceAge")
+                    b.Property<int>("DeviceID")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("MacAdress")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Manufacurer")
+                    b.Property<string>("Manufacturer")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("OwnerId")
-                        .HasColumnType("TEXT");
-
                     b.Property<bool>("Status")
                         .HasColumnType("INTEGER");
-
-                    b.Property<double>("UsageFrequency")
-                        .HasColumnType("REAL");
 
                     b.Property<double>("Wattage")
                         .HasColumnType("REAL");
@@ -50,6 +44,24 @@ namespace prosumerAppBack.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Devices");
+                });
+
+            modelBuilder.Entity("prosumerAppBack.Models.Device.DeviceOwners", b =>
+                {
+                    b.Property<Guid>("DeviceID")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("UserID")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ID")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("DeviceID", "UserID");
+
+                    b.HasIndex("UserID");
+
+                    b.ToTable("DeviceOwners");
                 });
 
             modelBuilder.Entity("prosumerAppBack.Models.User", b =>
@@ -145,6 +157,35 @@ namespace prosumerAppBack.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("UsersAppliedToDSO");
+                });
+
+            modelBuilder.Entity("prosumerAppBack.Models.Device.DeviceOwners", b =>
+                {
+                    b.HasOne("prosumerAppBack.Models.Device.Device", "Device")
+                        .WithMany("DeviceOwners")
+                        .HasForeignKey("DeviceID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("prosumerAppBack.Models.User", "User")
+                        .WithMany("DeviceOwners")
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Device");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("prosumerAppBack.Models.Device.Device", b =>
+                {
+                    b.Navigation("DeviceOwners");
+                });
+
+            modelBuilder.Entity("prosumerAppBack.Models.User", b =>
+                {
+                    b.Navigation("DeviceOwners");
                 });
 #pragma warning restore 612, 618
         }

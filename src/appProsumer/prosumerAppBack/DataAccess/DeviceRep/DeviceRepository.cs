@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
+using prosumerAppBack.BusinessLogic;
 using prosumerAppBack.Models;
 using prosumerAppBack.Models.Device;
 
 namespace prosumerAppBack.DataAccess
 {
-	public class DeviceRepository
+	public class DeviceRepository: IDeviceRepository
     {
         private readonly DataContext _dbContext;
 
@@ -16,7 +17,7 @@ namespace prosumerAppBack.DataAccess
 
         public async Task<Device> GetDeviceByIdAsync(Guid id)
         {
-            return await _dbContext.Devices.FirstOrDefaultAsync(d => d.ID == id);
+            return await _dbContext.Devices.FindAsync(id);
         }
 
         public async Task<List<Device>> GetAllDevices()
@@ -31,10 +32,8 @@ namespace prosumerAppBack.DataAccess
                 return false;
             }
             updatedDevice.Manufacturer = deviceUpdateDto.Manufacturer;
-            updatedDevice.UsageFrequency = deviceUpdateDto.UsageFrequency;
             updatedDevice.MacAdress = deviceUpdateDto.MacAdress;
             updatedDevice.Name = deviceUpdateDto.Name;
-            updatedDevice.DeviceAge = deviceUpdateDto.DeviceAge;
             updatedDevice.Wattage = deviceUpdateDto.Wattage;
 
 
@@ -43,6 +42,33 @@ namespace prosumerAppBack.DataAccess
             await _dbContext.SaveChangesAsync();
 
             return true;
+        }
+        public IEnumerable<Device> GetDevicesForUser(Guid userID)
+        {
+            var devices = from deviceOwner in _dbContext.Set<DeviceOwners>()
+                join device in _dbContext.Set<Device>() on deviceOwner.DeviceID equals device.ID
+                where deviceOwner.UserID == userID
+                select device;
+                      
+            return devices.ToList();
+        }
+
+        public async Task<Device> AddDevice(Models.Device.AddDeviceDto addDeviceDto)
+        {
+            var newDevice = new Device
+            {
+                ID = Guid.NewGuid(),
+                Name = addDeviceDto.Name,
+                Manufacurer = addDeviceDto.Manufacurer,
+                Wattage = addDeviceDto.Wattage,
+                UsageFrequency = addDeviceDto.UsageFrequency,
+                MacAdress = addDeviceDto.MacAdress,
+                UsageTime = addDeviceDto.UsageTime
+            };
+
+            _dbContext.Devices.Add(newDevice);
+            await _dbContext.SaveChangesAsync();
+            return newDevice;
         }
     }
 }

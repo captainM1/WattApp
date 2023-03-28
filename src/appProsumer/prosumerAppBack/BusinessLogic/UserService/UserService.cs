@@ -1,3 +1,4 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -9,7 +10,6 @@ namespace prosumerAppBack.BusinessLogic;
 public class UserService:IUserService
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
-
     private readonly DataContext _dbContext;
     private readonly HttpClient _httpClient;
     public UserService(IHttpContextAccessor httpContextAccessor, HttpClient httpClient, DataContext dbContext)
@@ -18,14 +18,31 @@ public class UserService:IUserService
         _httpClient = httpClient;
         _dbContext = dbContext;
     }
-    public string GetID()
+
+    public Guid? GetID()
     {
-        var ID = string.Empty;
+        var token = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+        var handler = new JwtSecurityTokenHandler();
+        try
+        {
+            var jwtToken = handler.ReadJwtToken(token);
+            var userIdClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == "unique_name");
+            if (userIdClaim != null)
+            {
+                Guid userIdGuid;
+                if (Guid.TryParse(userIdClaim.Value, out userIdGuid))
+                {
+                    return userIdGuid;
+                }
+            }
 
-        if (_httpContextAccessor.HttpContext != null)
-            ID = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
-
-        return ID;
+            return null;
+        }
+        catch (Exception ex)
+        {
+            // Log the exception
+            return null;
+        }
     }
     public string GetRole()
     {

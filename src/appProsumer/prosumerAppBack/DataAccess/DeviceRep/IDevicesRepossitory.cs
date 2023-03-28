@@ -8,7 +8,7 @@ namespace prosumerAppBack.BusinessLogic
 	{
 		Task<Device> GetDeviceByIdAsync(Guid id);
 		Task<Device> GetAllDevices();
-        Task<Boolean> UpdateDevice(Guid id,UpdateDeviceDto updateDeviceDto);
+        Task<Device> AddDevice(Models.Device.AddDeviceDto addDeviceDto);
     }
 }
 
