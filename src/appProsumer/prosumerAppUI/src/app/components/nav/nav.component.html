@@ -6,13 +6,13 @@
             </a>
             <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small" >
                 <li *ngFor = "let data of navData">
-                    
+
                     <a id = "icon" class="nav-link text-secondary" [routerLink] = [data.routeLink]>
 
                         <i [class]="data.icon"> </i>
                        <small> {{data.label}} </small>
-                       
-                       
+
+
                     </a>
                 </li>
             </ul>
@@ -32,22 +32,22 @@
               <i class="fa fa-th-large" style="color: white;" routerLink="/"></i> prostorije user-a
             </a> -->
             <a class="text-reset me-3" >
-              <i class="fa fa-home" style="color: white; "routerLink="/home"></i>
+              <i class="fa fa-home" routerLink="/home"></i>
             </a>
             <a class="text-reset me-3" >
-              <i class="fa fa-tachometer" style="color: white;" routerLink="/dashboard"></i>
+              <i class="fa fa-tachometer" routerLink="/dashboard"></i>
             </a>
             <a class="text-reset me-3">
-              <i class="fa fa-desktop" style="color: white;" routerLink="/add-device"></i>
+              <i class="fa fa-desktop"  routerLink="/add-device"></i>
             </a>
             <a class="text-reset me-3">
-              <i class="fa fa-cog" style="color: white;" routerLink="/"></i>
+              <i class="fa fa-cog"  routerLink="/"></i>
             </a>
-  
-            
+
+
           </div>
           <!-- Right elements -->
-  
+
           <!-- Center elements -->
           <div class="col-md-2 d-none d-lg-block">
             <a href="#!" class="ms-md-2">
@@ -55,18 +55,18 @@
             </a>
           </div>
           <!-- Center elements -->
-  
+
           <!-- Right elements -->
-          <div class="col-lg-5 d-flex justify-content-center justify-content-md-end align-items-center">
+          <div class="col-lg-5 d-flex justify-content-center justify-content-md-end align-items-center" >
             <a class="text-reset me-3" >
-              <i class="fa fa-bell" style="color: white;" routerLink="/"></i>
+              <i class="fa fa-bell"  routerLink="/"></i>
             </a>
-            
+
             <a class="text-reset me-3">
-              <i class="fa fa-user-circle" style="color: white;" routerLink="/profile-prosumer"></i>
+              <i class="fa fa-user-circle"  routerLink="/profile-prosumer"></i>
             </a>
-  
-            
+
+
           <!-- Right elements -->
         </div>
       </div>
