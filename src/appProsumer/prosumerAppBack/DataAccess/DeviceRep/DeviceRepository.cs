@@ -59,7 +59,7 @@ namespace prosumerAppBack.DataAccess
             {
                 ID = Guid.NewGuid(),
                 Name = addDeviceDto.Name,
-                Manufacturer = addDeviceDto.Manufacurer,
+                Manufacurer = addDeviceDto.Manufacurer,
                 Wattage = addDeviceDto.Wattage,
                 MacAdress = addDeviceDto.MacAdress,
             };

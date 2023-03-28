@@ -74,19 +74,6 @@ public class UserController : ControllerBase
         return Ok( JsonSerializer.Serialize(token) );
     }
 
-    [HttpPost("forgot-password")]
-    public async Task<IActionResult> ForgotPassword([FromBody] string email)
-    {
-        var user = await _userRepository.GetUserByEmailAsync(email);
-        if(user == null)
-        {
-            return BadRequest("Email not found");
-        }
-        user = await _userRepository.CreateUserPasswordResetTokenAsync(user);
-
-        return Ok("Reset token created successfully");
-    }
-
     [HttpPost("validate-token")]
     public ActionResult<object> ValidateToken([FromBody] object body)
     {
