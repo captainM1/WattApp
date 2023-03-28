@@ -64,8 +64,9 @@ button{
 }
 
 button:hover {
-  background-color: #32909a;
-  border: none;
+  background-color: white;
+  border: 2px solid #026670;
+  color:#026670;
 }
 button:active {
   background-color: #026670;
@@ -108,7 +109,7 @@ button:focus{
   .container
   {
       width: 30%;
-      margin-left: 40px;
+      margin-left: 150px;
   }
 
   button{
