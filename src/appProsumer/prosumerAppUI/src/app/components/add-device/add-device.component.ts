@@ -45,6 +45,8 @@ export class AddDeviceComponent {
     }
   }
 
+  
+
   onSubmit(){/* Ovo nije dobro;
     this.submitted = true;
     if(this.addConsumerForm.valid){
