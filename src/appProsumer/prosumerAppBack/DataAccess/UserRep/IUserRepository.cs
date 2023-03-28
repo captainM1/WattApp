@@ -13,5 +13,9 @@ public interface IUserRepository
     Task<string> GetUsernameByIdAsync(Guid id);
     Task<Boolean> UpdatePassword(Guid id, string newPassword);
     Task<int> UpdateUser(Guid id, UserUpdateDto userUpdateDto);
+    Task<List<User>> GetAllUsersAsync(int pageNumber, int pageSize);
+    Task<string> GetUsernameByIdAsync(string id);
+    Task<Boolean> UpdatePassword(int id, string newPassword);
+    Task<int> UpdateUser(int id, UserUpdateDto userUpdateDto);
     Task<Boolean> CreateUserRequestToDso(User user);
 }

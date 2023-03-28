@@ -114,16 +114,10 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("users")]
-    public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+    public async Task<List<User>> GetUsers([FromQuery]int pageNumber,[FromQuery] int pageSize)
     {
-        var users = await _userRepository.GetAllUsers();
-
-        if(users == null)
-        {
-            return BadRequest("Theres no users in the database");
-        }
-
-        return Ok(users);
+        var users = await _userRepository.GetAllUsersAsync(pageNumber,pageSize);
+        return users;
     }
 
     [HttpPost("users/{id}")]
