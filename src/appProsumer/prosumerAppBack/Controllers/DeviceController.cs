@@ -52,20 +52,17 @@ namespace prosumerAppBack.Controllers
 
             return Ok(new { message = "Device updated" });
         }
-
         [HttpPost("devices/add-new")]
-        public async Task<IActionResult> AddDevice([FromBody] AddDeviceDto addDeviceDto)
+        public async Task<IActionResult> AddDevice([FromBody] Models.Device.AddDeviceDto addDeviceDto)
         {
-            var check = await _deviceRepository.AddDevice(addDeviceDto);
+	        var check = await _deviceRepository.AddDevice(addDeviceDto);
+			if (check)
+			{
+				return BadRequest("Cannot add device");
+			}
 
-            if (check == null)
-            {
-                return BadRequest("Cannot add device");
-            }
-
-            return Ok(new { message = "Device added" });
-        }
-
-    }
+			return Ok(new { message = "Device added" });
+		}
+	}
 }
 

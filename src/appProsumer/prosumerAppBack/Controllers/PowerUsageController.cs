@@ -23,4 +23,18 @@ public class PowerUsageController : ControllerBase
         var powerUsages = _powerUsage.Get();
         return Ok(powerUsages);
     }
+
+    [HttpGet("power-usage/last-week")]
+    public ActionResult<IEnumerable<PowerUsage>> GetDeviceConsumptionLastWeek()
+    {
+        var powerUsages = _powerUsage.PreviousSevenDays();
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/next-week")]
+    public ActionResult<IEnumerable<PowerUsage>> GetDeviceConsumptionNextWeek()
+    {
+        var powerUsages = _powerUsage.NextSevenDays();
+        return Ok(powerUsages);
+    }
 }
