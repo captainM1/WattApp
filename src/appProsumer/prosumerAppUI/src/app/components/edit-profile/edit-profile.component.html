@@ -1,82 +1,75 @@
-<app-nav></app-nav>
- <div class="float " id = "outer" >
-    
-    <div class="container" style="margin-top: 100px;">
-        <div class="col-sm-6" id = "edit-profile">
-            <i class="fa fa-arrow-left fa-lg"  id = "arrow" routerLink="/profile-prosumer"></i>
-            <h1>Edit Profile</h1>
-        </div>
-        <div class="row " style="margin: 0;">
-            
-        <div class="col-sm-5" id = "form-style">
-            <form class="p-3 border" id = "form-user-enter">
-                <div class="form-group" >
-                <label for="username">Username:</label>
-                <input type="text" class="form-control" id="username" aria-describedby="username" placeholder="Enetr your username">
-                </div>
-                <div class="form-group">
-                    <label for="First Name">First Name:</label>
-                    <input type="text" class="form-control" id="first-name" placeholder="Enetr your first name">
-                </div>
-                <div class="form-group">
-                    <label for="Last Name">Last Name:</label>
-                    <input type="text" class="form-control" id="last-name" placeholder="Enter your last name">
-                </div>
-                <div class="form-group">
-                    <label for="Email Address">Email Address:</label>
-                    <input type="text" class="form-control" id="email-address" placeholder="Enter your email address">
-                </div>
-                <div class="form-group">
-                    <label for="Contact Number">Contact Number</label>
-                    <input type="text" class="form-control" id="contact-numer" placeholder="Enter your contact number">
-                </div>
-                <div class="form-group">
-                    <label for="Address">Address:</label>
-                    <input type="text" class="form-control" id="address" placeholder="Enter you address">
-                </div>
-                <div class="form-group">
-                    <label for="Country">Country:</label>
-                    <input type="text" class="form-control" id="country" placeholder="Select your country">
-                </div>
-            </form>
+<app-nav class="desktop"></app-nav>
+<app-mob-nav class="mobile"></app-mob-nav>
+<div class="outer">
+    <div class="container">
+        <div class="row" id = "edit-profile">
+               
+            <div class="col">
+                <i class="fa fa-arrow-left fa-lg"  id = "arrow" routerLink="/profile-prosumer"></i>
+                <h1>Edit Profile</h1>
+            </div>
         </div>
 
-        <div class="col-sm-6" id="notification-component" style="background: #EDEAE5;border-radius: 5px;  ">
-            <div class="col" style="background-color: #FFF; padding: 10px; border-radius: 5px; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); margin-top: 10px;">
-                <div id = "p-4 border bg-light">
-                    <p class="fs-2">Notification</p>
-                    <p class="fs-5">Email Notification</p>
-                    <p class="fw-normal" style="font-size: 14px;
-                    ">Turn on email notification to get updates throught email</p>
-                <div style="position: absolute;
-                right: 65px;
-                top: 200px;">
-                    <label class="switch">
-                        <input type="checkbox">
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-                </div>
-            </div>
-            
-                <div class="col" id = "image-container" style="box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);">
-                    <div class="p-3" style="background-color: #EDEAE5;">
-                        <button class="btn-add-img" type="button"x>Add image</button>
+        <div class="row" id = "main-form">
+            <div class="col-sm-6"  id = "top" style="margin-top: 30px; margin-bottom: 20px;">
+                <form class="p-3 border" id = "form-user-enter">
+                    <div class="form-group" >
+                        <label for="username">First Name:</label>
+                        <input style = "width: 100%" type="text" class="form-control" id="first-name" aria-describedby="First Namse" placeholder="Enetr your first name">
+                    </div>
+                    <div class="form-group">
+                        <label for="First Name">Last Name:</label>
+                        <input style = "width: 100%" type="text" class="form-control" id="last-name" placeholder="Enter your last name">
+                    </div>
+                </form>
+                <div class="row" id = "img-btn" >
+                    <div class="col" id = "col-img-btn">
                         <img src="../../../assets/icons/images.jpg">
                     </div>
-                    
+                    <div class="row" id="row-img-btn">
+                        <button class="btn-add-img"  type="button">Add image</button>
+                    </div>
                 </div>
-        
-                <div class="col" style="padding-top: 10px;">
-                    <div class="p-3 border" style="background-color: #EDEAE5;" >
-
-                    <button  class="btn-change-pass" type="button"
-                    >Change Password</button><br>
-                    <button class="btn-change-pass" type="button">Save</button>
+            </div>
+            <div class="col-sm-6" id = "bottom" style="margin-top: 30px; margin-bottom: 20px; ">
+                <form  class="p-4"id = "form-user-enter">
+                   
+                    <div class="form-group">
+                        <label for="Email Address">Email Address:</label>
+                        <input style = "width: 100%" type="text" class="form-control" id="email-address" placeholder="Enter your email address">
+                    </div>
+                    <div class="form-group">
+                        <label for="Contact Number">Contact Number</label>
+                        <input style = "width: 100%" type="text" class="form-control" id="contact-numer" placeholder="Enter your contact number">
+                    </div>
+                    <div class="form-group">
+                        <label for="Address">Address:</label>
+                        <input style = "width: 100%" type="text" class="form-control" id="address" placeholder="Enter you address">
+                    </div>
+                    <div class="form-group">
+                        <label for="Country">Country:</label>
+                        <input style = "width: 100%" type="text" class="form-control" id="country" placeholder="Select your country">
+                    </div>
+                    <div class="form-group">
+                        <label for="Time-zone">Time zone:</label>
+                        <input style = "width: 100%" type="text" class="form-control" id="time-zone" placeholder="Select your time zone">
+                    </div>
+                    <div class="form-group" id = "change-pass">
+                        <button id = "btnbtn"type="button" id = "change" style="background-color: #026670;
+                        color: white;" routerLink="/reset-password">Change Password</button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="row-2"id = "btn-save">
+                <div class="col-sm-6" id="col-img-btn-main" >
+                    <button id = "save" type="submit">Save Changes</button>
                 </div>
             </div>
         </div>
-    </div>
-    </div>
 
-    </div>
+        
+
+
+</div>
+    
