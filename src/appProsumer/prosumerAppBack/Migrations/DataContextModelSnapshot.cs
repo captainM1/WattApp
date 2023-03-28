@@ -23,9 +23,6 @@ namespace prosumerAppBack.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("DeviceAge")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("DeviceID")
                         .HasColumnType("INTEGER");
 

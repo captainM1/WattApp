@@ -13,7 +13,7 @@ export class HomeComponent {
     ){}
   ngOnInit(): void {
     this.auth.getData().subscribe((data) => {
-      this.data = "Welcome, " + data.Result;
+      this.data = "Hello " + data;
     });
   }
 }

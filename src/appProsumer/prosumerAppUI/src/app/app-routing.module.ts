@@ -14,6 +14,7 @@ import { NotauthGuard } from './guards/notauth.guard';
 import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
 import { EditDeviceComponent } from './components/edit-device/edit-device.component';
 import { NavComponent } from './components/nav/nav.component';
+import { MyDevicesComponent } from './components/my-devices/my-devices.component';
 
 
 
@@ -46,6 +47,9 @@ const routes: Routes = [
   },
   {
     path:'nav', component:NavComponent
+  },
+  {
+    path:'my-devices', component:MyDevicesComponent
   },
   {
     path:'profile-prosumer', component:ProfileProsumerComponent
