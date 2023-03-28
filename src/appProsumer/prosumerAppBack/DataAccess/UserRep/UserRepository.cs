@@ -47,7 +47,7 @@ public class UserRepository : IUserRepository
 
         return user;
     }
-    
+
     public async Task<User> CreateUser(UserRegisterDto userRegisterDto)
     {
         byte[] salt;

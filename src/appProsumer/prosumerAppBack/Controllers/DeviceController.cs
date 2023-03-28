@@ -56,7 +56,7 @@ namespace prosumerAppBack.Controllers
         public async Task<IActionResult> AddDevice([FromBody] Models.Device.AddDeviceDto addDeviceDto)
         {
 	        var check = await _deviceRepository.AddDevice(addDeviceDto);
-			if (check)
+			if (check == null)
 			{
 				return BadRequest("Cannot add device");
 			}
