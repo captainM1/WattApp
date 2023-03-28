@@ -4,14 +4,11 @@
         <h3 class="align-center">Add New Device</h3>
         <div class="forma">
             <div class="dropdown d-block d-md-none">
-                <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Menu
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <button class="dropdown-item" type="button" (click)="showConsumer=true; showProducer=false; showStorage=false">Consumer</button>
-                  <button class="dropdown-item" type="button" (click)="showConsumer=false; showProducer=true; showStorage=false">Producer</button>
-                  <button class="dropdown-item" type="button" (click)="showConsumer=false; showProducer=false; showStorage=true">Storage</button>
-                </div>
+                <select [(ngModel)]="selectedOption" (ngModelChange)="onSelect($event)">
+                    <option value="consumer">Consumer</option>
+                    <option value="producer">Producer</option>
+                    <option value="storage">Storage</option>
+                </select>
             </div>
             <div class="row align-center d-none d-md-flex">
                 <div class="col-sm"><button type="button" (click)="showConsumer=true; showProducer=false; showStorage=false">Consumer</button></div>
@@ -34,6 +31,6 @@
                 </form>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary font-weight-bold btn-lock mt-4 mt-2">ADD</button>
+        <button type="submit" class="btn btn-primary font-weight-bold btn-lock mt-4 mt-2">Add Device</button>
     </div>
 </div>
