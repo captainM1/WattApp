@@ -6,11 +6,13 @@ namespace prosumerAppBack.BusinessLogic
 {
 	public interface IDeviceRepository
 	{
-		Task<Device> GetDeviceByIdAsync(Guid id);
-		Task<List<Device>> GetAllDevices();
-        Task<Boolean> UpdateDevice(Guid id,UpdateDeviceDto updateDeviceDto);
+		Task<Boolean> UpdateDevice(Guid id,UpdateDeviceDto updateDeviceDto);
         
         IEnumerable<Device> GetDevicesForUser(Guid userID);
+        
+        Task<Device> GetDeviceByIdAsync(Guid id);
+        Task<List<Device>> GetAllDevices();
+        Task<Device> AddDevice(Models.Device.AddDeviceDto addDeviceDto);
     }
 }
 

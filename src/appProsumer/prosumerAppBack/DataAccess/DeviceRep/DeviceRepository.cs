@@ -59,11 +59,9 @@ namespace prosumerAppBack.DataAccess
             {
                 ID = Guid.NewGuid(),
                 Name = addDeviceDto.Name,
-                Manufacurer = addDeviceDto.Manufacurer,
+                Manufacturer = addDeviceDto.Manufacurer,
                 Wattage = addDeviceDto.Wattage,
-                UsageFrequency = addDeviceDto.UsageFrequency,
                 MacAdress = addDeviceDto.MacAdress,
-                UsageTime = addDeviceDto.UsageTime
             };
 
             _dbContext.Devices.Add(newDevice);
