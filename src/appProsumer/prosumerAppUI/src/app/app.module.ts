@@ -31,6 +31,9 @@ import { AddStorageComponent } from './components/add-storage/add-storage.compon
 
 import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
 import { NavComponent } from './components/nav/nav.component';
+import { MyDevicesComponent } from './components/my-devices/my-devices.component';
+
+
 import { MobNavComponent } from './components/mob-nav/mob-nav.component';
 
 @NgModule({
@@ -52,9 +55,8 @@ import { MobNavComponent } from './components/mob-nav/mob-nav.component';
     MobNavComponent,
     AddStorageComponent,
     NavComponent,
-    EditProfileComponent
-
-
+    EditProfileComponent,
+    MyDevicesComponent
   ],
   imports: [
     BrowserModule,
