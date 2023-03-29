@@ -9,15 +9,17 @@ namespace prosumerAppBack.DataAccess
 	public class DeviceRepository: IDeviceRepository
     {
         private readonly DataContext _dbContext;
+        private readonly IUserService _userService;
 
-        public DeviceRepository(DataContext dbContext)
+        public DeviceRepository(DataContext dbContext,UserService userService)
         {
             _dbContext = dbContext;
+            _userService = userService;
         }
 
         public async Task<Device> GetDeviceByIdAsync(Guid id)
         {
-            return await _dbContext.Devices.FindAsync(id);
+            return _dbContext.Devices.FirstOrDefault(d => d.ID == id);
         }
 
         public async Task<List<Device>> GetAllDevices()
@@ -31,12 +33,7 @@ namespace prosumerAppBack.DataAccess
             {
                 return false;
             }
-            updatedDevice.Manufacturer = deviceUpdateDto.Manufacturer;
             updatedDevice.MacAdress = deviceUpdateDto.MacAdress;
-            updatedDevice.Name = deviceUpdateDto.Name;
-            updatedDevice.Wattage = deviceUpdateDto.Wattage;
-
-
 
             _dbContext.Devices.Update(updatedDevice);
             await _dbContext.SaveChangesAsync();
@@ -45,12 +42,26 @@ namespace prosumerAppBack.DataAccess
         }
         public IEnumerable<Device> GetDevicesForUser(Guid userID)
         {
-            var devices = from deviceOwner in _dbContext.Set<DeviceOwners>()
-                join device in _dbContext.Set<Device>() on deviceOwner.DeviceID equals device.ID
-                where deviceOwner.UserID == userID
-                select device;
-                      
-            return devices.ToList();
+            return _dbContext.Devices.Where(d => d.OwnerID == userID).ToArray();
+        }
+        
+        public IEnumerable<DeviceGroup> GetDeviceGroups()
+        {
+            return _dbContext.DeviceGroups.ToArray();
+        }
+        public IEnumerable<DeviceManufacturers> GetDeviceManufacturers()
+        {
+            return _dbContext.DeviceManufacturers.ToArray();
+        }
+
+        public IEnumerable<DeviceType> GetDevicesBasedOnGroup(Guid groupID)
+        {
+            return _dbContext.DeviceTypes.Where(d => d.GroupID == groupID);
+        }
+
+        public IEnumerable<DeviceType> GetDevicesBasedOnManufacturer(Guid maunfID)
+        {
+            return _dbContext.DeviceTypes.Where(d => d.ManufacturerID == maunfID);
         }
 
         public async Task<Device> AddDevice(Models.Device.AddDeviceDto addDeviceDto)
@@ -58,14 +69,12 @@ namespace prosumerAppBack.DataAccess
             var newDevice = new Device
             {
                 ID = Guid.NewGuid(),
-                Name = addDeviceDto.Name,
-                Manufacturer = addDeviceDto.Manufacturer,
-                Wattage = addDeviceDto.Wattage,
+                OwnerID = _userService.GetID().Value,
                 MacAdress = addDeviceDto.MacAdress,
+                DeviceTypeID = addDeviceDto.DeviceTypeID
             };
 
             _dbContext.Devices.Add(newDevice);
-            //_dbContext.DeviceOwners.Add()
             await _dbContext.SaveChangesAsync();
             return newDevice;
         }

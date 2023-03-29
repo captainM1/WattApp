@@ -11,7 +11,7 @@ using prosumerAppBack.DataAccess;
 namespace prosumerAppBack.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230327001701_InitialMigration")]
+    [Migration("20230329162347_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -26,45 +26,81 @@ namespace prosumerAppBack.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("DeviceID")
-                        .HasColumnType("INTEGER");
+                    b.Property<Guid>("DeviceTypeID")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("MacAdress")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Manufacturer")
+                    b.Property<Guid>("OwnerID")
                         .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<double>("Wattage")
-                        .HasColumnType("REAL");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("DeviceTypeID");
+
+                    b.HasIndex("OwnerID");
 
                     b.ToTable("Devices");
                 });
 
-            modelBuilder.Entity("prosumerAppBack.Models.Device.DeviceOwners", b =>
+            modelBuilder.Entity("prosumerAppBack.Models.Device.DeviceGroup", b =>
                 {
-                    b.Property<Guid>("DeviceID")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("UserID")
-                        .HasColumnType("TEXT");
-
                     b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.HasKey("DeviceID", "UserID");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
-                    b.HasIndex("UserID");
+                    b.HasKey("ID");
 
-                    b.ToTable("DeviceOwners");
+                    b.ToTable("DeviceGroups");
+                });
+
+            modelBuilder.Entity("prosumerAppBack.Models.Device.DeviceManufacturers", b =>
+                {
+                    b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("DeviceManufacturers");
+                });
+
+            modelBuilder.Entity("prosumerAppBack.Models.Device.DeviceType", b =>
+                {
+                    b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("GroupID")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ManufacturerID")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+                    
+                    b.Property<string>("Wattage")
+                        .IsRequired()
+                        .HasColumnType("NUMERIC");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("GroupID");
+
+                    b.HasIndex("ManufacturerID");
+
+                    b.ToTable("DeviceTypes");
                 });
 
             modelBuilder.Entity("prosumerAppBack.Models.User", b =>
@@ -95,13 +131,7 @@ namespace prosumerAppBack.Migrations
                         .IsRequired()
                         .HasColumnType("BLOB");
 
-                    b.Property<string>("PasswordResetToken")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("ResetTokenExpires")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Role")
@@ -162,33 +192,62 @@ namespace prosumerAppBack.Migrations
                     b.ToTable("UsersAppliedToDSO");
                 });
 
-            modelBuilder.Entity("prosumerAppBack.Models.Device.DeviceOwners", b =>
-                {
-                    b.HasOne("prosumerAppBack.Models.Device.Device", "Device")
-                        .WithMany("DeviceOwners")
-                        .HasForeignKey("DeviceID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("prosumerAppBack.Models.User", "User")
-                        .WithMany("DeviceOwners")
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Device");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("prosumerAppBack.Models.Device.Device", b =>
                 {
-                    b.Navigation("DeviceOwners");
+                    b.HasOne("prosumerAppBack.Models.Device.DeviceType", "DeviceType")
+                        .WithMany("Devices")
+                        .HasForeignKey("DeviceTypeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("prosumerAppBack.Models.User", "Owner")
+                        .WithMany("Devices")
+                        .HasForeignKey("OwnerID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DeviceType");
+
+                    b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("prosumerAppBack.Models.Device.DeviceType", b =>
+                {
+                    b.HasOne("prosumerAppBack.Models.Device.DeviceGroup", "Group")
+                        .WithMany("DeviceTypes")
+                        .HasForeignKey("GroupID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("prosumerAppBack.Models.Device.DeviceManufacturers", "Manufacturer")
+                        .WithMany("DeviceTypes")
+                        .HasForeignKey("ManufacturerID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Group");
+
+                    b.Navigation("Manufacturer");
+                });
+
+            modelBuilder.Entity("prosumerAppBack.Models.Device.DeviceGroup", b =>
+                {
+                    b.Navigation("DeviceTypes");
+                });
+
+            modelBuilder.Entity("prosumerAppBack.Models.Device.DeviceManufacturers", b =>
+                {
+                    b.Navigation("DeviceTypes");
+                });
+
+            modelBuilder.Entity("prosumerAppBack.Models.Device.DeviceType", b =>
+                {
+                    b.Navigation("Devices");
                 });
 
             modelBuilder.Entity("prosumerAppBack.Models.User", b =>
                 {
-                    b.Navigation("DeviceOwners");
+                    b.Navigation("Devices");
                 });
 #pragma warning restore 612, 618
         }

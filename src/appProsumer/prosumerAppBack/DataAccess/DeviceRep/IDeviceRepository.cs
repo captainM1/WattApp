@@ -12,6 +12,14 @@ namespace prosumerAppBack.BusinessLogic
         
         IEnumerable<Device> GetDevicesForUser(Guid userID);
         Task<Device> AddDevice(Models.Device.AddDeviceDto addDeviceDto);
-    }
+
+        public IEnumerable<DeviceGroup> GetDeviceGroups();
+
+        public IEnumerable<DeviceManufacturers> GetDeviceManufacturers();
+        
+        public IEnumerable<DeviceType> GetDevicesBasedOnGroup(Guid groupID);
+        
+        public IEnumerable<DeviceType> GetDevicesBasedOnManufacturer(Guid maunfID);
+	}
 }
 

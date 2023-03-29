@@ -15,24 +15,33 @@ namespace prosumerAppBack.DataAccess
         public DbSet<UsersRequestedToDso> UsersAppliedToDSO { get; set; }
         public DbSet<Device> Devices { get; set; }
         
-        public DbSet<DeviceOwners> DeviceOwners { get; set; }
+        public DbSet<DeviceType> DeviceTypes { get; set; }
+        public DbSet<DeviceGroup> DeviceGroups { get; set; }
+        public DbSet<DeviceManufacturers> DeviceManufacturers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<DeviceType>()
+                .HasOne(d => d.Group)
+                .WithMany(g => g.DeviceTypes)
+                .HasForeignKey(d => d.GroupID);
+
+            modelBuilder.Entity<DeviceType>()
+                .HasOne(d => d.Manufacturer)
+                .WithMany(m => m.DeviceTypes)
+                .HasForeignKey(d => d.ManufacturerID);
             
-            modelBuilder.Entity<DeviceOwners>()
-                .HasKey(d => new { d.DeviceID, d.UserID });
-            
-            modelBuilder.Entity<DeviceOwners>()
-                .HasOne(d => d.Device)
-                .WithMany(d => d.DeviceOwners)
-                .HasForeignKey(d => d.DeviceID);
-            
-            modelBuilder.Entity<DeviceOwners>()
-                .HasOne(d => d.User)
-                .WithMany(u => u.DeviceOwners)
-                .HasForeignKey(d => d.UserID);
+            modelBuilder.Entity<Device>()
+                .HasOne(d => d.DeviceType)
+                .WithMany(dt => dt.Devices)
+                .HasForeignKey(d => d.DeviceTypeID);
+
+            modelBuilder.Entity<Device>()
+                .HasOne(d => d.Owner)
+                .WithMany(u => u.Devices)
+                .HasForeignKey(d => d.OwnerID);
         }
     }
 }
