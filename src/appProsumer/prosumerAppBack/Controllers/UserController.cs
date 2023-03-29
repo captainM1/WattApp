@@ -178,7 +178,7 @@ public class UserController : ControllerBase
         return Ok(new { message = "Password changed" });
     }
 
-    [HttpGet("coordinates")]
+    [HttpGet("coordinatesForEveryUser")]
     public async Task<ActionResult<IEnumerable<object>>> GetCoordinatesForAllUsers()
     {
         try
@@ -263,5 +263,20 @@ public class UserController : ControllerBase
         }
 
         return Ok(new { message = "Password changed" });
+    }
+    
+    [HttpGet("coordinates/{id}")]
+    public async Task<IActionResult> GetCoordinatesForUser(Guid id)
+    {
+        try
+        {
+            var results = await _userService.GetCoordinatesForUser(id);
+
+            return Ok(results);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 }
