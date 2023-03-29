@@ -16,7 +16,8 @@ namespace prosumerAppBack.DataAccess
         public DbSet<Device> Devices { get; set; }
         
         public DbSet<DeviceOwners> DeviceOwners { get; set; }
-
+        public DbSet<DeviceType> DeviceTypes { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -33,6 +34,19 @@ namespace prosumerAppBack.DataAccess
                 .HasOne(d => d.User)
                 .WithMany(u => u.DeviceOwners)
                 .HasForeignKey(d => d.UserID);
+            
+            modelBuilder.Entity<DeviceTypeConnection>()
+                .HasKey(dt => new { dt.DeviceID, dt.DeviceTypeID });
+
+            modelBuilder.Entity<DeviceTypeConnection>()
+                .HasOne(dt => dt.Device)
+                .WithMany(d => d.DeviceDeviceTypes)
+                .HasForeignKey(dt => dt.DeviceID);
+
+            modelBuilder.Entity<DeviceTypeConnection>()
+                .HasOne(dt => dt.DeviceType)
+                .WithMany(dt => dt.DeviceDeviceTypes)
+                .HasForeignKey(dt => dt.DeviceTypeID);
         }
     }
 }

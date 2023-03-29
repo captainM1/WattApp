@@ -17,6 +17,7 @@ namespace prosumerAppBack.Models.Device
 		public bool Status { get; set; }
 
 		public virtual ICollection<DeviceOwners> DeviceOwners { get; set; }
+		public virtual ICollection<DeviceTypeConnection> DeviceDeviceTypes { get; set; }
     }
 }
 

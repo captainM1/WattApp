@@ -9,10 +9,12 @@ namespace prosumerAppBack.DataAccess
 	public class DeviceRepository: IDeviceRepository
     {
         private readonly DataContext _dbContext;
+        private readonly IUserService _userService;
 
-        public DeviceRepository(DataContext dbContext)
+        public DeviceRepository(DataContext dbContext,UserService userService)
         {
             _dbContext = dbContext;
+            _userService = userService;
         }
 
         public async Task<Device> GetDeviceByIdAsync(Guid id)
@@ -62,10 +64,11 @@ namespace prosumerAppBack.DataAccess
                 Manufacturer = addDeviceDto.Manufacturer,
                 Wattage = addDeviceDto.Wattage,
                 MacAdress = addDeviceDto.MacAdress,
+                Status = false
             };
 
             _dbContext.Devices.Add(newDevice);
-            //_dbContext.DeviceOwners.Add()
+            _dbContext.DeviceOwners.Add(new DeviceOwners { DeviceID = newDevice.ID, UserID = _userService.GetID().Value ,ID = Guid.NewGuid()});
             await _dbContext.SaveChangesAsync();
             return newDevice;
         }
