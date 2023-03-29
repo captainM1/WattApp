@@ -264,16 +264,4 @@ public class UserController : ControllerBase
 
         return Ok(new { message = "Password changed" });
     }
-    [HttpGet("{userID}/devices")]
-    public IActionResult GetDevicesForUser(Guid userID)
-    {
-        var devices = _deviceService.GetDevicesForUser(userID);
-
-        if (devices == null)
-        {
-            return NotFound();
-        }
-
-        return Ok(devices);
-    }
 }

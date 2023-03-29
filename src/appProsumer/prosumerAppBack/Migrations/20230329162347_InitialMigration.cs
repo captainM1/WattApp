@@ -12,20 +12,27 @@ namespace prosumerAppBack.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Devices",
+                name: "DeviceGroups",
                 columns: table => new
                 {
                     ID = table.Column<Guid>(type: "TEXT", nullable: false),
-                    DeviceID = table.Column<int>(type: "INTEGER", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: true),
-                    Manufacturer = table.Column<string>(type: "TEXT", nullable: true),
-                    Wattage = table.Column<double>(type: "REAL", nullable: false),
-                    MacAdress = table.Column<string>(type: "TEXT", nullable: true),
-                    Status = table.Column<bool>(type: "INTEGER", nullable: false)
+                    Name = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Devices", x => x.ID);
+                    table.PrimaryKey("PK_DeviceGroups", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DeviceManufacturers",
+                columns: table => new
+                {
+                    ID = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DeviceManufacturers", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -72,50 +79,99 @@ namespace prosumerAppBack.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DeviceOwners",
+                name: "DeviceTypes",
                 columns: table => new
                 {
-                    DeviceID = table.Column<Guid>(type: "TEXT", nullable: false),
-                    UserID = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ID = table.Column<Guid>(type: "TEXT", nullable: false)
+                    ID = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    GroupID = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ManufacturerID = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Wattage = table.Column<int>(type: "NUMERIC", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DeviceOwners", x => new { x.DeviceID, x.UserID });
+                    table.PrimaryKey("PK_DeviceTypes", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_DeviceOwners_Devices_DeviceID",
-                        column: x => x.DeviceID,
-                        principalTable: "Devices",
+                        name: "FK_DeviceTypes_DeviceGroups_GroupID",
+                        column: x => x.GroupID,
+                        principalTable: "DeviceGroups",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_DeviceOwners_Users_UserID",
-                        column: x => x.UserID,
+                        name: "FK_DeviceTypes_DeviceManufacturers_ManufacturerID",
+                        column: x => x.ManufacturerID,
+                        principalTable: "DeviceManufacturers",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Devices",
+                columns: table => new
+                {
+                    ID = table.Column<Guid>(type: "TEXT", nullable: false),
+                    MacAdress = table.Column<string>(type: "TEXT", nullable: true),
+                    DeviceTypeID = table.Column<Guid>(type: "TEXT", nullable: false),
+                    OwnerID = table.Column<Guid>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Devices", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Devices_DeviceTypes_DeviceTypeID",
+                        column: x => x.DeviceTypeID,
+                        principalTable: "DeviceTypes",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Devices_Users_OwnerID",
+                        column: x => x.OwnerID,
                         principalTable: "Users",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_DeviceOwners_UserID",
-                table: "DeviceOwners",
-                column: "UserID");
+                name: "IX_Devices_DeviceTypeID",
+                table: "Devices",
+                column: "DeviceTypeID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Devices_OwnerID",
+                table: "Devices",
+                column: "OwnerID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DeviceTypes_GroupID",
+                table: "DeviceTypes",
+                column: "GroupID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DeviceTypes_ManufacturerID",
+                table: "DeviceTypes",
+                column: "ManufacturerID");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "DeviceOwners");
+                name: "Devices");
 
             migrationBuilder.DropTable(
                 name: "UsersAppliedToDSO");
 
             migrationBuilder.DropTable(
-                name: "Devices");
+                name: "DeviceTypes");
 
             migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "DeviceGroups");
+
+            migrationBuilder.DropTable(
+                name: "DeviceManufacturers");
         }
     }
 }
