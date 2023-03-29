@@ -1,5 +1,6 @@
 using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using prosumerAppBack.Helper;
 using prosumerAppBack.Models;
 
@@ -9,11 +10,13 @@ public class UserRepository : IUserRepository
 {
     private readonly DataContext _dbContext;
     private readonly IPasswordHasher _passwordHasher;
+    private readonly ITokenMaker _tokenMaker;
 
-    public UserRepository(DataContext dbContext,IPasswordHasher passwordHasher)
+    public UserRepository(DataContext dbContext,IPasswordHasher passwordHasher, ITokenMaker tokenMaker)
     {
         _dbContext = dbContext;
         _passwordHasher = passwordHasher;
+        _tokenMaker = tokenMaker;
 
     }
     public async Task<User> GetUserByIdAsync(Guid id)
@@ -141,6 +144,15 @@ public class UserRepository : IUserRepository
     public async Task<Boolean> UpdatePassword(Guid id, string newPassword)
     {
         var user = await this.GetUserByIdAsync(id);
+
+        string token = _tokenMaker.GenerateToken(user);
+
+        bool result = _tokenMaker.ValidateJwtToken(token);
+
+        if (result == false)
+        {
+            return false;
+        }
 
         if (user == null)
         {
