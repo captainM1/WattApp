@@ -18,8 +18,15 @@ export class AddDeviceComponent {
   showProducer: boolean = false;
   toggle2Checked = false;
 
+  groups: any[] = [];
+  selectedGroup!: string;
+
+  manufacturers: any[] = [];
+  selectedManufacturerId: any;
+  devices: any[] = [];
+  selectedDevice: any;
+
   selectedOption = 'consumer';
-  addConsumerForm!: FormGroup;
   addProducerForm!: FormGroup;
   addStorageForm!: FormGroup;
 
@@ -31,15 +38,52 @@ export class AddDeviceComponent {
     private messageService: MessageService
   ){}
 
+  addConsumerForm: FormGroup = this.fb.group({
+    manufacturer: ['', Validators.required]
+  });
+
   ngOnInit() {
-    this.addConsumerForm = this.fb.group({
-      name: '',
-      manufacturer: '',
-      wattage: 0,
-      macAddress: '',
-      toggleButton1: false,
-      toggleButton2: false
-    });
+    this.http.get<any[]>(environment.apiUrl + '/api/Device/manufacturers')
+      .subscribe(data => {
+        this.manufacturers = data;
+      });
+
+    this.http.get<any[]>(environment.apiUrl + '/api/Device/groups')
+      .subscribe(groups => this.groups = groups);
+  }
+
+  onGroupSelected(event: any) {
+    const selectElement = event.target as HTMLSelectElement;
+    this.selectedGroup = selectElement.value;
+    console.log(this.selectedGroup);
+  }
+
+  onManufacturerChange(event: any) {
+    const manSelect = event.target as HTMLSelectElement;
+    this.selectedManufacturerId = manSelect.value;
+    console.log(this.selectedManufacturerId);
+  
+    if (!this.selectedManufacturerId) {
+      console.log('No manufacturer selected');
+      return;
+    }
+  
+    this.http.get<any[]>(`${environment.apiUrl}/api/Device/manufacturer/${this.selectedManufacturerId}`)
+      .subscribe({
+        next: data => {
+          console.log(data);
+          this.devices = data;
+        },
+        error: err => {
+          console.error(err);
+        }
+      });
+  }
+  
+
+  onDeviceChange(event: any){
+    const deviceSelect = event.target as HTMLSelectElement;
+    this.selectedDevice = deviceSelect.value;
   }
 
   onSelect(selectedValue: string) {
@@ -64,6 +108,10 @@ export class AddDeviceComponent {
 
 
   onSubmit(){
+    const formData = {
+      manufacturerId: this.selectedManufacturerId.id,
+      deviceId: this.selectedDevice.id
+    };
     if(this.showConsumer){
       const formData = this.addConsumerForm.value;
 
