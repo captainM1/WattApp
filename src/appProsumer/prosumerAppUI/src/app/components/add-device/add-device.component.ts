@@ -5,6 +5,7 @@ import { MessageService } from 'primeng/api';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Device } from '../../models/device.model';
+import { Storage } from '../../models/storage.model';
 //import { NgToastService } from 'ng-angular-popup';
 @Component({
   selector: 'app-add-device',
@@ -70,6 +71,42 @@ export class AddDeviceComponent {
         name: formData.name,
         manufacturer: formData.manufacturer,
         wattage: formData.wattage,
+        macAddress: formData.macAddress,
+        collectData: formData.toggleButton1,
+        controlTime: formData.toggleButton2
+      };
+      console.log(device);
+
+      this.http.post(environment.apiUrl + '/devices/add-new', device)
+      .subscribe(response => {
+        console.log(response);
+      });
+    }
+    else if(this.showProducer){
+      const formData = this.addProducerForm.value;
+
+      const device: Device = {
+        name: formData.name,
+        manufacturer: formData.manufacturer,
+        wattage: formData.wattage,
+        macAddress: formData.macAddress,
+        collectData: formData.toggleButton1,
+        controlTime: formData.toggleButton2
+      };
+      console.log(device);
+
+      this.http.post(environment.apiUrl + '/devices/add-new', device)
+      .subscribe(response => {
+        console.log(response);
+      });
+    }
+    else{
+      const formData = this.addStorageForm.value;
+
+      const device: Storage = {
+        name: formData.name,
+        manufacturer: formData.manufacturer,
+        batteryCapacity: formData.batteryCapacity,
         macAddress: formData.macAddress,
         collectData: formData.toggleButton1,
         controlTime: formData.toggleButton2
