@@ -36,6 +36,7 @@ import { MyDevicesComponent } from './components/my-devices/my-devices.component
 
 import { MobNavComponent } from './components/mob-nav/mob-nav.component';
 
+
 @NgModule({
   declarations: [
     AppComponent,

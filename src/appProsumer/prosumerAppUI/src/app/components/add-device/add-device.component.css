@@ -3,6 +3,24 @@
     src: url(/assets/fonts/Inter-Regular.ttf);
  }
 
+ @media(max-width: 480px) {
+    .mobile{
+        display: contents;
+    }
+    .desktop{
+        display: none;
+    }
+  }
+  
+  @media(min-width: 481px){
+    .mobile{
+        display: none;
+    }
+    .desktop{
+        display: contents;
+    }
+  }
+
  
 @media (max-width: 280px) /*Fold*/
 { 
@@ -96,6 +114,11 @@
         background-color: #026670;
     }
 
+    .outer{
+        
+        margin-top: 80px;
+    }
+
     h3{
         color:white;
         text-transform: uppercase;
@@ -186,3 +209,4 @@ select option:not(:checked) {
     color: #026670;
     background-color: white;
 }
+

@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { environment } from 'src/environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { Device } from '../../models/device.model';
 //import { NgToastService } from 'ng-angular-popup';
 @Component({
   selector: 'app-add-device',
@@ -12,8 +15,7 @@ export class AddDeviceComponent {
   showConsumer: boolean = true;
   showStorage: boolean = false;
   showProducer: boolean = false;
-
-  submitted = false;
+  toggle2Checked = false;
 
   selectedOption = 'consumer';
   addConsumerForm!: FormGroup;
@@ -23,9 +25,21 @@ export class AddDeviceComponent {
   constructor(
     private fb: FormBuilder, 
     private router : Router,
+    private http : HttpClient,
     //private toast : NgToastService
     private messageService: MessageService
   ){}
+
+  ngOnInit() {
+    this.addConsumerForm = this.fb.group({
+      name: '',
+      manufacturer: '',
+      wattage: 0,
+      macAddress: '',
+      toggleButton1: false,
+      toggleButton2: false
+    });
+  }
 
   onSelect(selectedValue: string) {
     switch (selectedValue) {
@@ -47,18 +61,25 @@ export class AddDeviceComponent {
     }
   }
 
-  
 
-  onSubmit(){/* Ovo nije dobro;
-    this.submitted = true;
-    if(this.addConsumerForm.valid){
-      this.toast.success({detail:"Success", summary: "Adding device successful!", duration:3000});
-      this.router.navigate(['home']);
-      return;
-    }else{
-      this.toast.error({detail:"Error", summary:"Something went wrong!", duration:3000 })
-      this.router.navigate(['addDevice'])
-    }*/
+  onSubmit(){
+    if(this.showConsumer){
+      const formData = this.addConsumerForm.value;
 
+      const device: Device = {
+        name: formData.name,
+        manufacturer: formData.manufacturer,
+        wattage: formData.wattage,
+        macAddress: formData.macAddress,
+        collectData: formData.toggleButton1,
+        controlTime: formData.toggleButton2
+      };
+      console.log(device);
+
+      this.http.post(environment.apiUrl + '/devices/add-new', device)
+      .subscribe(response => {
+        console.log(response);
+      });
+    }
   }
 }
