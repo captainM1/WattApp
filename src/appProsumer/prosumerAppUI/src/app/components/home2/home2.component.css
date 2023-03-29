@@ -80,8 +80,8 @@
   #kolone
   {
     float:right;
-    margin-right: 50px;
-    width: 42%;
+    margin-right: 150px;
+    width: 35%;
     margin-top: 40px;
   }
 
@@ -125,6 +125,7 @@
   {
     width: 15%;
     padding-top: 10px;
+    padding-left: 15px;
   }
 
 

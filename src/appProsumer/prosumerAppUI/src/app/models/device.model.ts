@@ -1,10 +1,7 @@
 export interface Device {
+    id: string;
+    deviceID: number;
+    name: string;
     manufacturer: string;
-    wattage: number;
-    frequency: number;
-    mac: string;
-    name:string;
-    time:number;
-    collectData:boolean;
-    controlTime:boolean;
+    macAdress: string;
 }
