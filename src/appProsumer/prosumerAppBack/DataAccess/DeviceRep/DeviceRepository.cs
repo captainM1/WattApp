@@ -55,7 +55,7 @@ namespace prosumerAppBack.DataAccess
             return devices.ToList();
         }
 
-        public async Task<Device> AddDevice(Models.Device.AddDeviceDto addDeviceDto)
+        public async Task<Device> AddDevice(AddDeviceDto addDeviceDto)
         {
             var newDevice = new Device
             {

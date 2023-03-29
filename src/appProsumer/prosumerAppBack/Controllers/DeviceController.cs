@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 using prosumerAppBack.BusinessLogic;
+using prosumerAppBack.BusinessLogic.DeviceService;
 using prosumerAppBack.Models;
 using prosumerAppBack.Models.Device;
 
@@ -10,59 +11,76 @@ namespace prosumerAppBack.Controllers
 	public class DeviceController : ControllerBase
 	{
 		private readonly IDeviceRepository _deviceRepository;
+        private readonly IDeviceService _deviceService;
 
-		public DeviceController(IDeviceRepository deviceRepository)
+        public DeviceController(IDeviceRepository deviceRepository, IDeviceService deviceService)
 		{
 			_deviceRepository = deviceRepository;
+			_deviceService = deviceService;
 		}
 
 		[HttpGet("devices/{id}")]
 		public async Task<ActionResult<Device>> GetDevice(Guid id)
 		{
-			var device = await _deviceRepository.GetDeviceByIdAsync(id);
-			if(device == null)
-			{
-				return BadRequest("Device not found");
-			}
+            try
+            {
+                var device = await _deviceService.GetDeviceById(id);
 
-			return Ok(device);
-		}
+                return Ok(device);
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
+        }
 
 		[HttpGet("devices")]
 		public async Task<IActionResult> GetAllDevices()
 		{
-			var devices = await _deviceRepository.GetAllDevices();
-			if(devices == null)
-			{
-				return BadRequest("Not devices foundd");
-			}
+            try
+            {
+                var devices = await _deviceRepository.GetAllDevices();
+                if (devices == null)
+                {
+                    return BadRequest("Devices not found");
+                }
 
-			return Ok(devices);
-		}
+                return Ok(devices);
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
+        }
 
         [HttpPost("devices/update{id}")]
         public async Task<IActionResult> UpdateDevice(Guid id,[FromBody] UpdateDeviceDto updateDeviceDto)
         {
-            var check = await _deviceRepository.UpdateDevice(id, updateDeviceDto);
-
-            if (check)
+            try
             {
-                return BadRequest("Device not updated");
-            }
+                var check = await _deviceRepository.UpdateDevice(id, updateDeviceDto);
 
-            return Ok(new { message = "Device updated" });
+                return Ok(new { message = "Device updated" });
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }            
         }
         [HttpPost("devices/add-new")]
-        public async Task<IActionResult> AddDevice([FromBody] Models.Device.AddDeviceDto addDeviceDto)
+        public async Task<IActionResult> AddDevice([FromBody] AddDeviceDto addDeviceDto)
         {
-	        var check = await _deviceRepository.AddDevice(addDeviceDto);
-			if (check == null)
-			{
-				return BadRequest("Cannot add device");
-			}
+            try
+            {
+                var check = await _deviceRepository.AddDevice(addDeviceDto);
 
-			return Ok(new { message = "Device added" });
-		}
+                return Ok(new { message = "Device added" });
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
+        }
 	}
 }
 
