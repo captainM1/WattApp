@@ -29,10 +29,11 @@
                                 </div>
                             </div>
                             <div class="input-group form-group pt-4">
-                                <input class = "form-control"  [ngClass] = "{'is-invalid invalid-input' : submitted && fields['address'].errors}" formControlName = "address" type="text" placeholder="Address">
+                                <input class = "form-control" [ngClass] = "{'is-invalid invalid-input' : submitted && fields['address'].errors}" formControlName = "address" type="text" placeholder="Street, City, Country">
                                 <span class="input-group-addon addon-icon" [ngClass]="{'invalid-icon': submitted && fields['address'].errors}"><i class="fa fa-location-arrow"></i></span>
                                 <div class="invalid-feedback">
                                     <span class="text-danger" *ngIf="submitted && fields['address'].errors?.['required']">*Address is required!</span>
+                                    <span class="text-danger" *ngIf="submitted ">Address must be in the format: Street, City, Country</span>
                                 </div>
                         </div>
                         <div class="input-group form-group pt-4">

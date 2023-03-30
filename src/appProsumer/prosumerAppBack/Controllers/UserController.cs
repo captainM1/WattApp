@@ -175,7 +175,7 @@ public class UserController : ControllerBase
             return BadRequest("Action failed");
         }
 
-        return Ok(new { message = "Password changed" });
+        return Ok(new { message = "Password changed" }); 
     }
 
     [HttpGet("coordinatesForEveryUser")]

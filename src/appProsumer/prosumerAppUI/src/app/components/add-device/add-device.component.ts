@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { environment } from 'src/environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { Device } from '../../models/device.model';
+import { Storage } from '../../models/storage.model';
 //import { NgToastService } from 'ng-angular-popup';
 @Component({
   selector: 'app-add-device',
@@ -12,53 +16,109 @@ export class AddDeviceComponent {
   showConsumer: boolean = true;
   showStorage: boolean = false;
   showProducer: boolean = false;
+  toggle2Checked = false;
 
-  submitted = false;
+  groups: any[] = [];
+  selectedGroup!: string;
 
-  selectedOption = 'consumer';
-  addConsumerForm!: FormGroup;
-  addProducerForm!: FormGroup;
-  addStorageForm!: FormGroup;
+  manufacturers: any[] = [];
+  selectedManufacturerId: any;
+  devices: any[] = [];
+  selectedDevice: any;
+
 
   constructor(
     private fb: FormBuilder, 
     private router : Router,
+    private http : HttpClient,
     //private toast : NgToastService
     private messageService: MessageService
   ){}
 
-  onSelect(selectedValue: string) {
-    switch (selectedValue) {
-      case 'consumer':
-        this.showConsumer = true;
-        this.showProducer = false;
-        this.showStorage = false;
-        break;
-      case 'producer':
-        this.showConsumer = false;
-        this.showProducer = true;
-        this.showStorage = false;
-        break;
-      case 'storage':
-        this.showConsumer = false;
-        this.showProducer = false;
-        this.showStorage = true;
-        break;
+  addDeviceForm: FormGroup = this.fb.group({
+    type:['', Validators.required],
+    manufacturer: ['', Validators.required],
+    device: ['', Validators.required],
+    macAddress: ['', Validators.required]
+  });
+
+  ngOnInit() {
+    this.http.get<any[]>(environment.apiUrl + '/api/Device/manufacturers')
+      .subscribe(data => {
+        this.manufacturers = data;
+      });
+
+    this.http.get<any[]>(environment.apiUrl + '/api/Device/groups')
+      .subscribe(groups => this.groups = groups);
+  }
+
+  onGroupSelected(event: any) {
+    const selectElement = event.target as HTMLSelectElement;
+    this.selectedGroup = selectElement.value;
+    console.log(this.selectedGroup);
+
+    if (!this.selectedManufacturerId || !this.selectedGroup) {
+      console.log('No manufacturer or group selected');
+      return;
+    }
+    else{
+      this.http.get<any[]>(`${environment.apiUrl}/api/Device/${this.selectedGroup}/${this.selectedManufacturerId}`)
+      .subscribe({
+        next: data => {
+          console.log(data);
+          this.devices = data;
+        },
+        error: err => {
+          console.error(err);
+        }
+      });
     }
   }
 
+  onManufacturerChange(event: any) {
+    const manSelect = event.target as HTMLSelectElement;
+    this.selectedManufacturerId = manSelect.value;
+    console.log(this.selectedManufacturerId);
   
-
-  onSubmit(){/* Ovo nije dobro;
-    this.submitted = true;
-    if(this.addConsumerForm.valid){
-      this.toast.success({detail:"Success", summary: "Adding device successful!", duration:3000});
-      this.router.navigate(['home']);
+    if (!this.selectedManufacturerId || !this.selectedGroup) {
+      console.log('No manufacturer or group selected');
       return;
-    }else{
-      this.toast.error({detail:"Error", summary:"Something went wrong!", duration:3000 })
-      this.router.navigate(['addDevice'])
-    }*/
+    }
+    else{
+      this.http.get<any[]>(`${environment.apiUrl}/api/Device/${this.selectedGroup}/${this.selectedManufacturerId}`)
+      .subscribe({
+        next: data => {
+          console.log(data);
+          this.devices = data;
+        },
+        error: err => {
+          console.error(err);
+        }
+      });
+    } 
+  }
+  
+  onDeviceChange(event: any){
+    const deviceSelect = event.target as HTMLSelectElement;
+    this.selectedDevice = deviceSelect.value;
+  }
 
+  onSubmit(){
+    if(this.showConsumer){
+      const formData = this.addDeviceForm.value;
+
+      const device: Device = {
+        type: this.selectedGroup,
+        device: this.selectedDevice,
+        manufacturer: this.selectedManufacturerId,
+        macAddress: formData.macAddress
+      };
+      console.log(device);
+
+      this.http.post(environment.apiUrl + '/devices/add-new', device)
+      .subscribe(response => {
+        console.log(response);
+      });
+    }
   }
 }
