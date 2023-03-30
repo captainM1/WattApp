@@ -57,7 +57,7 @@ export class TableComponent implements OnInit{
   private initMap(): void{
     this.map = L.map('map',{
       center: this.centroid,
-      zoom: 12
+      zoom: 18
   });
 
     const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png?key=Xjmy4FwEg0zjH3KOEzXy',{
