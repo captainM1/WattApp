@@ -7,11 +7,12 @@ namespace prosumerAppBack.DataAccess;
 public class PowerUsageRepository:IPowerUsageRepository
 {
     private readonly IMongoCollection<PowerUsage> mongoCollection;
-
+    private readonly DataContext _dataContext;
     
-    public PowerUsageRepository(MongoDataContext mongoDataContext)
+    public PowerUsageRepository(MongoDataContext mongoDataContext, DataContext dataContext)
     {
         mongoCollection = mongoDataContext.PowerUsage;
+        _dataContext = dataContext;
     }
 
     public IEnumerable<PowerUsage> Get()
@@ -20,15 +21,7 @@ public class PowerUsageRepository:IPowerUsageRepository
         var filteredPowerUsageData = new List<PowerUsage>();
         foreach (var powerUsage in mongoCollection.AsQueryable())
         {
-            var filteredTimestampPowerPairs = new List<TimestampPowerPair>();
-            foreach (var timestampPowerPair in powerUsage.TimestampPowerPairs)
-            {
-                if (timestampPowerPair.Timestamp == currentHourTimestamp)
-                {
-                    filteredTimestampPowerPairs.Add(timestampPowerPair);
-                }
-            }
-
+            var filteredTimestampPowerPairs = powerUsage.TimestampPowerPairs.Where(p => p.Timestamp == currentHourTimestamp).ToList();
             if (filteredTimestampPowerPairs.Count > 0)
             {
                 filteredPowerUsageData.Add(new PowerUsage
@@ -38,7 +31,28 @@ public class PowerUsageRepository:IPowerUsageRepository
                 });
             }
         }
-
+        return filteredPowerUsageData;
+    }
+    public PowerUsage GetForDevice(Guid deviceID)
+    {
+        DateTime currentHourTimestamp = DateTime.Now.Date.AddHours(DateTime.Now.Hour);
+        PowerUsage filteredPowerUsageData = null;
+        foreach (var powerUsage in mongoCollection.AsQueryable())
+        {
+            if (powerUsage.Id == deviceID)
+            {
+                var filteredTimestampPowerPairs = powerUsage.TimestampPowerPairs.Where(p => p.Timestamp == currentHourTimestamp).ToList();
+                if (filteredTimestampPowerPairs.Count > 0)
+                {
+                    filteredPowerUsageData = new PowerUsage
+                    {
+                        Id = powerUsage.Id,
+                        TimestampPowerPairs = filteredTimestampPowerPairs
+                    };
+                }
+                break;
+            }
+        }
         return filteredPowerUsageData;
     }
 
@@ -102,5 +116,55 @@ public class PowerUsageRepository:IPowerUsageRepository
         }
 
         return nextSevenDaysUsage;
+    }
+    
+    public double GetPowerUsageForDay(Guid deviceID, DateTime today)
+    {
+        Guid deviceTypeID = _dataContext.Devices
+            .Where(d => d.ID == deviceID)
+            .Select(d => d.DeviceTypeID)
+            .FirstOrDefault();
+
+        Guid novi = new Guid(deviceTypeID.ToString("N").ToUpper());
+
+
+        PowerUsage powerUsage = null;
+        
+        foreach (var v in mongoCollection.AsQueryable())
+        {
+            if (novi == v.Id)
+                powerUsage = v;
+        }
+
+        if (powerUsage == null)
+        {
+            return 0;
+        }
+        
+        double totalPowerUsage = powerUsage.TimestampPowerPairs
+            .Where(pair => pair.Timestamp.Date == today)
+            .Average(pair => pair.PowerUsage);
+
+        return totalPowerUsage;
+    }
+
+    public PowerUsage GetPowerUsageFor7Days(Guid deviceId, int direction)
+    {
+        var powerUsage = new PowerUsage();
+        powerUsage.TimestampPowerPairs = new List<TimestampPowerPair>();
+        var today = DateTime.Today;
+
+        for (int i = 0; i < 7; i++)
+        {
+            var day = today.AddDays(i * direction);
+            var powerUsageD = GetPowerUsageForDay(deviceId, day);
+            var ts = new TimestampPowerPair();
+            ts.PowerUsage = powerUsageD;
+            ts.Timestamp = day;
+            powerUsage.TimestampPowerPairs.Add(ts);
+
+        }
+
+        return powerUsage;
     }
 }
