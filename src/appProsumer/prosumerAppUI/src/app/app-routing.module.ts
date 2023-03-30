@@ -33,26 +33,26 @@ const routes: Routes = [
     path:'home',component:HomeComponent,canActivate:[AuthGuard]
   },
   {
-    path: 'add-device', component: AddDeviceComponent
+    path: 'add-device', component: AddDeviceComponent,canActivate:[AuthGuard]
   },
   {
-    path: 'edit-profile', component: EditProfileComponent
+    path: 'edit-profile', component: EditProfileComponent,canActivate:[AuthGuard]
   },
   {
-    path: 'edit-device', component: EditDeviceComponent
+    path: 'edit-device', component: EditDeviceComponent,canActivate:[AuthGuard]
   },
   
   {
-    path:'mob-nav', component:MobNavComponent
+    path:'mob-nav', component:MobNavComponent,canActivate:[AuthGuard]
   },
   {
-    path:'nav', component:NavComponent
+    path:'nav', component:NavComponent,canActivate:[AuthGuard]
   },
   {
-    path:'my-devices', component:MyDevicesComponent
+    path:'my-devices', component:MyDevicesComponent,canActivate:[AuthGuard]
   },
   {
-    path:'profile-prosumer', component:ProfileProsumerComponent
+    path:'profile-prosumer', component:ProfileProsumerComponent,canActivate:[AuthGuard]
   }
 ];
 

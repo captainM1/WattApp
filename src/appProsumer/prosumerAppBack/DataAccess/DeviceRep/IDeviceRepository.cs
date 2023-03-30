@@ -1,4 +1,5 @@
 ﻿using System;
+using prosumerAppBack.DataAccess;
 using prosumerAppBack.Models;
 using prosumerAppBack.Models.Device;
 
@@ -22,6 +23,10 @@ namespace prosumerAppBack.BusinessLogic
         public IEnumerable<DeviceType> GetDevicesBasedOnManufacturer(Guid maunfID);
 
         public IEnumerable<DeviceType> GetDevicesBasedOnManufacturerAndGroup(Guid maunfID, Guid groupID);
+
+        public IEnumerable<object> GetDevicesInfoForUser(Guid userID);
+
+        public IEnumerable<ManufacturerDto> GetManufacturersBasedOnGroup(Guid groupID);
 	}
 }
 

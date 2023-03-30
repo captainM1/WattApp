@@ -45,6 +45,26 @@ namespace prosumerAppBack.DataAccess
             return _dbContext.Devices.Where(d => d.OwnerID == userID).ToArray();
         }
         
+        public IEnumerable<object> GetDevicesInfoForUser(Guid userID)
+        {
+            return _dbContext.Devices
+                .Where(d => d.OwnerID == userID)
+                .Join(_dbContext.DeviceTypes, d => d.DeviceTypeID, dt => dt.ID, (d, dt) => new 
+                { 
+                    d.MacAdress, 
+                    DeviceTypeName = dt.Name, 
+                    ManufacturerID = dt.ManufacturerID
+                })
+                .Select(joined => new 
+                {
+                    joined.MacAdress,
+                    joined.DeviceTypeName,
+                    ManufacturerName = _dbContext.DeviceManufacturers.FirstOrDefault(m => m.ID == joined.ManufacturerID).Name
+                })
+                .ToArray();
+        }
+
+
         public IEnumerable<DeviceGroup> GetDeviceGroups()
         {
             return _dbContext.DeviceGroups.ToArray();
@@ -61,7 +81,9 @@ namespace prosumerAppBack.DataAccess
 
         public IEnumerable<DeviceType> GetDevicesBasedOnManufacturer(Guid maunfID)
         {
-            return _dbContext.DeviceTypes.Where(d => d.ManufacturerID == maunfID);
+            return _dbContext.DeviceTypes.Where(d => d.ManufacturerID == maunfID)
+                .GroupBy(d => d.Wattage)
+                .Select(g => g.First());
         }
         
         public IEnumerable<DeviceType> GetDevicesBasedOnManufacturerAndGroup(Guid maunfID, Guid groupID)
@@ -83,6 +105,25 @@ namespace prosumerAppBack.DataAccess
             await _dbContext.SaveChangesAsync();
             return newDevice;
         }
+
+        public IEnumerable<ManufacturerDto> GetManufacturersBasedOnGroup(Guid groupID)
+        {
+            var manufacturers = (from deviceType in _dbContext.DeviceTypes
+                join manufacturer in _dbContext.DeviceManufacturers on deviceType.ManufacturerID equals manufacturer.ID
+                where deviceType.GroupID == groupID
+                select new ManufacturerDto
+                {
+                    ManufacturerID = manufacturer.ID,
+                    ManufacturerName = manufacturer.Name
+                }).Distinct();
+            return manufacturers;
+        }
+
+    }
+    public class ManufacturerDto
+    {
+        public Guid ManufacturerID { get; set; }
+        public string ManufacturerName { get; set; }
     }
 }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 using prosumerAppBack.BusinessLogic;
 using prosumerAppBack.BusinessLogic.DeviceService;
 using prosumerAppBack.Models;
@@ -13,10 +14,12 @@ namespace prosumerAppBack.Controllers
 	{
 		private readonly IDeviceRepository _deviceRepository;
 		private readonly IDeviceService _deviceService;
-		public DeviceController(IDeviceRepository deviceRepository, IDeviceService deviceService)
+		private readonly IUserService _userService;
+		public DeviceController(IDeviceRepository deviceRepository, IDeviceService deviceService, IUserService userService)
 		{
 			_deviceRepository = deviceRepository;
 			_deviceService = deviceService;
+			_userService = userService;
 		}
 
 		[HttpGet("{id}")]
@@ -78,6 +81,18 @@ namespace prosumerAppBack.Controllers
 
 	        return Ok(devices);
         }
+        [HttpGet("devices/info")]
+        public IActionResult GetDevicesInfoForUser()
+        {
+	        var devices = _deviceRepository.GetDevicesInfoForUser(_userService.GetID().Value);
+			
+	        if (devices == null)
+	        {
+		        return NotFound();
+	        }
+
+	        return Ok(devices);
+        }
         [HttpGet("groups")]
         public IActionResult GetGroups()
         {
@@ -103,8 +118,21 @@ namespace prosumerAppBack.Controllers
 	        return Ok(manufacturers);
         }
         
+        [HttpGet("manufacturers/{groupID}")]
+        public IActionResult GetDeviceManufacturersBasedOnGroup(Guid groupID)
+        {
+	        var manufacturers = _deviceRepository.GetManufacturersBasedOnGroup(groupID);
+
+	        if (manufacturers == null)
+	        {
+		        return NotFound();
+	        }
+
+	        return Ok(manufacturers);
+        }
+        
         [HttpGet("manufacturer/{manID}")]
-        public IActionResult GetDeviceTypesManufacturer(Guid manID)
+        public IActionResult GetDevicesBasedOnManufacturer(Guid manID)
         {
 	        var manufacturers = _deviceRepository.GetDevicesBasedOnManufacturer(manID);
 

@@ -3,11 +3,18 @@
         <div class="inputi">
             <div class="form-group pt-3">
                 <label for="manufacturer">Device Manufacturer</label>
-                <input class = "form-control" formControlName = "manufacturer" type="text" placeholder="Select manufacturer">
+                <select id="manufacturer-dropdown" [(ngModel)]="selectedManufacturer" (change)="onManufacturerChanged()" class = "form-control">
+                    <option *ngFor="let manufacturer of manufacturers" [value]="manufacturer.manufacturerID">{{ manufacturer.manufacturerName }}</option>
+                  </select>
             </div>
             <div class="form-group text-right pt-3">
-                <label for="name">Device Name</label>
-                <input class = "form-control" formControlName = "name" type="text" placeholder="Insert Name of Device">
+                <div *ngIf="devices.length">
+                    <label for="device-dropdown">Select a device:</label>
+                    <select id="device-dropdown" [(ngModel)]="selectedDeviceID" class="form-control" formControlName="name" (ngModelChange)="onDeviceSelectionChange($event)">
+                      <option *ngFor="let device of devices" [value]="device.deviceID">{{ device.name }} - {{device.wattage}}W</option>
+                    </select>
+                  </div>
+                  
             </div>
             <div class="form-group pt-3">
                 <label for="mac-address">Device Mac Address</label>
@@ -31,7 +38,7 @@
             </div>
         </div>
         <div class="pt-4">
-            <button class="mx-2 mt-2"><img src="assets/icons/add.png" alt="icon" style="width:20px; margin-right: 10px;">Add New Rule</button>
+            <button class="mx-2 mt-2"><img src="assets/icons/add.png" alt="icon" style="width:20px; margin-right: 10px;" (click)="onSubmit()">Add New Rule</button>
             <button class="mx-2 mt-2" [disabled]="!toggle2Checked"><img src="assets/icons/log-out.png" alt="icon" style="width:15px; color: white; margin-right: 10px;">Add New Requirement</button>
         </div>
     </div>
