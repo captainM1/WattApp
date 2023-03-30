@@ -64,8 +64,9 @@ button{
 }
 
 button:hover {
-  background-color: #32909a;
-  border: none;
+  background-color: white;
+  border: 2px solid #026670;
+  color:#026670;
 }
 button:active {
   background-color: #026670;
@@ -80,6 +81,7 @@ button:focus{
   .container
   {
     width: 90%;
+    margin-bottom: 60px;
   }
 
   button{
@@ -108,6 +110,7 @@ button:focus{
   .container
   {
       width: 30%;
+      margin-left: 150px;
   }
 
   button{
@@ -134,12 +137,42 @@ button:focus{
 
 
   }
-
-@media (min-width: 481px) and (max-width: 1023px)  /*Tablet*/
+  @media (min-width: 481px) and (max-width: 720px)
 {
   .container
   {
-      width: 30%;
+      width: 60%;
+  }
+
+  button{
+    width: 50%;
+    margin-bottom: 20px;
+    font-size: 13px;
+  }
+
+  label{
+    font-size: 14px;
+    padding-top: 5px;
+  }
+
+  .col img
+  {
+    width:50%;
+  }
+
+  .col
+  {
+    width: 40%;
+
+  }
+}
+
+@media (min-width: 721px) and (max-width: 1024px)  /*Tablet*/
+{
+  .container
+  {
+      width: 50%;
+      margin-left: -30px;
   }
 
   button{
