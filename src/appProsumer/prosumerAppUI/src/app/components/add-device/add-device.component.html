@@ -24,12 +24,14 @@
                                 <div>
                                     <label for="type">Device Type:</label>
                                     <select name="type" (change)="onGroupSelected($event)">
+                                        <option value="">-- Select Type --</option>
                                         <option *ngFor="let group of groups" [value]="group.id">{{ group.name }}</option>
                                     </select>
                                 </div>
                                 <div>
                                     <label for="manufacturer">Manufacturer:</label>
                                     <select id="manufacturer" name="manufacturer" (change)="onManufacturerChange($event)">
+                                        <option value="">-- Select Manufacturer --</option>
                                       <option *ngFor="let manufacturer of manufacturers" [value]="manufacturer.id">{{ manufacturer.name }}</option>
                                     </select>
                                 </div> 
