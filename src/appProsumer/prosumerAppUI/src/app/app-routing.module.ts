@@ -15,6 +15,7 @@ import { EditProfileComponent } from './components/edit-profile/edit-profile.com
 import { EditDeviceComponent } from './components/edit-device/edit-device.component';
 import { NavComponent } from './components/nav/nav.component';
 import { MyDevicesComponent } from './components/my-devices/my-devices.component';
+import { Home2Component } from './components/home2/home2.component';
 
 
 
@@ -41,7 +42,7 @@ const routes: Routes = [
   {
     path: 'edit-device', component: EditDeviceComponent
   },
-  
+
   {
     path:'mob-nav', component:MobNavComponent
   },
@@ -53,6 +54,9 @@ const routes: Routes = [
   },
   {
     path:'profile-prosumer', component:ProfileProsumerComponent
+  },
+  {
+    path:'home2', component: Home2Component
   }
 ];
 

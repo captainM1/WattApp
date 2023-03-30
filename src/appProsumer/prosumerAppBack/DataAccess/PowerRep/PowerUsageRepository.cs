@@ -8,11 +8,13 @@ public class PowerUsageRepository:IPowerUsageRepository
 {
     private readonly IMongoCollection<PowerUsage> mongoCollection;
     private readonly DataContext _dataContext;
+    private readonly IDeviceRepository _deviceRepository;
     
-    public PowerUsageRepository(MongoDataContext mongoDataContext, DataContext dataContext)
+    public PowerUsageRepository(MongoDataContext mongoDataContext, DataContext dataContext, IDeviceRepository deviceRepository)
     {
         mongoCollection = mongoDataContext.PowerUsage;
         _dataContext = dataContext;
+        _deviceRepository = deviceRepository;
     }
 
     public IEnumerable<PowerUsage> Get()
@@ -35,11 +37,17 @@ public class PowerUsageRepository:IPowerUsageRepository
     }
     public PowerUsage GetForDevice(Guid deviceID)
     {
+        
+        Guid deviceTypeID = _dataContext.Devices
+            .Where(d => d.ID == deviceID)
+            .Select(d => d.DeviceTypeID)
+            .FirstOrDefault();
+        
         DateTime currentHourTimestamp = DateTime.Now.Date.AddHours(DateTime.Now.Hour);
         PowerUsage filteredPowerUsageData = null;
         foreach (var powerUsage in mongoCollection.AsQueryable())
         {
-            if (powerUsage.Id == deviceID)
+            if (powerUsage.Id == deviceTypeID)
             {
                 var filteredTimestampPowerPairs = powerUsage.TimestampPowerPairs.Where(p => p.Timestamp == currentHourTimestamp).ToList();
                 if (filteredTimestampPowerPairs.Count > 0)
@@ -54,6 +62,19 @@ public class PowerUsageRepository:IPowerUsageRepository
             }
         }
         return filteredPowerUsageData;
+    }
+
+    public double CurrentPowerUsage(Guid userID)
+    {
+        var devices = _deviceRepository.GetDevicesForUser(userID);
+        
+        double sum = 0;
+        foreach (var VARIABLE in devices)
+        {
+            sum = GetForDevice(VARIABLE.ID).TimestampPowerPairs[0].PowerUsage;
+        }
+
+        return sum / devices.Count();
     }
 
     public IEnumerable<PowerUsage> PreviousSevenDays()

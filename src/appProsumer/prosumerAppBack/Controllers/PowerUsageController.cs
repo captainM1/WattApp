@@ -57,4 +57,16 @@ public class PowerUsageController : ControllerBase
         var powerUsages = _powerUsage.GetPowerUsageFor7Days(deviceID,-1);
         return Ok(powerUsages);
     }
+    [HttpGet("power-usage/current/{deviceID}")]
+    public ActionResult<IEnumerable<PowerUsage>> GetForDevice(Guid deviceID)
+    {
+        var powerUsages = _powerUsage.GetForDevice(deviceID);
+        return Ok(powerUsages);
+    }
+    [HttpGet("power-usage/currentUsageUser/{userID}")]
+    public ActionResult<IEnumerable<PowerUsage>> GetForUser(Guid userID)
+    {
+        var powerUsages = _powerUsage.CurrentPowerUsage(userID);
+        return Ok(new{powerUsages});
+    }
 }
