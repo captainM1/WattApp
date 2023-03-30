@@ -63,10 +63,17 @@ public class PowerUsageController : ControllerBase
         var powerUsages = _powerUsage.GetForDevice(deviceID);
         return Ok(powerUsages);
     }
-    [HttpGet("power-usage/currentUsageUser/{userID}")]
+   /* [HttpGet("power-usage/currentUsageUser/{userID}")]
     public ActionResult<IEnumerable<PowerUsage>> GetForUser(Guid userID)
     {
         var powerUsages = _powerUsage.CurrentPowerUsage(userID);
         return Ok(new{powerUsages});
+    }*/
+
+    [HttpGet("power-usage/currentUsageUser/summary/{userID}")] // ukupna trenutna potrosnja korisnika 
+    public ActionResult<double> GetForUser(Guid userID)
+    {
+        var powerUsages = _powerUsage.CurrentSumPowerUsage(userID);
+        return Ok(powerUsages);
     }
 }
