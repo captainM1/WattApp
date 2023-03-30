@@ -27,6 +27,7 @@ export class AddDeviceComponent {
   selectedManufacturerId: any;
   devices: any[] = [];
   selectedDevice: any;
+  selectedWattage: any;
 
 
   constructor(
@@ -76,6 +77,7 @@ export class AddDeviceComponent {
       });
     }
   }
+  
 
   onManufacturerChange(event: any) {
     const manSelect = event.target as HTMLSelectElement;
@@ -103,6 +105,8 @@ export class AddDeviceComponent {
   onDeviceChange(event: any){
     const deviceSelect = event.target as HTMLSelectElement;
     this.selectedDevice = deviceSelect.value;
+    this.selectedWattage = this.devices.find(device => device.id === deviceSelect.value);
+    console.log(this.selectedWattage);
   }
 
   onSubmit() {
@@ -115,7 +119,12 @@ export class AddDeviceComponent {
       this.http.post(environment.apiUrl + '/api/Device/add-new', new newDeviceDTO(formData.macAddress, this.selectedDevice), { headers })
         .subscribe(response => {
           console.log(response);
+          this.router.navigate(['home2']);
         });
     }
+  }
+
+  updateToggle2(){
+    this.toggle2Checked = true;
   }
 }
