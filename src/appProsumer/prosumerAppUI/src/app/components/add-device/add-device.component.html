@@ -50,13 +50,13 @@
                                     </div>
                                     <div class="form-group form-switch d-flex justify-content-center">
                                         <label class="form-check-label me-4" for="toggle-button-2">Allow DSO To Control Consumption Time</label>
-                                        <input class="form-check-input" formControlName = "toggleButton2" type="checkbox" id="toggle-button-2" [(ngModel)]="toggle2Checked">
+                                        <input class="form-check-input" formControlName = "toggleButton2" type="checkbox" id="toggle-button-2" (change)="onToggle2Change($event)">
                                     </div>
                                 </div> 
                             </div>
                             <div class="pt-4">
                                 <button class="mx-2 mt-2"><img src="assets/icons/add.png" alt="icon" style="width:20px; margin-right: 10px;">Add New Rule</button>
-                                <button class="mx-2 mt-2" [disabled]="!toggle2Checked" (click)="updateToggle2()"><img src="assets/icons/log-out.png" alt="icon" style="width:15px; color: white; margin-right: 10px;">Add New Requirement</button>
+                                <button class="mx-2 mt-2" [disabled]="!toggle2Checked"><img src="assets/icons/log-out.png" alt="icon" style="width:15px; color: white; margin-right: 10px;">Add New Requirement</button>
                             </div>
                         </div> 
                     </div>

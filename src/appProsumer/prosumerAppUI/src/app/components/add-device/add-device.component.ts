@@ -124,7 +124,8 @@ export class AddDeviceComponent {
     }
   }
 
-  updateToggle2(){
-    this.toggle2Checked = true;
+  onToggle2Change(event: any) {
+    this.toggle2Checked = event.target.checked;
   }
+
 }
