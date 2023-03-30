@@ -91,4 +91,38 @@ public class UserService:IUserService
 
         return results;
     }
+    
+    public async Task<object> GetCoordinatesForUser(Guid id)
+    {
+        var bingMapsApiKey = "AjxCmzN-m_jJJS97ob2OeGpEhL4afHaUSYTKRhRa1BzCAzc9A6Wri3lB6QjzxYBp";
+
+        var adress = _dbContext.Users
+            .Where(u => u.ID == id)
+            .Select(u => new 
+            {
+                u.Address,
+                u.City,
+                u.Country
+            })
+            .FirstOrDefault();
+
+        var addressFull = $"{adress.Address} {adress.City} {adress.Country}";
+        var urlBuilder = new UriBuilder("http://dev.virtualearth.net/REST/v1/Locations");
+        urlBuilder.Query = $"q={Uri.EscapeDataString(addressFull)}&key={bingMapsApiKey}";
+
+        var url = urlBuilder.ToString();
+        
+        var response = await _httpClient.GetAsync(url);
+        var responseString = await response.Content.ReadAsStringAsync();
+
+        var data = JObject.Parse(responseString);
+        var location = data["resourceSets"][0]["resources"][0]["point"]["coordinates"];
+
+        return(new
+        {
+            Address = adress,
+            Coordinates = JsonConvert.SerializeObject(location)
+        });
+        
+    }
 }
