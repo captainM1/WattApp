@@ -1,8 +1,6 @@
 export interface Device {
-    name: string;
+    type: string;
+    device: string;
     manufacturer: string;
-    wattage: number;
     macAddress: string;
-    collectData:boolean;
-    controlTime:boolean;
 }

@@ -26,9 +26,6 @@ export class AddDeviceComponent {
   devices: any[] = [];
   selectedDevice: any;
 
-  selectedOption = 'consumer';
-  addProducerForm!: FormGroup;
-  addStorageForm!: FormGroup;
 
   constructor(
     private fb: FormBuilder, 
@@ -38,8 +35,11 @@ export class AddDeviceComponent {
     private messageService: MessageService
   ){}
 
-  addConsumerForm: FormGroup = this.fb.group({
-    manufacturer: ['', Validators.required]
+  addDeviceForm: FormGroup = this.fb.group({
+    type:['', Validators.required],
+    manufacturer: ['', Validators.required],
+    device: ['', Validators.required],
+    macAddress: ['', Validators.required]
   });
 
   ngOnInit() {
@@ -56,19 +56,13 @@ export class AddDeviceComponent {
     const selectElement = event.target as HTMLSelectElement;
     this.selectedGroup = selectElement.value;
     console.log(this.selectedGroup);
-  }
 
-  onManufacturerChange(event: any) {
-    const manSelect = event.target as HTMLSelectElement;
-    this.selectedManufacturerId = manSelect.value;
-    console.log(this.selectedManufacturerId);
-  
-    if (!this.selectedManufacturerId) {
-      console.log('No manufacturer selected');
+    if (!this.selectedManufacturerId || !this.selectedGroup) {
+      console.log('No manufacturer or group selected');
       return;
     }
-  
-    this.http.get<any[]>(`${environment.apiUrl}/api/Device/manufacturer/${this.selectedManufacturerId}`)
+    else{
+      this.http.get<any[]>(`${environment.apiUrl}/api/Device/${this.selectedGroup}/${this.selectedManufacturerId}`)
       .subscribe({
         next: data => {
           console.log(data);
@@ -78,86 +72,46 @@ export class AddDeviceComponent {
           console.error(err);
         }
       });
+    }
+  }
+
+  onManufacturerChange(event: any) {
+    const manSelect = event.target as HTMLSelectElement;
+    this.selectedManufacturerId = manSelect.value;
+    console.log(this.selectedManufacturerId);
+  
+    if (!this.selectedManufacturerId || !this.selectedGroup) {
+      console.log('No manufacturer or group selected');
+      return;
+    }
+    else{
+      this.http.get<any[]>(`${environment.apiUrl}/api/Device/${this.selectedGroup}/${this.selectedManufacturerId}`)
+      .subscribe({
+        next: data => {
+          console.log(data);
+          this.devices = data;
+        },
+        error: err => {
+          console.error(err);
+        }
+      });
+    } 
   }
   
-
   onDeviceChange(event: any){
     const deviceSelect = event.target as HTMLSelectElement;
     this.selectedDevice = deviceSelect.value;
   }
 
-  onSelect(selectedValue: string) {
-    switch (selectedValue) {
-      case 'consumer':
-        this.showConsumer = true;
-        this.showProducer = false;
-        this.showStorage = false;
-        break;
-      case 'producer':
-        this.showConsumer = false;
-        this.showProducer = true;
-        this.showStorage = false;
-        break;
-      case 'storage':
-        this.showConsumer = false;
-        this.showProducer = false;
-        this.showStorage = true;
-        break;
-    }
-  }
-
-
   onSubmit(){
-    const formData = {
-      manufacturerId: this.selectedManufacturerId.id,
-      deviceId: this.selectedDevice.id
-    };
     if(this.showConsumer){
-      const formData = this.addConsumerForm.value;
+      const formData = this.addDeviceForm.value;
 
       const device: Device = {
-        name: formData.name,
-        manufacturer: formData.manufacturer,
-        wattage: formData.wattage,
-        macAddress: formData.macAddress,
-        collectData: formData.toggleButton1,
-        controlTime: formData.toggleButton2
-      };
-      console.log(device);
-
-      this.http.post(environment.apiUrl + '/devices/add-new', device)
-      .subscribe(response => {
-        console.log(response);
-      });
-    }
-    else if(this.showProducer){
-      const formData = this.addProducerForm.value;
-
-      const device: Device = {
-        name: formData.name,
-        manufacturer: formData.manufacturer,
-        wattage: formData.wattage,
-        macAddress: formData.macAddress,
-        collectData: formData.toggleButton1,
-        controlTime: formData.toggleButton2
-      };
-      console.log(device);
-
-      this.http.post(environment.apiUrl + '/devices/add-new', device)
-      .subscribe(response => {
-        console.log(response);
-      });
-    }
-    else{
-      const formData = this.addStorageForm.value;
-
-      const device: Storage = {
-        name: formData.name,
-        manufacturer: formData.manufacturer,
-        batteryCapacity: formData.batteryCapacity,
-        macAddress: formData.macAddress,
-        collectData: formData.toggleButton1,
-        controlTime: formData.toggleButton2
+        type: this.selectedGroup,
+        device: this.selectedDevice,
+        manufacturer: this.selectedManufacturerId,
+        macAddress: formData.macAddress
       };
       console.log(device);
 

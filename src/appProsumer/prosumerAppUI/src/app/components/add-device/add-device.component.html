@@ -17,44 +17,37 @@
                 <div class="col-sm"><button type="button" (click)="showConsumer=false; showProducer=false; showStorage=true">Storage</button></div>
             </div>-->
             <div *ngIf="showConsumer">
-                <form [formGroup]="addConsumerForm" (ngSubmit)="onSubmit()">
+                <form [formGroup]="addDeviceForm" (ngSubmit)="onSubmit()">
                     <div class="row pb-4 forma">
                         <div class="col-sm">
                             <div class="inputi">
                                 <div>
                                     <label for="type">Device Type:</label>
-                                    <select name="type" (change)="onGroupSelected($event)">
+                                    <select name="type" formControlName="type" (change)="onGroupSelected($event)">
                                         <option value="">-- Select Type --</option>
                                         <option *ngFor="let group of groups" [value]="group.id">{{ group.name }}</option>
                                     </select>
                                 </div>
                                 <div>
                                     <label for="manufacturer">Manufacturer:</label>
-                                    <select id="manufacturer" name="manufacturer" (change)="onManufacturerChange($event)">
+                                    <select id="manufacturer" formControlName="manufacturer" (change)="onManufacturerChange($event)">
                                         <option value="">-- Select Manufacturer --</option>
                                       <option *ngFor="let manufacturer of manufacturers" [value]="manufacturer.id">{{ manufacturer.name }}</option>
                                     </select>
                                 </div> 
                                   
-                                  <div>
+                                  <div >
                                     <label for="device">Device:</label>
-                                    <select id="device" name="device" (change)="onDeviceChange($event)">
+                                    <select id="device" formControlName="device" (change)="onDeviceChange($event)">
                                       <option value="">-- Select Device --</option>
                                       <option *ngFor="let device of devices" [value]="device.id">{{ device.name }}</option>
                                     </select>
                                   </div>
-             <!--                <div class="form-group text-right pt-3">
-                                    <label for="name">Device Name</label>
-                                    <input class = "form-control" formControlName = "name" type="text" placeholder="Insert Name of Device">
-                                </div>
+                           
                                 <div class="form-group pt-3">
                                     <label for="macAddress">Device Mac Address</label>
                                     <input class = "form-control" formControlName = "macAddress" type="text" placeholder="Insert Device Mac Address">
                                 </div>
-                                <div class="form-group pt-3">
-                                    <label for="wattage">Wattage</label>
-                                    <input class = "form-control" formControlName = "wattage" type="text" placeholder="Insert Device Wattage">
-                                </div>-->   
                             </div>
                         </div>
                         <div class="col-sm"><!--
@@ -79,16 +72,6 @@
                         </div> 
                     </div>
                     <button type="submit" class="dodavanje btn btn-primary font-weight-bold btn-lock mt-4 mt-2"><img src="assets/icons/moreb.png" alt="icon" style="width:20px; margin-right: 10px;">Add Device</button>
-                </form>
-            </div>
-            <div *ngIf="showProducer">
-                <form [formGroup]="addProducerForm" (ngSubmit)="onSubmit()">
-                    <app-add-producer></app-add-producer>
-                </form>    
-            </div>
-            <div *ngIf="showStorage">
-                <form [formGroup]="addStorageForm" (ngSubmit)="onSubmit()">
-                    <app-add-storage></app-add-storage>
                 </form>
             </div>
         </div>
