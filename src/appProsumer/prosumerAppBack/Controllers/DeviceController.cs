@@ -128,6 +128,20 @@ namespace prosumerAppBack.Controllers
 
 	        return Ok(groups);
         }
+        
+        [HttpGet("{groupID}/{manufID}")]
+        public IActionResult GetDeviceTypesGroup(Guid groupID,Guid manufID)
+        {
+	        var list = _deviceRepository.GetDevicesBasedOnManufacturerAndGroup(manufID, groupID);
+
+	        if (list == null)
+	        {
+		        return NotFound();
+	        }
+
+	        return Ok(list);
+        }
+        
 	}
 }
 

@@ -63,6 +63,11 @@ namespace prosumerAppBack.DataAccess
         {
             return _dbContext.DeviceTypes.Where(d => d.ManufacturerID == maunfID);
         }
+        
+        public IEnumerable<DeviceType> GetDevicesBasedOnManufacturerAndGroup(Guid maunfID, Guid groupID)
+        {
+            return _dbContext.DeviceTypes.Where(d => d.ManufacturerID == maunfID && d.GroupID == groupID);
+        }
 
         public async Task<Device> AddDevice(Models.Device.AddDeviceDto addDeviceDto)
         {

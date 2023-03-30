@@ -20,6 +20,8 @@ namespace prosumerAppBack.BusinessLogic
         public IEnumerable<DeviceType> GetDevicesBasedOnGroup(Guid groupID);
         
         public IEnumerable<DeviceType> GetDevicesBasedOnManufacturer(Guid maunfID);
+
+        public IEnumerable<DeviceType> GetDevicesBasedOnManufacturerAndGroup(Guid maunfID, Guid groupID);
 	}
 }
 
