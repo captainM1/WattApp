@@ -16,26 +16,13 @@ import { Component } from '@angular/core';
 })
 export class TableComponent {
 
-  // dataSource = ;
-  // columnsToDisplay = ;
-  // columnsToDisplayExpaned = ;
-  // expandedElement?: null;
+  
   
   constructor(
     private http : HttpClient
   ){}
 
-  // getAllUsers(){
-  //   return this.http.get('');
-  // }
+  
 
 }
 
-export interface UsersTable{
-  fullName: string;
-  cityStreet: string;
-  production: string,
-  consumption: string,
-  cord: string;
-
-}
