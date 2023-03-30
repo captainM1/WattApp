@@ -43,19 +43,4 @@ export class AuthService {
   getDeviceData(){
     return this.http.get<any>(`${environment.apiUrl}/api/Device/devices/info`, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
   }
-  getManufacturersConsumer(){
-    return this.http.get<any>(`${environment.apiUrl}/api/Device/manufacturers/77CBC929-1CF2-4750-900A-164DE4ABE28B`, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
-  }
-  getManufacturersProducer(){
-    return this.http.get<any>(`${environment.apiUrl}/api/Device/manufacturers/18F30035-59DE-474F-B9DB-987476DE551F`, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
-  }
-  getManufacturersStorage(){
-    return this.http.get<any>(`${environment.apiUrl}/api/Device/manufacturers/B17C9155-7E6F-4D37-8A86-EA1ABB327BB2`, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
-  }
-  getDevicesForManufacturer(id: any, idGrop:any){
-    return this.http.get<any>(`${environment.apiUrl}/api/Device/${idGrop}/${id}`, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
-  }
-  addNewDevice(id: any, mac: any){
-    return this.http.post<any>(`${environment.apiUrl}/api/Device/add-new`,new newDeviceDTO(mac,id),{ headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
-  }
 }

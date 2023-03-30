@@ -3,9 +3,11 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { environment } from 'src/environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Device } from '../../models/device.model';
 import { Storage } from '../../models/storage.model';
+import { newDeviceDTO } from 'src/app/models/newDeviceDTO';
+import { CookieService } from 'ngx-cookie-service';
 //import { NgToastService } from 'ng-angular-popup';
 @Component({
   selector: 'app-add-device',
@@ -31,8 +33,8 @@ export class AddDeviceComponent {
     private fb: FormBuilder, 
     private router : Router,
     private http : HttpClient,
-    //private toast : NgToastService
-    private messageService: MessageService
+    private messageService: MessageService,
+    private cookie: CookieService
   ){}
 
   addDeviceForm: FormGroup = this.fb.group({
@@ -103,22 +105,17 @@ export class AddDeviceComponent {
     this.selectedDevice = deviceSelect.value;
   }
 
-  onSubmit(){
-    if(this.showConsumer){
+  onSubmit() {
+    if (this.showConsumer) {
       const formData = this.addDeviceForm.value;
-
-      const device: Device = {
-        type: this.selectedGroup,
-        device: this.selectedDevice,
-        manufacturer: this.selectedManufacturerId,
-        macAddress: formData.macAddress
-      };
-      console.log(device);
-
-      this.http.post(environment.apiUrl + '/devices/add-new', device)
-      .subscribe(response => {
-        console.log(response);
-      });
+  
+      const headers = new HttpHeaders()
+        .set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`); 
+  
+      this.http.post(environment.apiUrl + '/api/Device/add-new', new newDeviceDTO(formData.macAddress, this.selectedDevice), { headers })
+        .subscribe(response => {
+          console.log(response);
+        });
     }
   }
 }

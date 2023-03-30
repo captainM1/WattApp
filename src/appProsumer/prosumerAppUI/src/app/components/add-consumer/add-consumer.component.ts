@@ -26,37 +26,36 @@ export class AddConsumerComponent {
   devices: any[] = [];
   selectedDeviceID?: string;
 
-  ngOnInit(): void {
-    this.addConsumerForm = this.fb.group({
-      'mac-address': ['', Validators.required]
-    });
-    this.authService.getManufacturersConsumer().subscribe((result) => {
-      this.manufacturers = result;
-    });
-  }
+  // ngOnInit(): void {
+  //   this.addConsumerForm = this.fb.group({
+  //     'mac-address': ['', Validators.required]
+  //   });
+  //   this.authService.getManufacturersConsumer().subscribe((result) => {
+  //     this.manufacturers = result;
+  //   });
+  // }
 
-  onManufacturerChanged() {
-    this.authService.getDevicesForManufacturer(this.selectedManufacturer, '77CBC929-1CF2-4750-900A-164DE4ABE28B').subscribe((result) => {
-      this.devices = result;
-    });
-  }
+  // onManufacturerChanged() {
+  //   this.authService.getDevicesForManufacturer(this.selectedManufacturer, '77CBC929-1CF2-4750-900A-164DE4ABE28B').subscribe((result) => {
+  //     this.devices = result;
+  //   });
+  // }
 
-  onDeviceSelectionChange(deviceID: string) {
-    this.selectedDeviceID = deviceID;
-  }
+  // onDeviceSelectionChange(deviceID: string) {
+  //   this.selectedDeviceID = deviceID;
+  // }
 
-  onSubmit(){
-    this.submitted = true;    
-    if(this.addConsumerForm.valid){
-      //OVO TREBA DA SE IZMENI JER NE ZNAM KAKO FUNKCIONISE SVE OVO
-      //this.authService.addNewDevice(this.selectedDeviceID,this.addConsumerForm.get('mac-address')?.value)
-      this.messageService.add({ severity: 'success', summary: 'Success', detail: 'You have added new device' });
-      this.router.navigate(['my-devices']);
-      return;
-    }else{
-      this.messageService.add({ severity: 'error', summary: 'Error adding device', detail: 'Try again' });
-      this.router.navigate(['addDevice'])
-    }
-  }
+  // onSubmit(){
+  //   this.submitted = true;    
+  //   if(this.addConsumerForm.valid){
+  //     //this.authService.addNewDevice(this.selectedDeviceID,this.addConsumerForm.get('mac-address')?.value)
+  //     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'You have added new device' });
+  //     this.router.navigate(['my-devices']);
+  //     return;
+  //   }else{
+  //     this.messageService.add({ severity: 'error', summary: 'Error adding device', detail: 'Try again' });
+  //     this.router.navigate(['addDevice'])
+  //   }
+  // }
   
 }
