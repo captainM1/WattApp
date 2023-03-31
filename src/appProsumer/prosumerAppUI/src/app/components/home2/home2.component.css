@@ -64,9 +64,16 @@
     color: red;
   }
 
+  img
+  {
+    width: 25%;
+    padding-top: 10px;
+    padding-left: 15px;
+  }
+
 }
 
-@media(min-width: 1025px){
+@media(min-width: 1024px){
   .mobile{
       display: none;
   }
@@ -81,7 +88,7 @@
   #kolone
   {
     float:right;
-    margin-right: 150px;
+    margin-right: 50px;
     width: 35%;
     margin-top: 40px;
   }
@@ -124,7 +131,7 @@
 
   img
   {
-    width: 15%;
+    width: 25%;
     padding-top: 10px;
     padding-left: 15px;
   }
@@ -134,7 +141,7 @@
 }
 
 
-@media(min-width: 481px) and (max-width: 1024px){
+@media(min-width: 481px) and (max-width: 1023px){
   .mobile{
       display: none;
   }

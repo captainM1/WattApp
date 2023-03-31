@@ -90,21 +90,36 @@ button:focus{
     font-size: 12px;
   }
 
-  label{
-     font-size: 14px;
+  .card-title{
+     font-size: 10px;
+     font-weight: bold;
+     color: #026670;
+      padding-top: 5px;
   }
 
-  .col img
+  .device-col img
   {
     width:70%;
+    margin-left: 17%;
+    padding-top: 10px;
   }
 
-  .col
+  .device-col
   {
-    width: 30%;
+    width: 39%;
 
   }
 
+  .card
+  {
+    border: none !important;
+    background-color:#FCFBFB !important;
+  }
+
+  .card-text
+  {
+    font-size: 8px;
+  }
 
 }
 @media(min-width: 1024px){
