@@ -1,51 +1,22 @@
 <div class="container">
   <div class="row pt-4 px-3">
-        <h1>My Devices</h1>
+    <h1>My Devices</h1>
+  </div>
 
-  </div>
   <div class="row mt-4">
-    <div class="col mt-4 mx-3">
-      <label>Microwave</label>
-      <div class="slika p-2">
-          <img src="/assets/icons-devices/microwave.png">
-      </div>
-    </div>
-    <div class="col mt-4 mx-3">
-      <label>Fridge</label>
-      <div class="slika p-2">
-         <img src="/assets/icons-devices/fridge.png">
+    <div *ngFor="let device of devices" class="col mt-4 mx-3">
+      <div class="card">
+        <img [src]="'/assets/icons-devices/' + device.deviceTypeName.toLowerCase() + '.png'" class="card-img-top" alt="{{ device.deviceTypeName }}">
+        <div class="card-body">
+          <h5 class="card-title">{{ device.deviceTypeName }}</h5>
+          <p class="card-text">Manufacturer: {{ device.manufacturerName }}</p>
+          <p class="card-text">MAC Address: {{ device.macAdress }}</p>
+        </div>
       </div>
     </div>
   </div>
+
   <div class="row mt-4">
-    <div class="col mt-4 mx-3">
-      <label>Dishwasher</label>
-      <div class="slika p-2">
-          <img src="/assets/icons-devices/dishwasher.png">
-      </div>
-    </div>
-    <div class="col mt-4 mx-3">
-      <label>Lamp</label>
-      <div class="slika p-2">
-          <img src="/assets/icons-devices/lamp.png">
-      </div>
-    </div>
-  </div>
-  <div class="row mt-4">
-    <div class="col mt-4 mx-3">
-      <label>TV</label>
-      <div class="slika p-2">
-         <img src="/assets/icons-devices/television.png">
-      </div>
-    </div>
-    <div class="col mt-4 mx-3">
-      <label>Air Condition</label>
-      <div class="slika p-2">
-         <img src="/assets/icons-devices/air-conditioning.png">
-      </div>
-    </div>
-  </div>
-  <div class="row mt-4">
-      <button type="submit" class="btn btn-primary btn-lock mt-4 mb-4" routerLink="/add-device">Add New Devices</button>
+    <button type="submit" class="btn btn-primary btn-lock mt-4 mb-4" routerLink="/add-device">Add New Devices</button>
   </div>
 </div>

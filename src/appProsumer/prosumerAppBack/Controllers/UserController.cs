@@ -157,12 +157,17 @@ public class UserController : ControllerBase
             return BadRequest("Invalid email address");
         }
 
-        _userService.UpdatePassword(user.Result.ID, resetPasswordDto.Password).GetAwaiter().GetResult();
-                
-        return Ok(new { message = "Password changed" });
+        var action = _userRepository.UpdatePassword(user.Result.ID, resetPasswordDto.Password).GetAwaiter().GetResult();
+
+        if (!action)
+        {
+            return BadRequest("Action failed");
+        }
+
+        return Ok(new { message = "Password changed" }); 
     }
 
-    [HttpGet("coordinates")]
+    [HttpGet("coordinatesForEveryUser")]
     public async Task<ActionResult<IEnumerable<object>>> GetCoordinatesForAllUsers()
     {
         try
@@ -233,12 +238,23 @@ public class UserController : ControllerBase
             return StatusCode(500, ex.Message);
         }
     }
-    [HttpGet("{userID}/devices")]
-    public IActionResult GetDevicesForUser(Guid userID)
+    
+    [HttpGet("coordinates/{id}")]
+    public async Task<IActionResult> GetCoordinatesForUser(Guid id)
     {
         var devices = _deviceService.GetDevicesForUser(userID);
                 
         return Ok(devices);
 
+        try
+        {
+            var results = await _userService.GetCoordinatesForUser(id);
+
+            return Ok(results);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 }

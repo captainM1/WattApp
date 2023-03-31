@@ -8,16 +8,14 @@ namespace prosumerAppBack.Models.Device
 	{
 		[Key]
 		public Guid ID { get; set; }
-
-		public int DeviceID { get; set; }
-		public string? Name { get; set; }
-		public string? Manufacturer { get; set; }
-		public double Wattage { get; set; }
 		public string? MacAdress { get; set; }
-		public bool Status { get; set; }
+		
+		public Guid DeviceTypeID { get; set; }
+		public DeviceType DeviceType { get; set; }
+		
+		public Guid OwnerID { get; set; }
+		public User Owner { get; set; }
 
-		public virtual ICollection<DeviceOwners> DeviceOwners { get; set; }
-		public virtual ICollection<DeviceTypeConnection> DeviceDeviceTypes { get; set; }
     }
 }
 

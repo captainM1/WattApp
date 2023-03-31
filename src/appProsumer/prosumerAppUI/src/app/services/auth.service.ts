@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { CookieService } from "ngx-cookie-service"
-
+import { newDeviceDTO } from 'src/app/models/newDeviceDTO'
 
 @Injectable({
   providedIn: 'root'
@@ -38,5 +38,9 @@ export class AuthService {
   }
   getData(){
     return this.http.get<any>(environment.apiUrl +"/api/User/username", { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
+  }
+
+  getDeviceData(){
+    return this.http.get<any>(`${environment.apiUrl}/api/Device/devices/info`, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
   }
 }

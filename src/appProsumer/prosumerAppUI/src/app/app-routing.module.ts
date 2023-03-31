@@ -15,6 +15,7 @@ import { EditProfileComponent } from './components/edit-profile/edit-profile.com
 import { EditDeviceComponent } from './components/edit-device/edit-device.component';
 import { NavComponent } from './components/nav/nav.component';
 import { MyDevicesComponent } from './components/my-devices/my-devices.component';
+import { Home2Component } from './components/home2/home2.component';
 
 
 
@@ -33,26 +34,29 @@ const routes: Routes = [
     path:'home',component:HomeComponent,canActivate:[AuthGuard]
   },
   {
-    path: 'add-device', component: AddDeviceComponent
+    path: 'add-device', component: AddDeviceComponent,canActivate:[AuthGuard]
   },
   {
-    path: 'edit-profile', component: EditProfileComponent
+    path: 'edit-profile', component: EditProfileComponent,canActivate:[AuthGuard]
   },
   {
-    path: 'edit-device', component: EditDeviceComponent
+    path: 'edit-device', component: EditDeviceComponent,canActivate:[AuthGuard]
   },
-  
+
   {
-    path:'mob-nav', component:MobNavComponent
-  },
-  {
-    path:'nav', component:NavComponent
+    path:'mob-nav', component:MobNavComponent,canActivate:[AuthGuard]
   },
   {
-    path:'my-devices', component:MyDevicesComponent
+    path:'nav', component:NavComponent,canActivate:[AuthGuard]
+  },
+  {
+    path:'my-devices', component:MyDevicesComponent,canActivate:[AuthGuard]
   },
   {
     path:'profile-prosumer', component:ProfileProsumerComponent
+  },
+  {
+    path:'home2', component: Home2Component
   }
 ];
 

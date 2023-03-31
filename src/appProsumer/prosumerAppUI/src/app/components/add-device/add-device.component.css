@@ -3,12 +3,31 @@
     src: url(/assets/fonts/Inter-Regular.ttf);
  }
 
+ @media(max-width: 480px) {
+    .mobile{
+        display: contents;
+    }
+    .desktop{
+        display: none;
+    }
+  }
+  
+  @media(min-width: 481px){
+    .mobile{
+        display: none;
+    }
+    .desktop{
+        display: contents;
+    }
+  }
+
  
 @media (max-width: 280px) /*Fold*/
 { 
     .container{
-        width: 85%;
+        width: 90%;
         background-color: white;
+        margin-bottom:10%;
     }
     
     h3{
@@ -30,7 +49,9 @@
         text-align: center;
     }
 
-
+    .custom-select div{
+        padding-top: none;
+    }
 }
 
 @media (min-width: 281px) and (max-width: 480px) /*Phones*/
@@ -38,6 +59,14 @@
     .container{
         width: 85%;
         background-color: white;
+    }
+
+    .outer{
+        margin-bottom: 10%;
+    }
+
+    .inputi div input{
+        border: 2px solid #026670;
     }
 
     h3{
@@ -59,6 +88,10 @@
         text-align: center;
     }
 
+    .custom-select div{
+        padding-top: none;
+    }
+
 }
  
 @media (min-width: 481px) and (max-width: 1023px)  /*Tablet*/
@@ -67,6 +100,11 @@
         width: 80%;
         background-color: #026670;
     }
+
+    .outer{ 
+        margin-top: 80px;
+    }
+
     h3{
         color:white;
         text-transform: uppercase;
@@ -96,6 +134,10 @@
         background-color: #026670;
     }
 
+    .outer{ 
+        margin-top: 80px;
+    }
+
     h3{
         color:white;
         text-transform: uppercase;
@@ -112,6 +154,10 @@
         margin-bottom: 30px;
         text-align: center;
     }
+
+    .custom-select div{
+        margin-bottom: 20px;
+    }
 }
 
 .dodavanje{
@@ -119,8 +165,6 @@
     background-color: white;
     font-size: 16px;
 }
-
-
 
 .container{
     border-radius: 17px;
@@ -130,6 +174,7 @@
     margin-bottom: 50px;
     font-family: font1;
 }
+
 .centriranje{
     display:flex;
     justify-content: center;
@@ -145,7 +190,6 @@ h3{
     margin: auto;
     border-radius: 17px;
 }
-
 
 button{
     border-radius: 17px;
@@ -171,18 +215,100 @@ button:focus{
 select {
     color: white;
     background-color: #026670;
-    width:75%;
-    margin-top: 15px;
-    margin-bottom: 25px;
+    width:90%;
     font-weight: bold;
     font-size: 13px;
     text-transform: uppercase;
     border-radius: 10px;
     text-align: center;
-    padding: 10px;
+    height: 50px;
 }
 
 select option:not(:checked) {
     color: #026670;
     background-color: white;
+}
+
+.inputi > .form-group> input{
+    width: 90%;
+    border-radius: 10px;
+    filter:drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
+    text-align: center;
+    height: 50px;   
+}
+
+.inputi > .form-group > label, .custom-select div label{
+    margin-left: 15px;
+}
+
+input::placeholder{
+    text-transform: uppercase;
+    color: black;
+    opacity: 0.5;
+    font-size: 12px;
+    font-weight: lighter;
+    font-style: italic;
+}
+
+label{
+    text-transform: uppercase;
+    text-align: left;
+    font-weight: bold;
+    width: 90%;
+    font-size: 13px;
+}
+
+.permissions{
+    width: 90%;
+    border-radius: 10px;
+    filter:drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
+    text-align: center;
+}
+
+.permissions > label{
+    font-weight: bolder;
+}
+
+.inputi{
+    text-align: center;
+}
+
+.form-group > input{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#toggle-buttons > .form-group > label{
+    text-transform: none;
+}
+
+hr{
+    width: 70%;
+    border: 2px solid black;
+    margin: auto;
+}
+
+.form-check-input:checked {
+  background-color: #026670;
+}
+
+button{
+    border-radius: 17px;
+    background-color:#026670;
+    color:white;
+    font-weight: bold;
+    font-size: 12px;
+    border: none;
+    filter:drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
+    padding: 5px 25px;
+}
+
+button:hover {
+    background-color: #0394a2;
+    color:white;    
+}
+
+button:disabled{
+    background-color: grey;
+    color: white;
 }

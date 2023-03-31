@@ -17,4 +17,5 @@ public interface IUserService
     Task<Boolean> UpdatePassword(Guid id, string newPassword);
     Task<Boolean> CreateUserRequestToDso(User user);
     Task<User> CheckEmail(string email);
+    Task<object> GetCoordinatesForUser(Guid id);
 }
