@@ -10,12 +10,10 @@ namespace prosumerAppBack.Controllers
 	[ApiController]
 	public class DeviceController : ControllerBase
 	{
-		private readonly IDeviceRepository _deviceRepository;
         private readonly IDeviceService _deviceService;
 
         public DeviceController(IDeviceRepository deviceRepository, IDeviceService deviceService)
 		{
-			_deviceRepository = deviceRepository;
 			_deviceService = deviceService;
 		}
 
@@ -39,7 +37,7 @@ namespace prosumerAppBack.Controllers
 		{
             try
             {
-                var devices = await _deviceRepository.GetAllDevices();
+                var devices = await _deviceService.GetAllDevices();
                 if (devices == null)
                 {
                     return BadRequest("Devices not found");
@@ -58,7 +56,7 @@ namespace prosumerAppBack.Controllers
         {
             try
             {
-                var check = await _deviceRepository.UpdateDevice(id, updateDeviceDto);
+                var check = await _deviceService.UpdateDevice(id, updateDeviceDto);
 
                 return Ok(new { message = "Device updated" });
             }
@@ -72,7 +70,7 @@ namespace prosumerAppBack.Controllers
         {
             try
             {
-                var check = await _deviceRepository.AddDevice(addDeviceDto);
+                var check = await _deviceService.AddDevice(addDeviceDto);
 
                 return Ok(new { message = "Device added" });
             }
