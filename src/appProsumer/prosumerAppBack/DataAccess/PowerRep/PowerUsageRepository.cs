@@ -1,6 +1,7 @@
 using MongoDB.Driver;
 using prosumerAppBack.BusinessLogic;
 using prosumerAppBack.Models;
+using prosumerAppBack.Models.Device;
 
 namespace prosumerAppBack.DataAccess;
 
@@ -71,7 +72,7 @@ public class PowerUsageRepository:IPowerUsageRepository
         double sum = 0;
         foreach (var VARIABLE in devices)
         {
-            sum = GetForDevice(VARIABLE.ID).TimestampPowerPairs[0].PowerUsage;
+            sum += GetForDevice(VARIABLE.ID).TimestampPowerPairs[0].PowerUsage;
         }
 
         return sum / devices.Count();
@@ -187,5 +188,31 @@ public class PowerUsageRepository:IPowerUsageRepository
         }
 
         return powerUsage;
+    }
+
+    public double CurrentSumPowerUsage(Guid userID)
+    {
+        IEnumerable<Device> devices = _deviceRepository.GetDevicesForUser(userID);
+        double sum = 0;
+
+        DateTime currentHourTimestamp = DateTime.Now.Date.AddHours(DateTime.Now.Hour);
+
+        foreach (var powerUsage in mongoCollection.AsQueryable())
+        {
+            foreach (Device device in devices)
+            {
+                if (powerUsage.Id == device.ID)
+                {
+                    var pairs = powerUsage.TimestampPowerPairs.Where(t => t.Timestamp == currentHourTimestamp).ToList();
+
+                    foreach (var pair in pairs)
+                    {
+                        sum += pair.PowerUsage;
+                    }
+                }
+            }
+        }
+
+        return sum;
     }
 }
