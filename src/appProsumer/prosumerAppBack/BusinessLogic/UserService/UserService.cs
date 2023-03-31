@@ -1,9 +1,12 @@
+using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using prosumerAppBack.DataAccess;
+using prosumerAppBack.Models;
+using SendGrid.Helpers.Errors.Model;
 
 namespace prosumerAppBack.BusinessLogic;
 
@@ -12,11 +15,13 @@ public class UserService:IUserService
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly DataContext _dbContext;
     private readonly HttpClient _httpClient;
-    public UserService(IHttpContextAccessor httpContextAccessor, HttpClient httpClient, DataContext dbContext)
+    private readonly IUserRepository _repository;
+    public UserService(IHttpContextAccessor httpContextAccessor, HttpClient httpClient, DataContext dbContext, IUserRepository repository)
     {
         _httpContextAccessor = httpContextAccessor;
         _httpClient = httpClient;
         _dbContext = dbContext;
+        _repository = repository;
     }
 
     public Guid? GetID()
@@ -90,5 +95,116 @@ public class UserService:IUserService
         }
 
         return results;
+    }
+
+    public async Task<string> GetUsernameByIdAsync(Guid id)
+    {
+        var username = await _repository.GetUsernameByIdAsync(id);
+        if (username == null)
+        {
+            throw new NullReferenceException("No username found");
+        }
+
+        return username;
+    }
+
+    public async Task<User> GetUserByEmailAsync(string email)
+    {
+        var user = await _repository.GetUserByEmailAsync(email);
+        if (user == null)
+        {
+            throw new NotFoundException("user with that email doesnt exist");
+        }
+
+        return user;
+    }
+
+    public async Task<User> CheckEmail(string email)
+    {
+        var user = await _repository.GetUserByEmailAsync(email);
+        if (user != null)
+        {
+            throw new NotFoundException("email already exist");
+        }
+
+        return user;
+    }
+
+    public async Task<User> CreateUser(UserRegisterDto userRegisterDto)
+    {
+        var user = await _repository.CreateUser(userRegisterDto);
+        if (user == null)
+        {
+            throw new NullReferenceException("Failed to create user");
+        }
+
+        return user;
+    }
+    public async Task<User> GetUserByEmailAndPasswordAsync(string email, string password)
+    {
+        var user = await _repository.GetUserByEmailAndPasswordAsync(email, password);
+        if (user == null)
+        {
+            throw new NullReferenceException("Invalid email or password");
+        }
+
+        return user;
+    }
+    public async Task<User> GetUserByIdAsync(Guid id)
+    {
+        var user = await _repository.GetUserByIdAsync(id);
+        if (user == null)
+        {
+            throw new NullReferenceException("User not found");
+        }
+
+        return user;
+    }
+
+    public async Task<List<User>> GetAllUsersAsync(int pageNumber, int pageSize)
+    {
+        var user = await _repository.GetAllUsersAsync(pageNumber, pageSize);
+        if (user == null)
+        {
+            throw new NullReferenceException("There are no users");
+        }
+
+        return user;
+    }
+
+    public async Task<int> UpdateUser(Guid id, UserUpdateDto userUpdateDto)
+    {
+        var user = await _repository.UpdateUser(id, userUpdateDto);
+        if (user == 0)
+        {
+            throw new NotFoundException("user cannot be updated");
+        }
+
+        if (user == 1)
+        {
+            throw new NotFoundException("username already exists");
+        }
+
+        return user;
+    }
+
+    public async Task<Boolean> UpdatePassword(Guid id, string newPassword)
+    {
+        var action = await _repository.UpdatePassword(id, newPassword);
+        if (!action)
+        {
+            throw new NullReferenceException("Action failed");
+        }
+        return true;
+    }
+
+    public async Task<Boolean> CreateUserRequestToDso(User user)
+    {
+        var action = await _repository.CreateUserRequestToDso(user);
+        if (!action)
+        {
+            throw new NullReferenceException("Action failed");
+        }
+        return true;
     }
 }
