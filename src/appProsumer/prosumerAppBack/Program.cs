@@ -14,6 +14,7 @@ using prosumerAppBack.BusinessLogic.DeviceService;
 using prosumerAppBack.Helper;
 using prosumerAppBack.Models;
 using Swashbuckle.AspNetCore.Filters;
+using prosumerAppBack.BusinessLogic.PowerUsageService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -66,6 +67,7 @@ builder.Services.AddScoped<IDeviceRepository,DeviceRepository>();
 builder.Services.AddScoped<IDeviceService,DeviceService>();
 builder.Services.AddScoped<IUserService,UserService>();
 builder.Services.AddScoped<IEmailService,EmailService>();
+builder.Services.AddScoped<IPowerUsageService,PowerUsageService>();
 
 builder.Services.AddHttpClient<UserService>();
 builder.Services.AddSingleton<IMongoDatabase>(provider =>

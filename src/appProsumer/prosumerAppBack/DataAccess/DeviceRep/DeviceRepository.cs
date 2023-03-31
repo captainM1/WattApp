@@ -91,7 +91,7 @@ namespace prosumerAppBack.DataAccess
             return _dbContext.DeviceTypes.Where(d => d.ManufacturerID == maunfID && d.GroupID == groupID);
         }
 
-        public async Task<Device> AddDevice(Models.Device.AddDeviceDto addDeviceDto)
+        public async Task<Device> AddDevice(AddDeviceDto addDeviceDto)
         {
             var newDevice = new Device
             {
