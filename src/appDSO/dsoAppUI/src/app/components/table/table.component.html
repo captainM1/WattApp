@@ -19,9 +19,16 @@
                       Total Production
                   </th>
               </tr>
-              <tr>
-                  <td></td>
+              <tr *ngFor="let user of allUsers">
+                  <td>{{user.firstName}}</td>
+                  <td>{{user.lastName}}</td>
+                  <td>{{user.address}}, {{user.city}}, {{user.country}}</td>
+                  <td>13kw/h</td>
+                  <td>14kw/h</td>
               </tr>
+              
+               
+              
           </table>
         </div> 
   </div>
@@ -33,6 +40,4 @@
               </div>
           </div>
       </div>
-  </div>
-  
   </div>

@@ -28,4 +28,8 @@ export class AuthService {
   getCoordsID(id : string):Observable<any>{
     return this.http.get<any>(environment.apiUrl + "/api/User/coordinates/"+id);
   }
+
+  getDevices(id: string):Observable<any>{
+    return this.http.get<any>(environment.apiUrl + "/api/Device/devices/" + id);
+  }
 }
