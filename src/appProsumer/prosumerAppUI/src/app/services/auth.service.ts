@@ -46,11 +46,11 @@ export class AuthService {
   }
 
   getToken() {
-    return this.cookie.get('token'); 
+    return this.cookie.get('jwtToken'); 
   }
 
   signOut(){
-    this.cookie.delete('token');
+    this.cookie.delete('jwtToken');
   }
   
 }

@@ -1,73 +1,50 @@
-<!-- <div class="px-3 py-2" id = "nav-style">
-    <div class="container">
-        <div class="d-flex flex-wrap align-items-center justify-content-center-justify-content-lg-start">
-            <a class ="d-flex.align-items-center.my-2.my-lg-0.me-lg-auto.text-white.text-decoration-none">
-                <button class="logo"><img src="../../../assets/icons/white no-background.png"/></button>
-            </a>
-            <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small" >
-                <li *ngFor = "let data of navData">
-
-                    <a id = "icon" class="nav-link text-secondary" [routerLink] = [data.routeLink]>
-
-                        <i [class]="data.icon"> </i>
-                       <small> {{data.label}} </small>
-
-
-                    </a>
-                </li>
-            </ul>
-
+<header class="mb-4 fixed-top">
+  <!-- Jumbotron -->
+  <div class="p-3 text-center border-bottom" style="background-color: #026670;">
+    <div class="container-fluid">
+      <div class="row">
+        <div
+          class="col-md-5 d-flex justify-content-center justify-content-md-start align-items-center d-none d-lg-flex">
+          
+          <a class="text-reset me-3">
+              <i class="fa fa-home" routerLink="/home" routerLinkActive #rlh ="routerLinkActive" [routerLinkActive]="'active'"></i><br>
+          </a>
+          <!-- dashboard-component -->
+          <a class="text-reset me-3">
+            <i class="fa fa-tachometer "  routerLink="/dashboard" routerLinkActive #rld ="routerLinkActive" [routerLinkActive]="'active'"></i><br>
+            
+          </a>
+          <!-- devices-component -->
+          <a class="text-reset me-3">
+            <i class="fa fa-desktop "  routerLink = "/devices" routerLinkActive #rlt ="routerLinkActive" [routerLinkActive]="'active'"></i><br>
+          </a>
         </div>
-    </div>
-</div> -->
-<header class="mb-4 fixed-top" >
-    <!-- Jumbotron -->
-    <div class="p-3 text-center border-bottom" style="background-color: #026670;">
-      <div class="container-fluid">
-        <div class="row">
-          <!-- Right elements -->
-          <div
-            class="col-md-5 d-flex justify-content-center justify-content-md-start align-items-center d-none d-lg-flex">
-            <!-- <a class="text-reset me-3">
-              <i class="fa fa-th-large" style="color: white;" routerLink="/"></i> prostorije user-a
-            </a> -->
+        
+        <div class="col-md-2 d-none d-lg-block">
+          <a  class="ms-md-2" id = "logo">
+            <img src="../../../assets/icons/white no-background.png" height="32px">
+            
+          </a>
+          <span *ngIf="rlh.isActive">Home</span>
+          <span *ngIf="rld.isActive">Dashboard</span>
+          <span *ngIf="rlt.isActive">Devices</span>  
+          <span *ngIf="rln.isActive">Notifications</span>
+          <span *ngIf="rlp.isActive">Profile</span>
+        </div>
+        
+        <div class="col-lg-5 d-flex justify-content-center justify-content-md-end align-items-center">
+          <a class="text-reset me-3">
+              <i class="fa fa-bell" routerLinkActive #rln ="routerLinkActive" [routerLinkActive]="'active'"></i><br>
+          </a>
+        
             <a class="text-reset me-3" >
-              <i class="fa fa-home" routerLink="/home"></i>
+              <i class="fa fa-user-circle" routerLinkActive #rlp ="routerLinkActive" [routerLinkActive]="'active'"></i><br>
             </a>
+
             <a class="text-reset me-3" >
-              <i class="fa fa-tachometer" routerLink="/dashboard"></i>
-            </a>
-            <a class="text-reset me-3">
-              <i class="fa fa-desktop"  routerLink="/add-device"></i>
-            </a>
-            <a class="text-reset me-3">
-              <i class="fa fa-cog"  routerLink="/"></i>
-            </a>
-
-
-          </div>
-          <!-- Right elements -->
-
-          <!-- Center elements -->
-          <div class="col-md-2 d-none d-lg-block">
-            <a href="#!" class="ms-md-2">
-              <img src="../../../assets/icons/white no-background.png" height="30px">
+              <i class="fa fa-sign-out" [routerLinkActive]="'active'" (click)="signOut()"></i><br>
             </a>
           </div>
-          <!-- Center elements -->
-
-          <!-- Right elements -->
-          <div class="col-lg-5 d-flex justify-content-center justify-content-md-end align-items-center" >
-            <a class="text-reset me-3" >
-              <i class="fa fa-bell"  routerLink="/"></i>
-            </a>
-
-            <a class="text-reset me-3">
-              <i class="fa fa-user-circle"  routerLink="/profile-prosumer"></i>
-            </a>
-
-
-          <!-- Right elements -->
         </div>
       </div>
-    </div>
+</div>
