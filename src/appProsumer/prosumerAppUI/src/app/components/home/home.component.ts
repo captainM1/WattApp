@@ -11,7 +11,8 @@ export class HomeComponent {
   constructor(
     private auth: AuthService,
     ){}
-  ngOnInit(): void {
+  
+    ngOnInit(): void {
     this.auth.getData().subscribe((data) => {
       this.data = "Welcome, " + data;
     });

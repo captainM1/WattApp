@@ -53,3 +53,19 @@ body {
     display: flex;
     flex-direction: column;
   }
+  .fixed-class{
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 999;
+      background-color: #026670;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      text-align: center;
+  }
+  .fixed-class img{
+      display: inline-block;
+      
+   
+  }
