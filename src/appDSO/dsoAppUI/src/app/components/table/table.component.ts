@@ -1,6 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import * as L from 'leaflet';
 import { Device, User } from 'models/User';
 import { AuthService } from 'service/auth.service';
@@ -12,80 +12,113 @@ import {PageEvent} from '@angular/material/paginator';
   styleUrls: ['./table.component.css'],
   
 })
-export class TableComponent implements OnInit{
+export class TableComponent implements OnInit  {
   
   allUsers!: User[];
   // deviceOfUserID! : Device[];
-  userCoords!: any[];
+  private userCoords!: any[];
   // coords?: number[];
   userIDCoords!:any[];
-  
-
-
+  private id : any;
+  private firstName?: string;
+  private lastName?: string;
+  private address? : string;
  
+  showAllUsersOnMap : boolean = true;
   
   private map!: L.Map;
   private markers: L.Marker[] = [];
   private latlng: L.LatLng[] = [];
   
+  public page = 1;
+  public pageSize = 10;
+  private lengthOfUsers!: number;
+
   constructor(
     private auth : AuthService
   ){}
 
-
   ngOnInit(): void {
     
-    this.auth.getPagination(1, 5).subscribe(
+    this.showMeUsers();
+    this.onInitMap();
+    this.showCoordsForEveryUser()
+  }
+
+  public showMeUsers(){
+
+    this.auth.getPagination(this.page, this.pageSize).subscribe(
       (response : any)=> {
         this.allUsers = response;
-
-        for(const user of this.allUsers){
-          this.auth.getCoordsByUserID(user.id).subscribe(
-            (response : any)=>{
-              this.userIDCoords = response;
-              
-            }
-          )
-        }
       }
     );
+  }
 
 
+  public onInitMap(){
+    this.map = L.map('map').setView([44.0165,21.0069],10);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 20,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(this.map);
+  }
+
+  public showCoordsForEveryUser(){
+    this.showAllUsersOnMap = true;
     this.auth.getCoords().subscribe(
       (response : any) =>{
+        this.lengthOfUsers = response['length'];
         this.userCoords = response;
-        
         for(const user of this.userCoords){
+          for(const us of this.allUsers){
+            if(user.address['address'] === us.address){
+              this.firstName = us.firstName;
+              this.lastName = us.lastName;
+              this.address = us.address;
+            }
+          }
           const latlng = L.latLng(JSON.parse(user['coordinates']));
           const marker = L.marker(latlng).addTo(this.map);
+          marker.bindPopup(`<b>${this.firstName} ${this.lastName} <br>${this.address}`)
           this.markers.push(marker);
         }
 
     });
-
-    this.map = L.map('map').setView([44.0165,21.0069],13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 18,
-      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }).addTo(this.map);
-
-   
-    
-
-    // this.auth.getDevices(this.returnUserID).subscribe(
-    //   (response : any) => {
-    //     this.deviceOfUserID = response;
-    //     console.log(this.deviceOfUserID[0].deviceType.name);
-        
-    //     console.log(this.deviceOfUserID[0].deviceType.group);
-        
-    //     console.log(this.deviceOfUserID[0].deviceType.manifacturer.name);
-    //   }
-    // )
   }
 
- 
   
+ 
+  public showMeOnMap(id : string){
+    
+    this.showAllUsersOnMap = false;
+    console.log("ShowMeOnMap", this.showAllUsersOnMap);
+    
+    for(const mark of this.markers){
+      this.map.removeLayer(mark);
+    }
+
+    this.auth.getCoordsByUserID(id).subscribe(
+      (response : any) => {
+        const latlng = L.latLng(JSON.parse(response['coordinates']));
+        // console.log(JSON.parse(response['coordinates']))
+        const marker = L.marker(latlng).addTo(this.map);
+        this.markers.push(marker);
+      }
+    )
+  }
+ 
+  // paginacija za menjanje strana
+  nextPage(){
+    if(this.lengthOfUsers / this.pageSize > 0){
+      this.page++;
+    }
+  }
+
+  prevPage(){
+    if(this.page !== 1){
+      this.page--;
+    }
+  }
       
     
 
