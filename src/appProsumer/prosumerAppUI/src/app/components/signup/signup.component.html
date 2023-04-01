@@ -5,7 +5,7 @@
             <div class="col-sm centriranje d-none d-lg-flex" style="background: linear-gradient(179.99deg, #026670 -47%, #9FEDD7 99.99%); color: #026670;">
                 <img src="/assets/icons/logo-white.png" class="slika" alt="logo">
             </div>
-            <div class="col-sm centriranje " style=" background:#EDEAE5;">
+            <div class="col-sm centriranje" style=" background:#EDEAE5;">
                 <div class=" forma panel border" >
                     <h3 class="pt-3 font-weight-bold">
                         Get started
@@ -40,15 +40,15 @@
                                 <span class="input-group-addon addon-icon" [ngClass]="{'invalid-icon': submitted && fields['address'].errors}"><i class="fa fa-location-arrow"></i></span>
                                 <div class="invalid-feedback">
                                     <span class="text-danger" *ngIf="submitted && fields['address'].errors?.['required']">*Address is required!</span>
-                                    <span class="text-danger" *ngIf="submitted ">Address must be in the format: Street, City, Country</span>
+                                    <span class="text-danger" *ngIf="fields['address'].hasError('pattern')">*Address must be in the format: Street, City, Country!</span>
                                 </div>
                         </div>
                         <div class="input-group form-group pt-4">
                             <input class = "form-control"  [ngClass] = "{'is-invalid invalid-input' : submitted && fields['phonenumber'].errors}" formControlName = "phonenumber" type="text" placeholder="Phone number">
                             <span class="input-group-addon addon-icon" [ngClass]="{'invalid-icon': submitted && fields['phonenumber'].errors}"><i class="fa fa-phone"></i></span>
                             <div class="invalid-feedback">
-                                <span class="text-danger" *ngIf="submitted && fields['phonenumber'].errors?.['required']">*Phone Number is required!</span>
-                                <span class="text-danger" *ngIf="fields['phonenumber'].errors?.['phonenumber']">Please, provide a valid phone number.</span>
+                                <span class="text-danger" *ngIf="submitted && fields['phonenumber'].errors?.['required']">*Phone number is required!</span>
+                                <span class="text-danger" *ngIf="fields['phonenumber'].errors?.['phonenumber']">"*Please, provide a valid phone number.</span>
                               </div>
                         </div>
 
