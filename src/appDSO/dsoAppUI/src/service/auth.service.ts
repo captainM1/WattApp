@@ -12,7 +12,7 @@ export class AuthService {
     private http: HttpClient
   ) { }
 
-  getUserCoords():Observable<any>{
+  getCoords():Observable<any>{
     return this.http.get<any>(environment.apiUrl + "/api/User/coordinatesForEveryUser");
   }
 
@@ -25,7 +25,7 @@ export class AuthService {
     })
   }
 
-  getCoordsID(id : string):Observable<any>{
+  getCoordsByUserID(id : string):Observable<any>{
     return this.http.get<any>(environment.apiUrl + "/api/User/coordinates/"+id);
   }
 

@@ -29,7 +29,7 @@
           <span *ngIf="rld.isActive">Dashboard</span>
           <span *ngIf="rlt.isActive">Devices</span>  
           <span *ngIf="rln.isActive">Notifications</span>
-          <span *ngIf="rlp.isActive">Profile</span>
+          <span *ngIf="rlp.isActive"></span>
         </div>
         
         <div class="col-lg-5 d-flex justify-content-center justify-content-md-end align-items-center">
@@ -38,7 +38,7 @@
           </a>
         
             <a class="text-reset me-3" >
-              <i class="fa fa-user-circle" routerLinkActive #rlp ="routerLinkActive" [routerLinkActive]="'active'"></i><br>
+              <i class="fa fa-user-circle" routerLink="/profile-prosumer" routerLinkActive #rlp ="routerLinkActive" [routerLinkActive]="'active'"></i><br>
             </a>
 
             <a class="text-reset me-3" >

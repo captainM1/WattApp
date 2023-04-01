@@ -15,26 +15,18 @@ import {PageEvent} from '@angular/material/paginator';
 export class TableComponent implements OnInit{
   
   allUsers!: User[];
-  deviceOfUserID! : Device[];
-  
+  // deviceOfUserID! : Device[];
   userCoords!: any[];
-  coords?: number[];
-  userIDCoords! : any[];
+  // coords?: number[];
+  userIDCoords!:any[];
   
-  pageNumber: number = 1;
-  length = 50;
-  pageSize = 10;
-  pageIndex = 0;
-  pageSizeOptions = [5, 10, 25];
 
-  
 
  
   
   private map!: L.Map;
-  private centroid: L.LatLngExpression = [44.0128,20.9114]; 
-  private marker! : L.Marker;
-  
+  private markers: L.Marker[] = [];
+  private latlng: L.LatLng[] = [];
   
   constructor(
     private auth : AuthService
@@ -43,20 +35,42 @@ export class TableComponent implements OnInit{
 
   ngOnInit(): void {
     
-    this.auth.getPagination(this.pageNumber, 5).subscribe(
+    this.auth.getPagination(1, 5).subscribe(
       (response : any)=> {
         this.allUsers = response;
+
+        for(const user of this.allUsers){
+          this.auth.getCoordsByUserID(user.id).subscribe(
+            (response : any)=>{
+              this.userIDCoords = response;
+              
+            }
+          )
+        }
       }
     );
-    this.auth.getUserCoords().subscribe(
+
+
+    this.auth.getCoords().subscribe(
       (response : any) =>{
         this.userCoords = response;
-        console.log(this.userCoords[0].address);
-        this.coords = JSON.parse(response[0].coordinates);
-        console.log(this.coords)
+        
+        for(const user of this.userCoords){
+          const latlng = L.latLng(JSON.parse(user['coordinates']));
+          const marker = L.marker(latlng).addTo(this.map);
+          this.markers.push(marker);
+        }
+
     });
 
-    this.initMap();
+    this.map = L.map('map').setView([44.0165,21.0069],13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(this.map);
+
+   
+    
 
     // this.auth.getDevices(this.returnUserID).subscribe(
     //   (response : any) => {
@@ -70,8 +84,8 @@ export class TableComponent implements OnInit{
     // )
   }
 
-   
-    
+ 
+  
       
     
 
@@ -85,18 +99,8 @@ export class TableComponent implements OnInit{
 
   
   
-  private initMap(): void{
-    this.map = L.map('map',{
-      center: this.centroid,
-      zoom: 18
-  });
-
-    const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png?key=Xjmy4FwEg0zjH3KOEzXy',{
-      maxZoom:18,
-      minZoom: 10,
-      
-    });
-  }
+  
+ 
 }
 
     
