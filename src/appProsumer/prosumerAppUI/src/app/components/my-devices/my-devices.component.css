@@ -76,9 +76,8 @@ button:focus{
   background-color: #026670;
 }
 
-
-
-@media(max-width: 480px){
+@media (max-width: 280px) /*Fold*/
+{
   .container
   {
     width: 90%;
@@ -91,10 +90,54 @@ button:focus{
   }
 
   .card-title{
-     font-size: 10px;
+     font-size: 30%;
      font-weight: bold;
      color: #026670;
-      padding-top: 5px;
+    padding-top: 5px;
+  }
+
+  .device-col img
+  {
+    width:70%;
+    margin-left: 17%;
+    padding-top: 10px;
+  }
+
+  .device-col
+  {
+    width: 35%;
+
+  }
+
+  .card
+  {
+    border: none !important;
+    background-color:#FCFBFB !important;
+  }
+
+  .card-text
+  {
+    font-size:28%;
+  }
+}
+
+@media(min-width: 281px) and  (max-width: 480px){
+  .container
+  {
+    width: 90%;
+    margin-bottom: 60px;
+  }
+
+  button{
+    width: 50%;
+    font-size: 12px;
+  }
+
+  .card-title{
+     font-size: 85%;
+     font-weight: bold;
+     color: #026670;
+    padding-top: 5px;
   }
 
   .device-col img
@@ -118,7 +161,7 @@ button:focus{
 
   .card-text
   {
-    font-size: 8px;
+    font-size:70%;
   }
 
 }
@@ -136,7 +179,7 @@ button:focus{
   }
 
   .card-title{
-    font-size: 14px;
+    font-size: 90%;
     padding-top: 5px;
     font-weight: bold;
     color: #026670;
@@ -161,6 +204,10 @@ button:focus{
     width: 28%;
   }
 
+  .card-text
+  {
+    font-size: 85%;
+  }
 
 
   }
@@ -168,7 +215,8 @@ button:focus{
 {
   .container
   {
-      width: 60%;
+      width: 55%;
+      margin-left: 5px;
   }
 
   button{
@@ -177,29 +225,44 @@ button:focus{
     font-size: 13px;
   }
 
-  label{
-    font-size: 14px;
+  .card-title{
+    font-size: 55%;
     padding-top: 5px;
+    font-weight: bold;
+    color: #026670;
   }
 
-  .col img
+  .device-col img
   {
     width:50%;
+    margin-left: 25%;
+    padding-top: 10px;
   }
 
-  .col
+  .device-col
   {
-    width: 40%;
+    width: 35%;
 
+  }
+
+  .card
+  {
+    border: none !important;
+    background-color:#FCFBFB !important;
+  }
+
+  .card-text
+  {
+    font-size: 50%;
   }
 }
 
-@media (min-width: 721px) and (max-width: 1024px)  /*Tablet*/
+@media (min-width: 721px) and (max-width: 1023px)  /*Tablet*/
 {
   .container
   {
-      width: 50%;
-      margin-left: -30px;
+      width: 65%;
+      margin-left: -35px;
   }
 
   button{
@@ -208,20 +271,35 @@ button:focus{
     font-size: 13px;
   }
 
-  label{
+  .card-title{
     font-size: 14px;
     padding-top: 5px;
+    font-weight: bold;
+    color: #026670;
   }
 
-  .col img
+  .device-col img
   {
-    width:50%;
+    width:60%;
+    margin-left: 22%;
+    padding-top: 10px;
   }
 
-  .col
+  .device-col
   {
     width: 40%;
 
+  }
+
+  .card
+  {
+    border: none !important;
+    background-color:#FCFBFB !important;
+  }
+
+  .card-text
+  {
+    font-size: 13px;
   }
 }
 

@@ -20,6 +20,13 @@
                                         <span class="text-danger" *ngIf="submitted && fields['username'].errors?.['required']">*Username is required!</span>
                                     </div>
                             </div>
+                            <div class="input-group form-group pt-2">
+                              <input class = "form-control"  [ngClass] = "{'is-invalid invalid-input' : submitted && fields['username'].errors}" formControlName = "username" type="text" placeholder="Username">
+                              <span class="input-group-addon addon-icon" [ngClass]="{'invalid-icon': submitted && fields['username'].errors}"><i class="fa fa-user"></i></span>
+                              <div class="invalid-feedback">
+                                  <span class="text-danger" *ngIf="submitted && fields['username'].errors?.['required']">*Username is required!</span>
+                              </div>
+                            </div>
                             <div class="input-group form-group pt-4">
                                 <input class = " form-control"  [ngClass] = "{'is-invalid invalid-input' : submitted && fields['email'].errors}" formControlName = "email" type="text" placeholder="Email">
                                 <span class="input-group-addon addon-icon" [ngClass]="{'invalid-icon': submitted && fields['email'].errors}"><i class="fa fa-envelope"></i></span>
