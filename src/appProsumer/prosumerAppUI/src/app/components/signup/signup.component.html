@@ -14,17 +14,17 @@
                     <div class="panel-body">
                         <form [formGroup] = "loginForm" (ngSubmit)="onSubmit()">
                             <div class="input-group form-group pt-2">
-                                    <input class = "form-control"  [ngClass] = "{'is-invalid invalid-input' : submitted && fields['username'].errors}" formControlName = "username" type="text" placeholder="Username">
-                                    <span class="input-group-addon addon-icon" [ngClass]="{'invalid-icon': submitted && fields['username'].errors}"><i class="fa fa-user"></i></span>
+                                    <input class = "form-control"  [ngClass] = "{'is-invalid invalid-input' : submitted && fields['firstName'].errors}" formControlName = "firstName" type="text" placeholder="First name">
+                                    <span class="input-group-addon addon-icon" [ngClass]="{'invalid-icon': submitted && fields['firstName'].errors}"><i class="fa fa-user"></i></span>
                                     <div class="invalid-feedback">
-                                        <span class="text-danger" *ngIf="submitted && fields['username'].errors?.['required']">*Username is required!</span>
+                                        <span class="text-danger" *ngIf="submitted && fields['firstName'].errors?.['required']">*First name is required!</span>
                                     </div>
                             </div>
-                            <div class="input-group form-group pt-2">
-                              <input class = "form-control"  [ngClass] = "{'is-invalid invalid-input' : submitted && fields['username'].errors}" formControlName = "username" type="text" placeholder="Username">
-                              <span class="input-group-addon addon-icon" [ngClass]="{'invalid-icon': submitted && fields['username'].errors}"><i class="fa fa-user"></i></span>
+                            <div class="input-group form-group pt-4">
+                              <input class = "form-control"  [ngClass] = "{'is-invalid invalid-input' : submitted && fields['lastName'].errors}" formControlName = "lastName" type="text" placeholder="Last name">
+                              <span class="input-group-addon addon-icon" [ngClass]="{'invalid-icon': submitted && fields['lastName'].errors}"><i class="fa fa-user"></i></span>
                               <div class="invalid-feedback">
-                                  <span class="text-danger" *ngIf="submitted && fields['username'].errors?.['required']">*Username is required!</span>
+                                  <span class="text-danger" *ngIf="submitted && fields['lastName'].errors?.['required']">*Last name is required!</span>
                               </div>
                             </div>
                             <div class="input-group form-group pt-4">
@@ -48,7 +48,8 @@
                             <span class="input-group-addon addon-icon" [ngClass]="{'invalid-icon': submitted && fields['phonenumber'].errors}"><i class="fa fa-phone"></i></span>
                             <div class="invalid-feedback">
                                 <span class="text-danger" *ngIf="submitted && fields['phonenumber'].errors?.['required']">*Phone Number is required!</span>
-                            </div>
+                                <span class="text-danger" *ngIf="fields['phonenumber'].errors?.['phonenumber']">Please, provide a valid phone number.</span>
+                              </div>
                         </div>
 
                             <div class="input-group form-group pt-4">

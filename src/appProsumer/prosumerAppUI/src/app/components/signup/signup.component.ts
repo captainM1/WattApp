@@ -17,25 +17,26 @@ export class SignupComponent  implements OnInit{
   eyeIcon: string = "fa-eye-slash";
   isText: boolean = false;
   loginForm!: FormGroup;
-  
+
   constructor(
-    private fb: FormBuilder, 
+    private fb: FormBuilder,
     private router : Router,
     //private toast : NgToastService,
     private messageService:MessageService,
     private auth: AuthService,
     private cookie: CookieService
     ){}
-  
+
   ngOnInit(): void {
     this.loginForm = this.fb.group({
-      username: ['', Validators.required],
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
       email : ['', [Validators.required, Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
       address: ['', Validators.required],
       phonenumber: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]]
     })
-    
+
   }
 
   hideShowPass(){
@@ -47,17 +48,17 @@ export class SignupComponent  implements OnInit{
   get fields(){
     return this.loginForm.controls;
   }
-  
+
   onSubmit(){
     this.submitted = true;
     if(this.loginForm.invalid){
 
-      this.messageService.add({ severity: 'error', summary: 'Invalid data', detail: 'Invalid data format' });  
+      this.messageService.add({ severity: 'error', summary: 'Invalid data', detail: 'Invalid data format' });
       this.validateAllFormFields(this.loginForm);
       this.router.navigate(['signup']);
       return;
     }else if(this.loginForm.valid){
-      this.auth.register(this.loginForm.get('username')?.value,this.loginForm.get('email')?.value,this.loginForm.get('address')?.value, this.loginForm.get('phonenumber')?.value, this.loginForm.get('password')?.value,)
+      this.auth.register(this.loginForm.get('firstName')?.value, this.loginForm.get('lastName')?.value, this.loginForm.get('email')?.value,this.loginForm.get('address')?.value, this.loginForm.get('phonenumber')?.value, this.loginForm.get('password')?.value,)
       .subscribe((message) =>
         {
             this.loginForm.reset();
@@ -74,7 +75,7 @@ export class SignupComponent  implements OnInit{
         const control = formGroup.get(field);
         if(control instanceof FormControl){
           console.log(control.value);
-          
+
           control?.markAsDirty({onlySelf: true})
         }else if(control instanceof FormGroup){
           this.validateAllFormFields(control);
