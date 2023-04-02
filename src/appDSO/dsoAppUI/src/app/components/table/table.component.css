@@ -1,47 +1,77 @@
-table {
+.card {
     width: 100%;
-  }
-  
-  tr.example-detail-row {
-    height: 0;
-  }
-  
-  tr.example-element-row:not(.example-expanded-row):hover {
-    background: whitesmoke;
-  }
-  
-  tr.example-element-row:not(.example-expanded-row):active {
-    background: #efefef;
-  }
-  
-  .example-element-row td {
-    border-bottom-width: 0;
-  }
-  
-  .example-element-detail {
-    overflow: hidden;
-    display: flex;
-  }
-  
-  .example-element-diagram {
-    min-width: 80px;
-    border: 2px solid black;
-    padding: 8px;
-    font-weight: lighter;
-    margin: 8px 0;
-    height: 104px;
-  }
-  
-  .example-element-symbol {
-    font-weight: bold;
-    font-size: 40px;
-    line-height: normal;
-  }
-  
-  .example-element-description {
-    padding: 16px;
-  }
-  
-  .example-element-description-attribution {
-    opacity: 0.5;
-  }
+    border-radius: 10px;
+    margin-top: 20px;
+    margin-left: 20px;
+}
+
+.card table thead{
+  background-color: #026670;
+  color: white;
+}
+.card table thead th{
+  padding: 20px;
+  text-align: center;
+  border-bottom: 1px solid #026670;
+
+}
+.card table tr:hover {
+  background-color: #026670; 
+  color:white;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.card table tr td{
+  padding: 15px;
+  text-align: center;
+  border-bottom: 1px solid #026670;
+
+}
+
+#map{
+  margin-top: 20px;
+  margin-left: 20px;
+}
+.fa{
+  padding-right: 10px;
+  color: #026670;
+}
+
+.input-div{
+  margin-top: 30px;
+  margin-left: 25px;
+  display: flex;
+  justify-content: baseline;
+}
+
+input{
+  width: 240px;
+  margin-left: 0px;
+  margin-right: 10px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid #026670;
+}
+button{
+  margin-left: 10px;
+  width: 150px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: #026670;
+  color: white;
+  border-radius: 8px;
+  font-size: medium;
+  font-weight: 500;
+  letter-spacing: 1px;
+
+
+}
+label{
+  display: ruby;
+  text-align: start;
+  padding-right: 10px;
+  padding-top: 5px;
+}

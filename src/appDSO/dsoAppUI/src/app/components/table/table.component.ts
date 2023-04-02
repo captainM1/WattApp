@@ -5,6 +5,10 @@ import * as L from 'leaflet';
 import { Device, User } from 'models/User';
 import { AuthService } from 'service/auth.service';
 import {PageEvent} from '@angular/material/paginator';
+import { FormsModule } from '@angular/forms';
+import { MatTableModule } from '@angular/material/table'; 
+import { MatTableExporterModule } from 'mat-table-exporter';
+
 
 @Component({
   selector: 'app-table',
@@ -14,16 +18,26 @@ import {PageEvent} from '@angular/material/paginator';
 })
 export class TableComponent implements OnInit  {
   
+  
+
+  _searchByName: string = '';
+  filterByName! : User[];
+
+  exportData : any[] = [];
+
   allUsers!: User[];
-  // deviceOfUserID! : Device[];
-  private userCoords!: any[];
-  // coords?: number[];
+  allUserDevices! : Device[];
   userIDCoords!:any[];
+
+  private userCoords!: any[];
   private id : any;
   private firstName?: string;
   private lastName?: string;
   private address? : string;
+
+  public toggleTable : boolean = false;
  
+
   showAllUsersOnMap : boolean = true;
   
   private map!: L.Map;
@@ -33,28 +47,57 @@ export class TableComponent implements OnInit  {
   public page = 1;
   public pageSize = 10;
   private lengthOfUsers!: number;
+  tableData: any;
+  
 
   constructor(
-    private auth : AuthService
+    private auth : AuthService,
+    private table : MatTableModule
   ){}
 
+  
   ngOnInit(): void {
     
     this.showMeUsers();
     this.onInitMap();
-    this.showCoordsForEveryUser()
+    this.showCoordsForEveryUser();
+    
   }
-
+  
+  exportSelectedData(){
+    this.exportData = this.tableData.filter((item: { checked: any; })=>item.checked)
+  }
+ 
   public showMeUsers(){
-
     this.auth.getPagination(this.page, this.pageSize).subscribe(
       (response : any)=> {
         this.allUsers = response;
+        this.filterByName = response;
       }
     );
   }
 
-
+  get filterName(){
+    return this._searchByName;
+  }
+  
+  set filterName(value: string){
+    this._searchByName = value;
+    console.log(this._searchByName);
+    this.filterByName = this.filterUsersByName(value);
+  }
+ 
+  filterUsersByName(filterTerm : string){
+    if(this.allUsers.length === 0  || this._searchByName === ''){
+      return this.allUsers;
+    }else{
+      return this.allUsers.filter((user)=>{
+        console.log(user)
+        return user.firstName.toLowerCase() === filterTerm.toLowerCase();
+      })
+    }
+  }
+ 
   public onInitMap(){
     this.map = L.map('map').setView([44.0165,21.0069],10);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -96,12 +139,13 @@ export class TableComponent implements OnInit  {
     for(const mark of this.markers){
       this.map.removeLayer(mark);
     }
-
+    this.showMeDevices(id);
     this.auth.getCoordsByUserID(id).subscribe(
       (response : any) => {
         const latlng = L.latLng(JSON.parse(response['coordinates']));
         // console.log(JSON.parse(response['coordinates']))
         const marker = L.marker(latlng).addTo(this.map);
+        marker.bindPopup(`<b>${this.firstName} ${this.lastName} <br>${this.address}`)
         this.markers.push(marker);
       }
     )
@@ -119,45 +163,38 @@ export class TableComponent implements OnInit  {
       this.page--;
     }
   }
-      
+  
+
+  showMeDevices(id : string){
+    this.toggleTable = true;
+    this.auth.getDevices(id).subscribe(
+      (response : any) => {
+        console.log(response);
+        this.allUserDevices = response;
+      }
+    )
+  }
+
+  
     
 
-    // this.auth.getCoordsID("5E12058A-2F83-4F95-B108-BF0B5811DAEE").subscribe(
-    //   (response : any) =>{
-        
-    //     console.log("USER",response);
-    //   }
-    // )
-    // this.initMap();
+  toggleColumn(){
+    this.toggleTable = !this.toggleTable;
+  }
+    
 
   
+
   
-  
+ 
  
 }
 
     
 
-  //   // const popup = L.popup().setLatLng(this.centroid).setContent('<p>User coords:<br> Total producing: <br> Total consuping: <br></p>').openOn(this.map);
-  //   var marker = L.marker([44.0128,20.9114],
-  //     {alt: 'Kyiv'}).addTo(this.map) // "Kyiv" is the accessible name of this marker
-  //     .bindPopup('<p>First name: <br>Last Name: <br>Total Production: <br> Total Consumption:</p>');
-  //   // this.marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
-  
-  //   // const jittery = Array(5).fill(this.centroid).map(
-  //   //   x =>[x[0]+(Math.random()- .5)/10, x[1]+(Math.random() - .5)/10],
-      
-  //   // ).map(
-  //   //   x=>L.marker(x as L.LatLngExpression)
-  //   // ).forEach(
-  //   //   x => x.addTo(this.map)
-  //   // );
-  //     tiles.addTo(this.map);
 
-  //     // tiles.bindPopup(popup).openPopup();
-  // } 
   
-  
+
 
 
 

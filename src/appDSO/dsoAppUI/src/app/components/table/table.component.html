@@ -1,8 +1,17 @@
-<div class="row">
+<app-nav></app-nav>
+<div class="row" style="margin-top: 100px;">
   <div class="col-lg-7">
+    <div class="input-div">
+        <label>Search by full name:</label>
+        <input type="text" [(ngModel)]="_searchByName" placeholder="John Cena">
+        <label>Search by address:</label>
+        <input type="text" [(ngModel)]="_searchByName" placeholder="Addres NN">
+        <button tableExport >Export data</button>
+        
+    </div>
       <div class="card">
-          <table >
-              <tr>
+          <table tableexporter >
+              <thead>
                   <th>
                       First Name
                   </th>
@@ -13,29 +22,39 @@
                       Address
                   </th>
                   <th>
-                      Total Consumption
+                      Prosumer/Consumer
                   </th>
                   <th>
-                      Total Production
+
                   </th>
-              </tr>
-              <tr *ngFor="let user of allUsers" (click) = "showMeOnMap(user.id)">
-                  <td>{{user.firstName}}</td>
+              </thead>
+              <tr *ngFor="let user of filterByName" (click) = "showMeOnMap(user.id)">
+                  <td><i class="fa fa-angle-right fa-lg" (click) = "showMeDevices(user.id)" (click) = "toggleColumn()"></i>{{user.firstName}}</td>
                   <td>{{user.lastName}}</td>
                   <td>{{user.address}}, {{user.city}}, {{user.country}}</td>
-                  <td>13kw/h</td>
-                  <td>14kw/h</td>
+                  <td><input (click)="exportSelectedData();" type="checkbox"></td>
               </tr>
-              
-               
-              
+              <tr>
+                
+              </tr>
           </table>
          
+          <table *ngIf="toggleTable">
+            <thead>
+                <th>Device name</th>
+                <th>Device manifacture</th>
+                <th>Type of Device</th>
+                <th>Status</th>
+            </thead>
+            <tr *ngFor="let device of allUserDevices">
+                <td></td>
+            </tr>
+          </table>
         </div> 
-  </div>
-  <div class="col">
-    <div id = "map" style="width: 450px; height: 300px;" >
-        
     </div>
-</div>
-  </div>
+    <div class="col">
+        <div id = "map" style="width: 450px; height: 300px;" >
+            
+        </div>
+    </div>
+ </div>

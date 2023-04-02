@@ -7,6 +7,7 @@ import { NavComponent } from './components/nav/nav.component'
 import { TableComponent } from './components/table/table.component';
 
 
+
 const routes: Routes = [
   {
     path: 'signin', component: LoginComponent
@@ -22,7 +23,8 @@ const routes: Routes = [
   },
   {
     path: 'table',component: TableComponent
-  }
+  },
+  
 ];
 
 @NgModule({

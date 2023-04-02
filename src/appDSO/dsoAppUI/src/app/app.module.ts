@@ -21,6 +21,8 @@ import { NavComponent } from './components/nav/nav.component';
 import { HomeComponent } from './components/home/home.component';
 import {MatTableModule} from '@angular/material/table';
 import { TableComponent } from './components/table/table.component';
+import { FormsModule } from '@angular/forms';
+import { MatTableExporterModule } from 'mat-table-exporter';
 var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
 
 
@@ -32,13 +34,13 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     CanvasJSChart,
     NavComponent,
     HomeComponent,
-    TableComponent
+    TableComponent,
+    
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    ReactiveFormsModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -47,6 +49,10 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     BrowserAnimationsModule,
     GoogleMapsModule,
     NgChartsModule,
+    FormsModule,
+    MatTableModule,
+    MatTableExporterModule
+    
     
 
   ],
