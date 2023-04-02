@@ -1,3 +1,8 @@
+@font-face {
+  font-family: font1;
+  src: url(/assets/fonts/Chivo-Regular.ttf);
+}
+
 .outer{
   height: 100vh;
 }
@@ -9,6 +14,7 @@
   padding: 50px;
   width: 30%;
   text-align: center;
+  font-family: font1;
 }
 
 input{
@@ -58,11 +64,13 @@ a{
 h3{
   font-size: 37px;
   color: #026670;
+  font-family: font1;
   font-weight: bold;
 }
 
 p{
   color:black;
+  font-family: font1;
   font-size: 14px;
   font-weight: bold;
 }
