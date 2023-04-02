@@ -36,6 +36,7 @@ import { MyDevicesComponent } from './components/my-devices/my-devices.component
 
 import { MobNavComponent } from './components/mob-nav/mob-nav.component';
 import { Home2Component } from './components/home2/home2.component';
+import { DeviceDetailsComponent } from './components/device-details/device-details.component';
 
 
 @NgModule({
@@ -59,7 +60,8 @@ import { Home2Component } from './components/home2/home2.component';
     NavComponent,
     EditProfileComponent,
     MyDevicesComponent,
-    Home2Component
+    Home2Component,
+    DeviceDetailsComponent
   ],
   imports: [
     BrowserModule,
