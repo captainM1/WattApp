@@ -6,13 +6,13 @@
             </a>
             <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small" >
                 <li *ngFor = "let data of navData">
-                    
+
                     <a id = "icon" class="nav-link text-secondary" [routerLink] = [data.routeLink]>
 
                         <i [class]="data.icon"> </i>
                        <small> {{data.label}} </small>
-                       
-                       
+
+
                     </a>
                 </li>
             </ul>
@@ -36,13 +36,13 @@
             </a>
             <a class="text-reset me-3" href="#">
               <i class="fa fa-columns me-1" style="color: white;"></i>
-              
+
             </a>
-  
-            
+
+
           </div>
           <!-- Right elements -->
-  
+
           <!-- Center elements -->
           <div class="col-md-2 d-none d-lg-block">
             <a href="#!" class="ms-md-2">
@@ -50,16 +50,16 @@
             </a>
           </div>
           <!-- Center elements -->
-  
+
           <!-- Right elements -->
           <div class="col-lg-5 d-flex justify-content-center justify-content-md-end align-items-center">
             <a class="text-reset me-3" href="#">
-              <i class="fa fa-plus" style="color: white;"></i>
+              <i class="fa fa-plus" style="color: white;" routerLink="/signup"></i>
             </a>
             <a class="text-reset me-3" href="#">
               <i class="fa fa-info-circle" style="color: white;"></i>
             </a>
-  
+
             <!-- Notification -->
             <div class="dropdown">
               <a class="text-reset me-3" href="#" id="navbarDropdownMenuLink" role="button"
@@ -67,7 +67,7 @@
                 <i class="fa fa-bell" style="color: white;" ></i>
               </a>
             </div>
-  
+
             <!-- User -->
             <div class="dropdown">
               <a class="text-reset dropdown-toggle d-flex align-items-center hidden-arrow" href="#"

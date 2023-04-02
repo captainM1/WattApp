@@ -6,6 +6,7 @@ import { LoginComponent } from './components/login/login.component';
 import { MapsComponent } from './components/maps/maps.component';
 import { NavComponent } from './components/nav/nav.component'
 import { navData } from './components/nav/navData';
+import { SignupComponent } from './components/signup/signup.component';
 
 
 const routes: Routes = [
@@ -23,6 +24,9 @@ const routes: Routes = [
   },
   {
     path: 'home', component: HomeComponent
+  },
+  {
+    path: 'signup', component: SignupComponent
   }
 ];
 
