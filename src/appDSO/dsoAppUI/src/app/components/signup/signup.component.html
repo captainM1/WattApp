@@ -39,7 +39,7 @@
                             <span  class="input-group-addon addon-icon" style="cursor: pointer;" [ngClass]="{'invalid-icon': submitted && fields['password'].errors}"><i (click) = "hideShowPass()" class="fa {{eyeIcon}}"></i></span>
                             <div class="invalid-feedback">
                                 <span class= "text-danger" *ngIf="submitted && fields['password'].errors?.['required']">*Password is required!</span>
-                                <span class = "text-danger" *ngIf="fields['password'].errors?.['minLength']">*Please provide a valid password!</span>
+                                <span class = "text-danger" *ngIf="fields['password'].errors?.['minlength']">*Please provide a valid password!</span>
                             </div>
                         </div>
 
