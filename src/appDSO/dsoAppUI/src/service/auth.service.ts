@@ -28,8 +28,19 @@ export class AuthService {
   getCoordsByUserID(id : string):Observable<any>{
     return this.http.get<any>(environment.apiUrl + "/api/User/coordinates/"+id);
   }
+  getDeviceData(){
+    return this.http.get<any>(`${environment.apiUrl}/api/Device/devices/info`, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
+  }
+
 
   getDevices(userId: string):Observable<any>{
-    return this.http.get<any>(environment.apiUrl + "/api/Device/devices/" + userId);
+    return this.http.get<any>(environment.apiUrl + "/api/Device/devices/info",{},{
+      headers: headers
+    });
+  }
+
+  getUserPowerByID(){
+
+    // /api/PowerUsage/power-usage/currentUsageUser/summary/{userID}
   }
 }
