@@ -112,7 +112,7 @@ namespace prosumerAppBack.Controllers
         [HttpGet("devices/info/{id}")]
         public IActionResult GetDevicesInfoForUser(Guid id)
         {
-	        var devices = _deviceRepository.GetDeviceInfoForUser(_userService.GetID().Value, id);
+	        var devices = _deviceRepository.GetDeviceInfoForUser(id);
 			
 	        if (devices == null)
 	        {

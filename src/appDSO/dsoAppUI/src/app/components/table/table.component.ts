@@ -2,13 +2,14 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { HttpClient } from '@angular/common/http';
 import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import * as L from 'leaflet';
-import { Device, User } from 'models/User';
+import { Device, Info, User } from 'models/User';
 import { AuthService } from 'service/auth.service';
 import {PageEvent} from '@angular/material/paginator';
 import { FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table'; 
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
+import { Observable, tap } from 'rxjs';
 
 
 @Component({
@@ -28,7 +29,7 @@ export class TableComponent implements OnInit {
   exportData : any[] = [];
 
   allUsers!: User[];
-  allUserDevices! : Device[];
+  allUserDevices! : Info[];
   userIDCoords!:any[];
 
   private userCoords!: any[];
@@ -66,7 +67,6 @@ export class TableComponent implements OnInit {
     this.showMeUsers();
     this.onInitMap();
     this.showCoordsForEveryUser();
-    
     
   }
   
@@ -156,30 +156,27 @@ export class TableComponent implements OnInit {
 
   
  
-  public showMeOnMap(id : string){
-    
+  public async showMeOnMap(id: string) {
     this.showAllUsersOnMap = false;
     console.log("ShowMeOnMap", this.showAllUsersOnMap);
-    
-    for(const mark of this.markers){
+  
+    for (const mark of this.markers) {
       this.map.removeLayer(mark);
     }
-    // poziv funkcije za svih uredjaja
-    this.showMeDevices(id);
-    this.auth.getUserPowerUsageByID(id).subscribe(
-      (response : any) =>{
-        this.powerUsage = response;
-        }
-      )
-    
-    this.auth.getCoordsByUserID(id).subscribe(
-      (response : any) => {
-        const latlng = L.latLng(JSON.parse(response['coordinates']));
-        const marker = L.marker(latlng).addTo(this.map);
-        marker.bindPopup(`<b>${this.firstName} ${this.lastName} <br>${this.address}`)
-        this.markers.push(marker);
-      }
-    )
+  
+    // wait for showMeDevices to complete
+    await this.showMeDevices(id).toPromise();
+  
+    this.auth.getUserPowerUsageByID(id).subscribe((response: any) => {
+      this.powerUsage = response;
+    });
+  
+    this.auth.getCoordsByUserID(id).subscribe((response: any) => {
+      const latlng = L.latLng(JSON.parse(response["coordinates"]));
+      const marker = L.marker(latlng).addTo(this.map);
+      marker.bindPopup(`<b>${this.firstName} ${this.lastName} <br>${this.address}`);
+      this.markers.push(marker);
+    });
   }
  
   // paginacija za menjanje strana
@@ -196,14 +193,15 @@ export class TableComponent implements OnInit {
   }
   
 
-  showMeDevices(id : string){
+  public showMeDevices(id: string): Observable<Info[]> {
     this.toggleTable = true;
+  
     // vraca sve devices za user-a
-    this.auth.getDevices(id).subscribe(
-      (response : any) => {
+    return this.auth.getDevices(id).pipe(
+      tap((response: any) => {
         this.allUserDevices = response;
-      }
-    )
+      })
+    );
   }
 
   

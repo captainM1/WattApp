@@ -17,6 +17,12 @@ export interface Device{
     owner: User
    
 }
+export interface Info{
+    deviceId: string;
+    deviceTypeName: string;
+    macAdress: string;
+    manufacturerName: string;
+}
 
 export interface DeviceType{
     id: string,

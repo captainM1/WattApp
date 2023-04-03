@@ -40,7 +40,7 @@
                   <td>{{user.firstName}}</td>
                   <td>{{user.lastName}}</td>
                   <td>{{user.address}}, {{user.city}}, {{user.country}}</td>
-                  <td>{{user.powerUsage}}</td>
+                  <td>{{powerUsage}}</td>
                   <!-- <td><input (click)="exportSelectedData();" type="checkbox"></td> -->
               </tr>
               <tr>
@@ -56,19 +56,25 @@
             </tfoot>
           </table>
          
-          <table *ngIf="toggleTable">
+          <table>
             <thead>
+              <tr>
                 <th>Device name</th>
-                <th>Device manifacture</th>
                 <th>Type of Device</th>
+                <th>Device manifacture</th>
                 <th>Status</th>
+              </tr>
             </thead>
-            <tr *ngFor="let device of allUserDevices">
-                <td>{{device.deviceType['name']}}</td>
-                <td>{{device.deviceType['manifacturer']['name']}}</td>
-                <td>{{device.deviceType['wattage']}}</td>
-            </tr>
+            <tbody>
+              <tr *ngFor="let device of allUserDevices">
+                <td>{{device.deviceId}}</td>
+                <td>{{device.deviceTypeName}}</td>
+                <td>{{device.manufacturerName}}</td>
+                <td>{{device.macAdress}}</td>
+              </tr>
+            </tbody>
           </table>
+          
           
         </div> 
     </div>

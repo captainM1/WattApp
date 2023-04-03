@@ -51,7 +51,6 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     NgChartsModule,
     FormsModule,
     MatTableModule,
-  
     
     
 
