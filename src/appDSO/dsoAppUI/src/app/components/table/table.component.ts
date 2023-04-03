@@ -7,7 +7,7 @@ import { AuthService } from 'service/auth.service';
 import {PageEvent} from '@angular/material/paginator';
 import { FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table'; 
-import { MatTableExporterModule } from 'mat-table-exporter';
+
 
 
 @Component({
