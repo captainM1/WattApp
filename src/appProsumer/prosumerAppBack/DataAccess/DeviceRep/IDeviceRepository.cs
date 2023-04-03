@@ -27,7 +27,9 @@ namespace prosumerAppBack.BusinessLogic
         public IEnumerable<object> GetDevicesInfoForUser(Guid userID);
 
         public IEnumerable<ManufacturerDto> GetManufacturersBasedOnGroup(Guid groupID);
-        public object GetDeviceInfoForUser(Guid userID, Guid deviceID);
+        public Task<List<DeviceInfo>> GetDeviceInfoForUser(Guid userID);
+        
+        public Task<DeviceInfo> GetDeviceInfoForDevice(Guid deviceID);
 	}
 }
 

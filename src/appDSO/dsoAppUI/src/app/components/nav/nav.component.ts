@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { navData } from './navData';
+
 
 @Component({
   selector: 'app-nav',
@@ -8,5 +8,5 @@ import { navData } from './navData';
 })
 export class NavComponent {
 
-  navData = navData;
+ 
 }

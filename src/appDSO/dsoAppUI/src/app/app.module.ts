@@ -14,7 +14,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { GoogleMapsModule } from '@angular/google-maps';
-import { MapsComponent } from './components/maps/maps.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { NgChartsModule } from 'ng2-charts';
 import * as CanvasJSAngularChart from '../assets/canvasjs.angular.component';
@@ -22,6 +21,8 @@ import { NavComponent } from './components/nav/nav.component';
 import { HomeComponent } from './components/home/home.component';
 import {MatTableModule} from '@angular/material/table';
 import { TableComponent } from './components/table/table.component';
+import { FormsModule } from '@angular/forms';
+
 var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
 
 
@@ -29,18 +30,17 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
   declarations: [
     AppComponent,
     LoginComponent,
-    MapsComponent,
     DashboardComponent,
     CanvasJSChart,
     NavComponent,
     HomeComponent,
-    TableComponent
+    TableComponent,
+    
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    ReactiveFormsModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -49,6 +49,9 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     BrowserAnimationsModule,
     GoogleMapsModule,
     NgChartsModule,
+    FormsModule,
+    MatTableModule,
+    
     
 
   ],

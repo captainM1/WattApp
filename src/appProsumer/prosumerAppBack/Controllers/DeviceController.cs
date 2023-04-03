@@ -109,17 +109,30 @@ namespace prosumerAppBack.Controllers
 	        return Ok(devices);
         }
         
-        [HttpGet("devices/info/{id}")]
+        [HttpGet("devices/info/user/{id}")]
         public IActionResult GetDevicesInfoForUser(Guid id)
         {
-	        var devices = _deviceRepository.GetDeviceInfoForUser(_userService.GetID().Value, id);
+	        var devices = _deviceRepository.GetDeviceInfoForUser(id);
 			
 	        if (devices == null)
 	        {
 		        return NotFound();
 	        }
 
-	        return Ok(devices);
+	        return Ok(devices.Result);
+        }
+        
+        [HttpGet("devices/info/{id}")]
+        public IActionResult GetDevicesInfo(Guid id)
+        {
+	        var device = _deviceRepository.GetDeviceInfoForDevice(id);
+			
+	        if (device == null)
+	        {
+		        return NotFound();
+	        }
+
+	        return Ok(device.Result);
         }
         
         [HttpGet("groups")]
