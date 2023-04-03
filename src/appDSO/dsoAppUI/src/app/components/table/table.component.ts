@@ -58,7 +58,7 @@ export class TableComponent implements OnInit {
     this.showMeUsers();
     this.onInitMap();
     this.showCoordsForEveryUser();
-    
+    this.showMePowerUsegaForUser();
     
   }
   
@@ -173,15 +173,15 @@ export class TableComponent implements OnInit {
   }
 
   
-  showMePowerUsegaForUser(id: string){
-    
-    this.auth.getUserPowerUsageByID(id).subscribe(
+  showMePowerUsegaForUser(){
+    for(const user of this.allUsers){
+    this.auth.getUserPowerUsageByID(user.id).subscribe(
       (response : any) =>{
-        console.log(response);
-      
+        user.powerUsage = response;
       }
     )
   }
+}
 
   toggleColumn(){
     this.toggleTable = !this.toggleTable;

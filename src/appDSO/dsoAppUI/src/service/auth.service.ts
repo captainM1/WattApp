@@ -39,6 +39,10 @@ export class AuthService {
 
   getUserPowerUsageByID(userID : string){
 
-    return this.http.get<any>(environment.apiUrl+ "/api/PowerUsage/power-usage/currentUsageUser/"+userID);
+    return this.http.get<any>(environment.apiUrl+ "/api/PowerUsage/power-usage/currentUsageUser/summary/"+userID);
+  }
+
+  getDevicesInfoByID(deviceID : string){
+    return this.http.get<any>(environment.apiUrl + "/api/Device/devices/info/"+deviceID);
   }
 }

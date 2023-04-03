@@ -13,7 +13,7 @@
           <table tableexporter >
               <thead>
                 <th>
-                    
+
                 </th>
                   <th>
                       First Name
@@ -40,7 +40,7 @@
                   <td>{{user.firstName}}</td>
                   <td>{{user.lastName}}</td>
                   <td>{{user.address}}, {{user.city}}, {{user.country}}</td>
-                  <td>{{showMePowerUsegaForUser(user.id)}}</td>
+                  <td>{{user.powerUsage}}</td>
                   <td><input (click)="exportSelectedData();" type="checkbox"></td>
               </tr>
               <tr>
