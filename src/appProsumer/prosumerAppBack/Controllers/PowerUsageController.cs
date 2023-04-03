@@ -115,4 +115,15 @@ public class PowerUsageController : ControllerBase
         var powerUsages = _powerUsage.GetPowerUsageForDevicesInPreviousMonth(userID);
         return Ok(powerUsages);
     }
+
+    [HttpGet("power-usage/PreviousMonth/device-usage/{deviceID}")]
+    public ActionResult<List<double>> GetDeviceUsageForPreviousMonth(Guid deviceID)
+    {
+        var powerUsages = _powerUsage.GetPowerUsageForDeviceInPreviousMonth(deviceID);
+        if(powerUsages == null)
+        {
+            return BadRequest("device does not exist");
+        }
+        return Ok(powerUsages);
+    }
 }

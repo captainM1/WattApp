@@ -241,8 +241,32 @@ public class PowerUsageRepository:IPowerUsageRepository
         }
 
         return result;
+  
     }
 
+    public List<double> GetPowerUsageForDeviceInPreviousMonth(Guid deviceID)
+    {
+        var monthAgo = DateTime.UtcNow.AddMonths(-1);
 
+        var powerUsageData = mongoCollection.AsQueryable()
+            .FirstOrDefault(p => p.ID == deviceID);
+
+        if (powerUsageData == null)
+        {
+            return null;
+        }
+
+        var result = new List<double>();
+
+        for (var day = monthAgo.Date; day <= DateTime.UtcNow.Date; day = day.AddDays(1))
+        {
+            var totalUsageForDay = powerUsageData.TimestampPowerPairs
+                .Where(tp => tp.Timestamp.Date == day)
+                .Sum(tp => tp.PowerUsage);
+            result.Add(totalUsageForDay);
+        }
+
+        return result;
+    }
 
 }
