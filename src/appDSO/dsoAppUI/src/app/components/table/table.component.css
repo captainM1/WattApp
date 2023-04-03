@@ -21,6 +21,12 @@
   font-weight: 800;
   cursor: pointer;
 }
+.card table tr:active{
+  background-color: #026670; 
+  color:white;
+  font-weight: 800;
+  cursor: pointer;
+}
 
 .card table tr td{
   padding: 15px;

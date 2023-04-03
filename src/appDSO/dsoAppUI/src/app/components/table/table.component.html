@@ -2,10 +2,10 @@
 <div class="row" style="margin-top: 100px;">
   <div class="col-lg-7">
     <div class="input-div">
-        <label>Search by full name:</label>
+        <label>Search by first name:</label>
         <input type="text" [(ngModel)]="_searchByName" placeholder="John Cena">
         <label>Search by address:</label>
-        <input type="text" [(ngModel)]="_searchByName" placeholder="Addres NN">
+        <input type="text" [(ngModel)]="_searchByAddress" placeholder="Addres NN">
         <button tableExport >Export data</button>
         
     </div>
@@ -34,18 +34,26 @@
 
                   </th>
               </thead>
-              <tr *ngFor="let user of filterByName" (click) = "showMeOnMap(user.id)">
+              <tr *ngFor="let user of filtered" (click) = "showMeOnMap(user.id)">
                 <i class="fa fa-angle-right fa-lg" (click) = "showMeDevices(user.id)" (click) = "toggleColumn()"></i>
                 <td>{{user.id}}</td>
                   <td>{{user.firstName}}</td>
                   <td>{{user.lastName}}</td>
                   <td>{{user.address}}, {{user.city}}, {{user.country}}</td>
                   <td>{{user.powerUsage}}</td>
-                  <td><input (click)="exportSelectedData();" type="checkbox"></td>
+                  <!-- <td><input (click)="exportSelectedData();" type="checkbox"></td> -->
               </tr>
               <tr>
                 
               </tr>
+              <tfoot style="text-align: center;">
+                
+                <select class="form-select" style="width: 30%;" [(ngModel)]="selected">
+                    <option *ngFor = "let size of pageSizeOption">{{size}}</option>
+                </select>
+                
+                <a (click)="prevPage()" style="padding-right: 50px;"><i class="fa fa-angle-left"></i>Previous page</a><a (click)="nextPage()">Next page<i class="fa fa-angle-right"></i></a>
+            </tfoot>
           </table>
          
           <table *ngIf="toggleTable">
@@ -56,7 +64,9 @@
                 <th>Status</th>
             </thead>
             <tr *ngFor="let device of allUserDevices">
-                <td>{{device}}</td>
+                <td>{{device.deviceType['name']}}</td>
+                <td>{{device.deviceType['manifacturer']['name']}}</td>
+                <td>{{device.deviceType['wattage']}}</td>
             </tr>
           </table>
           

@@ -18,8 +18,12 @@ import {MatTableDataSource} from '@angular/material/table';
   
 })
 export class TableComponent implements OnInit {
+  
   _searchByName: string = '';
-  filterByName! : User[];
+  _searchByAddress: string = '';
+
+  filtered! : User[];
+  
 
   exportData : any[] = [];
 
@@ -41,11 +45,15 @@ export class TableComponent implements OnInit {
   private markers: L.Marker[] = [];
   private latlng: L.LatLng[] = [];
   
+  pageSizeOption = ['5','10','15'];
+  selected: string = "";
+
   public page = 1;
-  public pageSize = 10;
+  public pageSize = 5;
   private lengthOfUsers!: number;
-  tableData: any;
+  // tableData: any;
   
+  powerUsage!:number;
 
   constructor(
     private auth : AuthService,
@@ -58,31 +66,51 @@ export class TableComponent implements OnInit {
     this.showMeUsers();
     this.onInitMap();
     this.showCoordsForEveryUser();
-    this.showMePowerUsegaForUser();
+    
     
   }
   
-  exportSelectedData(){
-    this.exportData = this.tableData.filter((item: { checked: any; })=>item.checked)
-  }
+  // exportSelectedData(){
+  //   this.exportData = this.tableData.filter((item: { checked: any; })=>item.checked)
+  // }
  
   public showMeUsers(){
+   
     this.auth.getPagination(this.page, this.pageSize).subscribe(
       (response : any)=> {
         this.allUsers = response;
-        this.filterByName = response;
+        this.filtered = response;
+        
       }
     );
   }
 
-  get filterName(){
+  get searchByAddress(){
+    return this._searchByAddress;
+  }
+
+  set searchByAddress(value : string){
+    this._searchByAddress = value;
+    this.filtered = this.filterByAddressFilter(value);
+  }
+
+  filterByAddressFilter(filterTerm:string){
+    if(this.filtered.length === 0 || this._searchByAddress === ''){
+      return this.filtered;
+    }else{
+      return this.filtered.filter((user)=>{
+        return 
+      })
+    }  
+  }
+// bind _searchByName ngModel
+  get searchByName(){
     return this._searchByName;
   }
   
-  set filterName(value: string){
+  set searchByName(value: string){
     this._searchByName = value;
-    console.log(this._searchByName);
-    this.filterByName = this.filterUsersByName(value);
+    this.filtered = this.filterUsersByName(value);
   }
  
   filterUsersByName(filterTerm : string){
@@ -90,7 +118,6 @@ export class TableComponent implements OnInit {
       return this.allUsers;
     }else{
       return this.allUsers.filter((user)=>{
-        console.log(user)
         return user.firstName.toLowerCase() === filterTerm.toLowerCase();
       })
     }
@@ -137,7 +164,14 @@ export class TableComponent implements OnInit {
     for(const mark of this.markers){
       this.map.removeLayer(mark);
     }
+    // poziv funkcije za svih uredjaja
     this.showMeDevices(id);
+    this.auth.getUserPowerUsageByID(id).subscribe(
+      (response : any) =>{
+        this.powerUsage = response;
+        }
+      )
+    
     this.auth.getCoordsByUserID(id).subscribe(
       (response : any) => {
         const latlng = L.latLng(JSON.parse(response['coordinates']));
@@ -164,24 +198,17 @@ export class TableComponent implements OnInit {
 
   showMeDevices(id : string){
     this.toggleTable = true;
+    // vraca sve devices za user-a
     this.auth.getDevices(id).subscribe(
       (response : any) => {
-        console.log(response);
         this.allUserDevices = response;
       }
     )
   }
 
   
-  showMePowerUsegaForUser(){
-    for(const user of this.allUsers){
-    this.auth.getUserPowerUsageByID(user.id).subscribe(
-      (response : any) =>{
-        user.powerUsage = response;
-      }
-    )
-  }
-}
+
+  
 
   toggleColumn(){
     this.toggleTable = !this.toggleTable;
