@@ -10,6 +10,7 @@ import { newDeviceDTO } from 'src/app/models/newDeviceDTO'
   providedIn: 'root'
 })
 export class AuthService {
+  
 
   constructor(private http: HttpClient, private router:Router, private cookie: CookieService) { }
 
@@ -43,4 +44,13 @@ export class AuthService {
   getDeviceData(){
     return this.http.get<any>(`${environment.apiUrl}/api/Device/devices/info`, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
   }
+
+  getToken() {
+    return this.cookie.get('jwtToken'); 
+  }
+
+  signOut(){
+    this.cookie.delete('jwtToken');
+  }
+  
 }

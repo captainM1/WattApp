@@ -122,28 +122,29 @@ namespace prosumerAppBack.DataAccess
             return manufacturers;
         }
 
-        public object GetDeviceInfoForUser(Guid userID, Guid deviceID)
+        public Task<List<DeviceInfo>> GetDeviceInfoForUser(Guid userID)
         {
             return _dbContext.Devices
-                .Where(d => d.OwnerID == userID && d.ID == deviceID)
-                .Join(_dbContext.DeviceTypes, d => d.DeviceTypeID, dt => dt.ID, (d, dt) => new 
-                { 
-                    d.ID,
-                    d.MacAdress,
-                    DeviceTypeName = dt.Name, 
-                    ManufacturerID = dt.ManufacturerID,
-                })
-                .Select(joined => new 
+                .Where(d => d.OwnerID == userID)
+                .Join(_dbContext.DeviceTypes, d => d.DeviceTypeID, dt => dt.ID, (d, dt) => new DeviceInfo()
                 {
-                    DeviceId = joined.ID,
-                    joined.MacAdress,
-                    joined.DeviceTypeName,
-                    ManufacturerName = _dbContext.DeviceManufacturers.FirstOrDefault(m => m.ID == joined.ManufacturerID).Name
+                    deviceId = d.ID,
+                    deviceTypeName = dt.Name, 
+                    macAdress = d.MacAdress,
+                    manufacturerName = _dbContext.DeviceManufacturers.FirstOrDefault(m => m.ID == dt.ManufacturerID).Name
                 })
-                .FirstOrDefault();
+                .ToListAsync();
         }
-
     }
+
+    public class DeviceInfo
+    {
+        public Guid deviceId { get; set; }
+        public string deviceTypeName { get; set; }
+        public string macAdress { get; set; }
+        public string manufacturerName { get; set; }
+    }
+
     public class ManufacturerDto
     {
         public Guid ManufacturerID { get; set; }
