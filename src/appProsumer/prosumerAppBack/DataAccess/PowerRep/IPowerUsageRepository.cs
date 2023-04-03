@@ -13,5 +13,8 @@ namespace prosumerAppBack.BusinessLogic
         public PowerUsage GetPowerUsageFor7Days(Guid deviceId, int direction);
 
         public double CurrentPowerUsage(Guid userID);
-	}
+
+        public List<PowerUsage> GetPowerUsageForAMonthSystem();
+
+    }
 }

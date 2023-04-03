@@ -80,4 +80,11 @@ public class PowerUsageController : ControllerBase
         var powerUsages = _powerUsage.CurrentSumPowerUsage(userID);
         return Ok(powerUsages);
     }
+
+    [HttpGet("power-usage/PreviousMonth/System")]
+    public ActionResult<List<PowerUsage>> GetSystemPowerUsageForMonth()
+    {
+        var powerUsages = _powerUsage.GetPowerUsageForAMonthSystem();
+        return Ok(powerUsages);
+    }
 }

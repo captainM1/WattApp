@@ -119,4 +119,16 @@ public class PowerUsageRepository:IPowerUsageRepository
 
         return sum;
     }
+
+    public List<PowerUsage> GetPowerUsageForAMonthSystem()
+    {
+        var startOfMonth = DateTime.Now.AddDays(-DateTime.Now.Day + 1).AddMonths(-1);
+        var endOfMonth = startOfMonth.AddMonths(1);
+
+        var powerUsages = mongoCollection.AsQueryable()
+            .Where(pu => pu.TimestampPowerPairs.Any(tp => tp.Timestamp >= startOfMonth && tp.Timestamp <= endOfMonth))
+            .ToList();
+
+        return powerUsages;
+    }
 }
