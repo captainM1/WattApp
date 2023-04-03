@@ -1,5 +1,6 @@
 using System;
 using MongoDB.Driver;
+using prosumerAppBack.DataAccess;
 using prosumerAppBack.Models;
 
 namespace prosumerAppBack.BusinessLogic

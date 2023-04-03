@@ -49,12 +49,13 @@ namespace prosumerAppBack.DataAccess
         {
             return _dbContext.Devices
                 .Where(d => d.OwnerID == userID)
-                .Join(_dbContext.DeviceTypes, d => d.DeviceTypeID, dt => dt.ID, (d, dt) => new 
+                .Include(d => d.DeviceType)
+                .Select(d => new 
                 { 
                     d.ID,
                     d.MacAdress,
-                    DeviceTypeName = dt.Name, 
-                    ManufacturerID = dt.ManufacturerID,
+                    DeviceTypeName = d.DeviceType.Name, 
+                    ManufacturerID = d.DeviceType.ManufacturerID,
                 })
                 .Select(joined => new 
                 {
@@ -64,9 +65,7 @@ namespace prosumerAppBack.DataAccess
                     ManufacturerName = _dbContext.DeviceManufacturers.FirstOrDefault(m => m.ID == joined.ManufacturerID).Name
                 })
                 .ToArray();
-
         }
-
 
         public IEnumerable<DeviceGroup> GetDeviceGroups()
         {
@@ -111,29 +110,50 @@ namespace prosumerAppBack.DataAccess
 
         public IEnumerable<ManufacturerDto> GetManufacturersBasedOnGroup(Guid groupID)
         {
-            var manufacturers = (from deviceType in _dbContext.DeviceTypes
-                join manufacturer in _dbContext.DeviceManufacturers on deviceType.ManufacturerID equals manufacturer.ID
-                where deviceType.GroupID == groupID
-                select new ManufacturerDto
+            var manufacturers = _dbContext.DeviceTypes
+                .Include(dt => dt.Manufacturer)
+                .Where(dt => dt.GroupID == groupID)
+                .Select(dt => new ManufacturerDto
                 {
-                    ManufacturerID = manufacturer.ID,
-                    ManufacturerName = manufacturer.Name
-                }).Distinct();
+                    ManufacturerID = dt.Manufacturer.ID,
+                    ManufacturerName = dt.Manufacturer.Name
+                })
+                .Distinct();
+
             return manufacturers;
         }
 
         public Task<List<DeviceInfo>> GetDeviceInfoForUser(Guid userID)
         {
             return _dbContext.Devices
+                .Include(d => d.DeviceType)
+                .ThenInclude(dt => dt.Manufacturer)
                 .Where(d => d.OwnerID == userID)
-                .Join(_dbContext.DeviceTypes, d => d.DeviceTypeID, dt => dt.ID, (d, dt) => new DeviceInfo()
+                .Select(d => new DeviceInfo()
                 {
                     deviceId = d.ID,
-                    deviceTypeName = dt.Name, 
+                    deviceTypeName = d.DeviceType.Name,
                     macAdress = d.MacAdress,
-                    manufacturerName = _dbContext.DeviceManufacturers.FirstOrDefault(m => m.ID == dt.ManufacturerID).Name
+                    manufacturerName = d.DeviceType.Manufacturer.Name
                 })
                 .ToListAsync();
+        }
+
+        
+        public Task<DeviceInfo> GetDeviceInfoForDevice(Guid deviceID)
+        {
+            return _dbContext.Devices
+                .Include(d => d.DeviceType)
+                .ThenInclude(dt => dt.Manufacturer)
+                .Where(d => d.ID == deviceID)
+                .Select(d => new DeviceInfo()
+                {
+                    deviceId = d.ID,
+                    deviceTypeName = d.DeviceType.Name, 
+                    macAdress = d.MacAdress,
+                    manufacturerName = d.DeviceType.Manufacturer.Name
+                })
+                .FirstOrDefaultAsync();
         }
     }
 
