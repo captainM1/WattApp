@@ -13,13 +13,13 @@ namespace prosumerAppBack.Controllers
 	public class DeviceController : ControllerBase
 	{
         private readonly IDeviceService _deviceService;
-		private readonly IDeviceService _deviceService;
-		private readonly IUserService _userService;
-        public DeviceController(IDeviceService deviceService, IDeviceService deviceService, IUserService userService)
+        private readonly IUserService _userService;
+        private readonly IDeviceRepository _deviceRepository;
+        public DeviceController(IDeviceService deviceService, IUserService userService, IDeviceRepository deviceRepository)
 		{
 			_deviceService = deviceService;
-			_deviceService = deviceService;
 			_userService = userService;
+			_deviceRepository = deviceRepository;
 		}
 
 		[HttpGet("{id}")]
@@ -108,6 +108,20 @@ namespace prosumerAppBack.Controllers
 
 	        return Ok(devices);
         }
+        
+        [HttpGet("devices/info/{id}")]
+        public IActionResult GetDevicesInfoForUser(Guid id)
+        {
+	        var devices = _deviceRepository.GetDeviceInfoForUser(_userService.GetID().Value, id);
+			
+	        if (devices == null)
+	        {
+		        return NotFound();
+	        }
+
+	        return Ok(devices);
+        }
+        
         [HttpGet("groups")]
         public IActionResult GetGroups()
         {

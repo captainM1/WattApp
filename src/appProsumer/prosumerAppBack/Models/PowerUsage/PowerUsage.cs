@@ -11,7 +11,7 @@ namespace prosumerAppBack.Models
         public string MongoId { get; set; }
 
         [BsonElement("device_id")] 
-        public Guid Id { get; set; }
+        public Guid ID { get; set; }
         [BsonElement("timestamp_power_pairs")]
         public List<TimestampPowerPair> TimestampPowerPairs { get; set; }
     }

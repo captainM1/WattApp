@@ -12,17 +12,7 @@ public class PowerUsageService:IPowerUsageService
         _repository = repository;
     }
 
-    public IEnumerable<PowerUsage> Get()
-    {
-        var powerUsages = _repository.Get();
-        if (powerUsages == null)
-        {
-            throw new NotFoundException();
-        }
-        return powerUsages;
-    }
-
-    public IEnumerable<PowerUsage> NextSevenDays()
+    /*public IEnumerable<PowerUsage> NextSevenDays()
     {
         var powerUsages = _repository.NextSevenDays();
         if (powerUsages == null)
@@ -41,5 +31,5 @@ public class PowerUsageService:IPowerUsageService
             throw new NotFoundException();
         }
         return powerUsages;
-    }
+    }*/
 }
