@@ -101,4 +101,11 @@ public class PowerUsageController : ControllerBase
         var powerUsages = _powerUsage.GetPowerUsagesForEachDayPreviousMonth();
         return Ok(powerUsages);
     }
+
+    [HttpGet("power-usage/PreviousMonth/average-user-usage/{userID}")]
+    public ActionResult<double> GetAvgPowerUsage(Guid userID)
+    {
+        double avgUsage = _powerUsage.GetAveragePowerUsageByUser(userID);
+        return Ok(avgUsage);
+    }
 }

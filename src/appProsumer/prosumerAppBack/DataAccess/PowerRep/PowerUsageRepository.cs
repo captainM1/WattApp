@@ -178,4 +178,22 @@ public class PowerUsageRepository:IPowerUsageRepository
 
         return sums;
     }
+
+    public double GetAveragePowerUsageByUser(Guid userID)
+    {
+        IEnumerable<String> deviceTypeIds = _deviceRepository.GetDevicesForUser(userID).Select(d => d.DeviceTypeID.ToString().ToUpper());
+        var monthAgo = DateTime.UtcNow.AddMonths(-1);
+
+        var powerUsageData = mongoCollection.AsQueryable()
+                .Where(p => deviceTypeIds.Contains(p.ID.ToString()))
+                .ToList()
+                .SelectMany(p => p.TimestampPowerPairs)
+                .Where(t => t.Timestamp >= monthAgo);
+
+        double average = powerUsageData.Average(p => p.PowerUsage);
+
+        return average;
+    }
+
+
 }
