@@ -94,4 +94,11 @@ public class PowerUsageController : ControllerBase
         var powerUsages = _powerUsage.GetPowerUsageSumByDevicePreviousMonth();
         return Ok(powerUsages);
     }
+
+    [HttpGet("power-usage/previousMonth/every-day-usage")]
+    public ActionResult<List<double>> GetPowerUsagesOfEachDay()
+    {
+        var powerUsages = _powerUsage.GetPowerUsagesForEachDayPreviousMonth();
+        return Ok(powerUsages);
+    }
 }

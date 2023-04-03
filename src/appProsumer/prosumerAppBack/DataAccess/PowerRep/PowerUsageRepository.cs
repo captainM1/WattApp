@@ -153,4 +153,29 @@ public class PowerUsageRepository:IPowerUsageRepository
 
         return sums;
     }
+
+    public List<double> GetPowerUsagesForEachDayPreviousMonth()
+    {
+        var startOfMonth = DateTime.Now.AddDays(-DateTime.Now.Day + 1).AddMonths(-1);
+        var endOfMonth = startOfMonth.AddMonths(1);
+
+        var powerUsages = mongoCollection.AsQueryable()
+            .Where(pu => pu.TimestampPowerPairs.Any(tp => tp.Timestamp >= startOfMonth && tp.Timestamp <= endOfMonth))
+            .ToList();
+
+        var sums = new List<double>();
+        var currentDate = startOfMonth;
+
+        while (currentDate <= endOfMonth)
+        {
+            var sum = powerUsages.Sum(pu => pu.TimestampPowerPairs
+                .Where(tp => tp.Timestamp.Date == currentDate.Date)
+                .Sum(tp => tp.PowerUsage));
+
+            sums.Add(sum);
+            currentDate = currentDate.AddDays(1);
+        }
+
+        return sums;
+    }
 }
