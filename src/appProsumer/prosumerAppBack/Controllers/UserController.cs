@@ -242,19 +242,15 @@ public class UserController : ControllerBase
     [HttpGet("coordinates/{id}")]
     public async Task<IActionResult> GetCoordinatesForUser(Guid id)
     {
-        var devices = _deviceService.GetDevicesForUser(userID);
-                
-        return Ok(devices);
+         try
+         {
+             var devices = _deviceService.GetDevicesForUser(id);
 
-        try
-        {
-            var results = await _userService.GetCoordinatesForUser(id);
-
-            return Ok(results);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.Message);
-        }
+             return Ok(devices);
+         }
+         catch (Exception ex)
+         {
+             return StatusCode(500, ex.Message);
+         }  
     }
 }

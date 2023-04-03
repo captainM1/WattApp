@@ -1,4 +1,5 @@
 ﻿using prosumerAppBack.Models;
+using prosumerAppBack.Models.Device;
 using SendGrid.Helpers.Errors.Model;
 
 namespace prosumerAppBack.BusinessLogic.PowerUsageService;
@@ -36,6 +37,45 @@ public class PowerUsageService:IPowerUsageService
     public IEnumerable<PowerUsage> PreviousSevenDays()
     {
         var powerUsages = _repository.PreviousSevenDays();
+        if (powerUsages == null)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsages;
+    }
+    public double GetPowerUsageForDay(Guid deviceID, DateTime today)
+    {
+        var powerUsages = _repository.GetPowerUsageForDay(deviceID, today);
+        if (powerUsages == null)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsages;
+    }
+
+    public PowerUsage GetPowerUsageFor7Days(Guid deviceId, int direction)
+    {
+        var powerUsages = _repository.GetPowerUsageFor7Days(deviceId, direction);
+        if (powerUsages == null)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsages;
+    }
+
+    public double CurrentSumPowerUsage(Guid userID)
+    {
+        var powerUsages = _repository.CurrentSumPowerUsage(userID);
+        if (powerUsages == null)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsages;
+    }
+
+    public PowerUsage GetForDevice(Guid deviceID)
+    {
+        var powerUsages = _repository.GetForDevice(deviceID);
         if (powerUsages == null)
         {
             throw new NotFoundException();
