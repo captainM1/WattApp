@@ -1,6 +1,6 @@
 <app-nav></app-nav>
 
-<div class="outer" style="position: fixed; top: 0px; left: 0px; width: 100%; height: 100%;">
+<div class="outer" style="position: fixed; top: 40px; left: 0px; width: 100%; height: 100%;">
   <div class="container-fluid h-100">
     <div class="row justify-content-center h-100">
       <div class="col-sm centriranje " style=" background:#EDEAE5;">
@@ -31,6 +31,14 @@
                         <div class="invalid-feedback">
                             <span class= "text-danger" *ngIf="submitted && fields['email'].errors?.['required']">*Email is required!</span>
                             <span class = "text-danger" *ngIf="fields['email'].errors?.['email']">*Please provide a valid email address</span>
+                        </div>
+                    </div>
+
+                    <div class="input-group form-group pt-4">
+                        <input class = "form-control"  [ngClass] = "{'is-invalid invalid-input' : submitted && fields['phonenumber'].errors}" formControlName = "phonenumber" type="text" placeholder="Phone number">
+                        <span class="input-group-addon addon-icon" [ngClass]="{'invalid-icon': submitted && fields['phonenumber'].errors}"><i class="fa fa-phone"></i></span>
+                        <div class="invalid-feedback">
+                            <span class="text-danger" *ngIf="submitted && fields['phonenumber'].errors?.['required']">*Phone number is required!</span>
                         </div>
                     </div>
 
