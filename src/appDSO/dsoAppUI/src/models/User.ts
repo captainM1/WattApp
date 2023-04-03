@@ -5,6 +5,7 @@ export interface User{
     address: string,
     city: string,
     country: string,
+    powerUsage:[];
    
 }
 export interface Device{

@@ -7,7 +7,8 @@ import { AuthService } from 'service/auth.service';
 import {PageEvent} from '@angular/material/paginator';
 import { FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table'; 
-
+import {MatPaginator} from '@angular/material/paginator';
+import {MatTableDataSource} from '@angular/material/table';
 
 
 @Component({
@@ -16,10 +17,7 @@ import { MatTableModule } from '@angular/material/table';
   styleUrls: ['./table.component.css'],
   
 })
-export class TableComponent implements OnInit  {
-  
-  
-
+export class TableComponent implements OnInit {
   _searchByName: string = '';
   filterByName! : User[];
 
@@ -36,7 +34,6 @@ export class TableComponent implements OnInit  {
   private address? : string;
 
   public toggleTable : boolean = false;
- 
 
   showAllUsersOnMap : boolean = true;
   
@@ -61,6 +58,7 @@ export class TableComponent implements OnInit  {
     this.showMeUsers();
     this.onInitMap();
     this.showCoordsForEveryUser();
+    
     
   }
   
@@ -143,7 +141,6 @@ export class TableComponent implements OnInit  {
     this.auth.getCoordsByUserID(id).subscribe(
       (response : any) => {
         const latlng = L.latLng(JSON.parse(response['coordinates']));
-        // console.log(JSON.parse(response['coordinates']))
         const marker = L.marker(latlng).addTo(this.map);
         marker.bindPopup(`<b>${this.firstName} ${this.lastName} <br>${this.address}`)
         this.markers.push(marker);
@@ -176,7 +173,15 @@ export class TableComponent implements OnInit  {
   }
 
   
+  showMePowerUsegaForUser(id: string){
     
+    this.auth.getUserPowerUsageByID(id).subscribe(
+      (response : any) =>{
+        console.log(response);
+      
+      }
+    )
+  }
 
   toggleColumn(){
     this.toggleTable = !this.toggleTable;

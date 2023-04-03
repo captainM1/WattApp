@@ -33,12 +33,12 @@ export class AuthService {
   // }
 
 
-  getDevices(userId: string):Observable<any>{
-    return this.http.get<any>(environment.apiUrl + "/api/Device/devices/info"+userId);
+  getDevices(userID: string):Observable<any>{
+    return this.http.get<any>(environment.apiUrl + "/api/Device/devices/info"+userID);
   }
 
-  getUserPowerByID(){
+  getUserPowerUsageByID(userID : string){
 
-    // /api/PowerUsage/power-usage/currentUsageUser/summary/{userID}
+    return this.http.get<any>(environment.apiUrl+ "/api/PowerUsage/power-usage/currentUsageUser/"+userID);
   }
 }

@@ -12,6 +12,9 @@
       <div class="card">
           <table tableexporter >
               <thead>
+                <th>
+                    
+                </th>
                   <th>
                       First Name
                   </th>
@@ -25,13 +28,19 @@
                       Prosumer/Consumer
                   </th>
                   <th>
+                        Power Usage
+                  </th>
+                  <th>
 
                   </th>
               </thead>
               <tr *ngFor="let user of filterByName" (click) = "showMeOnMap(user.id)">
-                  <td><i class="fa fa-angle-right fa-lg" (click) = "showMeDevices(user.id)" (click) = "toggleColumn()"></i>{{user.firstName}}</td>
+                <i class="fa fa-angle-right fa-lg" (click) = "showMeDevices(user.id)" (click) = "toggleColumn()"></i>
+                <td>{{user.id}}</td>
+                  <td>{{user.firstName}}</td>
                   <td>{{user.lastName}}</td>
                   <td>{{user.address}}, {{user.city}}, {{user.country}}</td>
+                  <td>{{showMePowerUsegaForUser(user.id)}}</td>
                   <td><input (click)="exportSelectedData();" type="checkbox"></td>
               </tr>
               <tr>
@@ -47,9 +56,10 @@
                 <th>Status</th>
             </thead>
             <tr *ngFor="let device of allUserDevices">
-                <td></td>
+                <td>{{device}}</td>
             </tr>
           </table>
+          
         </div> 
     </div>
     <div class="col">
