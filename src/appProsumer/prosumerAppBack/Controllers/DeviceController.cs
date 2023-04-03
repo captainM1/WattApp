@@ -119,7 +119,7 @@ namespace prosumerAppBack.Controllers
 		        return NotFound();
 	        }
 
-	        return Ok(devices);
+	        return Ok(devices.Result);
         }
         
         [HttpGet("groups")]

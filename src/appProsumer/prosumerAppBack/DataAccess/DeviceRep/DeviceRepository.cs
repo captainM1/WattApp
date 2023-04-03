@@ -122,7 +122,7 @@ namespace prosumerAppBack.DataAccess
             return manufacturers;
         }
 
-        public DeviceInfo GetDeviceInfoForUser(Guid userID)
+        public Task<List<DeviceInfo>> GetDeviceInfoForUser(Guid userID)
         {
             return _dbContext.Devices
                 .Where(d => d.OwnerID == userID)
@@ -133,7 +133,7 @@ namespace prosumerAppBack.DataAccess
                     macAdress = d.MacAdress,
                     manufacturerName = _dbContext.DeviceManufacturers.FirstOrDefault(m => m.ID == dt.ManufacturerID).Name
                 })
-                .FirstOrDefault();
+                .ToListAsync();
         }
     }
 
