@@ -51,17 +51,20 @@ namespace prosumerAppBack.DataAccess
                 .Where(d => d.OwnerID == userID)
                 .Join(_dbContext.DeviceTypes, d => d.DeviceTypeID, dt => dt.ID, (d, dt) => new 
                 { 
-                    d.MacAdress, 
+                    d.ID,
+                    d.MacAdress,
                     DeviceTypeName = dt.Name, 
-                    ManufacturerID = dt.ManufacturerID
+                    ManufacturerID = dt.ManufacturerID,
                 })
                 .Select(joined => new 
                 {
+                    DeviceId = joined.ID,
                     joined.MacAdress,
                     joined.DeviceTypeName,
                     ManufacturerName = _dbContext.DeviceManufacturers.FirstOrDefault(m => m.ID == joined.ManufacturerID).Name
                 })
                 .ToArray();
+
         }
 
 
@@ -91,7 +94,7 @@ namespace prosumerAppBack.DataAccess
             return _dbContext.DeviceTypes.Where(d => d.ManufacturerID == maunfID && d.GroupID == groupID);
         }
 
-        public async Task<Device> AddDevice(Models.Device.AddDeviceDto addDeviceDto)
+        public async Task<Device> AddDevice(AddDeviceDto addDeviceDto)
         {
             var newDevice = new Device
             {
@@ -117,6 +120,27 @@ namespace prosumerAppBack.DataAccess
                     ManufacturerName = manufacturer.Name
                 }).Distinct();
             return manufacturers;
+        }
+
+        public object GetDeviceInfoForUser(Guid userID, Guid deviceID)
+        {
+            return _dbContext.Devices
+                .Where(d => d.OwnerID == userID && d.ID == deviceID)
+                .Join(_dbContext.DeviceTypes, d => d.DeviceTypeID, dt => dt.ID, (d, dt) => new 
+                { 
+                    d.ID,
+                    d.MacAdress,
+                    DeviceTypeName = dt.Name, 
+                    ManufacturerID = dt.ManufacturerID,
+                })
+                .Select(joined => new 
+                {
+                    DeviceId = joined.ID,
+                    joined.MacAdress,
+                    joined.DeviceTypeName,
+                    ManufacturerName = _dbContext.DeviceManufacturers.FirstOrDefault(m => m.ID == joined.ManufacturerID).Name
+                })
+                .FirstOrDefault();
         }
 
     }

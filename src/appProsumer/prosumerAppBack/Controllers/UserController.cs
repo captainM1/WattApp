@@ -44,34 +44,40 @@ public class UserController : ControllerBase
 
         Guid nonNullableGuid = nullableGuid.Value;
         Console.WriteLine(nonNullableGuid);
-        var username = await _userRepository.GetUsernameByIdAsync(nonNullableGuid);
+        var username = await _userService.GetUsernameByIdAsync(nonNullableGuid);
         return Ok(JsonSerializer.Serialize(username));
     }
     [HttpPost("signup")]
     public async Task<IActionResult> Register([FromBody] UserRegisterDto userRegisterDto)
     {
-        var user = await _userRepository.GetUserByEmailAsync(userRegisterDto.Email);
-        if (user != null)
+        try
         {
-            return BadRequest("email already exist");
+            var user = await _userService.CheckEmail(userRegisterDto.Email);
+
+            await _userService.CreateUser(userRegisterDto);
+
+            return Ok(new { message = "User registered successfully" });
         }
-
-        await _userRepository.CreateUser(userRegisterDto);
-
-        return Ok(new { message = "User registered successfully" });
+        catch (ArgumentNullException ex)
+        {
+            throw new ArgumentException(ex.Message);
+        }
     }
 
     [HttpPost("signin")]
     public async Task<IActionResult> Login([FromBody] UserLoginDto userLoginDto)
-    {
-        var user = await _userRepository.GetUserByEmailAndPasswordAsync(userLoginDto.Email, userLoginDto.Password);
-        if (user == null)
+    {        
+        try
         {
-            return BadRequest("Invalid email or password");
+            var user = await _userService.GetUserByEmailAndPasswordAsync(userLoginDto.Email, userLoginDto.Password);
+            
+            var token = _tokenMaker.GenerateToken(user);
+            return Ok(JsonSerializer.Serialize(token));
         }
-
-        var token = _tokenMaker.GenerateToken(user);
-        return Ok( JsonSerializer.Serialize(token) );
+        catch (ArgumentNullException ex)
+        {
+            throw new ArgumentException(ex.Message);
+        }
     }
 
     [HttpPost("validate-token")]
@@ -90,37 +96,30 @@ public class UserController : ControllerBase
 
     [HttpGet("users/{id}")]
     public async Task<ActionResult<User>> GetUser(Guid id)
-    {
-        var user = await _userRepository.GetUserByIdAsync(id);
-        if(user == null)
+    {        
+        try
         {
-            return BadRequest("User not found");
-        }
+            var user = await _userService.GetUserByIdAsync(id);            
 
-        return Ok(user);
+            return Ok(user);
+        }
+        catch (ArgumentNullException ex)
+        {
+            throw new ArgumentException(ex.Message);
+        }
     }
 
     [HttpGet("users")]
     public async Task<List<User>> GetUsers([FromQuery]int pageNumber,[FromQuery] int pageSize)
     {
-        var users = await _userRepository.GetAllUsersAsync(pageNumber,pageSize);
+        var users = await _userService.GetAllUsersAsync(pageNumber,pageSize);
         return users;
     }
 
     [HttpPost("users/{id}")]
     public async Task<IActionResult> UpdateUser(Guid id, [FromBody] UserUpdateDto userUpdateDto)
     {
-        int user = await _userRepository.UpdateUser(id, userUpdateDto);
-
-        if(user == 0)
-        {
-            return BadRequest("cannot update user");
-        }
-
-        if (user == 1)
-        {
-            return BadRequest("username already exists");
-        }
+        await _userService.UpdateUser(id, userUpdateDto);
 
         return Ok(new { message = "user updated successfully" });
     }
@@ -128,12 +127,7 @@ public class UserController : ControllerBase
     [HttpPost("send-reset-email")]
     public async Task<IActionResult> SendResetEmail([FromBody] ResetPasswordEmailDto resetPasswordEmailDto)
     {
-        var user = await _userRepository.GetUserByEmailAsync(resetPasswordEmailDto.Email);
-
-        if (user == null)
-        {
-            return BadRequest("Invalid email address");
-        }
+        var user = await _userService.GetUserByEmailAsync(resetPasswordEmailDto.Email);
 
         var token = _tokenMaker.GenerateToken(user);
         var resetPasswordUrl = $"https://localhost:7182/api/user/reset-password?token={token}";
@@ -154,14 +148,9 @@ public class UserController : ControllerBase
         }
 
         var id = _userService.GetID().Value;
-        Task<User> user = _userRepository.GetUserByIdAsync(id);
+        Task<User> user = _userService.GetUserByIdAsync(id);
 
-        if (user == null)
-        {
-            return BadRequest("User not found" + user.Id);
-        }
-
-        var userCheck = _userRepository.GetUserByEmailAsync(resetPasswordDto.Email);
+        var userCheck = _userService.GetUserByEmailAsync(resetPasswordDto.Email);
 
         if (userCheck == null || resetPasswordDto.Email != user.Result.Email)
         {
@@ -196,15 +185,11 @@ public class UserController : ControllerBase
     [HttpPost("send-request-to-dso/{id}")]
     public async Task<IActionResult> CreateRequestForDso(Guid id)
     {
-        var user = await _userRepository.GetUserByIdAsync(id);
-        if (user == null) 
-        {
-            return BadRequest("User not found");
-        }
-
         try
         {
-            var result = await _userRepository.CreateUserRequestToDso(user);
+            var user = await _userService.GetUserByIdAsync(id);
+            
+            var result = await _userService.CreateUserRequestToDso(user);
 
             return Ok(result);
         }
@@ -217,57 +202,48 @@ public class UserController : ControllerBase
     [HttpPost("update-user")]
     [Authorize]
     public async Task<IActionResult> UpdateUserInformation([FromBody] UserUpdateDto userUpdateDto)
-    {
-        Guid userId = _userService.GetID().Value;
-
-        User user = await _userRepository.GetUserByIdAsync(userId);
-
-        if(user == null)
+    {        
+        try
         {
-            return BadRequest("user not found");
+            Guid userId = _userService.GetID().Value;
+
+            User user = await _userService.GetUserByIdAsync(userId);
+
+            int check = await _userService.UpdateUser(userId, userUpdateDto);
+
+            return Ok(new { message = "user updated successfully" });
         }
-
-        int check = await _userRepository.UpdateUser(userId, userUpdateDto);
-
-        if(check == 0)
+        catch (Exception ex)
         {
-            return BadRequest("user cannot be updated");
+            return StatusCode(500, ex.Message);
         }
-
-        if(check == 1)
-        {
-            return BadRequest("username already exists");
-        }
-
-        return Ok(new { message = "user updated successfully" });
     }
 
     [HttpPost("update-user/update-password")]
     [Authorize]
     public async Task<IActionResult> UpdateUserPassword([FromBody] UserUpdateDto userUpdateDto)
-    {
-        Guid userId = _userService.GetID().Value;
-
-        User user = await _userRepository.GetUserByIdAsync(userId);
-
-        if (user == null)
+    {       
+        try
         {
-            return BadRequest("user not found");
+            Guid userId = _userService.GetID().Value;
+
+            User user = await _userService.GetUserByIdAsync(userId);
+
+            var action = _userService.UpdatePassword(userId, userUpdateDto.Password).GetAwaiter().GetResult();
+
+            return Ok(new { message = "Password changed" });
         }
-
-        var action = _userRepository.UpdatePassword(userId, userUpdateDto.Password).GetAwaiter().GetResult();
-
-        if (!action)
+        catch (Exception ex)
         {
-            return BadRequest("Action failed");
+            return StatusCode(500, ex.Message);
         }
-
-        return Ok(new { message = "Password changed" });
     }
     
     [HttpGet("coordinates/{id}")]
     public async Task<IActionResult> GetCoordinatesForUser(Guid id)
     {
+        var devices = _deviceService.GetDevicesForUser(id);
+        
         try
         {
             var results = await _userService.GetCoordinatesForUser(id);
