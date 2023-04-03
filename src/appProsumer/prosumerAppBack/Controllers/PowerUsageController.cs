@@ -51,20 +51,20 @@ public class PowerUsageController : ControllerBase
     [HttpGet("power-usage/today/{deviceID}")]
     public ActionResult<IEnumerable<PowerUsage>> GetPowerUsageForDay(Guid deviceID)
     {
-        var powerUsages = _powerUsage.GetPowerUsageForDay(deviceID,DateTime.Today);
+        var powerUsages = _powerUsage.GetPowerUsageForDay(deviceID, DateTime.Today);
         return Ok(powerUsages);
     }
-    
+
     [HttpGet("power-usage/7daysHistory/{deviceID}")]
     public ActionResult<IEnumerable<PowerUsage>> GetPowerUsageFor7DaysHistory(Guid deviceID)
     {
-        var powerUsages = _powerUsage.GetPowerUsageFor7Days(deviceID,-1);
+        var powerUsages = _powerUsage.GetPowerUsageFor7Days(deviceID, -1);
         return Ok(powerUsages);
     }
     [HttpGet("power-usage/7daysFuture/{deviceID}")]
     public ActionResult<IEnumerable<PowerUsage>> GetPowerUsageFor7DaysFuture(Guid deviceID)
     {
-        var powerUsages = _powerUsage.GetPowerUsageFor7Days(deviceID,1);
+        var powerUsages = _powerUsage.GetPowerUsageFor7Days(deviceID, 1);
         return Ok(powerUsages);
     }
     [HttpGet("power-usage/current/{deviceID}")]
@@ -107,5 +107,12 @@ public class PowerUsageController : ControllerBase
     {
         double avgUsage = _powerUsage.GetAveragePowerUsageByUser(userID);
         return Ok(avgUsage);
+    }
+
+    [HttpGet("power-usage/PreviousMonth/user-every-day-device-usage/{userID}")]
+    public ActionResult<Dictionary<Guid, List<double>>> GetPowerUsageEachDayOfEachDevice(Guid userID)
+    {
+        var powerUsages = _powerUsage.GetPowerUsageForDevicesInPreviousMonth(userID);
+        return Ok(powerUsages);
     }
 }

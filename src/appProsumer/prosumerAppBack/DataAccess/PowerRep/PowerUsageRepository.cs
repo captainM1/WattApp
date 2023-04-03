@@ -195,5 +195,54 @@ public class PowerUsageRepository:IPowerUsageRepository
         return average;
     }
 
+    public double GetPowerUsageByUser(Guid userID)
+    {
+        IEnumerable<String> deviceTypeIds = _deviceRepository.GetDevicesForUser(userID).Select(d => d.DeviceTypeID.ToString().ToUpper());
+        var monthAgo = DateTime.UtcNow.AddMonths(-1);
+
+        var powerUsageData = mongoCollection.AsQueryable()
+                .Where(p => deviceTypeIds.Contains(p.ID.ToString()))
+                .ToList()
+                .SelectMany(p => p.TimestampPowerPairs)
+                .Where(t => t.Timestamp >= monthAgo);
+
+        double average = powerUsageData.Average(p => p.PowerUsage);
+
+        return average;
+    }
+
+
+    public Dictionary<Guid, List<double>> GetPowerUsageForDevicesInPreviousMonth(Guid userId)
+    {
+        var devices = _deviceRepository.GetDevicesForUser(userId);
+        var deviceIds = devices.Select(d => d.ID);
+
+        var monthAgo = DateTime.UtcNow.AddMonths(-1);
+        var powerUsages = mongoCollection.AsQueryable()
+            .Where(p => deviceIds.Contains(p.ID) &&
+                        p.TimestampPowerPairs.Any(tp => tp.Timestamp >= monthAgo))
+            .ToList();
+
+        var result = new Dictionary<Guid, List<double>>();
+        foreach (var device in devices)
+        {
+            var powerUsageList = new List<double>();
+            for (int i = 0; i < 30; i++)
+            {
+                var date = DateTime.UtcNow.AddDays(-i - 1).Date;
+                var powerUsage = powerUsages
+                    .Where(p => p.ID == device.ID)
+                    .SelectMany(p => p.TimestampPowerPairs)
+                    .Where(tp => tp.Timestamp.Date == date)
+                    .Sum(tp => tp.PowerUsage);
+                powerUsageList.Add(powerUsage);
+            }
+            result.Add(device.ID, powerUsageList);
+        }
+
+        return result;
+    }
+
+
 
 }
