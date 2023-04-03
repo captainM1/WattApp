@@ -22,7 +22,7 @@ export class DeviceDetailsComponent implements OnInit {
     const deviceId = this.route.snapshot.paramMap.get('id');
     console.log(deviceId);
 
-    this.http.get<any[]>(`${environment.apiUrl}/api/Device/devices/${deviceId}`)
+    this.http.get<any[]>(`${environment.apiUrl}/api/Device/devices/info/${deviceId}`)
       .subscribe(data => {
         this.device = data;
       });
