@@ -4,7 +4,7 @@
   </div>
 
   <div class="row mt-4">
-    <a *ngFor="let device of devices" class="col mt-4 mx-3" [routerLink]="['/device-details', device.manufacturerName]">
+    <a *ngFor="let device of devices" class="col mt-4 mx-3" [routerLink]="['/device-details', device.id]">
       <div class="card">
         <img [src]="'/assets/icons-devices/' + device.deviceTypeName.toLowerCase() + '.png'" class="card-img-top" alt="{{ device.deviceTypeName }}">
         <div class="card-body">
