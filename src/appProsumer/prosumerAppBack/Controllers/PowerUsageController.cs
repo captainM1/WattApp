@@ -81,10 +81,17 @@ public class PowerUsageController : ControllerBase
         return Ok(powerUsages);
     }
 
-    [HttpGet("power-usage/PreviousMonth/System")]
+    [HttpGet("power-usage/previousMonth/system")]
     public ActionResult<List<PowerUsage>> GetSystemPowerUsageForMonth()
     {
         var powerUsages = _powerUsage.GetPowerUsageForAMonthSystem();
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/previousMonth/each-device")]
+    public ActionResult<List<double>> GetPowerUsagesOfEachDevice()
+    {
+        var powerUsages = _powerUsage.GetPowerUsageSumByDevicePreviousMonth();
         return Ok(powerUsages);
     }
 }

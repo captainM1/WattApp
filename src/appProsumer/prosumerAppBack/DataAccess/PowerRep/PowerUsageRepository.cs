@@ -131,4 +131,26 @@ public class PowerUsageRepository:IPowerUsageRepository
 
         return powerUsages;
     }
+
+    public List<double> GetPowerUsageSumByDevicePreviousMonth()
+    {
+        var startOfMonth = DateTime.Now.AddDays(-DateTime.Now.Day + 1).AddMonths(-1);
+        var endOfMonth = startOfMonth.AddMonths(1);
+
+        var powerUsages = mongoCollection.AsQueryable()
+            .Where(pu => pu.TimestampPowerPairs.Any(tp => tp.Timestamp >= startOfMonth && tp.Timestamp <= endOfMonth))
+            .ToList();
+
+        var sums = new List<double>();
+
+        foreach (var powerUsage in powerUsages)
+        {
+            var sum = powerUsage.TimestampPowerPairs
+                .Sum(tp => tp.PowerUsage);
+
+            sums.Add(sum);
+        }
+
+        return sums;
+    }
 }

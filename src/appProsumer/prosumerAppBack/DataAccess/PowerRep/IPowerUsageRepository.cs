@@ -15,6 +15,7 @@ namespace prosumerAppBack.BusinessLogic
         public double CurrentPowerUsage(Guid userID);
 
         public List<PowerUsage> GetPowerUsageForAMonthSystem();
+        public List<double> GetPowerUsageSumByDevicePreviousMonth();
 
     }
 }
