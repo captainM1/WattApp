@@ -16,16 +16,7 @@ namespace prosumerAppBack.DataAccess
             _dbContext = dbContext;
             _userService = userService;
         }
-
-        public async Task<Device> GetDeviceByIdAsync(Guid id)
-        {
-            return _dbContext.Devices.FirstOrDefault(d => d.ID == id);
-        }
-
-        public async Task<List<Device>> GetAllDevices()
-        {
-            return await _dbContext.Devices.ToListAsync();
-        }
+        
         public async Task<Boolean> UpdateDevice(Guid id, UpdateDeviceDto deviceUpdateDto)
         {
             var updatedDevice = await _dbContext.Devices.FirstOrDefaultAsync(d => d.ID == id);
@@ -49,21 +40,23 @@ namespace prosumerAppBack.DataAccess
         {
             return _dbContext.Devices
                 .Where(d => d.OwnerID == userID)
-                .Join(_dbContext.DeviceTypes, d => d.DeviceTypeID, dt => dt.ID, (d, dt) => new 
+                .Include(d => d.DeviceType)
+                .Select(d => new 
                 { 
-                    d.MacAdress, 
-                    DeviceTypeName = dt.Name, 
-                    ManufacturerID = dt.ManufacturerID
+                    d.ID,
+                    d.MacAdress,
+                    DeviceTypeName = d.DeviceType.Name, 
+                    ManufacturerID = d.DeviceType.ManufacturerID,
                 })
                 .Select(joined => new 
                 {
+                    DeviceId = joined.ID,
                     joined.MacAdress,
                     joined.DeviceTypeName,
                     ManufacturerName = _dbContext.DeviceManufacturers.FirstOrDefault(m => m.ID == joined.ManufacturerID).Name
                 })
                 .ToArray();
         }
-
 
         public IEnumerable<DeviceGroup> GetDeviceGroups()
         {
@@ -108,18 +101,61 @@ namespace prosumerAppBack.DataAccess
 
         public IEnumerable<ManufacturerDto> GetManufacturersBasedOnGroup(Guid groupID)
         {
-            var manufacturers = (from deviceType in _dbContext.DeviceTypes
-                join manufacturer in _dbContext.DeviceManufacturers on deviceType.ManufacturerID equals manufacturer.ID
-                where deviceType.GroupID == groupID
-                select new ManufacturerDto
+            var manufacturers = _dbContext.DeviceTypes
+                .Include(dt => dt.Manufacturer)
+                .Where(dt => dt.GroupID == groupID)
+                .Select(dt => new ManufacturerDto
                 {
-                    ManufacturerID = manufacturer.ID,
-                    ManufacturerName = manufacturer.Name
-                }).Distinct();
+                    ManufacturerID = dt.Manufacturer.ID,
+                    ManufacturerName = dt.Manufacturer.Name
+                })
+                .Distinct();
+
             return manufacturers;
         }
 
+        public Task<List<DeviceInfo>> GetDeviceInfoForUser(Guid userID)
+        {
+            return _dbContext.Devices
+                .Include(d => d.DeviceType)
+                .ThenInclude(dt => dt.Manufacturer)
+                .Where(d => d.OwnerID == userID)
+                .Select(d => new DeviceInfo()
+                {
+                    deviceId = d.ID,
+                    deviceTypeName = d.DeviceType.Name,
+                    macAdress = d.MacAdress,
+                    manufacturerName = d.DeviceType.Manufacturer.Name
+                })
+                .ToListAsync();
+        }
+
+        
+        public Task<DeviceInfo> GetDeviceInfoForDevice(Guid deviceID)
+        {
+            return _dbContext.Devices
+                .Include(d => d.DeviceType)
+                .ThenInclude(dt => dt.Manufacturer)
+                .Where(d => d.ID == deviceID)
+                .Select(d => new DeviceInfo()
+                {
+                    deviceId = d.ID,
+                    deviceTypeName = d.DeviceType.Name, 
+                    macAdress = d.MacAdress,
+                    manufacturerName = d.DeviceType.Manufacturer.Name
+                })
+                .FirstOrDefaultAsync();
+        }
     }
+
+    public class DeviceInfo
+    {
+        public Guid deviceId { get; set; }
+        public string deviceTypeName { get; set; }
+        public string macAdress { get; set; }
+        public string manufacturerName { get; set; }
+    }
+
     public class ManufacturerDto
     {
         public Guid ManufacturerID { get; set; }

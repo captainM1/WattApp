@@ -23,25 +23,6 @@ public class DeviceService:IDeviceService
         }
         return devices;
     }
-    public async Task<Device> GetDeviceById(Guid id)
-    {
-        var device = await _repository.GetDeviceByIdAsync(id);
-        if (device == null)
-        {
-            throw new NullReferenceException("Customer not found");
-        }
-        return device;
-    }
-    public async Task<IEnumerable<Device>> GetAllDevices()
-    {
-        var devices = await _repository.GetAllDevices();
-        if (devices == null)
-        {
-            throw new NullReferenceException("No devices found");
-        }
-
-        return devices;
-    }
     public async Task<Boolean> UpdateDevice(Guid id, UpdateDeviceDto deviceUpdateDto)
     {
         if(id == null)
@@ -139,6 +120,26 @@ public class DeviceService:IDeviceService
         if (check == null)
         {
             throw new NotFoundException("No devices of this manufacturer and device group were found");
+        }
+        return check;
+    }
+
+    public Task<List<DeviceInfo>> GetDeviceInfoForUser(Guid userID)
+    {
+        var check = _repository.GetDeviceInfoForUser(userID);
+        if (check == null)
+        {
+            throw new NotFoundException("User has no devices.");
+        }
+        return check;
+    }
+
+    public Task<DeviceInfo> GetDeviceInfoForDevice(Guid deviceID)
+    {
+        var check = _repository.GetDeviceInfoForDevice(deviceID);
+        if (check == null)
+        {
+            throw new NotFoundException("No device with given ID");
         }
         return check;
     }
