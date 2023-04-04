@@ -1,111 +1,143 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { deviceGroup, deviceGroupManifacturers, deviceManifacturers } from 'models/Devices';
+import { AuthService } from 'service/auth.service';
+import { Chart } from 'chart.js';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent {
-	chartOptions = {
-		animationEnabled: true,
-		theme: "light2",
+export class HomeComponent implements OnInit, AfterViewInit{
+	
+
+	constructor(
+		private auth : AuthService
+	){}
+	
+
+	totalUsers: any;
+
+	deviceGroup!: deviceGroup[];
+	deviceManifaturers!: deviceManifacturers[];
+	deviceManifacturersByGroupID!: deviceGroupManifacturers[];
+	deviceGroupByGroupID!: deviceGroupManifacturers[]; 
+
+	producers!: deviceGroupManifacturers[];
+	consumers! : deviceGroupManifacturers[];
+	storage!: deviceGroupManifacturers[]; 
+
+	total!: number;
+	data : any;
+	chart: any;
+	chart1: any;
+	
+	@ViewChild('myChart') myChart!: ElementRef;
+	@ViewChild('myChartUsers') myChartUsers!:ElementRef;
+	ngAfterViewInit(): void {
 		
-		axisX:{
-			valueFormatString: " HH TT ",
-			crosshair: {
-				enabled: true,
-				snapToDataPoint: true
-			}
-		},
-		axisY: {
-			title: "Number of Visits",
-			crosshair: {
-				enabled: true
-			}
-		},
-		toolTip:{
-			shared:true
-		},  
-		legend:{
-			cursor: "pointer",
-			verticalAlign: "bottom",
-			horizontalAlign: "right",
-			dockInsidePlotArea: true,
-			itemclick: function(e: any) {
-				if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-					e.dataSeries.visible = false;
-				} else{
-					e.dataSeries.visible = true;
+	}
+	
+	
+		
+	ngOnInit(): void {
+		this.getDeviceGroup();
+		this.createChartDevices();
+		this.giveMeAllUsers();
+		  
+	}
+
+	getDeviceGroup(){
+		this.auth.getDeviceGroup().subscribe(
+			(response : any)=>{
+				this.deviceGroup = response;
+				console.log(this.deviceGroup);
+				for(let group of this.deviceGroup){
+					 this.auth.getDeviceGroupID(group.id).subscribe(
+						(response:any)=>{
+							if(group.id === "77cbc929-1cf2-4750-900a-164de4abe28b")
+							{
+								this.producers = response;
+								console.log("Producers:",this.producers);
+								
+							}else if(group.id === "18f30035-59de-474f-b9db-987476de551f")
+							{
+								this.consumers = response;
+								console.log("Consumers: ", this.consumers);
+							}
+							else if(group.id === "b17c9155-7e6f-4d37-8a86-ea1abb327bb2")
+							{
+								this.storage = response;
+								console.log("Storage : ", this.storage)
+							}
+							this.total = this.producers.length + this.consumers.length + this.storage.length;
+							this.createChartDevices();
+						}
+					 )
+					}
 				}
-				e.chart.render();
-			}
+			)	
+		}
+		
+		  
+	createChartDevices(){
+		this.chart = new Chart(this.myChart.nativeElement, {
+		type: 'doughnut',
+		data: {
+			labels: ['Prosumer', 'Consumer', 'Storage'],
+			datasets: [{
+			data: [this.producers.length, this.consumers.length, this.storage.length],
+			backgroundColor: [
+				'rgb(241, 143, 1)',
+				'rgb(218, 44, 56)',
+				'rgb(0, 191, 178)'
+			],
+			hoverOffset: 4
+			}]
 		},
-		data: [{
-			type: "line",
-			showInLegend: true,
-			name: "Users who produce electricity",
-			lineDashType: "dash",
-			markerType: "square",
-			dataPoints: [
-				{ x: new Date(2023,3,3,1,0), y: Math.floor(Math.random()*10230) },
-				{ x: new Date(2023,3,3,2,0), y: Math.floor(Math.random()*10230) },
-				{ x: new Date(2023,3,3,3,0), y: Math.floor(Math.random()*10230) },
-				{ x: new Date(2023,3,3,4,0), y: Math.floor(Math.random()*10230) },
-				{ x: new Date(2023,3,3,5,0), y: Math.floor(Math.random()*10230) },
-        { x: new Date(2023,3,3,6,0), y: Math.floor(Math.random()*10230) },
-        { x: new Date(2023,3,3,7,0), y: Math.floor(Math.random()*10230) },
-        { x: new Date(2023,3,3,8,0), y: Math.floor(Math.random()*10230) },
-        { x: new Date(2023,3,3,9,0), y: Math.floor(Math.random()*10230) },
-        { x: new Date(2023,3,3,10,0), y: Math.floor(Math.random()*10230) },
-        { x: new Date(2023,3,3,11,0), y: Math.floor(Math.random()*10230) },
-        { x: new Date(2023,3,3,12,0), y: Math.floor(Math.random()*10230) },
-        { x: new Date(2023,3,3,13,0), y: Math.floor(Math.random()*10230) },
-        { x: new Date(2023,3,3,14,0), y: Math.floor(Math.random()*10230) },
-        { x: new Date(2023,3,3,15,0), y: Math.floor(Math.random()*10230) },
-        { x: new Date(2023,3,3,16,0), y: Math.floor(Math.random()*10230) },
-        { x: new Date(2023,3,3,17,0), y: Math.floor(Math.random()*10230) },
-        { x: new Date(2023,3,3,18,0), y: Math.floor(Math.random()*10230)},
-        { x: new Date(2023,3,3,19,0), y: Math.floor(Math.random()*10230) },
-        { x: new Date(2023,3,3,20,0), y: Math.floor(Math.random()*10230) },
-        { x: new Date(2023,3,3,21,0), y: Math.floor(Math.random()*10230) },
-        { x: new Date(2023,3,3,22,0), y: Math.floor(Math.random()*10230) },
-        { x: new Date(2023,3,3,23,0), y: Math.floor(Math.random()*10230) },
-        { x: new Date(2023,3,3,24,0), y: Math.floor(Math.random()*10230)},
+		options: {
+			responsive: true,
+			maintainAspectRatio: false
+		}
+		});
+	}
+
+	giveMeAllUsers(){
+		this.auth.getCoords().subscribe(
+			(response:any)=>{
 				
-			]
-		},
-		{
-			type: "line",
-			showInLegend: true,
-			name: "Users who consume electricity",
-			lineDashType: "dot",
-			dataPoints: [
-				{ x: new Date(2023,3,3,1,0), y: Math.floor(Math.random()*5102) },
-				{ x: new Date(2023,3,3,2,0), y: Math.floor(Math.random()*5102) },
-				{ x: new Date(2023,3,3,3,0), y: Math.floor(Math.random()*5102) },
-				{ x: new Date(2023,3,3,4,0), y: Math.floor(Math.random()*5102)},
-				{ x: new Date(2023,3,3,5,0), y: Math.floor(Math.random()*5102) },
-        { x: new Date(2023,3,3,6,0), y: Math.floor(Math.random()*5102) },
-        { x: new Date(2023,3,3,7,0), y: Math.floor(Math.random()*5102) },
-        { x: new Date(2023,3,3,8,0), y: Math.floor(Math.random()*5102) },
-        { x: new Date(2023,3,3,9,0), y: Math.floor(Math.random()*5102) },
-        { x: new Date(2023,3,3,10,0), y: Math.floor(Math.random()*5102) },
-        { x: new Date(2023,3,3,11,0), y: Math.floor(Math.random()*5102) },
-        { x: new Date(2023,3,3,12,0), y: Math.floor(Math.random()*5102) },
-        { x: new Date(2023,3,3,13,0), y: Math.floor(Math.random()*5102) },
-        { x: new Date(2023,3,3,14,0), y: Math.floor(Math.random()*5102) },
-        { x: new Date(2023,3,3,15,0), y: Math.floor(Math.random()*5102)},
-        { x: new Date(2023,3,3,16,0), y: Math.floor(Math.random()*5102) },
-        { x: new Date(2023,3,3,17,0), y: Math.floor(Math.random()*5102) },
-        { x: new Date(2023,3,3,18,0), y: Math.floor(Math.random()*5102) },
-        { x: new Date(2023,3,3,19,0), y: Math.floor(Math.random()*5102) },
-        { x: new Date(2023,3,3,20,0), y: Math.floor(Math.random()*5102) },
-        { x: new Date(2023,3,3,21,0), y: Math.floor(Math.random()*5102) },
-        { x: new Date(2023,3,3,22,0), y: Math.floor(Math.random()*5102) },
-        { x: new Date(2023,3,3,23,0), y: Math.floor(Math.random()*5102) },
-        { x: new Date(2023,3,3,24,0), y: Math.floor(Math.random()*5102) },
-			]
-		}]
-	}	
-}                         
+				this.totalUsers = response.length;
+				console.log("USRE:",this.totalUsers);
+				console.log("TOTAL",response['length']);
+				console.log("P_{",response);
+				
+			}
+		)
+	}
+
+	giveMeChartForUsers(){
+		this.chart1 = new Chart(this.myChartUsers.nativeElement, {
+			type: 'doughnut',
+			data: {
+				labels: ['allUsers'],
+				datasets: [{
+				data: [this.totalUsers],
+				backgroundColor: [
+					'rgb(241, 143, 1)',
+				],
+				hoverOffset: 4
+				}]
+			},
+			options: {
+				responsive: true,
+    			maintainAspectRatio: false,
+    			circumference: Math.PI,
+    			rotation: -Math.PI
+			}
+			});
+		
+	}
+}
+
+               
 
