@@ -4,6 +4,8 @@ namespace prosumerAppBack.BusinessLogic.PowerUsageService;
 
 public interface IPowerUsageService
 {
-    // IEnumerable<PowerUsage> PreviousSevenDays();
-    // IEnumerable<PowerUsage> NextSevenDays();
+    PowerUsage GetForDevice(Guid deviceID);
+    double GetPowerUsageForDay(Guid deviceID, DateTime today);
+    PowerUsage GetPowerUsageFor7Days(Guid deviceId, int direction);
+    double CurrentSumPowerUsage(Guid userID);
 }

@@ -248,11 +248,11 @@ public class UserController : ControllerBase
         {
             var results = await _userService.GetCoordinatesForUser(id);
 
-            return Ok(results);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.Message);
-        }
+             return Ok(devices);
+         }
+         catch (Exception ex)
+         {
+             return StatusCode(500, ex.Message);
+         }  
     }
 }

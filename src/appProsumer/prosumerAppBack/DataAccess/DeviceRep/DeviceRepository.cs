@@ -16,16 +16,7 @@ namespace prosumerAppBack.DataAccess
             _dbContext = dbContext;
             _userService = userService;
         }
-
-        public async Task<Device> GetDeviceByIdAsync(Guid id)
-        {
-            return _dbContext.Devices.FirstOrDefault(d => d.ID == id);
-        }
-
-        public async Task<List<Device>> GetAllDevices()
-        {
-            return await _dbContext.Devices.ToListAsync();
-        }
+        
         public async Task<Boolean> UpdateDevice(Guid id, UpdateDeviceDto deviceUpdateDto)
         {
             var updatedDevice = await _dbContext.Devices.FirstOrDefaultAsync(d => d.ID == id);
