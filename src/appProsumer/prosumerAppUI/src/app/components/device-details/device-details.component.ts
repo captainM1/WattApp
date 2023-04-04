@@ -25,8 +25,12 @@ export class DeviceDetailsComponent implements OnInit {
     this.http.get<any[]>(`${environment.apiUrl}/api/Device/devices/info/${deviceId}`)
       .subscribe(data => {
         this.device = data;
+        console.log(data);
+        console.log(this.device);
+      },
+      error => {
+        console.error('Error fetching device information:', error);
       });
-    console.log(this.device);
   }
 
 }
