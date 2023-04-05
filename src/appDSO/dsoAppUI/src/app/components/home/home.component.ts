@@ -56,7 +56,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 	
 	ngAfterViewInit(): void {
 		this.createMeChartForEveryDevice();
-		this.giveMeAllUsers();
+		this.getNumberOfUsers();
     	this.createMeChartForEveryDevice();
     	setTimeout(() => {
         	this.giveMeChartForUsers();
@@ -69,13 +69,30 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		
 	ngOnInit(): void {
 		this.getDeviceGroup();
-		this.giveMeAllUsers();
+		this.getNumberOfUsers();
 		this.createMeChartForEveryDevice();
+		this.getAllUserInfo();
 		
 		
 	}
 	
-	
+	getNumberOfUsers(){
+		this.auth.getUserNumber().subscribe(
+			(response : any) => {
+				this.totalUsers = response;
+			}
+		)
+	}
+
+	getAllUserInfo(){
+		this.auth.getAllUserInfo().subscribe(
+			(response : any)=>{
+				this.User = response;
+				console.log("RES",response);
+				console.log("USER",this.User);
+			}
+		)
+	}
 	
 	getDeviceGroup(){
 		this.auth.getDeviceGroup().subscribe(
@@ -106,7 +123,9 @@ export class HomeComponent implements OnInit, AfterViewInit{
 							this.labStorages = [...new Set(this.storage.map(element => element.name))];
 							
 							this.createMeChartForEveryDevice();
-							this.giveMeAllUsers();
+
+							this.getNumberOfUsers();
+							this.giveMeChartForUsers();
 						}
 					 )
 					}
@@ -138,27 +157,17 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		});
 	}
 
-	giveMeAllUsers(){
-		this.auth.getCoords().subscribe(
-			(response:any)=>{
-				// ova funkcionalnost ne prikazuje length - u table.component postoji prikaz...
-				this.User = response;
-				this.totalUsers = this.User.length
-				this.giveMeChartForUsers();
-				console.log(this.totalUsers);
-			}
-		)
-	}
+	
 
 	giveMeChartForUsers(){
 		const tot = this.totalUsers;
 		console.log(tot);
 		this.chart1 = new Chart(this.myChartUsers.nativeElement, {
-			type: 'pie',
+			type: 'doughnut',
 			data: {
 				labels: ['Users'],
 				datasets: [{
-				data: [tot, 100-tot],
+				data: [this.totalUsers, 100-this.totalUsers],
 				backgroundColor: [
 					'rgb(241, 143, 1)',
 					'rgb(255, 255, 255)'
@@ -167,8 +176,8 @@ export class HomeComponent implements OnInit, AfterViewInit{
 				}]
 			},
 			options: {
-				cutout:'0%',
-				
+				cutout:'60',
+				aspectRatio:30,
 				responsive: true,
       			maintainAspectRatio: false,
 			}

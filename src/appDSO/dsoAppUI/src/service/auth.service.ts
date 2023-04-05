@@ -68,4 +68,13 @@ export class AuthService {
   getWeather(){
     return this.http.get('https://api.openweathermap.org/data/2.5/weather?lat=44.01667&lon=20.91667&appid=5aa0bb66ef67e76c36269e8d98cbc320')
   }
+
+  getUserNumber(){
+    return this.http.get(environment.apiUrl+'/api/User/userNumber');
+  }
+
+  getAllUserInfo(){
+    return this.http.get(environment.apiUrl + '/api/User/allUserInfo')
+  }
+
 }
