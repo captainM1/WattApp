@@ -35,6 +35,11 @@ button:hover
   color:#fff;
 }
 
+button:active
+{
+  background-color: transparent !important;
+  border: transparent !important;
+}
 
 
 thead
@@ -71,4 +76,19 @@ tr
 .modal-content
 {
   border-radius: 17px !important;
+}
+
+#sendButton
+{
+  background-color: #026670;
+  color:#fff;
+  width: 30%;
+  height: 35px;
+}
+
+#sendButton:hover
+{
+  background-color: #fff;
+  color:#026670;
+  border: 2px solid #026670;
 }
