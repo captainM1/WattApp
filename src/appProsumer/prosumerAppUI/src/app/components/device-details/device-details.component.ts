@@ -49,6 +49,15 @@ export class DeviceDetailsComponent implements OnInit, AfterViewInit {
         error => {
           console.error('Error fetching device history:', error);
         })
+
+      this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/7daysFuture/${this.deviceId}`)
+        .subscribe(data => {
+          this.deviceFuture = data;
+          console.log(data);
+        },
+        error => {
+          console.error('Error fetching device future:', error);
+        })
   }
 
   goBack(){
