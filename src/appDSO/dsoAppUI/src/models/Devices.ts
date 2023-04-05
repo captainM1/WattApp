@@ -17,3 +17,7 @@ export interface deviceGroupManifacturers{
     wattage: number,
     devices: string
 }
+export interface labProducers{
+    name: string,
+    count: number
+}

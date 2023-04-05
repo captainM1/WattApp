@@ -13,15 +13,51 @@
         </div>
     </div>
     
-    <div class="row">
-        <h1 class="display-2" style="text-align: center;">Total users: {{totalUsers}} </h1>
+   
+    <div class="row" style="margin-top: 30px;">
+        <h1 class = "display-2" style="text-align: center;">Total users: {{totalUsers}}</h1>
         <div>
-            <div class="progress">
-                <div class="progress-bar" role="progressbar" style="width: 25%; color: white;" aria-valuenow="totalUsers" aria-valuemin="0" aria-valuemax="100" ><small>{{totalUsers}}</small></div>
-                <canvas #myChartUsers style="width: 200px; height: 200px;"></canvas>    
-            </div>
+            <canvas #myChartUsers style="width: 200px; height: 200px;"></canvas>  
         </div>
     </div>
+
+    <div class="row" style="margin-top: 30px;">
+        <h1 class = "display-2" style="text-align: center;">Number of Appliances </h1>
+
+        <div>
+            <canvas #myChartForEveryTypeOfDevice style="width: 100%;"></canvas>
+        </div>
+        <!-- <div>
+            <h1>Number of Appliances for Prosumers:</h1>
+            <canvas #myChartProsumers style="width:20%"></canvas> 
+        </div>
+        <div>
+            <h1>Number of Appliances for Consumers:</h1>
+            <canvas #myChartConsumers style="width:20%"></canvas>
+        </div>
+            <h1>Number of Appliances for Storages</h1>
+            <canvas #myChartStorage style="width:20%"></canvas>
+        <div>
+        </div> -->
+        <!-- <select (change)="onOptionChange($event)">
+            <option value="prosumer">Prosumer</option>
+            
+            <option value="consumer">Consumer</option>
+            
+            <option value="storage">Storage</option>
+        </select>
+        </h1>
+        <div *ngIf="selectOption === 'prosumer'">
+            <canvas #myChartProsumers style="width:20%"></canvas>  
+        </div>
+
+        <div *ngIf="selectOption === 'consumer'">
+            <canvas #myChartConsumers style="width:20%"></canvas>
+        </div>
+
+        <div *ngIf="selectOption === 'storage'">
+            <canvas #myChartStorage style="width:20%"></canvas>
+        </div> -->
     
     
     
