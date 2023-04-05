@@ -14,11 +14,11 @@ namespace prosumerAppBack.BusinessLogic
 
         public double CurrentPowerUsage(Guid userID);
 
-        public List<PowerUsage> GetPowerUsageForAMonthSystem();
-        public List<double> GetPowerUsageSumByDevicePreviousMonth();
-        public List<double> GetPowerUsagesForEachDayPreviousMonth();
+        public double GetPowerUsageForAMonthSystem(int direction);
+        public Dictionary<Guid, double> GetPowerUsageSumByDevice(int direction);
+        public Dictionary<DateTime, double> GetPowerUsagesForEachDay(int direction);
         public double GetAveragePowerUsageByUser(Guid userID);
-        public Dictionary<Guid, List<double>> GetPowerUsageForDevicesInPreviousMonth(Guid userId);
-        public List<double> GetPowerUsageForDeviceInPreviousMonth(Guid deviceID);
+        public Dictionary<Guid, List<double>> GetPowerUsageForDevices(Guid userId, int direction);
+        public List<double> GetPowerUsageForDevice(Guid deviceID, int direction);
     }
 }

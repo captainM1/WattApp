@@ -82,23 +82,44 @@ public class PowerUsageController : ControllerBase
     }
 
     [HttpGet("power-usage/previousMonth/system")]
-    public ActionResult<List<PowerUsage>> GetSystemPowerUsageForMonth()
+    public ActionResult<double> GetSystemPowerUsageForPreviousMonth()
     {
-        var powerUsages = _powerUsage.GetPowerUsageForAMonthSystem();
+        var powerUsages = _powerUsage.GetPowerUsageForAMonthSystem(-1);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/nextMonth/system")]
+    public ActionResult<double> GetSystemPowerUsageForNextMonth()
+    {
+        var powerUsages = _powerUsage.GetPowerUsageForAMonthSystem(1);
         return Ok(powerUsages);
     }
 
     [HttpGet("power-usage/previousMonth/each-device")]
-    public ActionResult<List<double>> GetPowerUsagesOfEachDevice()
+    public ActionResult<List<double>> GetPowerUsagesOfEachDevicePreviousMonth()
     {
-        var powerUsages = _powerUsage.GetPowerUsageSumByDevicePreviousMonth();
+        var powerUsages = _powerUsage.GetPowerUsageSumByDevice(-1);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/nextMonth/each-device")]
+    public ActionResult<List<double>> GetPowerUsagesOfEachDeviceNextMonth()
+    {
+        var powerUsages = _powerUsage.GetPowerUsageSumByDevice(1);
         return Ok(powerUsages);
     }
 
     [HttpGet("power-usage/previousMonth/every-day-usage")]
-    public ActionResult<List<double>> GetPowerUsagesOfEachDay()
+    public ActionResult<List<double>> GetPowerUsagesOfEachDayPrevMonth()
     {
-        var powerUsages = _powerUsage.GetPowerUsagesForEachDayPreviousMonth();
+        var powerUsages = _powerUsage.GetPowerUsagesForEachDay(-1);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/nextMonth/every-day-usage")]
+    public ActionResult<List<double>> GetPowerUsagesOfEachDayNextMont()
+    {
+        var powerUsages = _powerUsage.GetPowerUsagesForEachDay(1);
         return Ok(powerUsages);
     }
 
@@ -110,17 +131,35 @@ public class PowerUsageController : ControllerBase
     }
 
     [HttpGet("power-usage/PreviousMonth/user-every-day-device-usage/{userID}")]
-    public ActionResult<Dictionary<Guid, List<double>>> GetPowerUsageEachDayOfEachDevice(Guid userID)
+    public ActionResult<Dictionary<Guid, List<double>>> GetPowerUsageEachDayOfEachDevicePrevMonth(Guid userID)
     {
-        var powerUsages = _powerUsage.GetPowerUsageForDevicesInPreviousMonth(userID);
+        var powerUsages = _powerUsage.GetPowerUsageForDevices(userID, -1);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/nextMonth/user-every-day-device-usage/{userID}")]
+    public ActionResult<Dictionary<Guid, List<double>>> GetPowerUsageEachDayOfEachDeviceNextMonth(Guid userID)
+    {
+        var powerUsages = _powerUsage.GetPowerUsageForDevices(userID, 1);
         return Ok(powerUsages);
     }
 
     [HttpGet("power-usage/PreviousMonth/device-usage/{deviceID}")]
     public ActionResult<List<double>> GetDeviceUsageForPreviousMonth(Guid deviceID)
     {
-        var powerUsages = _powerUsage.GetPowerUsageForDeviceInPreviousMonth(deviceID);
+        var powerUsages = _powerUsage.GetPowerUsageForDevices(deviceID, -1);
         if(powerUsages == null)
+        {
+            return BadRequest("device does not exist");
+        }
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/NextMonth/device-usage/{deviceID}")]
+    public ActionResult<List<double>> GetDeviceUsageForNextMonth(Guid deviceID)
+    {
+        var powerUsages = _powerUsage.GetPowerUsageForDevices(deviceID, 1);
+        if (powerUsages == null)
         {
             return BadRequest("device does not exist");
         }
