@@ -79,7 +79,7 @@ export class TableComponent implements OnInit {
       (response : any)=> {
         this.allUsers = response;
         this.filtered = response;
-        
+        console.log(response.length);
       }
     );
   }
@@ -136,6 +136,7 @@ export class TableComponent implements OnInit {
       (response : any) =>{
         this.lengthOfUsers = response['length'];
         this.userCoords = response;
+        console.log(response.length);
         for(const user of this.userCoords){
           for(const us of this.allUsers){
             if(user.address['address'] === us.address){

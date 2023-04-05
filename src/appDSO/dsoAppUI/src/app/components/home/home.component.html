@@ -2,31 +2,63 @@
 <div class="outer" style="margin-top: 90px;">
 <div class="container">
     <div class="row">
-        
-        <div class="display-5">Home</div>
+        <div>
+            <h1 class="display-2" style="text-align: center;">Weather: </h1>
+        </div>
     </div>
     <div class="row" style="margin-top: 30px;">
-        <div class="col-md">
-            <div class="p-3 bg-light text-center">
-                <h1>Total users: 15.332</h1>
-                <h3 class="p">Users who produce electricity: 10.230</h3>
-                <h3 class="g">Users who consume electricity: 5.102</h3>
-            </div>
-            <canvasjs-chart [options]="chartOptions" [styles]="{width: '100%', height:'360px'}"></canvasjs-chart>  
+        <h1 class = "display-2" style="text-align: center;">Total devices: {{total}}</h1>
+        <div>
+            <canvas #myChart style="width: 200px; height: 200px;"></canvas>  
         </div>
     </div>
-    <br>
-    <br>
     
-    <div class="row">
-        <div class="col-md">
-            <div class="p-3 bg-light text-center">
-                <h1> Total devices: 35.594</h1>
-                <h3 class="p"> Device manufacturers: 15.230</h3>
-                <h3 class="g"> Consumer devices: 20.369</h3>
-            </div>
-            <canvasjs-chart [options]="chartOptions" [styles]="{width: '100%', height:'360px'}"></canvasjs-chart> 
+   
+    <div class="row" style="margin-top: 30px;">
+        <h1 class = "display-2" style="text-align: center;">Total users: {{totalUsers}}</h1>
+        <div>
+            <canvas #myChartUsers style="width: 200px; height: 200px;"></canvas>  
         </div>
     </div>
+
+    <div class="row" style="margin-top: 30px;">
+        <h1 class = "display-2" style="text-align: center;">Number of Appliances </h1>
+
+        <div>
+            <canvas #myChartForEveryTypeOfDevice style="width: 100%;"></canvas>
+        </div>
+        <!-- <div>
+            <h1>Number of Appliances for Prosumers:</h1>
+            <canvas #myChartProsumers style="width:20%"></canvas> 
+        </div>
+        <div>
+            <h1>Number of Appliances for Consumers:</h1>
+            <canvas #myChartConsumers style="width:20%"></canvas>
+        </div>
+            <h1>Number of Appliances for Storages</h1>
+            <canvas #myChartStorage style="width:20%"></canvas>
+        <div>
+        </div> -->
+        <!-- <select (change)="onOptionChange($event)">
+            <option value="prosumer">Prosumer</option>
+            
+            <option value="consumer">Consumer</option>
+            
+            <option value="storage">Storage</option>
+        </select>
+        </h1>
+        <div *ngIf="selectOption === 'prosumer'">
+            <canvas #myChartProsumers style="width:20%"></canvas>  
+        </div>
+
+        <div *ngIf="selectOption === 'consumer'">
+            <canvas #myChartConsumers style="width:20%"></canvas>
+        </div>
+
+        <div *ngIf="selectOption === 'storage'">
+            <canvas #myChartStorage style="width:20%"></canvas>
+        </div> -->
+    
+    
     
 </div>
