@@ -42,16 +42,22 @@
         width: 97%;
     }
 
-    button{
+    .simple{
         margin-top: 10px;
         margin-bottom: 20px;
-        width: 80%;
+        width: 40%;
         text-align: center;
     }
 
     .custom-select div{
         padding-top: none;
     }
+
+    mat-icon{
+        color:#026670;
+    }
+    
+    
 }
 
 @media (min-width: 281px) and (max-width: 480px) /*Phones*/
@@ -81,16 +87,22 @@
         width: 97%;
     }
 
-    button{
+    .simple{
         margin-top: 10px;
         margin-bottom: 20px;
-        width: 80%;
+        width: 50px;
         text-align: center;
     }
 
     .custom-select div{
         padding-top: none;
     }
+
+    mat-icon{
+        color:#026670;
+    }
+
+    
 
 }
  
@@ -125,6 +137,11 @@
     .row > .col-sm > button{
         margin-top: 30px;
     }
+
+    mat-icon{
+        color:#026670;
+      }
+    
 }
 
 @media (min-width: 1024px) /*Laptops and Desktops */
@@ -158,4 +175,58 @@
     .custom-select div{
         margin-bottom: 20px;
     }
+
+    mat-icon{
+        color:white;
+      }
+}
+
+mat-toolbar {
+    display: flex;
+    justify-content: space-between;
+}
+
+.container{
+    border-radius: 17px;
+    margin: auto;
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    font-family: font1;
+}
+
+h3{
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.centriranje{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.simple{
+    border-radius: 17px;
+    background-color:#026670;
+    color:white;
+    font-weight: bold;
+    font-size: 10px;
+    border: none;
+    filter:drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
+    padding: 5px 5px;
+}
+
+.simple:hover {
+    background-color: #0394a2;
+    color:white;    
+}
+
+.simple:focus{
+    background-color: #0394a2;
+    color: white;
+}
+
+.simple mat-icon{
+    color:white;
 }
