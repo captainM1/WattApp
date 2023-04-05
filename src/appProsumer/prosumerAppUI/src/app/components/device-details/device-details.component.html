@@ -3,15 +3,15 @@
 <div class="outer centriranje">
     <div class="container">
         <div class="row">
-            <div class="col">
+            <div class="col align-center">
                 <button mat-icon-button (click)="goBack()">
                     <mat-icon>arrow_back</mat-icon>
                 </button>
             </div>
-            <div class="col centriranje">
+            <div class="col centriranje pb-3">
                 <h3>{{ device?.deviceTypeName }}</h3>
             </div>
-            <div class="col">
+            <div class="col align-center">
                 <button mat-icon-button (click)="deleteDevice()">
                     <mat-icon>delete</mat-icon>
                 </button>
@@ -19,22 +19,22 @@
         </div>
         <div class="row">
             <div class="col">
-                <button mat-icon-button class="simple" (click)="toggleDetails()">
-                    <mat-icon class="bela">info</mat-icon>
-                    Device details
+                <button mat-icon-button class="simple align-center" (click)="toggleDetails()">
+                    <mat-icon>info</mat-icon>
+                    &nbsp;&nbsp;Device details&nbsp;
                 </button>
             </div>
             <div class="col">
-                <button mat-icon-button class="simple">
-                    <mat-icon class="bela">bolt</mat-icon>
-                    Permissions
+                <button mat-icon-button class="simple align-center" (click)="showPermissions()">
+                    <mat-icon>bolt</mat-icon>
+                    &nbsp;&nbsp;Permissions&nbsp;
                 </button>
             </div>
         </div>
         <div class="row" *ngIf="showDetails">
-            <p>Manufacturer: {{device?.manufacturerName}}</p>
-            <p>Wattage: {{device?.deviceTypeName}}</p>
-            <p>Mac Address: {{device?.macAdress}}</p>
+            <p><span>Manufacturer:</span> {{device?.manufacturerName}}</p>
+            <p><span>Wattage:</span> {{device?.deviceTypeName}}</p>
+            <p><span>Mac Address:</span> {{device?.macAdress}}</p>
         </div>
         <div class="row">
             <h3>Daily Usage</h3>

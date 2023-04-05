@@ -55,6 +55,10 @@ export class DeviceDetailsComponent implements OnInit {
     );
   }
 
+  showPermissions(){
+    this.router.navigate(['/permissions', this.deviceId]);
+  }
+
   showDetails = false;
 
   toggleDetails() {
