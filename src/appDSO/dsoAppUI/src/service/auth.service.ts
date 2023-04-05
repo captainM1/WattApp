@@ -65,8 +65,7 @@ export class AuthService {
   }
 
 
-  getWeather(location : string){
-  //  https://api.openweathermap.org/data/2.5/weather?id={city id}&appid={API key}
-    return this.http.get('https://api.openweathermap.org/data/2.5/weather?q=Kragujevac&appid={754ab1f38f76a12c771ff8bd8c2f9cdb}')
+  getWeather(){
+    return this.http.get('https://api.openweathermap.org/data/2.5/weather?lat=44.01667&lon=20.91667&appid=5aa0bb66ef67e76c36269e8d98cbc320')
   }
 }

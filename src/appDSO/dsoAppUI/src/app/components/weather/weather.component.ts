@@ -25,8 +25,8 @@ export class WeatherComponent implements OnInit{
   }
 
 
-  sendToAPIXU(formValues: { location: string; }){
-    this.auth.getWeather(formValues.location).subscribe(
+  sendToAPIXU(){
+    this.auth.getWeather().subscribe(
       (response : any)=>{
         this.weatherData = response;
       }
