@@ -106,9 +106,10 @@ export class HomeComponent implements OnInit, AfterViewInit{
 							this.total = this.producers.length + this.consumers.length + this.storage.length;
 							this.createChartDevices();
 							
-							this.labProducers = this.producers.map(element => element.name); 
-							this.labConsumers = this.consumers.map(element => element.name);
-							this.labStorages = this.storage.map(element => element.name);
+							 
+							this.labProducers = [...new Set(this.producers.map(element => element.name))];
+							this.labConsumers = [...new Set(this.consumers.map(element => element.name))];
+							this.labStorages = [...new Set(this.storage.map(element => element.name))];
 							
 							// this.giveMeChartForProducers();
 							// this.giveMeChartForConsumers();
@@ -268,28 +269,31 @@ export class HomeComponent implements OnInit, AfterViewInit{
 	// 			}
 
 	createMeChartForEveryDevice(){
-	const dataProducers: number[] = [];
-	const labelsP: string[] = this.labProducers;
-	this.producers.forEach(element => {
-    const index = labelsP.indexOf(element.name);
-    dataProducers[index] = dataProducers[index] ? dataProducers[index] + 1 : 1;
-	});
+		const dataProducers: number[] = [];
+		let label : string[] = this.labProducers.concat(this.labConsumers).concat(this.labStorages);
+		
+		this.producers.forEach(element => {
+		const index = label.indexOf(element.name);
+			dataProducers[index] = dataProducers[index] ? dataProducers[index] + 1 : 1;
+		});
 
-	const dataConsumers: number[] = [];
-	const labelsC: string[] = this.labConsumers;
-	this.consumers.forEach(element => {
-    const index = labelsC.indexOf(element.name);
-    dataConsumers[index] = dataConsumers[index] ? dataConsumers[index] + 1 : 1;
-	});
+		const dataConsumers: number[] = [];
+		
+		this.consumers.forEach(element => {
+		const index = label.indexOf(element.name);
+			dataConsumers[index] = dataConsumers[index] ? dataConsumers[index] + 1 : 1;
+		});
 
-	const dataStorages: number[] = [];
-	const labelsS: string[] = this.labStorages;
-	this.storage.forEach(element => {
-    const index = labelsS.indexOf(element.name);
-    dataStorages[index] = dataStorages[index] ? dataStorages[index] + 1 : 1;
-	});
-	let label : string[] = this.labProducers.concat(this.labConsumers);
-	label.concat(this.labStorages);
+		const dataStorages: number[] = [];
+		
+		this.storage.forEach(element => {
+		const index = label.indexOf(element.name);
+			dataStorages[index] = dataStorages[index] ? dataStorages[index] + 1 : 1;
+		});
+
+		
+	
+		console.log(label);
 
 	const chartData = {
     labels: label,
