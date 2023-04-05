@@ -53,3 +53,22 @@ tr
 {
   border-bottom: 1px solid #026670;
 }
+
+#closeBtn, #closeBtn:active
+{
+  background-color: transparent !important;
+  border: transparent !important;
+}
+
+#closeBtn
+{
+  font-size:20px;
+  position: relative;
+  right:10px;
+  top:-10px;
+}
+
+.modal-content
+{
+  border-radius: 17px !important;
+}
