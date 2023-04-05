@@ -188,4 +188,30 @@ public class UserRepository : IUserRepository
         await _dbContext.SaveChangesAsync();
         return true;
     }
+    public async Task<int> GetNumberOfUsers()
+    {
+        return await _dbContext.Users.CountAsync();
+    }
+
+    public async Task<List<UserDto>> GetAllUsersAsync()
+    {
+        var users = await _dbContext.Users
+            .Select(u => new UserDto {
+                ID = u.ID,
+                FirstName = u.FirstName,
+                LastName = u.LastName,
+                UserName = u.UserName,
+                PhoneNumber = u.PhoneNumber,
+                Address = u.Address,
+                City = u.City,
+                Country = u.Country,
+                Role = u.Role,
+                Email = u.Email
+            })
+            .ToListAsync();
+
+        return users;
+    }
+
+
 }
