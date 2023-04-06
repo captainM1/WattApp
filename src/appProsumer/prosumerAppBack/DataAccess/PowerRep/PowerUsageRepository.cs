@@ -1,4 +1,5 @@
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using prosumerAppBack.BusinessLogic;
@@ -322,6 +323,23 @@ public class PowerUsageRepository:IPowerUsageRepository
 
         return powerUsageDictionary;
     }
+
+    public async Task<bool> DeleteDevice(Guid deviceID)
+    {
+        var device = await _dataContext.Devices.FirstOrDefaultAsync(d => d.ID == deviceID);
+
+        if (device == null)
+        {
+            return false;
+        }
+
+        _dataContext.Devices.Remove(device);
+        await _dataContext.SaveChangesAsync();
+
+        return true;
+    }
+
+
 
 
 }
