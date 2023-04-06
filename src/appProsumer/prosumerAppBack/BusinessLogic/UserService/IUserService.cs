@@ -18,4 +18,6 @@ public interface IUserService
     Task<Boolean> CreateUserRequestToDso(User user);
     Task<User> CheckEmail(string email);
     Task<object> GetCoordinatesForUser(Guid id);
+    Task<int> GetNumberOfUsers();
+    Task<List<UserDto>> GetAllUsersAsync();
 }

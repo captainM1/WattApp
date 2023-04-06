@@ -3,18 +3,16 @@ import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
-import { MapsComponent } from './components/maps/maps.component';
 import { NavComponent } from './components/nav/nav.component'
-import { navData } from './components/nav/navData';
+import { TableComponent } from './components/table/table.component';
+import { RequirementsComponent } from './components/requirements/requirements.component';
 import { SignupComponent } from './components/signup/signup.component';
+
 
 
 const routes: Routes = [
   {
     path: 'signin', component: LoginComponent
-  },
-  {
-    path: 'maps', component:MapsComponent
   },
   {
     path: 'dashboard', component: DashboardComponent
@@ -27,6 +25,12 @@ const routes: Routes = [
   },
   {
     path: 'signup', component: SignupComponent
+  },
+  {
+    path: 'table',component: TableComponent
+  },
+  {
+    path: 'requirements', component: RequirementsComponent
   }
 ];
 

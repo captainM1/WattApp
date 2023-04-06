@@ -242,13 +242,38 @@ public class UserController : ControllerBase
     [HttpGet("coordinates/{id}")]
     public async Task<IActionResult> GetCoordinatesForUser(Guid id)
     {
-        var devices = _deviceService.GetDevicesForUser(userID);
-                
-        return Ok(devices);
-
         try
         {
             var results = await _userService.GetCoordinatesForUser(id);
+
+            return Ok(results);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }  
+    }
+    [HttpGet("userNumber")]
+    public async Task<IActionResult> GetNumberOfUsers()
+    {
+        try
+        {
+            var results = await _userService.GetNumberOfUsers();
+
+            return Ok(results);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpGet("allUserInfo")]
+    public async Task<IActionResult> AllUsersInfo()
+    {
+        try
+        {
+            var results = await _userService.GetAllUsersAsync();
 
             return Ok(results);
         }

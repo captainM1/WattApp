@@ -12,4 +12,6 @@ public interface IUserRepository
     Task<int> UpdateUser(Guid id, UserUpdateDto userUpdateDto);
     Task<List<User>> GetAllUsersAsync(int pageNumber, int pageSize);
     Task<Boolean> CreateUserRequestToDso(User user);
+    Task<int> GetNumberOfUsers();
+    Task<List<UserDto>> GetAllUsersAsync();
 }

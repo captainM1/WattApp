@@ -1,9 +1,11 @@
 using System;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using prosumerAppBack.BusinessLogic;
 using prosumerAppBack.BusinessLogic.PowerUsageService;
 using prosumerAppBack.Models;
+using prosumerAppBack.Models.Device;
 
 namespace prosumerAppBack.Controllers;
 
@@ -11,91 +13,85 @@ namespace prosumerAppBack.Controllers;
 [Route("api/[controller]")]
 public class PowerUsageController : ControllerBase
 {
-    private readonly IPowerUsageService _repository;
+    private readonly IPowerUsageService _powerUsageService;
+    private readonly IPowerUsageRepository _powerUsage;
 
-    public PowerUsageController(IPowerUsageService repository)
+    public PowerUsageController(IPowerUsageService powerUsageService, IPowerUsageRepository powerUsage)
     {
-        _repository = repository;
+        _powerUsageService = powerUsageService;
+        _powerUsage = powerUsage;
     }
-
-    [HttpGet("power-usage")]
-    public ActionResult<IEnumerable<PowerUsage>> GetAll()
-    {
-        try
-        {
-            var powerUsages = _repository.Get();
-            return Ok(powerUsages);
-        }
-        catch (ArgumentNullException ex)
-        {
-            throw new ArgumentException(ex.Message);
-        }
-    }
-
-    [HttpGet("power-usage/last-week")]
-    public ActionResult<IEnumerable<PowerUsage>> GetDeviceConsumptionLastWeek()
-    {
-        try
-        {
-            var powerUsages = _repository.PreviousSevenDays();
-            return Ok(powerUsages);
-        }
-        catch (ArgumentNullException ex)
-        {
-            throw new ArgumentException(ex.Message);
-        }
-    }
-
-    [HttpGet("power-usage/next-week")]
-    public ActionResult<IEnumerable<PowerUsage>> GetDeviceConsumptionNextWeek()
-    {
-        try
-        {
-            var powerUsages = _repository.NextSevenDays();
-            return Ok(powerUsages);
-        }
-        catch (ArgumentNullException ex)
-        {
-            throw new ArgumentException(ex.Message);
-        }
-    }
-
+    
     [HttpGet("power-usage/today/{deviceID}")]
     public ActionResult<IEnumerable<PowerUsage>> GetPowerUsageForDay(Guid deviceID)
     {
-        var powerUsages = _powerUsage.GetPowerUsageForDay(deviceID,DateTime.Today);
-        return Ok(powerUsages);
+        try
+        {
+            var powerUsages = _powerUsageService.GetPowerUsageForDay(deviceID, DateTime.Today);
+
+            return Ok(powerUsages);
+        }
+        catch (ArgumentNullException ex)
+        {
+            throw new ArgumentException(ex.Message);
+        }
     }
     
     [HttpGet("power-usage/7daysHistory/{deviceID}")]
     public ActionResult<IEnumerable<PowerUsage>> GetPowerUsageFor7DaysHistory(Guid deviceID)
-    {
-        var powerUsages = _powerUsage.GetPowerUsageFor7Days(deviceID,1);
-        return Ok(powerUsages);
+    {        
+        try
+        {
+            var powerUsages = _powerUsageService.GetPowerUsageFor7Days(deviceID, -1);
+
+            return Ok(powerUsages);
+        }
+        catch (ArgumentNullException ex)
+        {
+            throw new ArgumentException(ex.Message);
+        }
     }
     [HttpGet("power-usage/7daysFuture/{deviceID}")]
     public ActionResult<IEnumerable<PowerUsage>> GetPowerUsageFor7DaysFuture(Guid deviceID)
-    {
-        var powerUsages = _powerUsage.GetPowerUsageFor7Days(deviceID,-1);
-        return Ok(powerUsages);
+    {        
+        try
+        {
+            var powerUsages = _powerUsageService.GetPowerUsageFor7Days(deviceID, 1);
+
+            return Ok(powerUsages);
+        }
+        catch (ArgumentNullException ex)
+        {
+            throw new ArgumentException(ex.Message);
+        }
     }
     [HttpGet("power-usage/current/{deviceID}")]
     public ActionResult<IEnumerable<PowerUsage>> GetForDevice(Guid deviceID)
-    {
-        var powerUsages = _powerUsage.GetForDevice(deviceID);
-        return Ok(powerUsages);
-    }
-   /* [HttpGet("power-usage/currentUsageUser/{userID}")]
-    public ActionResult<IEnumerable<PowerUsage>> GetForUser(Guid userID)
-    {
-        var powerUsages = _powerUsage.CurrentPowerUsage(userID);
-        return Ok(new{powerUsages});
-    }*/
+    {        
+        try
+        {
+            var powerUsages = _powerUsageService.GetForDevice(deviceID);
 
-    [HttpGet("power-usage/currentUsageUser/summary/{userID}")] // ukupna trenutna potrosnja korisnika 
+            return Ok(powerUsages);
+        }
+        catch (ArgumentNullException ex)
+        {
+            throw new ArgumentException(ex.Message);
+        }
+    }
+
+    [HttpGet("power-usage/currentUsageUser/summary/{userID}")]
     public ActionResult<double> GetForUser(Guid userID)
-    {
-        var powerUsages = _powerUsage.CurrentSumPowerUsage(userID);
-        return Ok(powerUsages);
+    {        
+        try
+        {
+            var powerUsages = _powerUsageService.CurrentSumPowerUsage(userID);
+
+            return Ok(powerUsages);
+        }
+        catch (ArgumentNullException ex)
+        {
+            throw new ArgumentException(ex.Message);
+        }
     }
 }
