@@ -1,0 +1,49 @@
+<app-nav class="desktop"></app-nav>
+<app-mob-nav class="mobile"></app-mob-nav>
+<div class="outer centriranje">
+    <div class="container">
+        <div class="row">
+            <div class="col align-center">
+                <button mat-icon-button (click)="goBack()">
+                    <mat-icon>arrow_back</mat-icon>
+                </button>
+            </div>
+            <div class="col centriranje pb-3">
+                <h3>{{ device?.deviceTypeName }}</h3>
+            </div>
+            <div class="col align-center">
+                <button mat-icon-button (click)="deleteDevice()">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col align-center">
+                <button mat-icon-button class="simple align-center" (click)="toggleDetails()">
+                    <mat-icon>info</mat-icon>
+                    &nbsp;&nbsp;Device details&nbsp;
+                </button>
+            </div>
+            <div class="col align-center">
+                <button mat-icon-button class="simple align-center" (click)="showPermissions()">
+                    <mat-icon>bolt</mat-icon>
+                    &nbsp;&nbsp;Permissions&nbsp;
+                </button>
+            </div>
+        </div>
+        <div class="row" *ngIf="showDetails">
+            <p><span>Manufacturer:</span> {{device?.manufacturerName}}</p>
+            <p><span>Wattage:</span> {{device?.deviceTypeName}}</p>
+            <p><span>Mac Address:</span> {{device?.macAdress}}</p>
+        </div>
+        <div class="part">
+            <div class="row">
+                <h3>Daily Usage</h3>
+            </div>
+            <div class="align-center">
+                <canvas #chart></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+

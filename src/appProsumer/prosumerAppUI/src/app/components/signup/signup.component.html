@@ -5,7 +5,7 @@
             <div class="col-sm centriranje d-none d-lg-flex" style="background: linear-gradient(179.99deg, #026670 -47%, #9FEDD7 99.99%); color: #026670;">
                 <img src="/assets/icons/logo-white.png" class="slika" alt="logo">
             </div>
-            <div class="col-sm centriranje " style=" background:#EDEAE5;">
+            <div class="col-sm centriranje" style=" background:#EDEAE5;">
                 <div class=" forma panel border" >
                     <h3 class="pt-3 font-weight-bold">
                         Get started
@@ -14,11 +14,18 @@
                     <div class="panel-body">
                         <form [formGroup] = "loginForm" (ngSubmit)="onSubmit()">
                             <div class="input-group form-group pt-2">
-                                    <input class = "form-control"  [ngClass] = "{'is-invalid invalid-input' : submitted && fields['username'].errors}" formControlName = "username" type="text" placeholder="Username">
-                                    <span class="input-group-addon addon-icon" [ngClass]="{'invalid-icon': submitted && fields['username'].errors}"><i class="fa fa-user"></i></span>
+                                    <input class = "form-control"  [ngClass] = "{'is-invalid invalid-input' : submitted && fields['firstName'].errors}" formControlName = "firstName" type="text" placeholder="First name">
+                                    <span class="input-group-addon addon-icon" [ngClass]="{'invalid-icon': submitted && fields['firstName'].errors}"><i class="fa fa-user"></i></span>
                                     <div class="invalid-feedback">
-                                        <span class="text-danger" *ngIf="submitted && fields['username'].errors?.['required']">*Username is required!</span>
+                                        <span class="text-danger" *ngIf="submitted && fields['firstName'].errors?.['required']">*First name is required!</span>
                                     </div>
+                            </div>
+                            <div class="input-group form-group pt-4">
+                              <input class = "form-control"  [ngClass] = "{'is-invalid invalid-input' : submitted && fields['lastName'].errors}" formControlName = "lastName" type="text" placeholder="Last name">
+                              <span class="input-group-addon addon-icon" [ngClass]="{'invalid-icon': submitted && fields['lastName'].errors}"><i class="fa fa-user"></i></span>
+                              <div class="invalid-feedback">
+                                  <span class="text-danger" *ngIf="submitted && fields['lastName'].errors?.['required']">*Last name is required!</span>
+                              </div>
                             </div>
                             <div class="input-group form-group pt-4">
                                 <input class = " form-control"  [ngClass] = "{'is-invalid invalid-input' : submitted && fields['email'].errors}" formControlName = "email" type="text" placeholder="Email">
@@ -33,15 +40,16 @@
                                 <span class="input-group-addon addon-icon" [ngClass]="{'invalid-icon': submitted && fields['address'].errors}"><i class="fa fa-location-arrow"></i></span>
                                 <div class="invalid-feedback">
                                     <span class="text-danger" *ngIf="submitted && fields['address'].errors?.['required']">*Address is required!</span>
-                                    <span class="text-danger" *ngIf="submitted ">Address must be in the format: Street, City, Country</span>
+                                    <span class="text-danger" *ngIf="fields['address'].hasError('pattern')">*Address must be in the format: Street, City, Country!</span>
                                 </div>
                         </div>
                         <div class="input-group form-group pt-4">
                             <input class = "form-control"  [ngClass] = "{'is-invalid invalid-input' : submitted && fields['phonenumber'].errors}" formControlName = "phonenumber" type="text" placeholder="Phone number">
                             <span class="input-group-addon addon-icon" [ngClass]="{'invalid-icon': submitted && fields['phonenumber'].errors}"><i class="fa fa-phone"></i></span>
                             <div class="invalid-feedback">
-                                <span class="text-danger" *ngIf="submitted && fields['phonenumber'].errors?.['required']">*Phone Number is required!</span>
-                            </div>
+                                <span class="text-danger" *ngIf="submitted && fields['phonenumber'].errors?.['required']">*Phone number is required!</span>
+                                <span class="text-danger" *ngIf="fields['phonenumber'].errors?.['phonenumber']">"*Please, provide a valid phone number.</span>
+                              </div>
                         </div>
 
                             <div class="input-group form-group pt-4">
@@ -49,7 +57,7 @@
                                     <span  class="input-group-addon addon-icon" [ngClass]="{'invalid-icon': submitted && fields['password'].errors}"><i (click) = "hideShowPass()" class="fa {{eyeIcon}}"></i></span>
                                     <div class="invalid-feedback">
                                         <span class= "text-danger" *ngIf="submitted && fields['password'].errors?.['required']">*Password is required!</span>
-                                        <span class = "text-danger" *ngIf="fields['password'].errors?.['minLength']">*Please provide a valid password!</span>
+                                        <span class = "text-danger" *ngIf="fields['password'].errors?.['minlength']">*Please provide a valid password!</span>
                                     </div>
                                 </div>
 

@@ -111,6 +111,11 @@ export class LoginComponent implements OnInit{
       }
     }
 
+    signOut(){
+      this.auth.signOut();
+      this.router.navigate(['/signin']);
+    }
+
 }
 
 

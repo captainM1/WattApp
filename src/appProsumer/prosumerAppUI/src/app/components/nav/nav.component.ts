@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { navData } from './navData';
+import { AuthService } from 'src/app/services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-nav',
@@ -7,6 +8,14 @@ import { navData } from './navData';
   styleUrls: ['./nav.component.css']
 })
 export class NavComponent {
+  
 
-  navData = navData;
+  constructor(
+    private auth: AuthService,
+    private router : Router){}
+
+  signOut(){
+    this.auth.signOut();
+    this.router.navigate(['signin']);
+  }
 }

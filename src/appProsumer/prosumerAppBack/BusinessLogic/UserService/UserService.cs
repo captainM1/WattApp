@@ -241,4 +241,20 @@ public class UserService:IUserService
         });
         
     }
+
+    public async Task<int> GetNumberOfUsers()
+    {
+        return await _repository.GetNumberOfUsers();
+    }
+
+    public async Task<List<UserDto>> GetAllUsersAsync()
+    {
+        var action = await _repository.GetAllUsersAsync();
+        if (action == null)
+        {
+            throw new NullReferenceException("Action failed");
+        }
+
+        return action;
+    }
 }

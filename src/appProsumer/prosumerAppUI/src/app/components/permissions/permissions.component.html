@@ -1,0 +1,60 @@
+<app-nav class="desktop"></app-nav>
+<app-mob-nav class="mobile"></app-mob-nav>
+<div class="outer centriranje">
+    <div class="container">
+        <div class="row">
+            <div class="col-2 align-center">
+                <button mat-icon-button (click)="goBack()">
+                    <mat-icon>arrow_back</mat-icon>
+                </button>
+            </div>
+            <div class="col centriranje pb-3">
+                <h3>Permissions</h3>
+            </div>
+            <div class="col-2">
+            </div>
+        </div>
+        <div class="permissions">
+        <div class="row mt-3 mx-2">
+            <div class="col label">Allow DSO To Collect Data</div>
+            <div class="col-3 form-switch"><input class="form-check-input" formControlName = "toggleButton1" type="checkbox" id="toggle-button-1"></div>
+        </div>
+        <div class="row mt-3 mx-2">
+            <div class="col label">Allow DSO To Control Consumption Time</div>
+            <div class="col-3 form-switch"><input class="form-check-input" formControlName = "toggleButton2" type="checkbox" id="toggle-button-2"></div>
+        </div>
+        </div>
+        
+        <div class="row mt-3 mb-3">
+            <h3>Rules And Requirements</h3>
+        </div>
+        <div class="kolona">
+        <div class="row rule align-center">
+            Turn on Device at<span>9:00</span>
+        </div>
+        <div class="row rule align-center">
+            Turn of Device at<span>17:00</span>
+        </div>
+        <div class="row align-center mt-3">
+            <button mat-icon-button class="simple r align-center">
+                <mat-icon>warning</mat-icon>
+                &nbsp;&nbsp;Add New Rule&nbsp;
+            </button>
+        </div>
+        </div>
+        <div class="kolona">
+        <div class="row rule">
+            Charge up to<span>70%</span>by<span>7:00</span>
+        </div>
+        <div class="row rule align-center">
+            Charge up to<span>70%</span> Everyday
+        </div>
+        <div class="row align-center mt-3">
+            <button mat-icon-button class="simple rq align-center">
+                <mat-icon>add_task</mat-icon>
+                &nbsp;&nbsp;Add New Requirement&nbsp;
+            </button>
+        </div>
+        </div>
+    </div>
+</div>

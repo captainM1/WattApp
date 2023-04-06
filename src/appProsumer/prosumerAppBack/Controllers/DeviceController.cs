@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using prosumerAppBack.BusinessLogic;
@@ -13,50 +14,14 @@ namespace prosumerAppBack.Controllers
 	public class DeviceController : ControllerBase
 	{
         private readonly IDeviceService _deviceService;
-        private readonly IUserService _userService;
-        private readonly IDeviceRepository _deviceRepository;
-        public DeviceController(IDeviceService deviceService, IUserService userService, IDeviceRepository deviceRepository)
+		private readonly IUserService _userService;
+        public DeviceController(IDeviceService deviceService, IUserService userService)
 		{
 			_deviceService = deviceService;
 			_userService = userService;
-			_deviceRepository = deviceRepository;
 		}
 
-		[HttpGet("{id}")]
-		public async Task<ActionResult<Device>> GetDevice(Guid id)
-		{
-            try
-            {
-                var device = await _deviceService.GetDeviceById(id);
-
-                return Ok(device);
-            }
-            catch (ArgumentNullException ex)
-            {
-                throw new ArgumentException(ex.Message);
-            }
-        }
-
-		[HttpGet("devices")]
-		public async Task<IActionResult> GetAllDevices()
-		{
-            try
-            {
-                var devices = await _deviceService.GetAllDevices();
-                if (devices == null)
-                {
-                    return BadRequest("Devices not found");
-                }
-
-                return Ok(devices);
-            }
-            catch (ArgumentNullException ex)
-            {
-                throw new ArgumentException(ex.Message);
-            }
-        }
-
-        [HttpPost("update{id}")]
+        [HttpPost("update/{id}")]
         public async Task<IActionResult> UpdateDevice(Guid id,[FromBody] UpdateDeviceDto updateDeviceDto)
         {
             try
@@ -87,116 +52,148 @@ namespace prosumerAppBack.Controllers
         [HttpGet("devices/{userID}")]
         public IActionResult GetDevicesForUser(Guid userID)
         {
-	        var devices = _deviceService.GetDevicesForUser(userID);
+            try
+            {
+                var devices = _deviceService.GetDevicesForUser(userID);
 
-	        if (devices == null)
-	        {
-		        return NotFound();
-	        }
-
-	        return Ok(devices);
+                return Ok(devices);
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
         }
         [HttpGet("devices/info")]
         public IActionResult GetDevicesInfoForUser()
         {
-	        var devices = _deviceRepository.GetDevicesInfoForUser(_userService.GetID().Value);
-			
-	        if (devices == null)
-	        {
-		        return NotFound();
-	        }
+            try
+            {
+                var devices = _deviceService.GetDevicesInfoForUser(_userService.GetID().Value);
 
-	        return Ok(devices);
+                return Ok(devices);
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
+        }
+        
+        [HttpGet("devices/info/user/{id}")]
+        public IActionResult GetDevicesInfoForUser(Guid id)
+        {
+            try
+            {
+                var devices = _deviceService.GetDeviceInfoForUser(id);
+                return Ok(devices.Result);
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
         }
         
         [HttpGet("devices/info/{id}")]
-        public IActionResult GetDevicesInfoForUser(Guid id)
+        public IActionResult GetDevicesInfo(Guid id)
         {
-	        var devices = _deviceRepository.GetDeviceInfoForUser(_userService.GetID().Value, id);
-			
-	        if (devices == null)
-	        {
-		        return NotFound();
-	        }
-
-	        return Ok(devices);
+            try
+            {
+                var device = _deviceService.GetDeviceInfoForDevice(id);
+                return Ok(device.Result);
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
+            
         }
         
         [HttpGet("groups")]
         public IActionResult GetGroups()
         {
-	        var groups = _deviceRepository.GetDeviceGroups();
+            try
+            {
+                var groups = _deviceService.GetDeviceGroups();
 
-	        if (groups == null)
-	        {
-		        return NotFound();
-	        }
-
-	        return Ok(groups);
+                return Ok(groups);
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
         }
         [HttpGet("manufacturers")]
         public IActionResult GetManufacturers()
-        {
-	        var manufacturers = _deviceRepository.GetDeviceManufacturers();
+        {	        
+            try
+            {
+                var manufacturers = _deviceService.GetDeviceManufacturers();
 
-	        if (manufacturers == null)
-	        {
-		        return NotFound();
-	        }
-
-	        return Ok(manufacturers);
+                return Ok(manufacturers);
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
         }
         
         [HttpGet("manufacturers/{groupID}")]
         public IActionResult GetDeviceManufacturersBasedOnGroup(Guid groupID)
         {
-	        var manufacturers = _deviceRepository.GetManufacturersBasedOnGroup(groupID);
+            try
+            {
+                var manufacturers = _deviceService.GetManufacturersBasedOnGroup(groupID);
 
-	        if (manufacturers == null)
-	        {
-		        return NotFound();
-	        }
-
-	        return Ok(manufacturers);
+                return Ok(manufacturers);
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
         }
         
         [HttpGet("manufacturer/{manID}")]
         public IActionResult GetDevicesBasedOnManufacturer(Guid manID)
         {
-	        var manufacturers = _deviceRepository.GetDevicesBasedOnManufacturer(manID);
+            try
+            {
+                var manufacturers = _deviceService.GetDevicesBasedOnManufacturer(manID);
 
-	        if (manufacturers == null)
-	        {
-		        return NotFound();
-	        }
-
-	        return Ok(manufacturers);
+                return Ok(manufacturers);
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
         }
         
         [HttpGet("groups/{groupID}")]
         public IActionResult GetDeviceTypesGroup(Guid groupID)
         {
-	        var groups = _deviceRepository.GetDevicesBasedOnGroup(groupID);
+            try
+            {
+                var groups = _deviceService.GetDevicesBasedOnGroup(groupID);
 
-	        if (groups == null)
-	        {
-		        return NotFound();
-	        }
-
-	        return Ok(groups);
+                return Ok(groups);
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
         }
         
         [HttpGet("{groupID}/{manufID}")]
         public IActionResult GetDeviceTypesGroup(Guid groupID,Guid manufID)
         {
-	        var list = _deviceRepository.GetDevicesBasedOnManufacturerAndGroup(manufID, groupID);
+            try
+            {
+                var list = _deviceService.GetDevicesBasedOnManufacturerAndGroup(manufID, groupID);
 
-	        if (list == null)
-	        {
-		        return NotFound();
-	        }
-
-	        return Ok(list);
+                return Ok(list);
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
         }
         
 	}

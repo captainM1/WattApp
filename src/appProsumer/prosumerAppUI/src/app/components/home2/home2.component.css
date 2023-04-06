@@ -2,7 +2,75 @@
   font-family: regular;
   src: url(../../../assets/fonts/Inter-Regular.ttf);
 }
-@media(max-width: 480px) {
+
+@media (max-width: 280px)
+{
+  .mobile{
+    display: contents;
+}
+.desktop{
+    display: none;
+}
+.container
+{
+  margin-top: 50px;
+}
+
+
+label
+{
+  font-size: 60%;
+  font-weight: bold;
+  width: 100%;
+  margin-left: 15%;
+  padding-bottom: 10px;
+}
+
+#kolone
+{
+  margin-right: 20px;
+  width: 90%;
+  margin-left: 20px;
+  margin-bottom: 20px;
+}
+
+#prvi
+{
+  background-color: white;
+  border-radius: 10px;
+  margin-top: 10px;
+  filter:drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
+  color: orange;
+}
+
+#drugi
+{
+  background-color: white;
+  border-radius: 10px;
+  margin-top: 10px;
+  filter:drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
+  color: #026670;
+}
+
+#treci
+{
+  background-color: white;
+  border-radius: 10px;
+  margin-top: 10px;
+  filter:drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
+  color: red;
+}
+
+img
+{
+  width: 25%;
+  padding-top: 10px;
+  padding-left: 15px;
+  padding-bottom: 10px;
+}
+}
+
+@media(min-width: 281px) and (max-width: 480px) {
   .mobile{
       display: contents;
   }
@@ -11,14 +79,9 @@
   }
   .container
   {
-    margin-top: 20px;
+    margin-top: 50px;
   }
 
-  img
-  {
-    width: 15%;
-    padding: 8px;
-  }
 
   label
   {
@@ -64,9 +127,17 @@
     color: red;
   }
 
+  img
+  {
+    width: 25%;
+    padding-top: 10px;
+    padding-left: 15px;
+    padding-bottom: 10px;
+  }
+
 }
 
-@media(min-width: 1025px){
+@media(min-width: 1024px){
   .mobile{
       display: none;
   }
@@ -81,7 +152,7 @@
   #kolone
   {
     float:right;
-    margin-right: 150px;
+    margin-right: 50px;
     width: 35%;
     margin-top: 40px;
   }
@@ -124,9 +195,10 @@
 
   img
   {
-    width: 15%;
+    width: 25%;
     padding-top: 10px;
     padding-left: 15px;
+    padding-bottom: 10px;
   }
 
 
@@ -134,7 +206,7 @@
 }
 
 
-@media(min-width: 481px) and (max-width: 1024px){
+@media(min-width: 481px) and (max-width: 1023px){
   .mobile{
       display: none;
   }
@@ -151,7 +223,7 @@
     float:right;
     width: 40%;
     margin-top: 40px;
-    margin-right: 10px;
+    margin-right: -30px;
   }
 
   label
@@ -193,9 +265,10 @@
 
   img
   {
-    width: 15%;
+    width: 25%;
     padding-top: 10px;
     padding-left: 5px;
+    padding-bottom: 10px;
   }
 
 
