@@ -195,7 +195,37 @@ namespace prosumerAppBack.Controllers
                 throw new ArgumentException(ex.Message);
             }
         }
-        
-	}
+
+        [HttpPost("add-rule/{id}")]
+        public async Task<IActionResult> AddDeviceRule(Guid id, [FromBody] DeviceRule deviceRule)
+        {
+            try
+            {
+                var check = await _deviceService.addDeviceRule(id, deviceRule);
+
+                return Ok(new { message = "Device rule added" });
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
+        }
+
+        [HttpPost("update-rule/{id}")]
+        public async Task<IActionResult> updateDeviceRule(Guid id, [FromBody] DeviceRule deviceRule)
+        {
+            try
+            {
+                var check = await _deviceService.updateDeviceRule(id, deviceRule);
+
+                return Ok(new { message = "Device rule added" });
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
+        }
+
+    }
 }
 

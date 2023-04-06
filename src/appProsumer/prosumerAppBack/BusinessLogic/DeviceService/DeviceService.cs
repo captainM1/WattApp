@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using prosumerAppBack.DataAccess;
 using prosumerAppBack.Models;
 using prosumerAppBack.Models.Device;
@@ -140,6 +141,34 @@ public class DeviceService:IDeviceService
         if (check == null)
         {
             throw new NotFoundException("No device with given ID");
+        }
+        return check;
+    }
+
+    public Task<DeviceRule> addDeviceRule(Guid id, [FromBody] DeviceRule deviceRule)
+    {
+        if (deviceRule == null)
+        {
+            throw new NullReferenceException("Device rule can't be null");
+        }
+        var check = _repository.AddDeviceRule(id, deviceRule);
+        if (check == null)
+        {
+            throw new NotFoundException("Device rule not added");
+        }
+        return check;
+    }
+
+    public Task<DeviceRule> updateDeviceRule(Guid id, [FromBody] DeviceRule deviceRule)
+    {
+        if (deviceRule == null)
+        {
+            throw new NullReferenceException("Device rule can't be null");
+        }
+        var check = _repository.UpdateDeviceRule(id, deviceRule);
+        if (check == null)
+        {
+            throw new NotFoundException("Device rule not updated");
         }
         return check;
     }

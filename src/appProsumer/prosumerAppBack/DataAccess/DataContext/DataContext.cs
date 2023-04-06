@@ -18,6 +18,7 @@ namespace prosumerAppBack.DataAccess
         public DbSet<DeviceType> DeviceTypes { get; set; }
         public DbSet<DeviceGroup> DeviceGroups { get; set; }
         public DbSet<DeviceManufacturers> DeviceManufacturers { get; set; }
+        public DbSet<DeviceRule> DeviceRules { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

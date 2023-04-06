@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 using prosumerAppBack.BusinessLogic;
 using prosumerAppBack.Models;
@@ -145,6 +146,41 @@ namespace prosumerAppBack.DataAccess
                     manufacturerName = d.DeviceType.Manufacturer.Name
                 })
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<DeviceRule> AddDeviceRule(Guid id, [FromBody] DeviceRule deviceRule)
+        {
+            var newRule = new DeviceRule
+            {
+                DeviceID = deviceRule.DeviceID,
+                TurnOn = deviceRule.TurnOn,
+                TurnOnStatus = deviceRule.TurnOnStatus,
+                TurnOff = deviceRule.TurnOff,
+                TurnOffStatus = deviceRule.TurnOffStatus,
+                TurnOnEvery = deviceRule.TurnOnEvery,
+                TurnOnEveryStatus = deviceRule.TurnOnEveryStatus,
+            };
+
+            _dbContext.DeviceRules.Add(newRule);
+            await _dbContext.SaveChangesAsync();
+            return newRule;
+        }
+
+        public async Task<DeviceRule> UpdateDeviceRule(Guid id, [FromBody] DeviceRule deviceRule)
+        {
+            var deviceRuleToBeUpdated = await _dbContext.DeviceRules.FirstOrDefaultAsync(d => d.DeviceID == id);
+
+            deviceRuleToBeUpdated.TurnOn = deviceRule.TurnOn;
+            deviceRuleToBeUpdated.TurnOnStatus = deviceRule.TurnOnStatus;
+            deviceRuleToBeUpdated.TurnOff = deviceRule.TurnOff;
+            deviceRuleToBeUpdated.TurnOffStatus = deviceRule.TurnOffStatus;
+            deviceRuleToBeUpdated.TurnOnEvery = deviceRule.TurnOnEvery;
+            deviceRuleToBeUpdated.TurnOnEveryStatus = deviceRule.TurnOnEveryStatus;
+
+            _dbContext.DeviceRules.Update(deviceRuleToBeUpdated);
+            await _dbContext.SaveChangesAsync();
+
+            return deviceRuleToBeUpdated;
         }
     }
 

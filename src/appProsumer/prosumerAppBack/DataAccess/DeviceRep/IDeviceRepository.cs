@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using prosumerAppBack.DataAccess;
 using prosumerAppBack.Models;
 using prosumerAppBack.Models.Device;
@@ -28,6 +29,9 @@ namespace prosumerAppBack.BusinessLogic
         public Task<List<DeviceInfo>> GetDeviceInfoForUser(Guid userID);
         
         public Task<DeviceInfo> GetDeviceInfoForDevice(Guid deviceID);
-	}
+        Task<DeviceRule> UpdateDeviceRule(Guid id, [FromBody] DeviceRule deviceRule);
+        Task<DeviceRule> AddDeviceRule(Guid id, [FromBody] DeviceRule deviceRule);
+
+    }
 }
 
