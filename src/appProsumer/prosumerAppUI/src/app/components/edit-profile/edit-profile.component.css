@@ -23,7 +23,7 @@ border-radius: 10px; */
   overflow-x: none;
 }
   .continer{
-    margin: 0;
+    margin: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -38,7 +38,7 @@ border-radius: 10px; */
   }
 
   #edit-profile{
-    margin-top: 50px;
+    margin-top: 70px;
     border-radius: 5px;
     background-color: #FFFFFF;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
@@ -242,7 +242,7 @@ border-radius: 10px; */
     align-items: center;
     height: 100vh;
     background-color: #026670;
-    width: 100%;
+    width: 90%;
   }
 
   .col-sm-6{
@@ -348,7 +348,8 @@ border-radius: 10px; */
     background-color: #EDEAE5;
     margin: 0;
     margin-top: 5px;
-    padding-top:10px;
+    
+    margin-top: 10px;padding-bottom: 20px;padding-top: 20px;
   }
   #col-img-btn{
     display: flex;
@@ -399,6 +400,10 @@ border-radius: 10px; */
     align-content: center;
     justify-content: center;
     padding-bottom: 15px;}
+
+    #top{
+     margin-left: 50px;
+    }
 }
 
 
