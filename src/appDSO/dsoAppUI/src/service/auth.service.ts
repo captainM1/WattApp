@@ -29,9 +29,6 @@ export class AuthService {
   getCoordsByUserID(id : string):Observable<any>{
     return this.http.get<any>(environment.apiUrl + "/api/User/coordinates/"+id);
   }
-  // getDeviceData(){
-  //   return this.http.get<any>(`${environment.apiUrl}/api/Device/devices/info`, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
-  // }
 
 
   getDevices(userID: string):Observable<Info>{
@@ -48,23 +45,7 @@ export class AuthService {
 
   getDeviceGroup():Observable<any>{
     return this.http.get<any>(environment.apiUrl + "/api/Device/groups");
-    // [
-    //   {
-    //     "id": "77cbc929-1cf2-4750-900a-164de4abe28b",
-    //     "name": "Consumer",
-    //     "deviceTypes": null
-    //   },
-    //   {
-    //     "id": "18f30035-59de-474f-b9db-987476de551f",
-    //     "name": "Producer",
-    //     "deviceTypes": null
-    //   },
-    //   {
-    //     "id": "b17c9155-7e6f-4d37-8a86-ea1abb327bb2",
-    //     "name": "Storage",
-    //     "deviceTypes": null
-    //   }
-    // ]
+    
   }
 
   getDeviceManifactureByGroup(groupID : string):Observable<any>{
@@ -84,4 +65,23 @@ export class AuthService {
   }
 
 
+  getWeather():Observable<any>{
+    return this.http.get<any>('https://api.openweathermap.org/data/2.5/weather?q=Kragujevac&APPID=5aa0bb66ef67e76c36269e8d98cbc320');
+  }
+
+  getUserNumber(){
+    return this.http.get(environment.apiUrl+'/api/User/userNumber');
+  }
+
+  getAllUserInfo(){
+    return this.http.get(environment.apiUrl + '/api/User/allUserInfo')
+  }
+
+  getDeviceInfoUserByID(userID : any){
+    return this.http.get(environment.apiUrl + '/api/Device/devices/info/user/'+userID);
+  }
+
+  getPowerUsageForDeviceByID(deviceID: any){
+    return this.http.get(environment.apiUrl + '/api/PowerUsage/power-usage/current/'+deviceID);
+  }
 }

@@ -15,7 +15,8 @@ export interface deviceGroupManifacturers{
     manifacturerID: string,
     manifacturer: string,
     wattage: number,
-    devices: string
+    devices: string,
+    typeOfDevice:string
 }
 export interface labProducers{
     name: string,

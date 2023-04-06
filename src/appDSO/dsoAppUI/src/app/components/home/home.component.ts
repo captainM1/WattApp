@@ -3,6 +3,7 @@ import { deviceGroup, deviceGroupManifacturers, deviceManifacturers } from 'mode
 import { AuthService } from 'service/auth.service';
 import { Chart, elements } from 'chart.js';
 import { User } from 'models/User';
+import { animation } from '@angular/animations';
 
 @Component({
   selector: 'app-home',
@@ -48,14 +49,18 @@ export class HomeComponent implements OnInit, AfterViewInit{
 	
 	@ViewChild('myChart') myChart!: ElementRef;
 	@ViewChild('myChartUsers') myChartUsers!:ElementRef;
-	@ViewChild('myChartProsumers') myChartProsumers!: ElementRef;
-	@ViewChild('myChartConsumers') myChartConsumers!: ElementRef;
-	@ViewChild('myChartStorage') myChartStorage!: ElementRef;
 	@ViewChild('myChartForEveryTypeOfDevice') myChartForEveryTypeOfDevice!: ElementRef;
+	// @ViewChild('myChartProsumers') myChartProsumers!: ElementRef;
+
+	
 	
 	ngAfterViewInit(): void {
-		this.giveMeChartForUsers();
 		this.createMeChartForEveryDevice();
+		this.getNumberOfUsers();
+    	this.createMeChartForEveryDevice();
+    	setTimeout(() => {
+        	this.giveMeChartForUsers();
+    	}, 0);
 	}
 							
 							
@@ -64,26 +69,32 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		
 	ngOnInit(): void {
 		this.getDeviceGroup();
-		this.giveMeAllUsers();
+		this.getNumberOfUsers();
 		this.createMeChartForEveryDevice();
-		// this.giveMeChartForProducers();
-		// this.giveMeChartForConsumers();
-		// this.giveMeChartForStorages();
+		this.getAllUserInfo();
+		
+		
 	}
 	
-	// onOptionChange(event: Event){
-	// 	this.selectOption = (event.target as HTMLSelectElement).value;
-	// 	if (this.selectOption === 'prosumer') {
-	// 		this.giveMeChartForProducers();
-	// 	  } else if (this.selectOption === 'consumer') {
-	// 		this.giveMeChartForConsumers();
-	// 	  } else if (this.selectOption === 'storage') {
-	// 		this.giveMeChartForStorages();
-	// 	}
-	// }
+	getNumberOfUsers(){
+		this.auth.getUserNumber().subscribe(
+			(response : any) => {
+				this.totalUsers = response;
+			}
+		)
+	}
+
+	getAllUserInfo(){
+		this.auth.getAllUserInfo().subscribe(
+			(response : any)=>{
+				this.User = response;
+				console.log("RES",response);
+				console.log("USER",this.User);
+			}
+		)
+	}
 	
 	getDeviceGroup(){
-		
 		this.auth.getDeviceGroup().subscribe(
 			(response : any)=>{
 				this.deviceGroup = response;
@@ -111,11 +122,10 @@ export class HomeComponent implements OnInit, AfterViewInit{
 							this.labConsumers = [...new Set(this.consumers.map(element => element.name))];
 							this.labStorages = [...new Set(this.storage.map(element => element.name))];
 							
-							// this.giveMeChartForProducers();
-							// this.giveMeChartForConsumers();
-							// this.giveMeChartForStorages();
 							this.createMeChartForEveryDevice();
-							
+
+							this.getNumberOfUsers();
+							this.giveMeChartForUsers();
 						}
 					 )
 					}
@@ -147,126 +157,34 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		});
 	}
 
-	giveMeAllUsers(){
-		this.auth.getCoords().subscribe(
-			(response:any)=>{
-				// ova funkcionalnost ne prikazuje length - u table.component postoji prikaz...
-				this.User = response;
-				this.totalUsers = this.User.length
-			}
-		)
-	}
+	
 
 	giveMeChartForUsers(){
-		this.giveMeAllUsers();
+		const tot = this.totalUsers;
+		console.log(tot);
 		this.chart1 = new Chart(this.myChartUsers.nativeElement, {
 			type: 'doughnut',
 			data: {
 				labels: ['Users'],
 				datasets: [{
-				data: [this.totalUsers, 20-this.totalUsers],
+				data: [this.totalUsers, 100-this.totalUsers],
 				backgroundColor: [
-					
 					'rgb(241, 143, 1)',
-					'rgba(1, 2, 3, 1)'
+					'rgb(255, 255, 255)'
 				],
 				borderWidth: 0
 				}]
 			},
 			options: {
-				cutout: '50%',
-      			responsive: true,
+				cutout:'60',
+				aspectRatio:30,
+				responsive: true,
       			maintainAspectRatio: false,
-				 
 			}
 		});
 	}
 
-	// giveMeChartForProducers(){
-	// 	const data: number[] = []; 
-	// 	const labels = this.labProducers;
-	// 	this.producers.forEach(element => {
-	// 		const index = labels.indexOf(element.name);
-	// 		data[index] = data[index] ? data[index] + 1 : 1; 
-	// 	});
-	// 	this.chart2 = new Chart(this.myChartProsumers.nativeElement, {
-	// 	type:'bar',
-	// 	data : {
-	// 		labels: labels,
-	// 	datasets: [{
-	// 		label: 'Number of Appliances',
-	// 		backgroundColor: "rgb(241, 143, 1)",
-    //   		borderColor: "rgb(241, 143, 1)",
-    //   		borderWidth: 1,
-	// 		data:data}
-	// 		]},
-	// 		options: {
-	// 			scales: {
-	// 			  y: {
-	// 				beginAtZero: true
-	// 			  }
-	// 			}
-	// 		  }
-	// 		})
-	// 	}
-
-	// 	giveMeChartForConsumers(){
-	// 		const data: number[] = []; 
-	// 		const labels = this.labConsumers;
-	// 		this.consumers.forEach(element => {
-	// 			const index = labels.indexOf(element.name); 
-	// 			data[index] = data[index] ? data[index] + 1 : 1; 
-	// 		});
-	// 		this.chart3 = new Chart(this.myChartConsumers.nativeElement, {
-	// 		type:'bar',
-	// 		data : {
-	// 			labels: labels,
-	// 		datasets: [{
-	// 			label: 'Number of Appliances',
-	// 			backgroundColor: "rgb(241, 143, 1)",
-	// 			  borderColor: "rgb(241, 143, 1)",
-	// 			  borderWidth: 1,
-	// 			data:data}
-	// 			]},
-	// 			options: {
-	// 				scales: {
-	// 				  y: {
-	// 					beginAtZero: true
-	// 				  }
-	// 				}
-	// 			  }
-	// 			})
-	// 		}
-
-	// 		giveMeChartForStorages(){
-	// 			const data: number[] = []; 
-	// 			const labels = this.labStorages;
-	// 			console.log(labels)
-	// 			this.storage.forEach(element => {
-	// 				const index = labels.indexOf(element.name); 
-	// 				data[index] = data[index] ? data[index] + 1 : 1; 
-	// 			});
-				
-	// 			this.chart4 = new Chart(this.myChartStorage.nativeElement, {
-	// 			type:'bar',
-	// 			data : {
-	// 				labels: labels,
-	// 			datasets: [{
-	// 				label: 'Number of Appliances',
-	// 				backgroundColor: "rgb(241, 143, 1)",
-	// 				  borderColor: "rgb(241, 143, 1)",
-	// 				  borderWidth: 1,
-	// 				data:data}
-	// 				]},
-	// 				options: {
-	// 					scales: {
-	// 					  y: {
-	// 						beginAtZero: true
-	// 					  }
-	// 					}
-	// 				  }
-	// 				})
-	// 			}
+	
 
 	createMeChartForEveryDevice(){
 		const dataProducers: number[] = [];
@@ -319,21 +237,23 @@ export class HomeComponent implements OnInit, AfterViewInit{
             borderWidth: 1,
             data: dataStorages
         }
-    ]
-};
+    	]
+	};
 
-this.chart = new Chart(this.myChartForEveryTypeOfDevice.nativeElement, {
-    type: 'bar',
-    data: chartData,
-    options: {
-        scales: {
-            y: {
-                beginAtZero: true
-            }
-        }
-    }
-});
-}
+		this.chart = new Chart(this.myChartForEveryTypeOfDevice.nativeElement, {
+			type: 'bar',
+			data: chartData,
+			options: {
+				scales: {
+					y: {
+						beginAtZero: true
+					}
+				}
+			}
+		});
+		}
+
+		
 }
 
                

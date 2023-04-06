@@ -24,6 +24,7 @@
 h1{
     color: #026670;
     font-weight: 500;
+    margin-top: 10px;
 }
 .p{
     color:#6f42c1 ;
@@ -32,4 +33,12 @@ h1{
 .g{
     color:#20c997;
     font-weight: 400;
+}
+.col{
+    background-color: rgba(255, 255, 255, 0.64) ;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    padding-bottom:15px;
+    margin-right: 20px;
+    margin-left: 20px;
 }

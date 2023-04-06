@@ -53,7 +53,11 @@ export class TableComponent implements OnInit {
   private lengthOfUsers!: number;
   // tableData: any;
   
-  powerUsage!:number;
+  powerUsage!:string;
+  deviceGroup!: any[];
+  producers!: any[];
+  consumers!: any[];
+  storage!: any[];
 
   constructor(
     private auth : AuthService,
@@ -66,6 +70,8 @@ export class TableComponent implements OnInit {
     this.showMeUsers();
     this.onInitMap();
     this.showCoordsForEveryUser();
+    this.getDeviceGroup();
+    
     
   }
   
@@ -79,7 +85,15 @@ export class TableComponent implements OnInit {
       (response : any)=> {
         this.allUsers = response;
         this.filtered = response;
-        console.log(response.length);
+        for(let user of this.allUsers){
+          this.auth.getUserPowerUsageByID(user.id).subscribe(
+            (response: any)=>{
+              user.powerUsage = (response/10).toFixed(2);
+              console.log("USER.powerUSEGAE",user.powerUsage)
+            }
+          )
+        }
+        
       }
     );
   }
@@ -136,7 +150,6 @@ export class TableComponent implements OnInit {
       (response : any) =>{
         this.lengthOfUsers = response['length'];
         this.userCoords = response;
-        console.log(response.length);
         for(const user of this.userCoords){
           for(const us of this.allUsers){
             if(user.address['address'] === us.address){
@@ -154,13 +167,12 @@ export class TableComponent implements OnInit {
     });
   }
 
-  
+ 
  
   public showMeOnMap(id : string){
     
     this.showAllUsersOnMap = false;
-    console.log("ShowMeOnMap", this.showAllUsersOnMap);
-    
+
     for(const mark of this.markers){
       this.map.removeLayer(mark);
     }
@@ -168,7 +180,12 @@ export class TableComponent implements OnInit {
     this.showMeDevices(id);
     this.auth.getUserPowerUsageByID(id).subscribe(
       (response : any) =>{
-        this.powerUsage = response;
+        for(let user of this.allUsers){
+          if(user.id === id){
+            user.powerUsage = (response/10).toFixed(2);
+          }
+        }
+       
         }
       )
     
@@ -197,23 +214,71 @@ export class TableComponent implements OnInit {
   
 
   showMeDevices(id : string){
+    this.getDeviceGroup();
     this.toggleTable = true;
-    // vraca sve devices za user-a
-    this.auth.getDevices(id).subscribe(
+    this.auth.getDeviceInfoUserByID(id).subscribe(
       (response : any) => {
+
         this.allUserDevices = response;
-        console.log(response)
+        for(let us of this.allUserDevices){
+          for(let p of this.producers){
+            for(let c of this.consumers){
+              for(let s of this.storage){
+                if(us.deviceTypeName === p['name'])
+                {
+                  us.typeOfDevice = 'Producer';
+                  
+                }
+                if(us.deviceTypeName === c['name']){
+                  us.typeOfDevice = "Consumer";
+                }
+                if(us.deviceTypeName === s['name']){
+                  us.typeOfDevice = 'Storage';
+                }
+              }
+          }
+          }
+        }
+        
       }
     )
   }
+
+  
+    getDeviceGroup(){
+      this.auth.getDeviceGroup().subscribe(
+        (response : any)=>{
+          this.deviceGroup = response;
+          for(let group of this.deviceGroup){
+             this.auth.getDeviceGroupID(group.id).subscribe(
+              (response:any)=>{
+                if(group.id === "77cbc929-1cf2-4750-900a-164de4abe28b")
+                {
+                  this.producers = response;
+                  
+                  
+                }else if(group.id === "18f30035-59de-474f-b9db-987476de551f")
+                {
+                  this.consumers = response;
+                }
+                else if(group.id === "b17c9155-7e6f-4d37-8a86-ea1abb327bb2")
+                {
+                  this.storage = response;
+                }
+              }
+      )}
+          }
+        )}
+      
 
   toggleColumn(){
     this.toggleTable = !this.toggleTable;
   }
     
-
+  
   
 
+  
   
  
  

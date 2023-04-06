@@ -5,8 +5,12 @@ import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { NavComponent } from './components/nav/nav.component'
 import { TableComponent } from './components/table/table.component';
+
+import { WeatherComponent } from './components/weather/weather.component';
+
 import { RequirementsComponent } from './components/requirements/requirements.component';
 import { SignupComponent } from './components/signup/signup.component';
+
 
 
 
@@ -30,9 +34,15 @@ const routes: Routes = [
     path: 'table',component: TableComponent
   },
   {
+
+    path:'weather', component:WeatherComponent
+  },
+  {
+
     path: 'requirements', component: RequirementsComponent
   }
-];
+]
+
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
