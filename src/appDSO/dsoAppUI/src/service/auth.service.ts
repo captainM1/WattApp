@@ -65,8 +65,8 @@ export class AuthService {
   }
 
 
-  getWeather(){
-    return this.http.get('https://api.openweathermap.org/data/2.5/weather?lat=44.01667&lon=20.91667&appid=5aa0bb66ef67e76c36269e8d98cbc320')
+  getWeather():Observable<any>{
+    return this.http.get<any>('https://api.openweathermap.org/data/2.5/weather?q=Kragujevac&APPID=5aa0bb66ef67e76c36269e8d98cbc320');
   }
 
   getUserNumber(){

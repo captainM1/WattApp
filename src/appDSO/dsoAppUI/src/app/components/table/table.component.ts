@@ -71,7 +71,7 @@ export class TableComponent implements OnInit {
     this.onInitMap();
     this.showCoordsForEveryUser();
     this.getDeviceGroup();
-    this.updatePoweUsageForUsers();
+    
     
   }
   
@@ -216,7 +216,6 @@ export class TableComponent implements OnInit {
   showMeDevices(id : string){
     this.getDeviceGroup();
     this.toggleTable = true;
-    
     this.auth.getDeviceInfoUserByID(id).subscribe(
       (response : any) => {
 
@@ -276,11 +275,7 @@ export class TableComponent implements OnInit {
     this.toggleTable = !this.toggleTable;
   }
     
-  public updatePoweUsageForUsers(){
-    
-    
-    
-  }
+  
   
 
   
