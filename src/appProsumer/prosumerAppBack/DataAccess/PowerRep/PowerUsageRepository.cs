@@ -272,4 +272,56 @@ public class PowerUsageRepository:IPowerUsageRepository
         return result;
     }
 
+    public Dictionary<DateTime, double> GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction)
+    {
+        var end = DateTime.UtcNow;
+        var start = end.AddDays(direction * -1);
+
+        var powerUsages = mongoCollection.AsQueryable()
+            .Where(p => deviceID.ToString().ToUpper().Contains(p.ID.ToString()))
+            .ToList();
+
+        var powerUsageDictionary = new Dictionary<DateTime,double>();
+
+        for (int i = 0; i < 24; i++)
+        {
+            var hourStart = end.AddHours(direction * i * -1);
+            var hourEnd = end.AddHours(direction * (i+1) * -1);
+
+            var powerUsage = powerUsages
+                .SelectMany(p => p.TimestampPowerPairs)
+                .Where(tp => tp.Timestamp >= hourStart && tp.Timestamp <= hourEnd)
+                .Sum(tp => tp.PowerUsage);
+            powerUsageDictionary.Add(hourStart, powerUsage);
+        }
+
+        return powerUsageDictionary;
+    }
+
+    public Dictionary<DateTime, double> GetPowerUsageForDeviceNext24Hours(Guid deviceID)
+    {
+        var end = DateTime.UtcNow;
+        var start = end;
+
+        var powerUsages = mongoCollection.AsQueryable()
+            .Where(p => deviceID.ToString().ToUpper().Contains(p.ID.ToString()))
+            .ToList();
+
+        var powerUsageDictionary = new Dictionary<DateTime, double>();
+
+        for (int i = 0; i < 24; i++)
+        {
+            var hourStart = start.AddHours(i);
+            var hourEnd = hourStart.AddHours(1);
+            var powerUsage = powerUsages
+                .SelectMany(p => p.TimestampPowerPairs)
+                .Where(tp => tp.Timestamp >= hourStart && tp.Timestamp < hourEnd)
+                .Sum(tp => tp.PowerUsage);
+            powerUsageDictionary.Add(hourStart, powerUsage);
+        }
+
+        return powerUsageDictionary;
+    }
+
+
 }
