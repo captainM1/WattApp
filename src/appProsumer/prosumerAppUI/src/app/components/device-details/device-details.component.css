@@ -29,6 +29,11 @@
         background-color: white;
         margin-bottom:10%;
     }
+
+    .outer{
+        margin-bottom: 10%;
+        margin-top:70px;
+    }
     
     h3{
         color: #026670;
@@ -36,21 +41,16 @@
         margin-top: 25px;
     }
 
-    .forma{
-        background-color:white;
-        filter:drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
-        width: 97%;
-    }
-
     .simple{
         margin-top: 10px;
         margin-bottom: 20px;
         width: 100%;
         text-align: center;
+        font-size: 12px;
     }
 
-    .custom-select div{
-        padding-top: none;
+    .simple mat-icon{
+        font-size: 16px;
     }
 
     mat-icon{
@@ -69,10 +69,7 @@
 
     .outer{
         margin-bottom: 10%;
-    }
-
-    .inputi div input{
-        border: 2px solid #026670;
+        margin-top:70px;
     }
 
     h3{
@@ -81,26 +78,18 @@
         margin-top: 25px;
     }
 
-    .forma{
-        background-color:white;
-        filter:drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
-        width: 97%;
-    }
-
     .simple{
         margin-top: 10px;
         margin-bottom: 20px;
         width: 100%;
         text-align: center;
+        font-size: 9px;
     }
 
     .simple mat-icon{
         font-size: 18px;
     }
 
-    .custom-select div{
-        padding-top: none;
-    }
 
     mat-icon{
         color:#026670;
@@ -112,7 +101,6 @@
 {
     .container{
         width: 80%;
-        background-color: #026670;
     }
 
     .outer{ 
@@ -120,24 +108,24 @@
     }
 
     h3{
-        color:white;
+        color:#026670;
         text-transform: uppercase;
         margin: 25px 0;
-    }
-
-    .forma{
-        background-color:#EDEAE5;
-        width: 90%;
+        padding-top:15px;
     }
 
     .simple{
         margin-top: 10px;
         margin-bottom: 20px;
         text-align: center;
+        width:80%;
+        font-size:16px;
     }
-    
-    .row > .col-sm > button{
-        margin-top: 30px;
+
+    .part{
+        background-color:white;
+        border-radius: 17px;
+        filter: drop-shadow(0 4px 4px rgba(0,0,0,0.25));
     }
 
     mat-icon{
@@ -150,7 +138,6 @@
 {
     .container{
         width: 70%;
-        background-color: #026670;
     }
 
     .outer{ 
@@ -158,29 +145,31 @@
     }
 
     h3{
-        color:white;
+        color:#026670;
         text-transform: uppercase;
         margin: 25px 0;
-    }
-
-    .forma{
-        background-color:#EDEAE5;
-        width: 90%;
+        padding-top:15px;
     }
 
     .simple{
         margin-top: 30px;
         margin-bottom: 30px;
         text-align: center;
+        width:80%;
+        font-size:16px;
     }
 
-    .custom-select div{
-        margin-bottom: 20px;
+    .part{
+        background-color:white;
+        border-radius: 17px;
+        filter: drop-shadow(0 4px 4px rgba(0,0,0,0.25));
     }
 
     mat-icon{
-        color:white;
+        color:#026670;
       }
+    
+    
 }
 
 mat-toolbar {
@@ -213,7 +202,6 @@ h3{
     background-color:#026670;
     color:white;
     font-weight: bold;
-    font-size: 12px;
     border: none;
     filter:drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
     padding: 5px 5px;
