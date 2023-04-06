@@ -21,6 +21,7 @@ import { NavComponent } from './components/nav/nav.component';
 import { HomeComponent } from './components/home/home.component';
 import {MatTableModule} from '@angular/material/table';
 import { TableComponent } from './components/table/table.component';
+import { SignupComponent } from './components/signup/signup.component';
 import { FormsModule } from '@angular/forms';
 import { RequirementsComponent } from './components/requirements/requirements.component';
 
@@ -36,6 +37,7 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     NavComponent,
     HomeComponent,
     TableComponent,
+    SignupComponent,
     RequirementsComponent,
     
   ],
