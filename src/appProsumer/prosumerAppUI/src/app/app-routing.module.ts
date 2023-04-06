@@ -17,6 +17,7 @@ import { NavComponent } from './components/nav/nav.component';
 import { MyDevicesComponent } from './components/my-devices/my-devices.component';
 import { Home2Component } from './components/home2/home2.component';
 import { DeviceDetailsComponent } from './components/device-details/device-details.component';
+import { PermissionsComponent } from './components/permissions/permissions.component';
 
 
 
@@ -61,6 +62,9 @@ const routes: Routes = [
   },
   {
     path: 'device-details/:id', component: DeviceDetailsComponent
+  },
+  {
+    path: 'permissions/:id', component: PermissionsComponent
   }
 ];
 

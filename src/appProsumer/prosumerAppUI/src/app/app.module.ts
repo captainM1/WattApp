@@ -39,6 +39,7 @@ import { MobNavComponent } from './components/mob-nav/mob-nav.component';
 import { Home2Component } from './components/home2/home2.component';
 import { DeviceDetailsComponent } from './components/device-details/device-details.component';
 import { CommonModule } from '@angular/common';
+import { PermissionsComponent } from './components/permissions/permissions.component';
 
 
 @NgModule({
@@ -63,7 +64,8 @@ import { CommonModule } from '@angular/common';
     EditProfileComponent,
     MyDevicesComponent,
     Home2Component,
-    DeviceDetailsComponent
+    DeviceDetailsComponent,
+    PermissionsComponent
   ],
   imports: [
     BrowserModule,
