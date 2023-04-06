@@ -23,6 +23,7 @@
     "@types/leaflet": "^1.9.3",
     "bootstrap": "^5.2.3",
     "bootstrap-icons": "^1.10.3",
+    "chart.js": "^4.2.1",
     "font-awesome": "^4.7.0",
     "install": "^0.13.0",
     "ionic": "^4.1.2",

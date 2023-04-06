@@ -9,6 +9,7 @@ import { TableComponent } from './components/table/table.component';
 import { WeatherComponent } from './components/weather/weather.component';
 
 import { RequirementsComponent } from './components/requirements/requirements.component';
+import { SignupComponent } from './components/signup/signup.component';
 
 
 
@@ -25,6 +26,9 @@ const routes: Routes = [
   },
   {
     path: 'home', component: HomeComponent
+  },
+  {
+    path: 'signup', component: SignupComponent
   },
   {
     path: 'table',component: TableComponent
