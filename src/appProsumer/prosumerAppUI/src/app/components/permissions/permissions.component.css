@@ -113,6 +113,7 @@
 {
     .container{
         width: 80%;
+        background-color: white;
     }
 
     .outer{ 
@@ -130,8 +131,14 @@
         margin-top: 10px;
         margin-bottom: 20px;
         text-align: center;
-        width:80%;
         font-size:16px;
+    }
+    .r{
+        width:30%;
+    }
+
+    .rq{
+        width:45%;
     }
 
     .part{
@@ -150,6 +157,7 @@
 {
     .container{
         width: 70%;
+        background-color: white;
     }
 
     .outer{ 
@@ -167,10 +175,21 @@
         margin-top: 30px;
         margin-bottom: 30px;
         text-align: center;
-        width:80%;
         font-size:16px;
     }
 
+    .r{
+        width: 50%;
+    }
+
+    .rq{
+        width: 75%;
+    }
+
+    .kolona{
+        width:50%;
+        float:left;
+    }
     .part{
         background-color:white;
         border-radius: 17px;
@@ -268,6 +287,7 @@ span{
     font-size:13px;
     display: inline-block;
     text-align: center;
+    width: 100%;
 }
 
 .rule span{
