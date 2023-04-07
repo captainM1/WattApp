@@ -58,7 +58,8 @@ public class UserRepository : IUserRepository
         (salt,hash)= _passwordHasher.HashPassword(userRegisterDto.Password);
         var newUser = new User
         {
-            UserName = userRegisterDto.Username,
+            FirstName = userRegisterDto.FirstName,
+            LastName = userRegisterDto.LastName,
             PhoneNumber = userRegisterDto.PhoneNumber,
             Email = userRegisterDto.Email,
             Address = userRegisterDto.Address.Split(",")[0],
@@ -74,11 +75,23 @@ public class UserRepository : IUserRepository
         return newUser;
     }
 
-    public async Task<List<User>> GetAllUsersAsync(int pageNumber, int pageSize)
+    public async Task<List<UserDto>> GetAllUsersAsync(int pageNumber, int pageSize)
     {
         var pagedData = await _dbContext.Users
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
+            .Select(u => new UserDto {
+                ID = u.ID,
+                FirstName = u.FirstName,
+                LastName = u.LastName,
+                UserName = u.UserName,
+                PhoneNumber = u.PhoneNumber,
+                Address = u.Address,
+                City = u.City,
+                Country = u.Country,
+                Role = u.Role,
+                Email = u.Email
+            })
             .ToListAsync();
         return pagedData;
     }

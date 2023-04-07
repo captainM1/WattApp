@@ -5,8 +5,11 @@ namespace prosumerAppBack.Models;
 public class UserRegisterDto
 {
     [Required]
-    public string Username { get; set; }
-
+    public string FirstName { get; set; }
+    
+    [Required]
+    public string LastName { get; set; }
+    
     [Required]
     public string PhoneNumber { get; set; }
 
