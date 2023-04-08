@@ -87,10 +87,10 @@ img
   {
     font-size: 14px;
     font-weight: bold;
-    width: 100%;
-    margin-left: 15%;
+    padding-left: 40px;
     padding-bottom: 10px;
   }
+
 
   #kolone
   {
