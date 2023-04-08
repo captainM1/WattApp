@@ -197,11 +197,11 @@ namespace prosumerAppBack.Controllers
         }
 
         [HttpPost("add-rule/{id}")]
-        public async Task<IActionResult> AddDeviceRule(Guid id, [FromBody] DeviceRule deviceRule)
+        public async Task<IActionResult> AddDeviceRule(Guid id, [FromBody] DeviceRuleDto deviceRuleDto)
         {
             try
             {
-                var check = await _deviceService.addDeviceRule(id, deviceRule);
+                var check = await _deviceService.AddDeviceRule(id, deviceRuleDto);
 
                 return Ok(new { message = "Device rule added" });
             }
@@ -212,13 +212,43 @@ namespace prosumerAppBack.Controllers
         }
 
         [HttpPost("update-rule/{id}")]
-        public async Task<IActionResult> updateDeviceRule(Guid id, [FromBody] DeviceRule deviceRule)
+        public async Task<IActionResult> UpdateDeviceRule(Guid id, [FromBody] DeviceRuleDto deviceRuleDto)
         {
             try
             {
-                var check = await _deviceService.updateDeviceRule(id, deviceRule);
+                var check = await _deviceService.UpdateDeviceRule(id, deviceRuleDto);
 
-                return Ok(new { message = "Device rule added" });
+                return Ok(new { message = "Device rule updated" });
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
+        }
+
+        [HttpPost("add-requirement/{id}")]
+        public async Task<IActionResult> AddDeviceRequirement(Guid id, [FromBody] DeviceRequirementDto deviceRequirementDto)
+        {
+            try
+            {
+                var check = await _deviceService.AddDeviceRequirement(id, deviceRequirementDto);
+
+                return Ok(new { message = "Device requirement added" });
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
+        }
+
+        [HttpPost("update-requirement/{id}")]
+        public async Task<IActionResult> UpdateDeviceRequirement(Guid id, [FromBody] DeviceRequirementDto deviceRequirementDto)
+        {
+            try
+            {
+                var check = await _deviceService.UpdateDeviceRequirement(id, deviceRequirementDto);
+
+                return Ok(new { message = "Device requirement updated" });
             }
             catch (ArgumentNullException ex)
             {

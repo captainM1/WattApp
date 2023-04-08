@@ -145,13 +145,13 @@ public class DeviceService:IDeviceService
         return check;
     }
 
-    public Task<DeviceRule> addDeviceRule(Guid id, [FromBody] DeviceRule deviceRule)
+    public Task<DeviceRule> AddDeviceRule(Guid id, [FromBody] DeviceRuleDto deviceRuleDto)
     {
-        if (deviceRule == null)
+        if (deviceRuleDto == null)
         {
             throw new NullReferenceException("Device rule can't be null");
         }
-        var check = _repository.AddDeviceRule(id, deviceRule);
+        var check = _repository.AddDeviceRule(id, deviceRuleDto);
         if (check == null)
         {
             throw new NotFoundException("Device rule not added");
@@ -159,16 +159,44 @@ public class DeviceService:IDeviceService
         return check;
     }
 
-    public Task<DeviceRule> updateDeviceRule(Guid id, [FromBody] DeviceRule deviceRule)
+    public Task<DeviceRule> UpdateDeviceRule(Guid id, [FromBody] DeviceRuleDto deviceRuleDto)
     {
-        if (deviceRule == null)
+        if (deviceRuleDto == null)
         {
             throw new NullReferenceException("Device rule can't be null");
         }
-        var check = _repository.UpdateDeviceRule(id, deviceRule);
+        var check = _repository.UpdateDeviceRule(id, deviceRuleDto);
         if (check == null)
         {
             throw new NotFoundException("Device rule not updated");
+        }
+        return check;
+    }
+
+    public Task<DeviceRequirement> AddDeviceRequirement(Guid id, [FromBody] DeviceRequirementDto deviceRequirementDto)
+    {
+        if (deviceRequirementDto == null)
+        {
+            throw new NullReferenceException("Device requirement can't be null");
+        }
+        var check = _repository.AddDeviceRequirement(id, deviceRequirementDto);
+        if (check == null)
+        {
+            throw new NotFoundException("Device requirement not added");
+        }
+        return check;
+    }
+
+    public Task<DeviceRequirement> UpdateDeviceRequirement(Guid id, [FromBody] DeviceRequirementDto deviceRequirementDto)
+    {
+        if (deviceRequirementDto == null)
+        {
+            throw new NullReferenceException("Device requirement can't be null");
+        }
+        var check = _repository.UpdateDeviceRequirement(id, deviceRequirementDto);
+        if (check == null)
+        {
+            throw new NotFoundException("Device requirement not updated");
         }
         return check;
     }
