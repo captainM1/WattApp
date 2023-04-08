@@ -65,7 +65,7 @@ export class DeviceDetailsComponent implements OnInit, AfterViewInit {
   }
 
   deleteDevice(){
-    this.http.delete(`${environment.apiUrl}/api/Device/devices/delete/${this.deviceId}`)
+    this.http.delete(`${environment.apiUrl}/api/Device/devices/delete-device/${this.deviceId}`)
     .subscribe(
       () => {
         console.log('Device deleted successfully');
