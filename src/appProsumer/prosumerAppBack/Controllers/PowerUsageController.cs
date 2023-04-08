@@ -194,16 +194,4 @@ public class PowerUsageController : ControllerBase
         var powerUsages = _powerUsage.GetPowerUsageForDeviceNext24Hours(deviceID);
         return Ok(powerUsages);
     }
-
-    [HttpGet("power-usage/delete-device/{deviceID}")]
-    public async Task<IActionResult> DeleteDevice(Guid deviceID)
-    {
-        var action = await _powerUsage.DeleteDevice(deviceID);
-        if(!action)
-        {
-            return BadRequest("device cannot be deleted");
-        }
-
-        return Ok(new {Message = "device deleted successfully" });
-    }
 }

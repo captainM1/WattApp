@@ -28,6 +28,8 @@ namespace prosumerAppBack.BusinessLogic
         public Task<List<DeviceInfo>> GetDeviceInfoForUser(Guid userID);
         
         public Task<DeviceInfo> GetDeviceInfoForDevice(Guid deviceID);
+
+        public Task<bool> DeleteDevice(Guid deviceID);
 	}
 }
 

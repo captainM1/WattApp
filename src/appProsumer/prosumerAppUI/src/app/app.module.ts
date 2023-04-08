@@ -12,7 +12,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 
 //import {NgToastModule} from 'ng-angular-popup'
 import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -41,6 +41,7 @@ import { DeviceDetailsComponent } from './components/device-details/device-detai
 import { CommonModule } from '@angular/common';
 import { PermissionsComponent } from './components/permissions/permissions.component';
 
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 @NgModule({
   declarations: [
@@ -81,9 +82,10 @@ import { PermissionsComponent } from './components/permissions/permissions.compo
     BrowserAnimationsModule,
     ToastModule,
     MatToolbarModule,
-    CommonModule
+    CommonModule,
+    ConfirmDialogModule
   ],
-  providers: [MessageService],
+  providers: [MessageService,ConfirmationService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
