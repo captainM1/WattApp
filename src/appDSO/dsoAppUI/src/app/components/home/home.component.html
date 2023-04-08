@@ -1,34 +1,95 @@
 <app-nav></app-nav>
 <div class="outer" style="margin-top: 90px;">
 <div class="container">
-    <div class="row">
+    <!-- WEATHER -->
+            <div class="row" >
+                <h2 class="text-center" style="margin-top: 15px;margin-bottom: 10px;">Weather Details:</h2>
+                <div class="col-sm-4" style="padding-top: 20px; padding-right: 60px; padding-left: 60px;">
+                    <p class="text-left">
+                        <img src="../../../assets/icons/weather-icons/compass.png" width="20px"> Your Time Zone : {{ this.weather.timezone }}
+                    </p>
+                    <p class="text-left">
+                      <img src="../../../assets/icons/weather-icons/temperature(2).png" width="20px"> Temperature: {{ this.weather.current_weather.temperature }}
+                    </p>
+                    <p class="text-left">
+                        <img src="../../../assets/icons/weather-icons/hot.png" width="20px"> Maximal Temperature: {{ this.weather.daily.temperature_2m_max[0]}}
+                      </p>
+                </div>
+                <div class="col-sm-4" style="padding-top: 20px;margin-right: -20px; padding-top: 20px; padding-right: 60px; padding-left: 60px;">
+                    <p class="text-left">
+                        <img src="../../../assets/icons/weather-icons/cold.png" width="20px">Minimal Temperature: {{ this.weather.daily.temperature_2m_min[0]}}
+                      </p>
+                      <p class="text-left">
+                        <img src="../../../assets/icons/weather-icons/storm.png" width="20px">Wind Speed: {{ this.weather.current_weather.windspeed}}
+                      </p>
+                      <p class="text-left">
+                        <img src="../../../assets/icons/weather-icons/humidity.png" width="20px">Humidity: {{ this.weather.hourly.relativehumidity_2m[0]}}
+                      </p>
+                </div>
+                <div class="col-sm-4">
+                    <canvas #hourlyTemp style="width: 200px; height: 100px;"></canvas>
+                </div>
+            </div>
+    <!-- TOTAL DEVICES  -->
+            <div class="row">
+                <div class="col-sm-4" >
+                    <div style="width:300px; height:300px;">
+                        <h1 class = "display-2" style="text-align: center;">Total devices: {{total}}</h1>
+                        <canvas #myChart style="height: 80vh; width: 100%;"></canvas>  
+                    </div>
+                </div>
+                    <div class="col-sm-4" style="padding: 0;">
+                        <div style="width:400px; height:400px;">
+                            <h1 class = "display-2" style="text-align: center;">Number of Devices</h1>
+                        <canvas #myChartForEveryTypeOfDevice style="height: 400px; width: 384px;"></canvas>
+                        </div>
+                    </div>
+            </div>
+    <!-- POWER USAGE -->
+   <div class="row">
+    <h2 style="text-align: center;">Power Usage</h2>
+    <!-- <p>Current price of elecricity: </p>
+    <p>Price of elecricity whole year: </p> -->
+    <div class="col-sm-6">
+            <h4 style="text-align: center; font-size: 24px; font-weight: 400;  color: #026670;">Previous Month</h4>
+            <p class="text-center" style="font-size: 18px; color: #026670;"> 
+                <img src="../../../assets/icons/home/icons8-flash-on-48.png" style="width:40px; height:40px; padding-top:5px">
+                Summary of power consumtion:  {{previousMonth}}kw
+            </p>
+            <canvas #prevMonth></canvas>
+    </div>
+    
+    <div class="col-sm-6">
+        <h4 style="text-align: center; font-size: 24px; font-weight: 400;  color: #026670;">Next Month</h4>
+            <p class="text-center" style="font-size: 18px; color: #026670;"> 
+                <img src="../../../assets/icons/home/icons8-flash-on-48.png" style="width:40px; height:40px; padding-top:5px">
+                Summary of power consumtion:  {{nextMonthSummary}}kw
+            </p>
+            <canvas #nextMonthChart></canvas>
+    </div>
+   </div>
+
+   <!-- POWER USAGE FOR EACH DEVICES -->
+   <div class="row">
+    <h2 style="text-align: center;">Power Usage for Each Devices</h2>
+    <div class="col-sm-5">
         <div>
-            
-            <app-weather></app-weather>
+            <h4 style="text-align: center; font-size: 24px; font-weight: 400;  color: #026670;">Previous Month for Each Device</h4>
+        <canvas #prevEachDevice></canvas>
         </div>
     </div>
-    <div class="row" style="margin-top: 30px;">
-        <div class="col">
-            <h1 class = "display-2" style="text-align: center;">Total devices: {{total}}</h1>
-            <div>
-                <canvas #myChart style="width: 200px; height: 200px;"></canvas>  
-            </div>
-        </div>
-        <div class="col">
-            <h1 class = "display-2" style="text-align: center;">Total users: {{totalUsers}}</h1>
-            <div>
-                <canvas #myChartUsers style="width: 200px; height: 200px;" ></canvas>  
-            </div>
+    <div class="col-sm-5">
+        <div>
+            <h4 style="text-align: center; font-size: 24px; font-weight: 400;  color: #026670;">Next Month for Each Device</h4>
+        <canvas #nextEachDevice></canvas>
         </div>
     </div>
+</div>
+</div>
+        
+ 
+       
     
    
 
-    <div class="row" style="margin-top: 30px;">
-        <h1 class = "display-2" style="text-align: center;">Number of Appliances</h1>
-
-        <div style="margin-bottom: 20px;">
-            <canvas #myChartForEveryTypeOfDevice style="width: 80%;"></canvas>
-        </div>
     
-</div>

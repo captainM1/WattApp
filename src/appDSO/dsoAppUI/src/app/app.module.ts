@@ -23,9 +23,6 @@ import {MatTableModule} from '@angular/material/table';
 import { TableComponent } from './components/table/table.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { FormsModule } from '@angular/forms';
-
-import { WeatherComponent } from './components/weather/weather.component';
-
 import { RequirementsComponent } from './components/requirements/requirements.component';
 
 
@@ -41,12 +38,7 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     NavComponent,
     HomeComponent,
     TableComponent,
-
-
-    WeatherComponent,
-
     SignupComponent,
-
     RequirementsComponent,
 
     
