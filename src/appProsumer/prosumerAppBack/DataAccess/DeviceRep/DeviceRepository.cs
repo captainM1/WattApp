@@ -146,6 +146,20 @@ namespace prosumerAppBack.DataAccess
                 })
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<bool> DeleteDevice(Guid deviceID)
+        {
+            var device = _dbContext.Devices.FirstOrDefaultAsync(d => d.ID == deviceID);
+
+            if (device.Result != null)
+            {
+                _dbContext.Devices.Remove(device.Result);
+                await _dbContext.SaveChangesAsync();
+                return true;
+            }
+
+            return false;
+        }
     }
 
     public class DeviceInfo

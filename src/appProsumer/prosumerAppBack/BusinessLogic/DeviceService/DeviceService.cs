@@ -143,4 +143,15 @@ public class DeviceService:IDeviceService
         }
         return check;
     }
+    public async Task<bool> DeleteDevice(Guid deviceID)
+    {
+        try
+        {
+            return await _repository.DeleteDevice(deviceID);
+        }
+        catch(Exception ex)
+        {
+            throw new Exception("Failed to delete device: " + ex.Message);
+        }
+    }
 }

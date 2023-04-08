@@ -17,5 +17,7 @@ public interface IDeviceService
     IEnumerable<DeviceType> GetDevicesBasedOnManufacturerAndGroup(Guid maunfID, Guid groupID);
     Task<List<DeviceInfo>> GetDeviceInfoForUser(Guid userID);
     
-    public Task<DeviceInfo> GetDeviceInfoForDevice(Guid deviceID);
+    Task<DeviceInfo> GetDeviceInfoForDevice(Guid deviceID);
+
+    Task<bool> DeleteDevice(Guid deviceID);
 }

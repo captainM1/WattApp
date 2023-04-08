@@ -110,7 +110,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("users")]
-    public async Task<List<User>> GetUsers([FromQuery]int pageNumber,[FromQuery] int pageSize)
+    public async Task<List<UserDto>> GetUsers([FromQuery]int pageNumber,[FromQuery] int pageSize)
     {
         var users = await _userService.GetAllUsersAsync(pageNumber,pageSize);
         return users;

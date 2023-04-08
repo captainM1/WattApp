@@ -5,8 +5,7 @@ import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
 import Chart from 'chart.js/auto';
 import { ViewChild, ElementRef } from '@angular/core';
-
-
+import { ConfirmationService, MessageService, ConfirmEventType } from 'primeng/api';
 
 @Component({
   selector: 'app-device-details',
@@ -23,7 +22,9 @@ export class DeviceDetailsComponent implements OnInit, AfterViewInit {
   constructor(
     private route: ActivatedRoute,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService
   )
   {}
 
@@ -63,16 +64,35 @@ export class DeviceDetailsComponent implements OnInit, AfterViewInit {
   goBack(){
     this.router.navigate(['/home2']);
   }
-
+  del() {
+    this.confirmationService.confirm({
+      message: 'Do you want to delete this record?',
+      header: 'Delete Confirmation',
+      icon: 'pi pi-info-circle',
+      accept: () => {
+        this.deleteDevice();
+      },
+      reject: (type: any) => {
+        switch (type) {
+          case ConfirmEventType.REJECT:
+            this.messageService.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected' });
+            break;
+          case ConfirmEventType.CANCEL:
+            this.messageService.add({ severity: 'warn', summary: 'Cancelled', detail: 'You have cancelled' });
+            break;
+        }
+      }
+    });
+  }
   deleteDevice(){
-    this.http.delete(`${environment.apiUrl}/api/Device/devices/delete/${this.deviceId}`)
+    this.http.delete(`${environment.apiUrl}/api/Device/delete-device/${this.deviceId}`)
     .subscribe(
       () => {
-        console.log('Device deleted successfully');
         this.router.navigate(['/home2']);
       },
       error => {
-        console.error('Error deleting device:', error);
+        console.log(error)
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: error.message });
       }
     );
   }

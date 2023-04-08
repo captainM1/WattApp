@@ -12,7 +12,7 @@ public interface IUserService
     Task<User> CreateUser(UserRegisterDto userRegisterDto);
     Task<User> GetUserByEmailAndPasswordAsync(string email, string password);
     Task<User> GetUserByIdAsync(Guid id);
-    Task<List<User>> GetAllUsersAsync(int pageNumber, int pageSize);
+    Task<List<UserDto>> GetAllUsersAsync(int pageNumber, int pageSize);
     Task<int> UpdateUser(Guid id, UserUpdateDto userUpdateDto);
     Task<Boolean> UpdatePassword(Guid id, string newPassword);
     Task<Boolean> CreateUserRequestToDso(User user);

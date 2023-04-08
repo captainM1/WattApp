@@ -161,7 +161,7 @@ public class UserService:IUserService
         return user;
     }
 
-    public async Task<List<User>> GetAllUsersAsync(int pageNumber, int pageSize)
+    public async Task<List<UserDto>> GetAllUsersAsync(int pageNumber, int pageSize)
     {
         var user = await _repository.GetAllUsersAsync(pageNumber, pageSize);
         if (user == null)

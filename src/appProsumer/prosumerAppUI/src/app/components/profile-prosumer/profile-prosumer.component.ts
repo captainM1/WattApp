@@ -49,10 +49,7 @@ export class ProfileProsumerComponent implements OnInit{
        console.log(this.userID);
       }
     )
-  }
-
- 
- 
+  } 
 }
 
 
