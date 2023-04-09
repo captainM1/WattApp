@@ -3,28 +3,33 @@
 
 <div class="outer">
   <div class="container">
-
-    <div id="kolone">
-          <div id="prvi">
-          <label>Total Number Of Devices</label>
+    <div class="row" >
+      <div id="prvi">
+        <label>Total Number Of Devices</label>
+        <div>
+          <img id="deviceNumberImg" src="/assets/icons-devices-home/device-number.png">
+        </div>
+        </div>
+        <div id="drugi">
+          <label>The Largest Producer Of Electricity</label>
           <div>
-            <img src="/assets/icons-devices-home/device-number.png">
+            <img src="/assets/icons-devices-home/energy-production.png">
           </div>
+        </div>
+        <div id="treci">
+          <label>The Biggest Consumer Of Electricity</label>
+          <div>
+            <img src="/assets/icons-devices-home/energy-consumption.png">
           </div>
-          <div id="drugi">
-            <label>The Largest Producer Of Electricity</label>
-            <div>
-              <img src="/assets/icons-devices-home/energy-production.png">
-            </div>
-          </div>
-          <div id="treci">
-            <label>The Biggest Consumer Of Electricity</label>
-            <div>
-              <img src="/assets/icons-devices-home/energy-consumption.png">
-            </div>
-          </div>
+        </div>
     </div>
-    <app-my-devices></app-my-devices>
+    <div class="row" id="red">
+      <div class="col">
+        <app-my-devices></app-my-devices>
+      </div>
+    </div>
+
+
   </div>
 </div>
 

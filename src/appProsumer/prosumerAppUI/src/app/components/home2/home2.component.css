@@ -146,55 +146,65 @@ img
     margin-top: 120px;
   }
 
-  #kolone
+  #red
   {
-    float:right;
-    margin-right: 50px;
-    width: 35%;
     margin-top: 40px;
+  }
+
+  #deviceNumberImg
+  {
+    padding-top: 50px;
   }
 
   label
   {
-    font-size: 18px;
+    font-size: 25px;
     font-weight: bold;
-    width: 60%;
-    margin-left: 28%;
+    text-align: center;
   }
   #prvi
   {
+    float:left;
+    width:30%;
+    margin-top: 5px;
+    margin-right: 25px;
+    margin-left: 20px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 10px;
+    filter:drop-shadow(0px 4px 8px rgba(0,0,0,0.25));
+    color:#026670;
+  }
+  #drugi
+  {
+    float: left;
+    width:30%;
+    margin-right: 25px;
     margin-top: 5px;
     background-color: white;
     border-radius: 10px;
     padding: 10px;
     filter:drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
-    color: orange;
-  }
-  #drugi
-  {
-    margin-top: 50px;
-    background-color: white;
-    border-radius: 10px;
-    padding: 10px;
-    filter:drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
-    color: #026670;
+    color:#026670;
   }
 
   #treci
   {
-    margin-top: 50px;
+    float: left;
+    width:30%;
+    margin-top: 5px;
     background-color: white;
     border-radius: 10px;
     padding: 10px;
     filter:drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
-    color:red;
+    color:#026670;
   }
 
   img
   {
-    width: 25%;
-    padding-top: 10px;
-    padding-left: 15px;
+    width: 20%;
+    padding-top: 15px;
+    padding-left: 5px;
     padding-bottom: 10px;
   }
 

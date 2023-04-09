@@ -189,7 +189,7 @@ button:focus{
   }
 
   .card-title{
-    font-size: 90%;
+    font-size: 14px;
     padding-top: 5px;
     font-weight: bold;
     color: #026670;
@@ -216,7 +216,7 @@ button:focus{
 
   .card-text
   {
-    font-size: 85%;
+    font-size: 12px;
   }
 
 
