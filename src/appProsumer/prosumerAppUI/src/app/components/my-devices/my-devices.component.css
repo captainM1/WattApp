@@ -144,9 +144,12 @@ button:focus{
      font-size: 85%;
      font-weight: bold;
      color: #026670;
-    padding-top: 5px;
+     padding-top: 5px;
   }
-
+  h1
+  {
+    font-size: 25px;
+  }
   .device-col img
   {
     width:70%;

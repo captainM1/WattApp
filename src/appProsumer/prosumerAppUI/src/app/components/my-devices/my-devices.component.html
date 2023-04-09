@@ -4,7 +4,7 @@
   </div>
 
   <div class="row mt-4">
-    <a *ngFor="let device of devices" class="col mt-4 mx-3" [routerLink]="['/device-details', device.deviceId]">
+    <div *ngFor="let device of devices" class="device-col mt-4 mx-3" [routerLink]="['/device-details', device.deviceId]">
       <div class="card">
         <img [src]="'/assets/icons-devices/' + device.deviceTypeName.toLowerCase() + '.png'" class="card-img-top" alt="{{ device.deviceTypeName }}">
         <div class="card-body">
@@ -13,7 +13,7 @@
           <p class="card-text"><span style="font-weight: bold;">MAC Address:</span><br> {{ device.macAdress }}</p>
         </div>
       </div>
-    </a>
+    </div>
   </div>
 
   <div class="row mt-4">
