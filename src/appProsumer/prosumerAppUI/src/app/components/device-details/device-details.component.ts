@@ -18,6 +18,7 @@ export class DeviceDetailsComponent implements OnInit, AfterViewInit {
   deviceId: any;
   deviceHistory: any;
   deviceFuture: any;
+  deviceToday: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -51,6 +52,15 @@ export class DeviceDetailsComponent implements OnInit, AfterViewInit {
           console.error('Error fetching device history:', error);
         })
 
+      this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/today/${this.deviceId}`)
+        .subscribe(data => {
+          this.deviceToday = data;
+          console.log(data);
+        },
+        error => {
+          console.error('Error fetching device today:', error);
+        })
+      
       this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/7daysFuture/${this.deviceId}`)
         .subscribe(data => {
           this.deviceFuture = data;
@@ -118,7 +128,7 @@ export class DeviceDetailsComponent implements OnInit, AfterViewInit {
       labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7', 'Day 8', 'Day 9', 'Day 10', 'Day 11', 'Day 12', 'Day 13', 'Day 14'],
       datasets: [{
         label: 'Power Usage',
-        data: [12, 15, 20, 18, 25, 23, 19, 22, 17, 14, 16, 21, 24, 26],
+        data: [...this.deviceHistory],
         fill: false,
         borderColor: 'rgb(75, 192, 192)',
         tension: 0.1
