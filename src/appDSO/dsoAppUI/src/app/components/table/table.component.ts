@@ -147,57 +147,58 @@ export class TableComponent implements OnInit {
   public showCoordsForEveryUser(){
     this.showAllUsersOnMap = true;
     this.auth.getCoords().subscribe(
-      (response : any) =>{
-        this.lengthOfUsers = response['length'];
+      (response: any) => {
+        this.lengthOfUsers = response.length;
         this.userCoords = response;
-        for(const user of this.userCoords){
-          for(const us of this.allUsers){
-            if(user.address['address'] === us.address){
-              this.firstName = us.firstName;
-              this.lastName = us.lastName;
-              this.address = us.address;
-            }
+        this.userCoords.forEach((user) => {
+          const matchingUser = this.allUsers.find((us) => us.address === user.address.address);
+          if (matchingUser) {
+            const firstName = matchingUser.firstName;
+            const lastName = matchingUser.lastName;
+            const address = matchingUser.address;
+            const latlng = L.latLng(JSON.parse(user.coordinates));
+            const marker = L.marker(latlng).addTo(this.map);
+            marker.bindPopup(`<b>${firstName} ${lastName} <br>${address}`);
+            this.markers.push(marker);
           }
-          const latlng = L.latLng(JSON.parse(user['coordinates']));
-          const marker = L.marker(latlng).addTo(this.map);
-          marker.bindPopup(`<b>${this.firstName} ${this.lastName} <br>${this.address}`)
-          this.markers.push(marker);
-        }
+        });
+      });
+  }  
 
-    });
-  }
-
- 
- 
-  public showMeOnMap(id : string){
-    
-    this.showAllUsersOnMap = false;
-
-    for(const mark of this.markers){
+  public showMeOnMap(id: string) {
+    // remove all markers from the map
+    for (const mark of this.markers) {
       this.map.removeLayer(mark);
     }
     // poziv funkcije za svih uredjaja
     this.showMeDevices(id);
     this.auth.getUserPowerUsageByID(id).subscribe(
-      (response : any) =>{
-        for(let user of this.allUsers){
-          if(user.id === id){
-            user.powerUsage = (response/10).toFixed(2);
+      (response: any) => {
+        for (let user of this.allUsers) {
+          if (user.id === id) {
+            user.powerUsage = (response / 10).toFixed(2);
           }
         }
-       
-        }
-      )
-    
-    this.auth.getCoordsByUserID(id).subscribe(
-      (response : any) => {
-        const latlng = L.latLng(JSON.parse(response['coordinates']));
-        const marker = L.marker(latlng).addTo(this.map);
-        marker.bindPopup(`<b>${this.firstName} ${this.lastName} <br>${this.address}`)
-        this.markers.push(marker);
       }
-    )
+    );
+  
+    // get the user's coordinates
+    this.auth.getCoordsByUserID(id).subscribe(
+      (response: any) => {
+        const latlng = L.latLng(JSON.parse(response['coordinates']));
+  
+        // add the user's marker to the map
+        const marker = L.marker(latlng).addTo(this.map);
+        const user = this.allUsers.find(u => u.id === id);
+        marker.bindPopup(`<b>${user?.firstName} ${user?.lastName} <br>${user?.address}`).openPopup();
+        this.markers.push(marker);
+  
+        // zoom the map to the user's marker
+        this.map.setView(latlng, 15); // 15 is the zoom level, you can adjust it as needed
+      }
+    );
   }
+  
  
   // paginacija za menjanje strana
   nextPage(){
@@ -274,14 +275,6 @@ export class TableComponent implements OnInit {
   toggleColumn(){
     this.toggleTable = !this.toggleTable;
   }
-    
-  
-  
-
-  
-  
- 
- 
 }
 
     

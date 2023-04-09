@@ -50,21 +50,8 @@ public class PowerUsageController : ControllerBase
         {
             throw new ArgumentException(ex.Message);
         }
-    }*/
-
-    [HttpGet("power-usage/today/{deviceID}")]
-    public ActionResult<IEnumerable<PowerUsage>> GetPowerUsageForDay(Guid deviceID)
-    {
-        var powerUsages = _powerUsage.GetPowerUsageForDay(deviceID, DateTime.Today);
-        return Ok(powerUsages);
     }
-
-    [HttpGet("power-usage/7daysHistory/{deviceID}")]
-    public ActionResult<IEnumerable<PowerUsage>> GetPowerUsageFor7DaysHistory(Guid deviceID)
-    {
-        var powerUsages = _powerUsage.GetPowerUsageFor7Days(deviceID, -1);
-        return Ok(powerUsages);
-    }
+    
     [HttpGet("power-usage/7daysFuture/{deviceID}")]
     public ActionResult<IEnumerable<PowerUsage>> GetPowerUsageFor7DaysFuture(Guid deviceID)
     {        
@@ -96,13 +83,18 @@ public class PowerUsageController : ControllerBase
 
     [HttpGet("power-usage/currentUsageUser/summary/{userID}")]
     public ActionResult<double> GetForUser(Guid userID)
-    {        
+    {
         try
         {
             var powerUsages = _powerUsageService.CurrentSumPowerUsage(userID);
 
             return Ok(powerUsages);
         }
+        catch (ArgumentNullException ex)
+        {
+            throw new ArgumentException(ex.Message);
+        }
+    }
 
     [HttpGet("power-usage/previousMonth/system")]
     public ActionResult<double> GetSystemPowerUsageForPreviousMonth()
@@ -201,22 +193,5 @@ public class PowerUsageController : ControllerBase
     {
         var powerUsages = _powerUsage.GetPowerUsageForDeviceNext24Hours(deviceID);
         return Ok(powerUsages);
-    }
-
-    [HttpGet("power-usage/delete-device/{deviceID}")]
-    public async Task<IActionResult> DeleteDevice(Guid deviceID)
-    {
-        var action = await _powerUsage.DeleteDevice(deviceID);
-        if(!action)
-        {
-            return BadRequest("device cannot be deleted");
-        }
-
-        return Ok(new {Message = "device deleted successfully" });
-    }
-        catch (ArgumentNullException ex)
-        {
-            throw new ArgumentException(ex.Message);
-        }
     }
 }
