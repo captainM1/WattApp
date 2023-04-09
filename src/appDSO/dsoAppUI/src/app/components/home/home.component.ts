@@ -196,6 +196,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 							if(group.id === "77cbc929-1cf2-4750-900a-164de4abe28b")
 							{
 								this.producers = response;
+								console.log('PRODUCERS',this.producers);
 								
 							}else if(group.id === "18f30035-59de-474f-b9db-987476de551f")
 							{
@@ -234,12 +235,18 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			datasets: [{
 			data: [this.producers.length, this.consumers.length, this.storage.length],
 			backgroundColor: [
-				'rgb(250, 166, 77)',
-				'rgb(253, 211, 128)',
-				'rgb(78, 148, 155)',
+				'rgba(255, 159, 64, 0.5)',
+				'rgba(54, 162, 235, 0.5)',
+				'rgba(75, 192, 192, 0.5)'
 				
 			],
-			hoverOffset: 4
+			borderColor:[
+				'rgb(255, 159, 64)',
+				'rgb(54, 162, 235)',
+				'rgb(75, 192, 192)',
+			],
+			hoverOffset: 4,
+			borderWidth: 1,
 			}]
 		},
 		options: {
@@ -309,22 +316,22 @@ export class HomeComponent implements OnInit, AfterViewInit{
     datasets: [
         {
             label: 'Producers',
-            backgroundColor: "rgb(241, 143, 1)",
-            borderColor: "rgb(241, 143, 1)",
+            backgroundColor: 'rgba(255, 159, 64, 0.5)',
+            borderColor: 'rgb(255, 159, 64)',
             borderWidth: 1,
             data: dataProducers
         },
         {
             label: 'Consumers',
-            backgroundColor: "rgb(54, 162, 235)",
-            borderColor: "rgb(54, 162, 235)",
+            backgroundColor: 'rgba(54, 162, 235, 0.5)',
+            borderColor:   'rgb(54, 162, 235)',
             borderWidth: 1,
             data: dataConsumers
         },
         {
             label: 'Storages',
-            backgroundColor: "rgb(255, 99, 132)",
-            borderColor: "rgb(255, 99, 132)",
+            backgroundColor: 'rgba(75, 192, 192, 0.5)',
+            borderColor: 'rgb(75, 192, 192)',
             borderWidth: 1,
             data: dataStorages
         }
@@ -335,6 +342,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			type: 'bar',
 			data: chartData,
 			options: {
+				indexAxis: 'y',
 				scales: {
 					y: {
 						beginAtZero: true
@@ -368,7 +376,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 	charthForPreviusMonth(){
 			 
 			 const list =  Object.keys(this.everyDayUsagePreviousMonth).map((key) => key.split('T')[0]);
-			 console.log(list);
+			 
 			 const valuesList = [];
 
 			for (const key in this.everyDayUsagePreviousMonth) {
@@ -378,15 +386,15 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			}
 			
 
-			console.log(Object.keys(this.everyDayUsagePreviousMonth)[1]);
+			
 			const data = {
 			labels: list,
 			datasets: [{
 				label: 'Power Usage For Previous Month',
 				data: valuesList,
 				fill: true,
-				borderColor: 'rgb(115, 210, 222)',
-				backgroundColor:'rgb(115, 210, 222)',
+				borderColor: 'rgb(255, 159, 64)',
+				backgroundColor:'rgba(255, 159, 64, 0.5)',
 				tension: 0.1
 			}]
 		}
@@ -436,7 +444,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 	nextMonthEveryDay(){
 		this.auth.getPowerUsageNextMonthEveryDay().subscribe(
 			(response :any)=>{
-				console.log(response);
+				
 				this.everyDayUsageNextMonth = response;
 				this.chartForNextMonth();
 			}
@@ -458,9 +466,10 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		   label: 'Power Usage For Next Month',
 		   data: valuesList,
 		   fill: true,
-		   borderColor: 'rgb(115, 210, 222)',
-		   backgroundColor:'rgb(115, 210, 222)',
-		   tension: 0.1
+		   borderColor: 'rgb(75, 192, 192)',
+		   backgroundColor:'rgba(75, 192, 192, 0.5)',
+		   tension: 0.1,
+		   borderWidth: 1,
 	   }]
    }
 	   const options: ChartOptions = {
@@ -501,7 +510,6 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		this.auth.getPowerUsagePreviousMonthEachDevice().subscribe(
 			(response : any) =>{
 				this.eachDevicePrev = response;
-				console.log(this.eachDevicePrev);
 				this.chartPreviousMonthEachDevice()
 				
 			}
@@ -510,10 +518,15 @@ export class HomeComponent implements OnInit, AfterViewInit{
 
 	chartPreviousMonthEachDevice(){
 		const label: string[] =[];
+		const producersUnique = Array.from(new Set(this.producers))
 		for(const key in this.eachDevicePrev){
-			label.push(key);
+			for(let pro of producersUnique){
+				if(key === pro.id){
+					label.push(pro.name);
+				}
+			}
 		}
-
+		console.log("LABEL",label)
 		const dataEach = Object.values(this.eachDevicePrev).map((value) => value);
 		const data = {
 			labels: label,
@@ -521,25 +534,16 @@ export class HomeComponent implements OnInit, AfterViewInit{
 				label: 'Previous Month for Each Device',
 				data: dataEach,
 				fill: true,
-				borderColor: 'rgb(115, 210, 222)',
-				backgroundColor:'rgb(115, 210, 222)',
-				tension: 0.1
+				borderColor: 'rgb(255, 159, 64)',
+				backgroundColor:'rgba(255, 159, 64, 0.5)',
+				tension: 0.1,
+				borderWidth: 1,
 			}]
 		}
 			const options: ChartOptions = {
+				indexAxis: 'y',
 				scales: {
 				x: {
-					title: {
-					display: true,
-					text: 'Name of device',
-					},
-					ticks: {
-					font: {
-						size: 14,
-					},
-					},
-				},
-				y: {
 					title: {
 					display: true,
 					text: 'Power Consuming in (kw/day)',
@@ -550,10 +554,21 @@ export class HomeComponent implements OnInit, AfterViewInit{
 					},
 					},
 				},
+				y: {
+					title: {
+					display: true,
+					text: '',
+					},
+					ticks: {
+					font: {
+						size: 14,
+					},
+					},
+				},
 				},
 			};
 			const stackedLine = new Chart(this.prevEachDevice.nativeElement, {
-				type: 'line',
+				type: 'bar',
 				data: data,
 				options: options,
 			});
@@ -570,8 +585,14 @@ export class HomeComponent implements OnInit, AfterViewInit{
 
 	chartNextMonthEachDevice(){
 		const label: string[] =[];
+		const producersUnique = Array.from(new Set(this.producers))
+		
 		for(const key in this.eachDeviceNext){
-			label.push(key);
+			for(let pro of producersUnique){
+				if(key === pro.id){
+					label.push(pro.name);
+				}
+			}
 		}
 
 		const dataEach = Object.values(this.eachDeviceNext).map((value) => value);
@@ -581,25 +602,16 @@ export class HomeComponent implements OnInit, AfterViewInit{
 				label: 'Next Month for Each Device',
 				data: dataEach,
 				fill: true,
-				borderColor: 'rgb(115, 210, 222)',
-				backgroundColor:'rgb(115, 210, 222)',
-				tension: 0.1
+				borderColor: 'rgb(75, 192, 192)',
+		   		backgroundColor:'rgba(75, 192, 192, 0.5)',
+				tension: 0.1,
+				borderWidth: 1,
 			}]
 		}
 			const options: ChartOptions = {
+				indexAxis: 'y',
 				scales: {
 				x: {
-					title: {
-					display: true,
-					text: 'Name of device',
-					},
-					ticks: {
-					font: {
-						size: 14,
-					},
-					},
-				},
-				y: {
 					title: {
 					display: true,
 					text: 'Power Consuming in (kw/day)',
@@ -610,10 +622,21 @@ export class HomeComponent implements OnInit, AfterViewInit{
 					},
 					},
 				},
+				y: {
+					title: {
+					display: true,
+					text: '',
+					},
+					ticks: {
+					font: {
+						size: 14,
+					},
+					},
+				},
 				},
 			};
 			const stackedLine = new Chart(this.nextEachDevice.nativeElement, {
-				type: 'line',
+				type: 'bar',
 				data: data,
 				options: options,
 			});
