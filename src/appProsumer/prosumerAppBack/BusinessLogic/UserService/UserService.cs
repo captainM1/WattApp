@@ -257,4 +257,24 @@ public class UserService:IUserService
 
         return action;
     }
+
+    public async Task<Boolean> ApproveUserRequestToDso(Guid id)
+    {
+        var action = await _repository.ApproveUserRequestToDso(id);
+        if (!action)
+        {
+            throw new NullReferenceException("Action failed");
+        }
+        return true;
+    }
+
+    public async Task<Boolean> DeclineUserRequestToDso(Guid id)
+    {
+        var action = await _repository.DeclineUserRequestToDso(id);
+        if (!action)
+        {
+            throw new NullReferenceException("Action failed");
+        }
+        return true;
+    }
 }
