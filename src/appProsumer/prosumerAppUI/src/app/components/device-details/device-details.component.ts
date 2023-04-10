@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import Chart from 'chart.js/auto';
 import { ViewChild, ElementRef } from '@angular/core';
 import { ConfirmationService, MessageService, ConfirmEventType } from 'primeng/api';
+import { IgxLegendComponent, IgxCategoryChartComponent } from 'igniteui-angular-charts';
+
 
 @Component({
   selector: 'app-device-details',
