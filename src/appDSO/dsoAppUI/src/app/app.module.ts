@@ -14,7 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { GoogleMapsModule } from '@angular/google-maps';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
+
 import { NgChartsModule } from 'ng2-charts';
 import * as CanvasJSAngularChart from '../assets/canvasjs.angular.component';
 import { NavComponent } from './components/nav/nav.component';
@@ -33,7 +33,6 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
   declarations: [
     AppComponent,
     LoginComponent,
-    DashboardComponent,
     CanvasJSChart,
     NavComponent,
     HomeComponent,

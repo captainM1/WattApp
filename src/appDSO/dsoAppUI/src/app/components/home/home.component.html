@@ -71,45 +71,96 @@
             </tbody>
             </table>
         </div>
-    </div>
+    </div>   
+    
     <!-- POWER USAGE -->
-   <div class="row">
-    <h2 style="text-align: center;">Power Usage</h2>
-    <div class="col-sm-6">
-            <h4 style="text-align: center; font-size: 24px; font-weight: 400;  color: #026670;">Previous Month</h4>
-            <p class="text-center" style="font-size: 18px; color: #026670; "> 
-                <img src="../../../assets/icons/home/icons8-flash-on-48.png" style="width:40px; height:40px; padding-top:5px">
-                Summary of power consumtion:  {{previousMonth}}kw
-            </p>
-            <canvas #prevMonth></canvas>
+    <div class="container" style="margin-top:90px">
+        <div class="row">
+                <div class="col-sm-4">
+                    <div class="card">
+                        <div class="card-body">
+                        <h5 class="card-title"> Summary of power production for the previous month:</h5>
+                        <p class="card-text">  {{previousMonth}}kw </p>
+                        
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="card">
+                        <div class="card-body">
+                        <h5 class="card-title"> Prediction of total electricity production for the next month</h5>
+                        <p class="card-text" style="text-align: center;">  {{nextMonthSummary}}kw </p>
+                        
+                        </div>
+                    </div>
+                </div>
+        </div>
+       
+        <div class="row">
+            <h2 style="text-align: center; font-size: 24px; font-weight: 500;  color: #026670;">Power Usage</h2>
+            
+            <div class="col-sm-6">
+                    <h4 style="text-align: center; font-size: 20px; font-weight: 400;  color: #026670;">Previous Month</h4>
+                    <canvas #prevMonth></canvas>
+            </div>
+            
+            <div class="col-sm-6">
+                <h4 style="text-align: center; font-size: 20px; font-weight: 400;  color: #026670;">Next Month</h4>
+                    
+                    <canvas #nextMonthChart></canvas>
+            </div>
+           </div>
+           
+           <!-- POWER USAGE FOR EACH DEVICES -->
+           <div class="row">
+            <h2 style="text-align: center;">Devices energy graph</h2>
+            <div class="col-sm-6">
+                <div>
+                    <h4 style="text-align: center; font-size: 24px; font-weight: 400;  color: #026670;">Previous Month for Each Device</h4>
+                <canvas #prevEachDevice></canvas>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div>
+                    <h4 style="text-align: center; font-size: 24px; font-weight: 400;  color: #026670;">Next Month for Each Device</h4>
+                <canvas #nextEachDevice></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- TABLE FOR CURRENT STATUS OF PRODUCERS?CONSUMERS?BATTERY?SOLAR -->
+    <div class="row">
+        <div class="col-sm-5">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            Solar Production
+                        </th>
+                        <th>
+                            Battery Production
+                        </th>
+                        <th>
+                            Energy Consumption
+                        </th>
+                        <th>
+                            Energy Production
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
     </div>
     
-    <div class="col-sm-6">
-        <h4 style="text-align: center; font-size: 24px; font-weight: 400;  color: #026670;">Next Month</h4>
-            <p class="text-center" style="font-size: 18px; color: #026670;"> 
-                <img src="../../../assets/icons/home/icons8-flash-on-48.png" style="width:40px; height:40px; padding-top:5px">
-                Summary of power consumtion:  {{nextMonthSummary}}kw
-            </p>
-            <canvas #nextMonthChart></canvas>
-    </div>
-   </div>
-   <!-- Energy sources table -->
-   <!-- POWER USAGE FOR EACH DEVICES -->
-   <div class="row">
-    <h2 style="text-align: center;">Devices energy graph</h2>
-    <div class="col-sm-6">
-        <div>
-            <h4 style="text-align: center; font-size: 24px; font-weight: 400;  color: #026670;">Previous Month for Each Device</h4>
-        <canvas #prevEachDevice></canvas>
-        </div>
-    </div>
-    <div class="col-sm-6">
-        <div>
-            <h4 style="text-align: center; font-size: 24px; font-weight: 400;  color: #026670;">Next Month for Each Device</h4>
-        <canvas #nextEachDevice></canvas>
-        </div>
-    </div>
-</div>
 </div>
         
  
