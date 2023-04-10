@@ -90,6 +90,16 @@ button:focus{
     font-size: 20px;
   }
 
+  input
+  {
+    width: 100%;
+  }
+
+  input::placeholder
+  {
+    font-size: 10px;
+  }
+
   .container
   {
     width: 90%;
@@ -138,6 +148,11 @@ button:focus{
   {
     width: 90%;
     margin-bottom: 60px;
+  }
+
+  input
+  {
+    width: 90%;
   }
 
   button{
@@ -224,6 +239,10 @@ button:focus{
     font-size: 12px;
   }
 
+  input
+  {
+    width:50%;
+  }
 
   }
   @media (min-width: 481px) and (max-width: 720px)
@@ -232,6 +251,10 @@ button:focus{
   {
       width: 55%;
       margin-left: 5px;
+  }
+  input
+  {
+    width: 80%;
   }
 
   button{
@@ -286,6 +309,12 @@ button:focus{
     font-size: 13px;
   }
 
+  input
+  {
+    width:50%;
+  }
+
+
   .card-title{
     font-size: 14px;
     padding-top: 5px;
@@ -316,5 +345,19 @@ button:focus{
   {
     font-size: 13px;
   }
+}
+
+input{
+  margin-top: 10px;
+  border:2px solid #026670;
+  border-radius: 5px;
+  font-style: italic;
+  font-size: 12px;
+  height: 30px;
+}
+
+
+input::placeholder{
+  color:rgba(2, 102, 112, 0.5);
 }
 

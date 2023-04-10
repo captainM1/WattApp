@@ -42,6 +42,7 @@ import { CommonModule } from '@angular/common';
 import { PermissionsComponent } from './components/permissions/permissions.component';
 
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
 
 @NgModule({
   declarations: [
@@ -83,7 +84,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     ToastModule,
     MatToolbarModule,
     CommonModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    Ng2SearchPipeModule
   ],
   providers: [MessageService,ConfirmationService],
   bootstrap: [AppComponent]

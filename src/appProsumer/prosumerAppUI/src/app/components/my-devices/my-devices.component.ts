@@ -9,7 +9,7 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class MyDevicesComponent implements OnInit {
   devices: any;
-
+  searchText: string = '';
   constructor(
     private auth: AuthService,
     private cookie: CookieService
