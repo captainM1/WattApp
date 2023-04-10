@@ -1,11 +1,11 @@
 <div class="container">
   <div class="row pt-4 px-3">
     <h1>My Devices</h1>
-    <input type="text" [(ngModel)]="searchText" placeholder="Search by devices name">
+    <input type="text" [(ngModel)]="searchName" placeholder="Search by devices name">
   </div>
 
   <div class="row mt-4">
-    <div *ngFor="let device of devices | filter:searchText" class="device-col mt-4 mx-3" [routerLink]="['/device-details', device.deviceId]">
+    <div *ngFor="let device of devices | searchDevice: searchName" class="device-col mt-4 mx-3" [routerLink]="['/device-details', device.deviceId]">
       <div class="card">
         <img [src]="'/assets/icons-devices/' + device.deviceTypeName.toLowerCase() + '.png'" class="card-img-top" alt="{{ device.deviceTypeName }}">
         <div class="card-body">
