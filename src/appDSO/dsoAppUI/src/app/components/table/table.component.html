@@ -3,9 +3,9 @@
   <div class="col-lg-7">
     <div class="input-div">
         <label>Search by first name:</label>
-        <input type="text" [(ngModel)]="_searchByName" placeholder="John Cena">
+        <input type="text" [(ngModel)]="_searchByName" placeholder="Milovan">
         <label>Search by address:</label>
-        <input type="text" [(ngModel)]="_searchByAddress" placeholder="Addres NN">
+        <input type="text" [(ngModel)]="_searchByCity" placeholder="Addres NN">
         <button (click)="toggleExportSelected(); export()" (click) = "exportSelectedData()">Export data</button>
         
     </div>
@@ -13,17 +13,17 @@
           <table tableexporter class="table-hover" #myTable id = "myTable">
               <thead>
                 <tr>
-                  <th></th>
-                  <th>First Name</th>
-                  <th>Last Name</th>
-                  <th>Address</th>
-                  <th> Power Usage</th>
-                  <th></th>
+                  <th (click)="setActiveCol(0)" [ngClass]="{'active': activeColIndex === 0}"></th>
+                  <th (click)="setActiveCol(1)" [ngClass]="{'active': activeColIndex === 1}">First Name</th>
+                  <th (click)="setActiveCol(2)" [ngClass]="{'active': activeColIndex === 2}">Last Name</th>
+                  <th (click)="setActiveCol(3)" [ngClass]="{'active': activeColIndex === 3}">Address</th>
+                  <th (click)="setActiveCol(4)" [ngClass]="{'active': activeColIndex === 4}"> Power Usage</th>
+                  <th (click)="setActiveCol(4)" [ngClass]="{'active': activeColIndex === 5}"></th>
                 </tr>
               </thead>
-              <tr *ngFor="let user of filtered" (click) = "showMeOnMap(user.id)" [ngClass]="{'table-active': activeItem === user.id}" >
+              <tr *ngFor="let user of allUsers | filterName : _searchByName | filterAddress : _searchByCity" (click) = "showMeOnMap(user.id)" [ngClass]="{'table-active': activeItem === user.id}" >
                   <td> <i class="fa fa-angle-right fa-lg" (click) = "showMeDevices(user.id)" ></i> </td>
-                  <td> {{user.firstName}}</td>
+                  <td>{{user.firstName}}</td>
                   <td>{{user.lastName}}</td>
                   <td>{{user.address}}, {{user.city}}, {{user.country}}</td>
                   <td>{{user.powerUsage}}kw/h</td>

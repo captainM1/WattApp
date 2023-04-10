@@ -21,7 +21,7 @@ import { saveAs } from 'file-saver';
 export class TableComponent implements OnInit {
   
   _searchByName: string = '';
-  _searchByAddress: string = '';
+  _searchByCity: string = '';
 
   activeItem:any;
   filtered! : User[];
@@ -64,7 +64,8 @@ export class TableComponent implements OnInit {
 
   constructor(
     private auth : AuthService,
-    private table : MatTableModule
+    private table : MatTableModule,
+
   ){}
 
   
@@ -81,17 +82,21 @@ export class TableComponent implements OnInit {
   
   
 
-toggleExportSelected(): void {
-  this.exportSelected = !this.exportSelected;
-}
+    toggleExportSelected(): void {
+      this.exportSelected = !this.exportSelected;
+    }
+    activeColIndex: number = -1;
 
-export(): void {
-  if (this.exportSelected) {
-    this.exportSelectedData();
-  } else {
-    this.exportToExcel();
-  }
-}
+    setActiveCol(index: number): void {
+      this.activeColIndex = index;
+    }
+    export(): void {
+      if (this.exportSelected) {
+        this.exportSelectedData();
+      } else {
+        this.exportToExcel();
+      }
+    }
 
     exportToExcel(): void {
       const worksheet = XLSX.utils.table_to_sheet(document.querySelector('#myTable'));
@@ -101,20 +106,18 @@ export(): void {
       const blob = new Blob([fileBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
       saveAs(blob, 'table-data.xlsx');
       console.log(worksheet)
-   
-  }
+    }
 
   exportSelectedData():void{
-    
     const selectedRows = this.filtered.filter(user => user.selected);
     const worksheet = XLSX.utils.json_to_sheet(selectedRows);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Selected Data');
   
- 
-  const fileBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-  const blob = new Blob([fileBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-  saveAs(blob, 'selected-data.xlsx');
+  
+    const fileBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([fileBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    saveAs(blob, 'selected-data.xlsx');
   }
  
  
@@ -138,43 +141,6 @@ export(): void {
     );
   }
 
-  get searchByAddress(){
-    return this._searchByAddress;
-  }
-
-  set searchByAddress(value : string){
-    this._searchByAddress = value;
-    this.filtered = this.filterByAddressFilter(value);
-  }
-
-  filterByAddressFilter(filterTerm:string){
-    if(this.filtered.length === 0 || this._searchByAddress === ''){
-      return this.filtered;
-    }else{
-      return this.filtered.filter((user)=>{
-        return 
-      })
-    }  
-  }
-// bind _searchByName ngModel
-  get searchByName(){
-    return this._searchByName;
-  }
-  
-  set searchByName(value: string){
-    this._searchByName = value;
-    this.filtered = this.filterUsersByName(value);
-  }
- 
-  filterUsersByName(filterTerm : string){
-    if(this.allUsers.length === 0  || this._searchByName === ''){
-      return this.allUsers;
-    }else{
-      return this.allUsers.filter((user)=>{
-        return user.firstName.toLowerCase() === filterTerm.toLowerCase();
-      })
-    }
-  }
  
   public onInitMap(){
     this.map = L.map('map').setView([44.0165,21.0069],10);
