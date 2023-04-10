@@ -1,6 +1,7 @@
+import { write, writeXLSX } from 'xlsx';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { HttpClient } from '@angular/common/http';
-import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import * as L from 'leaflet';
 import { Device, Info, User } from 'models/User';
 import { AuthService } from 'service/auth.service';
@@ -9,8 +10,8 @@ import { FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table'; 
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
-
-
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
@@ -22,6 +23,7 @@ export class TableComponent implements OnInit {
   _searchByName: string = '';
   _searchByAddress: string = '';
 
+  activeItem:any;
   filtered! : User[];
   
 
@@ -52,6 +54,7 @@ export class TableComponent implements OnInit {
   public pageSize = 5;
   private lengthOfUsers!: number;
   // tableData: any;
+  exportSelected: boolean = false;
   
   powerUsage!:string;
   deviceGroup!: any[];
@@ -74,10 +77,46 @@ export class TableComponent implements OnInit {
     
     
   }
+  @ViewChild('myTable') myTable!: ElementRef;
   
-  // exportSelectedData(){
-  //   this.exportData = this.tableData.filter((item: { checked: any; })=>item.checked)
-  // }
+  
+
+toggleExportSelected(): void {
+  this.exportSelected = !this.exportSelected;
+}
+
+export(): void {
+  if (this.exportSelected) {
+    this.exportSelectedData();
+  } else {
+    this.exportToExcel();
+  }
+}
+
+    exportToExcel(): void {
+      const worksheet = XLSX.utils.table_to_sheet(document.querySelector('#myTable'));
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+      const fileBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+      const blob = new Blob([fileBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      saveAs(blob, 'table-data.xlsx');
+      console.log(worksheet)
+   
+  }
+
+  exportSelectedData():void{
+    
+    const selectedRows = this.filtered.filter(user => user.selected);
+    const worksheet = XLSX.utils.json_to_sheet(selectedRows);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Selected Data');
+  
+ 
+  const fileBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+  const blob = new Blob([fileBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  saveAs(blob, 'selected-data.xlsx');
+  }
+ 
  
   public showMeUsers(){
    
@@ -90,6 +129,7 @@ export class TableComponent implements OnInit {
             (response: any)=>{
               user.powerUsage = (response/10).toFixed(2);
               console.log("USER.powerUSEGAE",user.powerUsage)
+              user.selected = false;
             }
           )
         }
@@ -172,10 +212,12 @@ export class TableComponent implements OnInit {
     }
     // poziv funkcije za svih uredjaja
     this.showMeDevices(id);
+    
     this.auth.getUserPowerUsageByID(id).subscribe(
       (response: any) => {
         for (let user of this.allUsers) {
           if (user.id === id) {
+            this.activeItem = user.id;
             user.powerUsage = (response / 10).toFixed(2);
           }
         }

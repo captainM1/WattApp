@@ -5,7 +5,8 @@ export interface User{
     address: string,
     city: string,
     country: string,
-    powerUsage:string;
+    powerUsage:string,
+    selected: boolean
    
 }
 export interface Device{

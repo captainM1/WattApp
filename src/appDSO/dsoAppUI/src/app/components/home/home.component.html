@@ -32,68 +32,71 @@
             </div>
     <!-- TOTAL DEVICES  -->
             <div class="row">
-                <div class="col-sm-4" >
-                    <div style="width:300px; height:300px;">
-                        <h1 class = "display-2" style="text-align: center;">Total devices: {{total}}</h1>
-                        <canvas #myChart style="height: 80vh; width: 100%;"></canvas>  
-                    </div>
-                </div>
-                    <div class="col-sm-4" style="padding: 0;">
-                        <div style="width:400px; height:400px;">
-                            <h1 class = "display-2" style="text-align: center;">Number of Devices</h1>
-                        <canvas #myChartForEveryTypeOfDevice style="height: 400px; width: 384px;"></canvas>
+                    <div class="col-sm-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title"> Total devices: {{total}}</h5>
+                                <p class="card-text"> Prosumer: {{producers.length}} </p>
+                                <p class="card-text"> Consumer: {{consumers.length}} </p>
+                                <p class="card-text"> Storage: {{storage.length}} </p>
+                            </div>
                         </div>
                     </div>
+                    <div class="col-sm-4">
+                        <div class="card">
+                            <div class="card-body">
+                            <h5 class="card-title"> Summary of power production for the previous month:</h5>
+                            <p class="card-text"  style="text-align: center;">  {{previousMonth}}kw </p>
+                            
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="card">
+                            <div class="card-body">
+                            <h5 class="card-title"> Prediction of total electricity production for the next month</h5>
+                            <p class="card-text" style="text-align: center;">  {{nextMonthSummary}}kw </p>
+                            
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="col-sm-5">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Serbia electricity prices</th>
+                                    <th scope="col">Household, kWh</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td scope="row">Serbian Dinar</td>
+                                <td >
+                                    11.330
+                                </td>
+                            </tr>
+                            <tr>
+                                <td scope="row">EUR</td>
+                                <td>
+                                    95.92
+                                </td>
+                            </tr>
+                        </tbody>
+                        </table>
+                    </div> -->
+                    <!-- <div class="col-sm-4" style="padding: 0;">
+                        <div style="width:400px; height:400px;">
+                            <h1 class = "display-2" style="text-align: center;">Number of Devices</h1>
+                            <canvas #myChartForEveryTypeOfDevice style="height: 400px; width: 384px;"></canvas>
+                        </div>
+                    </div> -->
             </div>
-    <!-- PRICE OF ELECTRICITY -->
-    <div class="row">
-        <div class="col-sm-5">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">Serbia electricity prices</th>
-                        <th scope="col">Household, kWh</th>
-                    </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td scope="row">Serbian Dinar</td>
-                    <td >
-                        11.330
-                    </td>
-                </tr>
-                <tr>
-                    <td scope="row">EUR</td>
-                    <td>
-                        95.92
-                    </td>
-                </tr>
-            </tbody>
-            </table>
-        </div>
-    </div>   
+    
     
     <!-- POWER USAGE -->
     <div class="container" style="margin-top:90px">
         <div class="row">
-                <div class="col-sm-4">
-                    <div class="card">
-                        <div class="card-body">
-                        <h5 class="card-title"> Summary of power production for the previous month:</h5>
-                        <p class="card-text">  {{previousMonth}}kw </p>
-                        
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="card">
-                        <div class="card-body">
-                        <h5 class="card-title"> Prediction of total electricity production for the next month</h5>
-                        <p class="card-text" style="text-align: center;">  {{nextMonthSummary}}kw </p>
-                        
-                        </div>
-                    </div>
-                </div>
+               
         </div>
        
         <div class="row">

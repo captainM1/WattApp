@@ -6,35 +6,28 @@
         <input type="text" [(ngModel)]="_searchByName" placeholder="John Cena">
         <label>Search by address:</label>
         <input type="text" [(ngModel)]="_searchByAddress" placeholder="Addres NN">
-        <button tableExport >Export data</button>
+        <button (click)="toggleExportSelected(); export()" (click) = "exportSelectedData()">Export data</button>
         
     </div>
       <div class="card">
-          <table tableexporter >
+          <table tableexporter class="table-hover" #myTable id = "myTable">
               <thead>
                 <tr>
-                  <th>
-                      First Name
-                  </th>
-                  <th>
-                      Last Name
-                  </th>
-                  <th>
-                      Address
-                  </th>
-                  <th>
-                        Power Usage
-                  </th>
-                  </tr>
+                  <th></th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Address</th>
+                  <th> Power Usage</th>
+                  <th></th>
+                </tr>
               </thead>
-              <tr *ngFor="let user of filtered" (click) = "showMeOnMap(user.id)">
-               
-                
-                  <td> <i class="fa fa-angle-right fa-lg" (click) = "showMeDevices(user.id)" ></i>{{user.firstName}}</td>
+              <tr *ngFor="let user of filtered" (click) = "showMeOnMap(user.id)" [ngClass]="{'table-active': activeItem === user.id}" >
+                  <td> <i class="fa fa-angle-right fa-lg" (click) = "showMeDevices(user.id)" ></i> </td>
+                  <td> {{user.firstName}}</td>
                   <td>{{user.lastName}}</td>
                   <td>{{user.address}}, {{user.city}}, {{user.country}}</td>
                   <td>{{user.powerUsage}}kw/h</td>
-                  <!-- <td><input (click)="exportSelectedData();" type="checkbox"></td> -->
+                  <td><input  [(ngModel)]="user.selected" type="checkbox" style="width: 20px;"></td>
               </tr>
               <tr>
                 

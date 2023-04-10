@@ -91,12 +91,13 @@ export class HomeComponent implements OnInit, AfterViewInit{
 	
 		
 	ngOnInit(): void {
+		this.getDeviceGroup();
 		this.powerUsagePreviousMonth();
 		this.nextMonthSummary();
 		this.previousMonthEachDevice();
 		this.nextMonthEachDevice();
 		this.giveMeWeather();
-		this.getDeviceGroup();
+		
 		this.getNumberOfUsers();
 		this.createMeChartForEveryDevice();
 		this.getAllUserInfo();
@@ -216,7 +217,6 @@ export class HomeComponent implements OnInit, AfterViewInit{
 							this.labStorages = [...new Set(this.storage.map(element => element.name))];
 							
 							this.createMeChartForEveryDevice();
-
 							this.getNumberOfUsers();
 							this.giveMeChartForUsers();
 						}
