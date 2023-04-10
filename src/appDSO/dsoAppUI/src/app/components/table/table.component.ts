@@ -81,7 +81,25 @@ export class TableComponent implements OnInit {
   @ViewChild('myTable') myTable!: ElementRef;
   
   
-
+  currentSortOrder: string = 'asc';
+  sortData(sortBy: string): void {
+    this.currentSortOrder = this.currentSortOrder === 'asc' ? 'desc' : 'asc';
+      if (sortBy === 'powerUsage') {
+        this.allUsers.sort((a, b) => {
+          
+          if (a.powerUsage < b.powerUsage) {
+           
+            return -1;
+          } else if (a.powerUsage > b.powerUsage) {
+           
+            return 1;
+          } else {
+            return 0;
+          }
+        });
+    }
+   
+  }
     toggleExportSelected(): void {
       this.exportSelected = !this.exportSelected;
     }
@@ -227,7 +245,6 @@ export class TableComponent implements OnInit {
     this.toggleTable = true;
     this.auth.getDeviceInfoUserByID(id).subscribe(
       (response : any) => {
-
         this.allUserDevices = response;
         for(let us of this.allUserDevices){
           for(let p of this.producers){
@@ -248,7 +265,7 @@ export class TableComponent implements OnInit {
           }
           }
         }
-        
+        console.log(this.allUserDevices);
       }
     )
   }

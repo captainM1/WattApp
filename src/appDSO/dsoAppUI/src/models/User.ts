@@ -23,7 +23,7 @@ export interface Info{
     deviceTypeName: string;
     macAdress: string;
     manufacturerName: string;
-    typeOfDevice: string
+    typeOfDevice: string;
 }
 
 export interface DeviceType{

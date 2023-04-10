@@ -13,12 +13,12 @@
           <table tableexporter class="table-hover" #myTable id = "myTable">
               <thead>
                 <tr>
-                  <th (click)="setActiveCol(0)" [ngClass]="{'active': activeColIndex === 0}"></th>
-                  <th (click)="setActiveCol(1)" [ngClass]="{'active': activeColIndex === 1}">First Name</th>
-                  <th (click)="setActiveCol(2)" [ngClass]="{'active': activeColIndex === 2}">Last Name</th>
-                  <th (click)="setActiveCol(3)" [ngClass]="{'active': activeColIndex === 3}">Address</th>
-                  <th (click)="setActiveCol(4)" [ngClass]="{'active': activeColIndex === 4}"> Power Usage</th>
-                  <th (click)="setActiveCol(4)" [ngClass]="{'active': activeColIndex === 5}"></th>
+                  <th ></th>
+                  <th >First Name</th>
+                  <th >Last Name</th>
+                  <th >Address</th>
+                  <th (click)="sortData('powerUsage')"><i class="fa fa-arrow-up" aria-hidden="true" style = "color:white" *ngIf="currentSortOrder ==='asc'"></i><i class="fa fa-arrow-down"  style ="color:white"*ngIf="currentSortOrder === 'desc'"aria-hidden="true"></i>Power Usage</th>
+                  <th></th>
                 </tr>
               </thead>
               <tr *ngFor="let user of allUsers | filterName : _searchByName | filterAddress : _searchByCity" (click) = "showMeOnMap(user.id)" [ngClass]="{'table-active': activeItem === user.id}" >
