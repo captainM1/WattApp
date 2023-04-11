@@ -24,6 +24,7 @@ export class TableComponent implements OnInit {
 // filtriranje
   _searchByName: string = '';
   _searchByCity: string = '';
+  _searchByAddress: string = '';
 // export 
   filtered! : User[];
   activeItem:any;

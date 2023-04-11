@@ -5,7 +5,7 @@
         <label>Search by first name:</label>
         <input type="text" [(ngModel)]="_searchByName" placeholder="Milovan">
         <label>Search by address:</label>
-        <input type="text" [(ngModel)]="_searchByCity" placeholder="Addres NN">
+        <input type="text" [(ngModel)]="_searchByAddress" placeholder="Addres NN">
         <button (click)="toggleExportSelected(); export()" (click) = "exportSelectedData()">Export data</button>
         
     </div>
@@ -22,7 +22,7 @@
                   
                 </tr>
               </thead>
-              <tr *ngFor="let user of allUsers | filterName : _searchByName | filterAddress : _searchByCity" (click) = "showMeOnMap(user.id)" [ngClass]="{'table-active': activeItem === user.id}" >
+              <tr *ngFor="let user of allUsers | filterName : _searchByName: _searchByAddress" (click) = "showMeOnMap(user.id)" [ngClass]="{'table-active': activeItem === user.id}" >
                   <td> <i class="fa fa-angle-right fa-lg" (click) = "showMeDevices(user.id)" ></i> </td>
                   <td>{{user.firstName}}</td>
                   <td>{{user.lastName}}</td>
