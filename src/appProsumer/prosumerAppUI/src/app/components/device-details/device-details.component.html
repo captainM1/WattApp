@@ -41,22 +41,8 @@
             <div class="row">
                 <h3>Daily Usage</h3>
             </div>
-            <div class="align-center fill">
-                <igx-category-chart
-      chartType="Line"
-      yAxisLabelLeftMargin="0"
-      yAxisTitleLeftMargin="10"
-      yAxisTitleRightMargin="5"
-      yAxisTitle="TWh"
-      [dataSource]="countryRenewableElectricity"
-      includedProperties="year, europe, china, america"
-      [legend]="legend"
-      isHorizontalZoomEnabled="false"
-      isVerticalZoomEnabled="false"
-      computedPlotAreaMarginMode="Series"
-      name="chart"
-      #chart>
-      </igx-category-chart>
+            <div class="align-center">
+                <canvas #chart></canvas>
             </div>
         </div>
     </div>
