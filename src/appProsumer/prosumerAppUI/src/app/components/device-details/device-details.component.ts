@@ -17,6 +17,7 @@ export class DeviceDetailsComponent implements OnInit, AfterViewInit {
   device: any;
   deviceId: any;
   deviceHistory: any;
+  deviceHistoryPower: any;
   deviceFuture: any;
   deviceToday: any;
 
@@ -46,7 +47,8 @@ export class DeviceDetailsComponent implements OnInit, AfterViewInit {
       this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/7daysHistory/${this.deviceId}`)
         .subscribe(data => {
           this.deviceHistory = data;
-          console.log(data);
+          this.deviceHistoryPower = this.deviceHistory.timestampPowerPairs.map((time:any) => time.powerUsage);
+          console.log(this.deviceHistoryPower);
         },
         error => {
           console.error('Error fetching device history:', error);
@@ -123,17 +125,13 @@ export class DeviceDetailsComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     if (this.chartElement){
   const ctx = this.chartElement.nativeElement.getContext('2d');
-  const chartData = this.deviceHistory.timestampPowerPairs.map((pair: { timestamp: string | number | Date; powerUsage: any; }) => ({
-    x: new Date(pair.timestamp),
-    y: pair.powerUsage,
-  }));
   const chart = new Chart(ctx, {
     type: 'line',
     data: {
-      labels:  chartData.map((data: { x: any; }) => data.x),
+      labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7', 'Day 8', 'Day 9', 'Day 10', 'Day 11', 'Day 12', 'Day 13', 'Day 14'],
       datasets: [{
         label: 'Power Usage',
-        data: chartData,
+        data: this.deviceHistoryPower,
         fill: false,
         borderColor: 'rgb(75, 192, 192)',
         tension: 0.1
@@ -147,15 +145,15 @@ export class DeviceDetailsComponent implements OnInit, AfterViewInit {
             display: true,
             text: 'Power Usage (kW)'
           },
-          max: 4000
+          max: 3000,
+          min:1000
         },
         x: {
           title: {
             display: true,
             text: 'Day'
           }
-        }
-        
+        },
       }
     }
     
