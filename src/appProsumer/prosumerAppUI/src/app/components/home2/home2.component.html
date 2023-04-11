@@ -24,12 +24,36 @@
         </div>
     </div>
     <div class="row" id="red">
-      <div class="col">
+      <div class="col" id="col1">
         <app-my-devices></app-my-devices>
       </div>
+
+        <div class="col" id="col2">
+
+            <div class="card">
+                <div class="card-body">
+                <h5 class="card-title"> Summary of current usage :</h5>
+                <p class="card-text"  style="text-align: center;">  {{currentUsage}}kw </p>
+
+                </div>
+            </div>
+
+
+            <div class="card">
+                <div class="card-body">
+                <h5 class="card-title"> Average usage for the previous month:</h5>
+                <p class="card-text" style="text-align: center;"> {{averageUsage}} kw </p>
+
+                </div>
+            </div>
+
+       </div>
+
+    </div>
+
     </div>
 
 
-  </div>
 </div>
+
 
