@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { User } from 'src/app/models/user';
 import { AuthUserService } from 'src/app/services/auth-user.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -8,15 +8,22 @@ import { AuthService } from 'src/app/services/auth.service';
   templateUrl: './home2.component.html',
   styleUrls: ['./home2.component.css']
 })
-export class Home2Component implements OnInit {
+export class Home2Component implements OnInit, AfterViewInit {
   currentUsage! : any;
   averageUsage! : any;
   userID!: any;
   token!:any;
+
   constructor(
 		private auth : AuthService,
     private auth1 : AuthUserService,
 	){}
+
+  @ViewChild('myChart') myChart!: ElementRef;
+
+  ngAfterViewInit(): void {
+    throw new Error('Method not implemented.');
+  }
 
   ngOnInit(): void {
     this.getToken();
@@ -25,7 +32,7 @@ export class Home2Component implements OnInit {
   currentUsageUser(id:any){
     this.auth1.getCurrentUsageUserSummary(id).subscribe(
       (response : any) => {
-        this.currentUsage = response;
+        this.currentUsage = response.toFixed(2);
         console.log(response);
       }
     )
@@ -34,7 +41,7 @@ export class Home2Component implements OnInit {
   averageUsegaUser(id:any){
     this.auth1.getAverageUserUsage(id).subscribe(
       (response : any) => {
-        this.averageUsage = response;
+        this.averageUsage = response.toFixed(2);
       }
     )
   }
@@ -46,7 +53,7 @@ export class Home2Component implements OnInit {
        this.userID = response.id;
        console.log(this.userID);
        this.currentUsageUser(this.userID);
-      this.averageUsegaUser(this.userID);
+       this.averageUsegaUser(this.userID);
       }
     )
   }
