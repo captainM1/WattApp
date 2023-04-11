@@ -17,8 +17,9 @@
                   <th >First Name</th>
                   <th >Last Name</th>
                   <th >Address</th>
-                  <th (click)="sortData('powerUsage')"><i class="fa fa-arrow-up" aria-hidden="true" style = "color:white" *ngIf="currentSortOrder ==='asc'"></i><i class="fa fa-arrow-down"  style ="color:white"*ngIf="currentSortOrder === 'desc'"aria-hidden="true"></i>Power Usage</th>
+                  <th (click)="sortData('powerUsage')"><i class="fa fa-arrow-up" aria-hidden="true" style = "color:white" *ngIf="currentSortOrder ==='asc'"></i><i class="fa fa-arrow-down"  style ="color:white" *ngIf="currentSortOrder === 'desc'"></i>Power Usage</th>
                   <th></th>
+                  
                 </tr>
               </thead>
               <tr *ngFor="let user of allUsers | filterName : _searchByName | filterAddress : _searchByCity" (click) = "showMeOnMap(user.id)" [ngClass]="{'table-active': activeItem === user.id}" >
@@ -27,6 +28,7 @@
                   <td>{{user.lastName}}</td>
                   <td>{{user.address}}, {{user.city}}, {{user.country}}</td>
                   <td>{{user.powerUsage}}kw/h</td>
+                 
                   <td><input  [(ngModel)]="user.selected" type="checkbox" style="width: 20px;"></td>
               </tr>
               <tr>
@@ -57,11 +59,11 @@
                 <th>Type of Device</th>
                 <th>Device manifacture</th>
                 <th>Mac Address</th>
+                
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let device of allUserDevices">
-                
                 <td>{{device.deviceTypeName}}</td>
                 <td>{{device.typeOfDevice}}</td>
                 <td>{{device.manufacturerName}}</td>
@@ -75,7 +77,15 @@
     </div>
     <div class="col">
         <div id = "map" style="width: 450px; height: 300px;" >
-            
         </div>
+    
+      
+      <!-- onclik on the device -->
+      <div class="card" style="width: 450px; height: 100px; margin-top: 10px">
+        <div class="card-body">
+        <h5 class="card-title">Current power usage for device: </h5>
+        <p class="card-text"  style="text-align: center;">  kw </p>
+      </div>
+    </div>
     </div>
  </div>

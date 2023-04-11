@@ -12,6 +12,8 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import { ProfileComponent } from 'app/profile/profile.component';
+
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
@@ -19,52 +21,47 @@ import { saveAs } from 'file-saver';
   
 })
 export class TableComponent implements OnInit {
-  
+// filtriranje
   _searchByName: string = '';
   _searchByCity: string = '';
-
-  activeItem:any;
+// export 
   filtered! : User[];
-  
-
+  activeItem:any;
   exportData : any[] = [];
-
+  exportSelected: boolean = false;
+// pagination
+  public page = 1;
+  public pageSize = 5;
+  
+  showAllUsersOnMap : boolean = true;
+  lengthOfUsers!: number;
   allUsers!: User[];
   allUserDevices! : Info[];
   userIDCoords!:any[];
-
   private userCoords!: any[];
-  private id : any;
-  private firstName?: string;
-  private lastName?: string;
-  private address? : string;
 
   public toggleTable : boolean = false;
 
-  showAllUsersOnMap : boolean = true;
-  
   private map!: L.Map;
   private markers: L.Marker[] = [];
   private latlng: L.LatLng[] = [];
   
-  pageSizeOption = ['5','10','15'];
   selected: string = "";
-
-  public page = 1;
-  public pageSize = 5;
-  private lengthOfUsers!: number;
-  // tableData: any;
-  exportSelected: boolean = false;
   
   powerUsage!:string;
   deviceGroup!: any[];
+
+// device type
   producers!: any[];
   consumers!: any[];
   storage!: any[];
+ 
+  @ViewChild('myTable') myTable!: ElementRef;
 
   constructor(
     private auth : AuthService,
     private table : MatTableModule,
+
 
   ){}
 
@@ -78,28 +75,24 @@ export class TableComponent implements OnInit {
     
     
   }
-  @ViewChild('myTable') myTable!: ElementRef;
-  
-  
+
   currentSortOrder: string = 'asc';
   sortData(sortBy: string): void {
     this.currentSortOrder = this.currentSortOrder === 'asc' ? 'desc' : 'asc';
-      if (sortBy === 'powerUsage') {
-        this.allUsers.sort((a, b) => {
-          
-          if (a.powerUsage < b.powerUsage) {
-           
-            return -1;
-          } else if (a.powerUsage > b.powerUsage) {
-           
-            return 1;
-          } else {
-            return 0;
-          }
-        });
+    if (sortBy === 'powerUsage') {
+      this.allUsers.sort((a, b) => {
+        if (a.powerUsage < b.powerUsage) {
+          return this.currentSortOrder === 'asc' ? -1 : 1;
+        } else if (a.powerUsage > b.powerUsage) {
+          return this.currentSortOrder === 'asc' ? 1 : -1;
+        } else {
+          return 0;
+        }
+      });
     }
-   
+    console.log(this.currentSortOrder);
   }
+
     toggleExportSelected(): void {
       this.exportSelected = !this.exportSelected;
     }
@@ -141,15 +134,15 @@ export class TableComponent implements OnInit {
  
   public showMeUsers(){
    
+    
     this.auth.getPagination(this.page, this.pageSize).subscribe(
       (response : any)=> {
         this.allUsers = response;
-        this.filtered = response;
         for(let user of this.allUsers){
+          
           this.auth.getUserPowerUsageByID(user.id).subscribe(
             (response: any)=>{
               user.powerUsage = (response/10).toFixed(2);
-              console.log("USER.powerUSEGAE",user.powerUsage)
               user.selected = false;
             }
           )
@@ -242,6 +235,13 @@ export class TableComponent implements OnInit {
 
   showMeDevices(id : string){
     this.getDeviceGroup();
+    console.log(id);
+    this.auth.getPowerUsageForDeviceByID(id).subscribe(
+      (response : any)=>{
+        
+        console.log(response);
+      }
+    )
     this.toggleTable = true;
     this.auth.getDeviceInfoUserByID(id).subscribe(
       (response : any) => {
@@ -265,7 +265,7 @@ export class TableComponent implements OnInit {
           }
           }
         }
-        console.log(this.allUserDevices);
+        // console.log(this.allUserDevices);
       }
     )
   }
@@ -300,6 +300,10 @@ export class TableComponent implements OnInit {
   toggleColumn(){
     this.toggleTable = !this.toggleTable;
   }
+
+  
+    
+  
 }
 
     

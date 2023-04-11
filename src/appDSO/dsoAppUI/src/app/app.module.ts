@@ -26,6 +26,7 @@ import { FormsModule } from '@angular/forms';
 import { RequirementsComponent } from './components/requirements/requirements.component';
 import { FilterPipe } from './components/table/filer.pipe';
 import { FilterPipeAddress } from './components/table/filterAddress.pipe';
+import { ProfileComponent } from './profile/profile.component';
 
 
 var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
@@ -42,7 +43,8 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     SignupComponent,
     RequirementsComponent,
     FilterPipe,
-    FilterPipeAddress
+    FilterPipeAddress,
+    ProfileComponent
 
     
   ],
