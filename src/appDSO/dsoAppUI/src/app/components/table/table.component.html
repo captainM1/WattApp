@@ -6,36 +6,34 @@
       <input type="text" [(ngModel)]="_searchByAddress" placeholder="Addres NN" (input)="applyFilters()">        
     </div>
       <div class="card">
-        <table tableexporter >
-          <thead>
-            <tr>
-              <th>
-                  First Name
-              </th>
-              <th>
-                  Last Name
-              </th>
-              <th>
-                  Address
-              </th>
-              <th>
-                    Power Usage
-              </th>
+          <table tableexporter class="table-hover" #myTable id = "myTable">
+              <thead>
+                <tr>
+                  <th ></th>
+                  <th >First Name</th>
+                  <th >Last Name</th>
+                  <th >Address</th>
+                  <th (click)="sortData('powerUsage')"><i class="fa fa-arrow-up" aria-hidden="true" style = "color:white" *ngIf="currentSortOrder ==='asc'"></i><i class="fa fa-arrow-down"  style ="color:white" *ngIf="currentSortOrder === 'desc'"></i>Power Usage</th>
+                  <th></th>
+                  
+                </tr>
+              </thead>
+              <tr *ngFor="let user of allUsers | filterName : _searchByName: _searchByAddress" (click) = "showMeOnMap(user.id)" [ngClass]="{'table-active': activeItem === user.id}" >
+                  <td> <i class="fa fa-angle-right fa-lg" (click) = "showMeDevices(user.id)" ></i> </td>
+                  <td>{{user.firstName}}</td>
+                  <td>{{user.lastName}}</td>
+                  <td>{{user.address}}, {{user.city}}, {{user.country}}</td>
+                  <td>{{user.powerUsage}}kw/h</td>
+                 
+                  <td><input  [(ngModel)]="user.selected" type="checkbox" style="width: 20px;"></td>
               </tr>
-          </thead>
-          <tr *ngFor="let user of filtered" (click) = "showMeOnMap(user.id)">
-           
-            
-              <td> <i class="fa fa-angle-right fa-lg" (click) = "showMeDevices(user.id)" ></i>{{user.firstName}}</td>
-              <td>{{user.lastName}}</td>
-              <td>{{user.address}}, {{user.city}}, {{user.country}}</td>
-              <td>{{user.powerUsage}}kw/h</td>
-              <!-- <td><input (click)="exportSelectedData();" type="checkbox"></td> -->
-          </tr>
-          <tr>
-              <p-paginator class="w-100" [rows]="pageSize" [totalRecords]="lengthOfUsers" [rowsPerPageOptions]="pageSizeOptions" (onPageChange)="onPageChange($event)"></p-paginator>
-          </tr>
-      </table>
+              <tr>
+                
+              </tr>
+              <tr>
+                <p-paginator class="w-100" [rows]="pageSize" [totalRecords]="lengthOfUsers" [rowsPerPageOptions]="pageSizeOptions" (onPageChange)="onPageChange($event)"></p-paginator>
+            </tr>
+          </table>
          
           <table>
             <thead>
@@ -44,11 +42,11 @@
                 <th>Type of Device</th>
                 <th>Device manifacture</th>
                 <th>Mac Address</th>
+                
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let device of allUserDevices">
-                
                 <td>{{device.deviceTypeName}}</td>
                 <td>{{device.typeOfDevice}}</td>
                 <td>{{device.manufacturerName}}</td>
@@ -62,7 +60,15 @@
     </div>
     <div class="col">
         <div id = "map" style="width: 450px; height: 300px;" >
-            
         </div>
+    
+      
+      <!-- onclik on the device -->
+      <div class="card" style="width: 450px; height: 100px; margin-top: 10px">
+        <div class="card-body">
+        <h5 class="card-title">Current power usage for device: </h5>
+        <p class="card-text"  style="text-align: center;">  kw </p>
+      </div>
+    </div>
     </div>
  </div>

@@ -5,7 +5,8 @@ export interface User{
     address: string,
     city: string,
     country: string,
-    powerUsage:string;
+    powerUsage:string,
+    selected: boolean
    
 }
 export interface Device{
@@ -22,7 +23,7 @@ export interface Info{
     deviceTypeName: string;
     macAdress: string;
     manufacturerName: string;
-    typeOfDevice: string
+    typeOfDevice: string;
 }
 
 export interface DeviceType{
