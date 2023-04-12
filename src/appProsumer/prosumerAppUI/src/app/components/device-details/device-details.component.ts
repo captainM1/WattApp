@@ -52,8 +52,10 @@ export class DeviceDetailsComponent implements OnInit, AfterViewInit {
       this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/7daysHistory/${this.deviceId}`)
         .subscribe(data => {
           this.deviceHistory = data;
+          this.deviceHistoryDate = this.deviceHistory.timestampPowerPairs.map((time:any) => time.timestamp);
           this.deviceHistoryPower = this.deviceHistory.timestampPowerPairs.map((time:any) => time.powerUsage);
           console.log(this.deviceHistoryPower);
+          console.log(this.deviceHistoryDate);
         },
         error => {
           console.error('Error fetching device history:', error);
@@ -71,9 +73,10 @@ export class DeviceDetailsComponent implements OnInit, AfterViewInit {
       this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/7daysFuture/${this.deviceId}`)
         .subscribe(data => {
           this.deviceFuture = data;
+          this.deviceFutureDate = this.deviceFuture.timestampPowerPairs.map((time:any) => time.timestamp);
           this.deviceFuturePower = this.deviceFuture.timestampPowerPairs.map((time:any) => time.powerUsage);
           console.log(this.deviceFuturePower);
-          console.log(data);
+          console.log(this.deviceFutureDate);
         },
         error => {
           console.error('Error fetching device future:', error);
@@ -135,11 +138,11 @@ export class DeviceDetailsComponent implements OnInit, AfterViewInit {
   const chart = new Chart(ctx, {
     type: 'line',
     data: {
-      labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7', 'Day 8', 'Day 9', 'Day 10', 'Day 11', 'Day 12', 'Day 13', 'Day 14'],
+      labels: this.deviceHistoryDate,
       datasets: [{
         label: 'Power Usage',
         data: this.deviceHistoryPower,
-        fill: false,
+        fill: true,
         borderColor: 'rgb(75, 192, 192)',
         tension: 0.1
       }]
