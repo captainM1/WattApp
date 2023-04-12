@@ -59,14 +59,13 @@ public class PowerUsageRepository:IPowerUsageRepository
         var q = (from x in _dataContext.DeviceTypes
             join y in _dataContext.DeviceGroups on x.GroupID equals y.ID
             where deviceTypeID == x.ID
-            select new
+            select new 
             {
-                x.ID,
-                x.GroupID, 
+                y.ID,
                 y.Name
-            });
-        var temp = q.AsQueryable().FirstOrDefault();
-        if (temp.Name == "Consumer")
+            }).FirstOrDefault();
+
+        if (q.Name == "Consumer")
         {
             var powerUsageData = mongoCollection
                 .AsQueryable()
