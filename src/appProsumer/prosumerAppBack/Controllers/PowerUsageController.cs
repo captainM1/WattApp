@@ -80,6 +80,21 @@ public class PowerUsageController : ControllerBase
             throw new ArgumentException(ex.Message);
         }
     }
+    
+    [HttpGet("power-usage/current/system")]
+    public ActionResult<IEnumerable<PowerUsage>> GetForSystem()
+    {        
+        try
+        {
+            var powerUsages = _powerUsageService.CurrentSumPowerUsageSystem();
+
+            return Ok(powerUsages);
+        }
+        catch (ArgumentNullException ex)
+        {
+            throw new ArgumentException(ex.Message);
+        }
+    }
 
     [HttpGet("power-usage/currentUsageUser/summary/{userID}")]
     public ActionResult<double> GetForUser(Guid userID)

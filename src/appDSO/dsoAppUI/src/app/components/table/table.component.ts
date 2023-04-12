@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table'; 
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
-
+import { PaginatorModule } from 'primeng/paginator';
 
 @Component({
   selector: 'app-table',
@@ -18,124 +18,84 @@ import {MatTableDataSource} from '@angular/material/table';
   
 })
 export class TableComponent implements OnInit {
-  
   _searchByName: string = '';
   _searchByAddress: string = '';
+  exportData: any[] = [];
 
-  filtered! : User[];
-  
-
-  exportData : any[] = [];
-
-  allUsers!: User[];
-  allUserDevices! : Info[];
-  userIDCoords!:any[];
+  allUserDevices!: Info[];
+  userIDCoords!: any[];
 
   private userCoords!: any[];
-  private id : any;
+  private id: any;
   private firstName?: string;
   private lastName?: string;
-  private address? : string;
+  private address?: string;
 
-  public toggleTable : boolean = false;
+  public toggleTable: boolean = false;
 
-  showAllUsersOnMap : boolean = true;
-  
+  showAllUsersOnMap: boolean = true;
+
   private map!: L.Map;
   private markers: L.Marker[] = [];
   private latlng: L.LatLng[] = [];
-  
-  pageSizeOption = ['5','10','15'];
-  selected: string = "";
 
-  public page = 1;
-  public pageSize = 5;
-  private lengthOfUsers!: number;
-  // tableData: any;
-  
-  powerUsage!:string;
+  selected: string = "";
+  page = 0;
+  pageSize = 5;
+  pageSizeOptions = [5, 10, 25, 50];
+
+  public lengthOfUsers: number = 0;
+  allUsers: User[] = [];
+  filtered: User[] = [];
+
+  powerUsage!: string;
   deviceGroup!: any[];
   producers!: any[];
   consumers!: any[];
   storage!: any[];
 
   constructor(
-    private auth : AuthService,
-    private table : MatTableModule
+    private auth: AuthService,
+    private table: MatTableModule
   ){}
 
-  
   ngOnInit(): void {
-    
-    this.showMeUsers();
+    this.showMeUsers(this.page,this.pageSize);
     this.onInitMap();
     this.showCoordsForEveryUser();
     this.getDeviceGroup();
-    
-    
   }
-  
-  // exportSelectedData(){
-  //   this.exportData = this.tableData.filter((item: { checked: any; })=>item.checked)
-  // }
- 
-  public showMeUsers(){
-   
-    this.auth.getPagination(this.page, this.pageSize).subscribe(
-      (response : any)=> {
+
+  onPageChange(event: any) {
+    this.page = event.page;
+    this.pageSize = event.rows;
+    this.showMeUsers(this.page, this.pageSize);
+  }
+
+  public showMeUsers(page: number, pageSize: number) {
+    this.auth.getPagination(page, pageSize).subscribe(
+      (response: any) => {
         this.allUsers = response;
         this.filtered = response;
         for(let user of this.allUsers){
           this.auth.getUserPowerUsageByID(user.id).subscribe(
-            (response: any)=>{
+            (response: any) => {
               user.powerUsage = (response/10).toFixed(2);
-              console.log("USER.powerUSEGAE",user.powerUsage)
             }
           )
         }
-        
       }
     );
   }
-
-  get searchByAddress(){
-    return this._searchByAddress;
-  }
-
-  set searchByAddress(value : string){
-    this._searchByAddress = value;
-    this.filtered = this.filterByAddressFilter(value);
-  }
-
-  filterByAddressFilter(filterTerm:string){
-    if(this.filtered.length === 0 || this._searchByAddress === ''){
-      return this.filtered;
-    }else{
-      return this.filtered.filter((user)=>{
-        return 
-      })
-    }  
-  }
-// bind _searchByName ngModel
-  get searchByName(){
-    return this._searchByName;
+  
+  applyFilters(): void {
+    this.filtered = this.allUsers.filter((user: User) => {
+      const nameMatch = user.firstName.toLowerCase().includes(this._searchByName.toLowerCase());
+      const addressMatch = user.address.toLowerCase().includes(this._searchByAddress.toLowerCase());
+      return nameMatch && addressMatch;
+    });
   }
   
-  set searchByName(value: string){
-    this._searchByName = value;
-    this.filtered = this.filterUsersByName(value);
-  }
- 
-  filterUsersByName(filterTerm : string){
-    if(this.allUsers.length === 0  || this._searchByName === ''){
-      return this.allUsers;
-    }else{
-      return this.allUsers.filter((user)=>{
-        return user.firstName.toLowerCase() === filterTerm.toLowerCase();
-      })
-    }
-  }
- 
   public onInitMap(){
     this.map = L.map('map').setView([44.0165,21.0069],10);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -163,7 +123,7 @@ export class TableComponent implements OnInit {
           }
         });
       });
-  }  
+  }
 
   public showMeOnMap(id: string) {
     // remove all markers from the map
@@ -197,22 +157,7 @@ export class TableComponent implements OnInit {
         this.map.setView(latlng, 15); // 15 is the zoom level, you can adjust it as needed
       }
     );
-  }
-  
- 
-  // paginacija za menjanje strana
-  nextPage(){
-    if(this.lengthOfUsers / this.pageSize > 0){
-      this.page++;
-    }
-  }
-
-  prevPage(){
-    if(this.page !== 1){
-      this.page--;
-    }
-  }
-  
+  }  
 
   showMeDevices(id : string){
     this.getDeviceGroup();
