@@ -267,7 +267,5 @@ namespace prosumerAppBack.Controllers
                 throw new ArgumentException(ex.Message);
             }
         }
-
-    }
 }
 
