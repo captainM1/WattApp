@@ -221,6 +221,46 @@ public class UserRepository : IUserRepository
             Country = newUser.Country,
             Salt = newUser.Salt,
             PasswordHash = newUser.PasswordHash,
+            Role = "RegularUser",
+        };
+
+        _dbContext.Users.Update(approvedUser);
+        await _dbContext.SaveChangesAsync();
+
+        var user = await _dbContext.UsersAppliedToDSO.FindAsync(id);
+
+        _dbContext.UsersAppliedToDSO.Remove(user);
+        await _dbContext.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<Boolean> DeclineUserRequestToDso(Guid id)
+    {
+        var user = await _dbContext.UsersAppliedToDSO.FindAsync(id);
+
+        _dbContext.UsersAppliedToDSO.Remove(user);
+        await _dbContext.SaveChangesAsync();
+        return true;
+    }
+
+
+    public async Task<Boolean> ApproveUserRequestToDso(Guid id)
+    {
+        var newUser = await _dbContext.UsersAppliedToDSO.FindAsync(id);
+
+        var approvedUser = new User
+        {
+            ID = newUser.ID,
+            FirstName = newUser.FirstName,
+            LastName = newUser.LastName,
+            UserName = newUser.UserName,
+            PhoneNumber = newUser.PhoneNumber,
+            Email = newUser.Email,
+            Address = newUser.Address,
+            City = newUser.City,
+            Country = newUser.Country,
+            Salt = newUser.Salt,
+            PasswordHash = newUser.PasswordHash,
             Role= "RegularUser",
         };
 
