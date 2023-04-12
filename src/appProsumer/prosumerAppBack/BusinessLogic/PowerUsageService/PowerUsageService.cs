@@ -1,4 +1,7 @@
-﻿using prosumerAppBack.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using prosumerAppBack.Models;
 using prosumerAppBack.Models.Device;
 using SendGrid.Helpers.Errors.Model;
 

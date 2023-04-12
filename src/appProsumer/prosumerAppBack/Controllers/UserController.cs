@@ -124,10 +124,15 @@ public class UserController : ControllerBase
         return Ok(new { message = "user updated successfully" });
     }
 
-    [HttpPost("send-reset-email")]
+    [HttpPost("forgot-password")]
     public async Task<IActionResult> SendResetEmail([FromBody] ResetPasswordEmailDto resetPasswordEmailDto)
     {
         var user = await _userService.GetUserByEmailAsync(resetPasswordEmailDto.Email);
+
+        if(user == null)
+        {
+            return BadRequest("Email does not exists");
+        }
 
         var token = _tokenMaker.GenerateToken(user);
         var resetPasswordUrl = $"https://localhost:7182/api/user/reset-password?token={token}";

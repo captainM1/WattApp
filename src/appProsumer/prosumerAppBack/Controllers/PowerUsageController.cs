@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
@@ -209,4 +210,25 @@ public class PowerUsageController : ControllerBase
         var powerUsages = _powerUsage.GetPowerUsageForDeviceNext24Hours(deviceID);
         return Ok(powerUsages);
     }
+
+    /*[HttpGet("power-usage/most-consumes/last-24hours/{userID}")]
+    public ActionResult<Dictionary<DateTime, double>> GetMostConsumerPast24hours(Guid userID)
+    {
+        var powerUsages = _powerUsageService.GetDeviceWithMaxPowerUsage24(userID);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/most-consumes/last-week/{userID}")]
+    public ActionResult<Dictionary<DateTime, double>> GetMostConsumerLastWeek(Guid userID)
+    {
+        var powerUsages = _powerUsageService.GetDevicePowerUsageMaxForUserLastWeek(userID);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/most-consumes/last-month/{userID}")]
+    public ActionResult<Dictionary<DateTime, double>> GetMostConsumerLastMonth(Guid userID)
+    {
+        var powerUsages = _powerUsageService.GetDevicePowerUsageForUserPreviousMonth(userID);
+        return Ok(powerUsages);
+    }*/
 }
