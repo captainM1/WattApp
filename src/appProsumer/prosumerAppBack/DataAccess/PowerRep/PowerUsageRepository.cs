@@ -354,8 +354,4 @@ public class PowerUsageRepository:IPowerUsageRepository
 
         return true;
     }
-
-
-
-
 }
