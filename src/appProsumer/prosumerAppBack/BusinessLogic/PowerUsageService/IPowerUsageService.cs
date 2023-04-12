@@ -8,4 +8,5 @@ public interface IPowerUsageService
     double GetPowerUsageForDay(Guid deviceID, DateTime today);
     PowerUsage GetPowerUsageFor7Days(Guid deviceId, int direction);
     double CurrentSumPowerUsage(Guid userID);
+    public double CurrentSumPowerUsageSystem();
 }
