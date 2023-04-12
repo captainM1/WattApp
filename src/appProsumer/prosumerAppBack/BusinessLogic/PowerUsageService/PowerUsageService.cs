@@ -43,6 +43,16 @@ public class PowerUsageService:IPowerUsageService
         return powerUsages;
     }
 
+    public double CurrentSumPowerUsageSystem()
+    {
+        var powerUsage = _repository.CurrentSumPowerUsageSystem();
+        if (powerUsage == 0)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsage;
+    }
+
     public PowerUsage GetForDevice(Guid deviceID)
     {
         var powerUsages = _repository.GetForDevice(deviceID);
