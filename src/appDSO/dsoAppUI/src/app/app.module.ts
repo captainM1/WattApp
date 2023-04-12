@@ -27,6 +27,7 @@ import { FormsModule } from '@angular/forms';
 import { WeatherComponent } from './components/weather/weather.component';
 
 import { RequirementsComponent } from './components/requirements/requirements.component';
+import { PaginatorModule } from 'primeng/paginator';
 
 
 var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
@@ -65,9 +66,7 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     NgChartsModule,
     FormsModule,
     MatTableModule,
-    
-    
-
+    PaginatorModule
   ],
   providers: [],
   bootstrap: [AppComponent]

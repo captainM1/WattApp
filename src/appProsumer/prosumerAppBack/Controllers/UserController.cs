@@ -282,4 +282,64 @@ public class UserController : ControllerBase
             return StatusCode(500, ex.Message);
         }
     }
+
+    [HttpPost("approve-request-to-dso/{id}")]
+    public async Task<IActionResult> ApproveRequestForDso(Guid id)
+    {
+        try
+        {
+            var result = await _userService.ApproveUserRequestToDso(id);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpPost("decline-request-to-dso/{id}")]
+    public async Task<IActionResult> DeclineRequestForDso(Guid id)
+    {
+        try
+        {
+            var result = await _userService.DeclineUserRequestToDso(id);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpPost("approve-request-to-dso/{id}")]
+    public async Task<IActionResult> ApproveRequestForDso(Guid id)
+    {
+        try
+        { 
+            var result = await _userService.ApproveUserRequestToDso(id);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpPost("decline-request-to-dso/{id}")]
+    public async Task<IActionResult> DeclineRequestForDso(Guid id)
+    {
+        try
+        {
+            var result = await _userService.DeclineUserRequestToDso(id);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
 }
