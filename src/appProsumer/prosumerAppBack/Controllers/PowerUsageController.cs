@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
@@ -192,6 +193,34 @@ public class PowerUsageController : ControllerBase
     public ActionResult<Dictionary<DateTime, double>> GetDeviceUsageForNext24(Guid deviceID)
     {
         var powerUsages = _powerUsage.GetPowerUsageForDeviceNext24Hours(deviceID);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/most-consumes/last-24hours/{userID}")]
+    public ActionResult<Dictionary<DateTime, double>> GetMostConsumerPast24hours(Guid userID)
+    {
+        var powerUsages = _powerUsage.GetDeviceWithMaxPowerUsage24(userID);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/most-consumes/last-week/{userID}")]
+    public ActionResult<Dictionary<DateTime, double>> GetMostConsumerLastWeek(Guid userID)
+    {
+        var powerUsages = _powerUsage.GetDevicePowerUsageMaxForUserLastWeek(userID);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/most-consumes/last-month/{userID}")]
+    public ActionResult<Dictionary<DateTime, double>> GetMostConsumerLastMonth(Guid userID)
+    {
+        var powerUsages = _powerUsage.GetDevicePowerUsageForUserPreviousMonth(userID);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/most-consumes/current/{userID}")]
+    public ActionResult<Dictionary<DateTime, double>> GetMostConsumerLastMonth(Guid userID)
+    {
+        var powerUsages = _powerUsage.GetDeviceWithHighestCurrentUsage(userID);
         return Ok(powerUsages);
     }
 }
