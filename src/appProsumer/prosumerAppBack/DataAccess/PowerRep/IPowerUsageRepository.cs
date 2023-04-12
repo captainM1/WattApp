@@ -22,6 +22,9 @@ namespace prosumerAppBack.BusinessLogic
         public Dictionary<DateTime, double> GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction);
         public Dictionary<DateTime, double> GetPowerUsageForDeviceNext24Hours(Guid deviceID);
         public Task<bool> DeleteDevice(Guid deviceID);
+        Dictionary<DateTime, double> GetPowerUsageForADaySystem();
+        public double GetCurrentPowerUsage();
+        public double GetCurrentPowerUsageForDevice(Guid deviceID);
         public double CurrentSumPowerUsageSystem();
 	}
 }

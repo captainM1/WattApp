@@ -65,4 +65,34 @@ public class PowerUsageService:IPowerUsageService
         }
         return powerUsages;
     }
+
+    public Dictionary<DateTime, double> GetPowerUsageForADaySystem()
+    {
+        var powerUsages = _repository.GetPowerUsageForADaySystem();
+        if (powerUsages == null)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsages;
+    }
+
+    public double GetCurrentPowerUsage()
+    {
+        var powerUsages = _repository.GetCurrentPowerUsage();
+        if (powerUsages == null)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsages;
+    }
+
+    public double GetCurrentPowerUsageForDevice(Guid deviceID)
+    {
+        var powerUsages = _repository.GetCurrentPowerUsageForDevice(deviceID);
+        if (powerUsages == null)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsages;
+    }
 }
