@@ -86,7 +86,26 @@ public class PowerUsageService:IPowerUsageService
         return (maxDeviceID, maxPowerUsage);
     }
 
-    
+    public Dictionary<Guid, double> GetDevicePowerUsageMaxForUserLastWeek(Guid userID)
+    {
+        var end = DateTime.UtcNow;
+        var start = end.AddDays(-7);
+
+        var powerUsages = _context.Devices
+            .Where(d => d.OwnerID == userID)
+            .SelectMany(d => d.TimestampPowerPairs)
+            .Where(tp => tp.Timestamp >= start && tp.Timestamp <= end)
+            .ToList();
+
+        var devicePowerUsageMax = powerUsages
+            .GroupBy(tp => tp.DeviceID)
+            .ToDictionary(g => g.Key, g => g.Sum(tp => tp.PowerUsage))
+            .OrderByDescending(kv => kv.Value)
+            .FirstOrDefault();
+
+        return devicePowerUsageMax != null ? new Dictionary<Guid, double> { { devicePowerUsageMax.Key, devicePowerUsageMax.Value } } : new Dictionary<Guid, double>();
+    }
+
 
 
 }

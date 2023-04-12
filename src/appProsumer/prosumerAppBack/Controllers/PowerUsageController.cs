@@ -196,10 +196,17 @@ public class PowerUsageController : ControllerBase
         return Ok(powerUsages);
     }
 
-    [HttpGet("power-usage/most-consumes/{userID}")]
+    [HttpGet("power-usage/most-consumes/last-24hours/{userID}")]
     public ActionResult<Dictionary<DateTime, double>> GetMostConsumerPast24hours(Guid userID)
     {
         var powerUsages = _powerUsage.GetDeviceWithMaxPowerUsage24(userID);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/most-consumes/last-week/{userID}")]
+    public ActionResult<Dictionary<DateTime, double>> GetMostConsumerLastWeek(Guid userID)
+    {
+        var powerUsages = _powerUsage.GetDevicePowerUsageMaxForUserLastWeek(userID);
         return Ok(powerUsages);
     }
 }
