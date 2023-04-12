@@ -68,20 +68,35 @@ public class PowerUsageRepository : IPowerUsageRepository
             .Select(d => d.DeviceTypeID)
             .FirstOrDefault();
 
-        var powerUsageData = mongoCollection
-            .AsQueryable()
-            .FirstOrDefault(p => p.ID.ToString() == deviceTypeID.ToString().ToUpper());
+        string deviceGroupName = _dataContext.DeviceGroups
+            .Where(g => g.ID == _dataContext.DeviceTypes
+                .Where(dt => dt.ID == deviceTypeID)
+                .Select(dt => dt.GroupID)
+                .FirstOrDefault())
+            .Select(g => g.Name)
+            .FirstOrDefault();
 
-        if (powerUsageData == null)
+        if (deviceGroupName == "Consumer")
         {
-            return 0;
+            var powerUsageData = mongoCollection
+                .AsQueryable()
+                .FirstOrDefault(p => p.ID.ToString() == deviceTypeID.ToString().ToUpper());
+
+            if (powerUsageData == null)
+            {
+                return 0;
+            }
+
+            double totalPowerUsage = powerUsageData.TimestampPowerPairs
+                .Where(pair => pair.Timestamp.Date == today)
+                .Sum(pair => pair.PowerUsage);
+
+            return totalPowerUsage;
         }
-
-        double totalPowerUsage = powerUsageData.TimestampPowerPairs
-            .Where(pair => pair.Timestamp.Date == today)
-            .Sum(pair => pair.PowerUsage);
-
-        return totalPowerUsage;
+        else
+        {
+            return 1;
+        }
     }
 
 
@@ -340,26 +355,13 @@ public class PowerUsageRepository : IPowerUsageRepository
         return true;
     }
 
-    public double GetPowerUsageForADaySystem(int direction)
-    {
-        var startOfMonth = DateTime.Now.AddDays(-DateTime.Now.Day + 1).AddMonths(direction); // pocetak proslog meseca (npr 04.05.)
-        var endOfMonth = startOfMonth.AddMonths(1); // (04. 06.)
-
-        var deviceUsages = mongoCollection.AsQueryable().ToList();
-
-        var powerUsages = deviceUsages
-            .Sum(p => p.TimestampPowerPairs.Where(t => t.Timestamp >= startOfMonth && t.Timestamp <= endOfMonth).Sum(p => p.PowerUsage));
-
-        return powerUsages;
-    }
-
     public Dictionary<DateTime, double> GetPowerUsageForADaySystem()
     {
         var startOf24Period = DateTime.Now.AddDays(-1);
         var endOf24Period = DateTime.Now;
 
-        var deviceUsages = mongoCollection.AsQueryable().ToList();
-        var powerUsages = deviceUsages
+        var powerUsages = mongoCollection.AsQueryable().ToList();
+        var temp = powerUsages
             .SelectMany(t => t.TimestampPowerPairs)
             .Where(t => t.Timestamp >= startOf24Period && t.Timestamp <= endOf24Period)
             .ToList();
@@ -369,11 +371,11 @@ public class PowerUsageRepository : IPowerUsageRepository
 
         while (currentDate <= endOf24Period)
         {
-            var sum = powerUsages
+            var sum = temp
                 .Where(tp => tp.Timestamp.Date == currentDate.Date)
                 .Sum(tp => tp.PowerUsage);
 
-            sums.Add(currentDate, sum);
+            sums.Add(currentDate, sum);            
             currentDate = currentDate.AddHours(1);
         }
 
@@ -398,10 +400,22 @@ public class PowerUsageRepository : IPowerUsageRepository
         var startOfAnHour = DateTime.Now;
         var endOfAnHour = DateTime.Now.AddHours(1);
 
+        Guid deviceTypeID = _dataContext.Devices
+            .Where(d => d.ID == deviceID)
+            .Select(d => d.DeviceTypeID)
+            .FirstOrDefault();
+
         var powerUsages = mongoCollection.AsQueryable()
-            .Sum(p => p.TimestampPowerPairs.Where(t => t.Timestamp >= startOfAnHour && t.Timestamp < endOfAnHour).Sum(p => p.PowerUsage));            
-        
-        return powerUsages;
+            .Where(p => deviceTypeID.ToString().ToUpper().Contains(p.ID.ToString()))
+            .ToList();
+
+        var temp = powerUsages
+                .SelectMany(p => p.TimestampPowerPairs)
+                .Where(tp => tp.Timestamp >= startOfAnHour && tp.Timestamp < endOfAnHour)
+                .Sum(tp => tp.PowerUsage);
+
+
+        return temp;
     }
 
 
