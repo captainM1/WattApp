@@ -12,7 +12,7 @@ import { ConfirmationService, MessageService, ConfirmEventType } from 'primeng/a
   templateUrl: './device-details.component.html',
   styleUrls: ['./device-details.component.css']
 })
-export class DeviceDetailsComponent implements OnInit, AfterViewInit {
+export class DeviceDetailsComponent implements OnInit {
 
   device: any;
   deviceId: any;
@@ -54,7 +54,6 @@ export class DeviceDetailsComponent implements OnInit, AfterViewInit {
           this.deviceHistory = data;
           this.deviceHistoryDate = this.deviceHistory.timestampPowerPairs.map((time:any) => time.timestamp);
           this.deviceHistoryPower = this.deviceHistory.timestampPowerPairs.map((time:any) => time.powerUsage);
-          console.log(this.deviceHistoryPower);
           console.log(this.deviceHistoryDate);
         },
         error => {
@@ -75,13 +74,12 @@ export class DeviceDetailsComponent implements OnInit, AfterViewInit {
           this.deviceFuture = data;
           this.deviceFutureDate = this.deviceFuture.timestampPowerPairs.map((time:any) => time.timestamp);
           this.deviceFuturePower = this.deviceFuture.timestampPowerPairs.map((time:any) => time.powerUsage);
-          console.log(this.deviceFuturePower);
-          console.log(this.deviceFutureDate);
+          this.initializeChart();
         },
         error => {
           console.error('Error fetching device future:', error);
         })
-        this.ngAfterViewInit();
+        
   }
 
   goBack(){
@@ -132,16 +130,16 @@ export class DeviceDetailsComponent implements OnInit, AfterViewInit {
 
   @ViewChild('chart', {static: true}) chartElement: ElementRef | undefined = undefined;
 
-  ngAfterViewInit() {
+  initializeChart() {
     if (this.chartElement){
   const ctx = this.chartElement.nativeElement.getContext('2d');
   const chart = new Chart(ctx, {
     type: 'line',
     data: {
-      labels: this.deviceHistoryDate,
+      labels: [...this.deviceHistoryDate, ...this.deviceFutureDate],
       datasets: [{
         label: 'Power Usage',
-        data: this.deviceHistoryPower,
+        data: [...this.deviceHistoryPower, this.deviceToday, ...this.deviceFuturePower],
         fill: true,
         borderColor: 'rgb(75, 192, 192)',
         tension: 0.1
