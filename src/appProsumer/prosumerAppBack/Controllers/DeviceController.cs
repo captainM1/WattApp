@@ -195,6 +195,18 @@ namespace prosumerAppBack.Controllers
                 throw new ArgumentException(ex.Message);
             }
         }
+        [HttpDelete("delete-device/{deviceID}")]
+        public async Task<IActionResult> DeleteDevice(Guid deviceID)
+        {
+            var action = await _deviceService.DeleteDevice(deviceID);
+            if(!action)
+            {
+                return BadRequest("device cannot be deleted");
+            }
+
+            return Ok(new {Message = "device deleted successfully" });
+        }
+	}
 
         [HttpPost("add-rule/{id}")]
         public async Task<IActionResult> AddDeviceRule(Guid id, [FromBody] DeviceRuleDto deviceRuleDto)

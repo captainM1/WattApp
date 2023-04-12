@@ -23,7 +23,7 @@ public class UserRepository : IUserRepository
     {
         return await _dbContext.Users.FindAsync(id);
     }
-
+       
     public async Task<User> GetUserByEmailAndPasswordAsync(string email, string password)
     {
         var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
@@ -58,7 +58,8 @@ public class UserRepository : IUserRepository
         (salt,hash)= _passwordHasher.HashPassword(userRegisterDto.Password);
         var newUser = new User
         {
-            UserName = userRegisterDto.Username,
+            FirstName = userRegisterDto.FirstName,
+            LastName = userRegisterDto.LastName,
             PhoneNumber = userRegisterDto.PhoneNumber,
             Email = userRegisterDto.Email,
             Address = userRegisterDto.Address.Split(",")[0],
@@ -66,7 +67,7 @@ public class UserRepository : IUserRepository
             Country = userRegisterDto.Address.Split(",")[2],
             Salt = salt,
             PasswordHash = hash,
-            Role = "RegularUser",
+            Role = "UnapprovedUser",
             ID = Guid.NewGuid(),
         };
         _dbContext.Users.Add(newUser);
@@ -74,11 +75,23 @@ public class UserRepository : IUserRepository
         return newUser;
     }
 
-    public async Task<List<User>> GetAllUsersAsync(int pageNumber, int pageSize)
+    public async Task<List<UserDto>> GetAllUsersAsync(int pageNumber, int pageSize)
     {
         var pagedData = await _dbContext.Users
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
+            .Select(u => new UserDto {
+                ID = u.ID,
+                FirstName = u.FirstName,
+                LastName = u.LastName,
+                UserName = u.UserName,
+                PhoneNumber = u.PhoneNumber,
+                Address = u.Address,
+                City = u.City,
+                Country = u.Country,
+                Role = u.Role,
+                Email = u.Email
+            })
             .ToListAsync();
         return pagedData;
     }
@@ -174,6 +187,8 @@ public class UserRepository : IUserRepository
     {
         var newUser = new UsersRequestedToDso
         {
+            FirstName = user.FirstName,
+            LastName = user.LastName,
             UserName = user.UserName,
             PhoneNumber = user.PhoneNumber,
             Email = user.Email,
@@ -182,10 +197,75 @@ public class UserRepository : IUserRepository
             Country = user.Country,
             Salt = user.Salt,
             PasswordHash = user.PasswordHash,
-            ID = user.ID,
+            ID = user.ID,            
         };
         _dbContext.UsersAppliedToDSO.Add(newUser);
         await _dbContext.SaveChangesAsync();
         return true;
     }
+    public async Task<Boolean> ApproveUserRequestToDso(Guid id)
+    {
+        var newUser = await _dbContext.UsersAppliedToDSO.FindAsync(id);
+
+        var approvedUser = new User
+        {
+            ID = newUser.ID,
+            FirstName = newUser.FirstName,
+            LastName = newUser.LastName,
+            UserName = newUser.UserName,
+            PhoneNumber = newUser.PhoneNumber,
+            Email = newUser.Email,
+            Address = newUser.Address,
+            City = newUser.City,
+            Country = newUser.Country,
+            Salt = newUser.Salt,
+            PasswordHash = newUser.PasswordHash,
+            Role= "RegularUser",
+        };
+
+        _dbContext.Users.Update(approvedUser);
+        await _dbContext.SaveChangesAsync();
+
+        var user = await _dbContext.UsersAppliedToDSO.FindAsync(id);
+
+        _dbContext.UsersAppliedToDSO.Remove(user);
+        await _dbContext.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<Boolean> DeclineUserRequestToDso(Guid id)
+    {
+        var user = await _dbContext.UsersAppliedToDSO.FindAsync(id);
+
+        _dbContext.UsersAppliedToDSO.Remove(user);
+        await _dbContext.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<int> GetNumberOfUsers()
+    {
+        return await _dbContext.Users.CountAsync();
+    }
+
+    public async Task<List<UserDto>> GetAllUsersAsync()
+    {
+        var users = await _dbContext.Users
+            .Select(u => new UserDto {
+                ID = u.ID,
+                FirstName = u.FirstName,
+                LastName = u.LastName,
+                UserName = u.UserName,
+                PhoneNumber = u.PhoneNumber,
+                Address = u.Address,
+                City = u.City,
+                Country = u.Country,
+                Role = u.Role,
+                Email = u.Email
+            })
+            .ToListAsync();
+
+        return users;
+    }
+
+
 }

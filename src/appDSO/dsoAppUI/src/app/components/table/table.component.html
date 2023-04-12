@@ -2,59 +2,40 @@
 <div class="row" style="margin-top: 100px;">
   <div class="col-lg-7">
     <div class="input-div">
-        <label>Search by first name:</label>
-        <input type="text" [(ngModel)]="_searchByName" placeholder="John Cena">
-        <label>Search by address:</label>
-        <input type="text" [(ngModel)]="_searchByAddress" placeholder="Addres NN">
-        <button tableExport >Export data</button>
-        
+      <input type="text" [(ngModel)]="_searchByName" placeholder="John Cena" (input)="applyFilters()">
+      <input type="text" [(ngModel)]="_searchByAddress" placeholder="Addres NN" (input)="applyFilters()">        
     </div>
       <div class="card">
-          <table tableexporter >
-              <thead>
-                <th>
-
-                </th>
-                  <th>
-                      First Name
-                  </th>
-                  <th>
-                      Last Name
-                  </th>
-                  <th>
-                      Address
-                  </th>
-                  <th>
-                      Prosumer/Consumer
-                  </th>
-                  <th>
-                        Power Usage
-                  </th>
-                  <th>
-
-                  </th>
-              </thead>
-              <tr *ngFor="let user of filtered" (click) = "showMeOnMap(user.id)">
-                <i class="fa fa-angle-right fa-lg" (click) = "showMeDevices(user.id)" (click) = "toggleColumn()"></i>
-                <td>{{user.id}}</td>
-                  <td>{{user.firstName}}</td>
-                  <td>{{user.lastName}}</td>
-                  <td>{{user.address}}, {{user.city}}, {{user.country}}</td>
-                  <td>{{powerUsage}}</td>
-                  <!-- <td><input (click)="exportSelectedData();" type="checkbox"></td> -->
+        <table tableexporter >
+          <thead>
+            <tr>
+              <th>
+                  First Name
+              </th>
+              <th>
+                  Last Name
+              </th>
+              <th>
+                  Address
+              </th>
+              <th>
+                    Power Usage
+              </th>
               </tr>
-              <tr>
-                
-              </tr>
-              <tfoot style="text-align: center;">
-                
-                <select class="form-select" style="width: 30%;" [(ngModel)]="selected">
-                    <option *ngFor = "let size of pageSizeOption">{{size}}</option>
-                </select>
-                
-                <a (click)="prevPage()" style="padding-right: 50px;"><i class="fa fa-angle-left"></i>Previous page</a><a (click)="nextPage()">Next page<i class="fa fa-angle-right"></i></a>
-            </tfoot>
-          </table>
+          </thead>
+          <tr *ngFor="let user of filtered" (click) = "showMeOnMap(user.id)">
+           
+            
+              <td> <i class="fa fa-angle-right fa-lg" (click) = "showMeDevices(user.id)" ></i>{{user.firstName}}</td>
+              <td>{{user.lastName}}</td>
+              <td>{{user.address}}, {{user.city}}, {{user.country}}</td>
+              <td>{{user.powerUsage}}kw/h</td>
+              <!-- <td><input (click)="exportSelectedData();" type="checkbox"></td> -->
+          </tr>
+          <tr>
+              <p-paginator class="w-100" [rows]="pageSize" [totalRecords]="lengthOfUsers" [rowsPerPageOptions]="pageSizeOptions" (onPageChange)="onPageChange($event)"></p-paginator>
+          </tr>
+      </table>
          
           <table>
             <thead>
@@ -62,13 +43,14 @@
                 <th>Device name</th>
                 <th>Type of Device</th>
                 <th>Device manifacture</th>
-                <th>Status</th>
+                <th>Mac Address</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let device of allUserDevices">
-                <td>{{device.deviceId}}</td>
+                
                 <td>{{device.deviceTypeName}}</td>
+                <td>{{device.typeOfDevice}}</td>
                 <td>{{device.manufacturerName}}</td>
                 <td>{{device.macAdress}}</td>
               </tr>

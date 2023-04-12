@@ -10,6 +10,10 @@ public interface IUserRepository
     Task<string> GetUsernameByIdAsync(Guid id);
     Task<Boolean> UpdatePassword(Guid id, string newPassword);
     Task<int> UpdateUser(Guid id, UserUpdateDto userUpdateDto);
-    Task<List<User>> GetAllUsersAsync(int pageNumber, int pageSize);
+    Task<List<UserDto>> GetAllUsersAsync(int pageNumber, int pageSize);
     Task<Boolean> CreateUserRequestToDso(User user);
+    Task<int> GetNumberOfUsers();
+    Task<List<UserDto>> GetAllUsersAsync();
+    Task<Boolean> ApproveUserRequestToDso(Guid id);
+    Task<Boolean> DeclineUserRequestToDso(Guid id);
 }

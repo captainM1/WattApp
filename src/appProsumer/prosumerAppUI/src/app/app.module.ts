@@ -6,12 +6,13 @@ import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
+import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 //import {NgToastModule} from 'ng-angular-popup'
 import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -36,7 +37,13 @@ import { MyDevicesComponent } from './components/my-devices/my-devices.component
 
 import { MobNavComponent } from './components/mob-nav/mob-nav.component';
 import { Home2Component } from './components/home2/home2.component';
+import { DeviceDetailsComponent } from './components/device-details/device-details.component';
+import { CommonModule } from '@angular/common';
+import { PermissionsComponent } from './components/permissions/permissions.component';
 
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { FilterPipe } from './filter.pipe';
 
 @NgModule({
   declarations: [
@@ -59,7 +66,10 @@ import { Home2Component } from './components/home2/home2.component';
     NavComponent,
     EditProfileComponent,
     MyDevicesComponent,
-    Home2Component
+    Home2Component,
+    DeviceDetailsComponent,
+    PermissionsComponent,
+    FilterPipe
   ],
   imports: [
     BrowserModule,
@@ -73,9 +83,13 @@ import { Home2Component } from './components/home2/home2.component';
     MatIconModule,
     FormsModule,
     BrowserAnimationsModule,
-    ToastModule
+    ToastModule,
+    MatToolbarModule,
+    CommonModule,
+    ConfirmDialogModule,
+    Ng2SearchPipeModule
   ],
-  providers: [MessageService],
+  providers: [MessageService,ConfirmationService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

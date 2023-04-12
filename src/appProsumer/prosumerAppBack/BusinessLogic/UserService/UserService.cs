@@ -161,7 +161,7 @@ public class UserService:IUserService
         return user;
     }
 
-    public async Task<List<User>> GetAllUsersAsync(int pageNumber, int pageSize)
+    public async Task<List<UserDto>> GetAllUsersAsync(int pageNumber, int pageSize)
     {
         var user = await _repository.GetAllUsersAsync(pageNumber, pageSize);
         if (user == null)
@@ -240,5 +240,40 @@ public class UserService:IUserService
             Coordinates = JsonConvert.SerializeObject(location)
         });
         
+    }
+
+    public async Task<int> GetNumberOfUsers()
+    {
+        return await _repository.GetNumberOfUsers();
+    }
+
+    public async Task<List<UserDto>> GetAllUsersAsync()
+    {
+        var action = await _repository.GetAllUsersAsync();
+        if (action == null)
+        {
+            throw new NullReferenceException("Action failed");
+        }
+
+        return action;
+    }
+    public async Task<Boolean> ApproveUserRequestToDso(Guid id)
+    {
+        var action = await _repository.ApproveUserRequestToDso(id);
+        if (!action)
+        {
+            throw new NullReferenceException("Action failed");
+        }
+        return true;
+    }
+
+    public async Task<Boolean> DeclineUserRequestToDso(Guid id)
+    {
+        var action = await _repository.DeclineUserRequestToDso(id);
+        if (!action)
+        {
+            throw new NullReferenceException("Action failed");
+        }
+        return true;
     }
 }

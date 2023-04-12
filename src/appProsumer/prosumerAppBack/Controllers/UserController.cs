@@ -110,7 +110,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("users")]
-    public async Task<List<User>> GetUsers([FromQuery]int pageNumber,[FromQuery] int pageSize)
+    public async Task<List<UserDto>> GetUsers([FromQuery]int pageNumber,[FromQuery] int pageSize)
     {
         var users = await _userService.GetAllUsersAsync(pageNumber,pageSize);
         return users;
@@ -124,10 +124,15 @@ public class UserController : ControllerBase
         return Ok(new { message = "user updated successfully" });
     }
 
-    [HttpPost("send-reset-email")]
+    [HttpPost("forgot-password")]
     public async Task<IActionResult> SendResetEmail([FromBody] ResetPasswordEmailDto resetPasswordEmailDto)
     {
         var user = await _userService.GetUserByEmailAsync(resetPasswordEmailDto.Email);
+
+        if(user == null)
+        {
+            return BadRequest("Email does not exists");
+        }
 
         var token = _tokenMaker.GenerateToken(user);
         var resetPasswordUrl = $"https://localhost:7182/api/user/reset-password?token={token}";
@@ -242,17 +247,74 @@ public class UserController : ControllerBase
     [HttpGet("coordinates/{id}")]
     public async Task<IActionResult> GetCoordinatesForUser(Guid id)
     {
-        var devices = _deviceService.GetDevicesForUser(id);
-        
         try
         {
             var results = await _userService.GetCoordinatesForUser(id);
 
-             return Ok(devices);
-         }
-         catch (Exception ex)
-         {
-             return StatusCode(500, ex.Message);
-         }  
+            return Ok(results);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }  
+    }
+    [HttpGet("userNumber")]
+    public async Task<IActionResult> GetNumberOfUsers()
+    {
+        try
+        {
+            var results = await _userService.GetNumberOfUsers();
+
+            return Ok(results);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpGet("allUserInfo")]
+    public async Task<IActionResult> AllUsersInfo()
+    {
+        try
+        {
+            var results = await _userService.GetAllUsersAsync();
+
+            return Ok(results);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpPost("approve-request-to-dso/{id}")]
+    public async Task<IActionResult> ApproveRequestForDso(Guid id)
+    {
+        try
+        { 
+            var result = await _userService.ApproveUserRequestToDso(id);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpPost("decline-request-to-dso/{id}")]
+    public async Task<IActionResult> DeclineRequestForDso(Guid id)
+    {
+        try
+        {
+            var result = await _userService.DeclineUserRequestToDso(id);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 }

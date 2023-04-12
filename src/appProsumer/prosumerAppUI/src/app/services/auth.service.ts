@@ -5,13 +5,16 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { CookieService } from "ngx-cookie-service"
 import { newDeviceDTO } from 'src/app/models/newDeviceDTO'
+import jwt_decode from 'jwt-decode';
+import { decode } from 'jsonwebtoken';
+import { Token } from '@angular/compiler';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  
 
+  decoded! : Token;
   constructor(private http: HttpClient, private router:Router, private cookie: CookieService) { }
 
   login(email : string, password : string) : Observable<string>{
@@ -47,11 +50,14 @@ export class AuthService {
   }
 
   getToken() {
-    return this.cookie.get('jwtToken'); 
+
+    const jwtToken = this.cookie.get('jwtToken');
+     const decoded :any = jwt_decode(jwtToken);
+     return decoded.unique_name;
   }
 
   signOut(){
     this.cookie.delete('jwtToken');
   }
-  
+
 }

@@ -24,12 +24,12 @@
                 <form class="p-4 border" id = "form-user-enter" style="align-items: center;">
                     <div class="form-group" >
                         <label for="username">First Name:</label>
-                        <input style = "width: 100%" type="text" class="form-control" id="first-name" aria-describedby="First Namse" placeholder="John" readonly>
+                        <input style = "width: 100%" type="text" class="form-control" id="first-name" aria-describedby="First Namse" placeholder="{{userID.firstName}}" readonly>
                     </div>
                      
                     <div class="form-group" style="align-self: center;">
                         <label for="First Name">Last Name:</label>
-                        <input style = "width: 100%" type="text" class="form-control" id="last-name" placeholder="Cena" readonly>
+                        <input style = "width: 100%" type="text" class="form-control" id="last-name" placeholder="{{userID.lastName}}" readonly>
                     </div>
                 </form>
                 
@@ -39,27 +39,27 @@
                    
                     <div class="form-group">
                         <label for="Email Address">Email Address:</label>
-                        <input style = "width: 100%" type="text" class="form-control" id="email-address" placeholder="Enter your email address">
+                        <input style = "width: 100%" type="text" class="form-control" id="email-address" placeholder="{{userID.email}}">
                     </div>
                     <div class="form-group">
                       <label for="Password">Password:</label>
-                      <input style = "width: 100%" type="text" class="form-control" id="email-address" placeholder="Enter your password">
+                      <input style = "width: 100%" type="text" class="form-control" id="email-address" placeholder="*******">
                   </div>
                     <div class="form-group">
                         <label for="Contact Number">Contact Number</label>
-                        <input style = "width: 100%" type="text" class="form-control" id="contact-numer" placeholder="Enter your contact number">
+                        <input style = "width: 100%" type="text" class="form-control" id="contact-numer" placeholder="{{userID.phoneNumber}}">
                     </div>
                     <div class="form-group">
                         <label for="Address">Address:</label>
-                        <input style = "width: 100%" type="text" class="form-control" id="address" placeholder="Enter you address">
+                        <input style = "width: 100%" type="text" class="form-control" id="address" placeholder="{{userID.address}}">
                     </div>
                     <div class="form-group">
                         <label for="Country">Country:</label>
-                        <input style = "width: 100%" type="text" class="form-control" id="country" placeholder="Select your country">
+                        <input style = "width: 100%" type="text" class="form-control" id="country" placeholder="{{userID.country}}">
                     </div>
                     <div class="form-group">
                         <label for="Time-zone">Time zone:</label>
-                        <input style = "width: 100%" type="text" class="form-control" id="time-zone" placeholder="Select your time zone">
+                        <input style = "width: 100%" type="text" class="form-control" id="time-zone" placeholder="Europe/{{userID.city}}">
                     </div>
                     
                 </form>

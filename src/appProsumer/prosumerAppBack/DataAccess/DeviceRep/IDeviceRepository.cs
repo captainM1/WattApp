@@ -33,6 +33,8 @@ namespace prosumerAppBack.BusinessLogic
         Task<DeviceRule> AddDeviceRule(Guid id, [FromBody] DeviceRuleDto deviceRuleDto);
         Task<DeviceRequirement> UpdateDeviceRequirement(Guid id, [FromBody] DeviceRequirementDto deviceRequirementDto);
         Task<DeviceRequirement> AddDeviceRequirement(Guid id, [FromBody] DeviceRequirementDto deviceRequirementDto);        
+
+        public Task<bool> DeleteDevice(Guid deviceID);
     }
 }
 
