@@ -125,5 +125,20 @@ public class PowerUsageService:IPowerUsageService
         return devicePowerUsageDictionary.OrderByDescending(x => x.Value).Take(1).ToDictionary(x => x.Key, x => x.Value);
     }
 
+    public async Task<(Guid, double)> GetDeviceWithHighestCurrentUsage(Guid userID)
+    {
+        var deviceWithHighestCurrentUsage = await _dataContext.Devices
+            .Where(d => d.OwnerID == userID)
+            .OrderByDescending(d => d.Current)
+            .Select(d => new { d.ID, d.Current })
+            .FirstOrDefaultAsync();
+
+        if (deviceWithHighestCurrentUsage == null)
+        {
+            return (Guid.Empty, 0.0);
+        }
+
+        return (deviceWithHighestCurrentUsage.ID, deviceWithHighestCurrentUsage.Current);
+    }
 
 }

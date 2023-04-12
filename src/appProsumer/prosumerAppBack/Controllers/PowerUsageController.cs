@@ -216,4 +216,11 @@ public class PowerUsageController : ControllerBase
         var powerUsages = _powerUsage.GetDevicePowerUsageForUserPreviousMonth(userID);
         return Ok(powerUsages);
     }
+
+    [HttpGet("power-usage/most-consumes/current/{userID}")]
+    public ActionResult<Dictionary<DateTime, double>> GetMostConsumerLastMonth(Guid userID)
+    {
+        var powerUsages = _powerUsage.GetDeviceWithHighestCurrentUsage(userID);
+        return Ok(powerUsages);
+    }
 }

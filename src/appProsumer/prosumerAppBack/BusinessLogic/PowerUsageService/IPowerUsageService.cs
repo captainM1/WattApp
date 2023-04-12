@@ -16,4 +16,5 @@ public interface IPowerUsageService
     public async Task<(Guid, double)> GetDeviceWithMaxPowerUsage24(Guid userID);
     public Dictionary<Guid, double> GetDevicePowerUsageMaxForUserLastWeek(Guid userID);
     public Dictionary<Guid, double> GetDevicePowerUsageForUserPreviousMonth(Guid userID);
+    public async Task<(Guid, double)> GetDeviceWithHighestCurrentUsage(Guid userID);
 }
