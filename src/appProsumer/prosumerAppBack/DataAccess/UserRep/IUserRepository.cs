@@ -14,4 +14,6 @@ public interface IUserRepository
     Task<Boolean> CreateUserRequestToDso(User user);
     Task<int> GetNumberOfUsers();
     Task<List<UserDto>> GetAllUsersAsync();
+    Task<Boolean> ApproveUserRequestToDso(Guid id);
+    Task<Boolean> DeclineUserRequestToDso(Guid id);
 }

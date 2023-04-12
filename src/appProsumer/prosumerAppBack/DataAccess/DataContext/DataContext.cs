@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using prosumerAppBack.Models;
 using prosumerAppBack.Models.Device;
+using prosumerAppBack.Models.Dispatcher;
 
 namespace prosumerAppBack.DataAccess
 {
@@ -18,6 +19,7 @@ namespace prosumerAppBack.DataAccess
         public DbSet<DeviceType> DeviceTypes { get; set; }
         public DbSet<DeviceGroup> DeviceGroups { get; set; }
         public DbSet<DeviceManufacturers> DeviceManufacturers { get; set; }
+        public DbSet<Dispatcher> Dispatchers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
