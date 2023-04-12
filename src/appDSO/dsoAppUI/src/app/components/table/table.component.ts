@@ -1,6 +1,7 @@
+import { write, writeXLSX } from 'xlsx';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { HttpClient } from '@angular/common/http';
-import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import * as L from 'leaflet';
 import { Device, Info, User } from 'models/User';
 import { AuthService } from 'service/auth.service';
@@ -9,7 +10,9 @@ import { FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table'; 
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
-import { PaginatorModule } from 'primeng/paginator';
+import { PaginatorModule } from 'primeng/paginator';import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
+import { ProfileComponent } from 'app/profile/profile.component';
 
 @Component({
   selector: 'app-table',
@@ -18,13 +21,29 @@ import { PaginatorModule } from 'primeng/paginator';
   
 })
 export class TableComponent implements OnInit {
+// filtriranje
   _searchByName: string = '';
+  _searchByCity: string = '';
   _searchByAddress: string = '';
   exportData: any[] = [];
 
   allUserDevices!: Info[];
   userIDCoords!: any[];
 
+// export 
+  filtered! : User[];
+  activeItem:any;
+  exportData : any[] = [];
+  exportSelected: boolean = false;
+// pagination
+  public page = 1;
+  public pageSize = 5;
+  
+  showAllUsersOnMap : boolean = true;
+  lengthOfUsers!: number;
+  allUsers!: User[];
+  allUserDevices! : Info[];
+  userIDCoords!:any[];
   private userCoords!: any[];
   private id: any;
   private firstName?: string;
@@ -50,13 +69,19 @@ export class TableComponent implements OnInit {
 
   powerUsage!: string;
   deviceGroup!: any[];
+
+// device type
   producers!: any[];
   consumers!: any[];
   storage!: any[];
+ 
+  @ViewChild('myTable') myTable!: ElementRef;
 
   constructor(
     private auth: AuthService,
-    private table: MatTableModule
+    private table: MatTableModule,
+
+
   ){}
 
   ngOnInit(): void {
@@ -72,15 +97,74 @@ export class TableComponent implements OnInit {
     this.showMeUsers(this.page, this.pageSize);
   }
 
-  public showMeUsers(page: number, pageSize: number) {
-    this.auth.getPagination(page, pageSize).subscribe(
-      (response: any) => {
+  currentSortOrder: string = 'asc';
+  sortData(sortBy: string): void {
+    this.currentSortOrder = this.currentSortOrder === 'asc' ? 'desc' : 'asc';
+    if (sortBy === 'powerUsage') {
+      this.allUsers.sort((a, b) => {
+        if (a.powerUsage < b.powerUsage) {
+          return this.currentSortOrder === 'asc' ? -1 : 1;
+        } else if (a.powerUsage > b.powerUsage) {
+          return this.currentSortOrder === 'asc' ? 1 : -1;
+        } else {
+          return 0;
+        }
+      });
+    }
+    console.log(this.currentSortOrder);
+  }
+
+    toggleExportSelected(): void {
+      this.exportSelected = !this.exportSelected;
+    }
+    activeColIndex: number = -1;
+
+    setActiveCol(index: number): void {
+      this.activeColIndex = index;
+    }
+    export(): void {
+      if (this.exportSelected) {
+        this.exportSelectedData();
+      } else {
+        this.exportToExcel();
+      }
+    }
+
+    exportToExcel(): void {
+      const worksheet = XLSX.utils.table_to_sheet(document.querySelector('#myTable'));
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+      const fileBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+      const blob = new Blob([fileBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      saveAs(blob, 'table-data.xlsx');
+      console.log(worksheet)
+    }
+
+  exportSelectedData():void{
+    const selectedRows = this.filtered.filter(user => user.selected);
+    const worksheet = XLSX.utils.json_to_sheet(selectedRows);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Selected Data');
+  
+  
+    const fileBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([fileBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    saveAs(blob, 'selected-data.xlsx');
+  }
+ 
+ 
+  public showMeUsers(){
+   
+    
+    this.auth.getPagination(this.page, this.pageSize).subscribe(
+      (response : any)=> {
         this.allUsers = response;
-        this.filtered = response;
         for(let user of this.allUsers){
+          
           this.auth.getUserPowerUsageByID(user.id).subscribe(
             (response: any) => {
               user.powerUsage = (response/10).toFixed(2);
+              user.selected = false;
             }
           )
         }
@@ -132,10 +216,12 @@ export class TableComponent implements OnInit {
     }
     // poziv funkcije za svih uredjaja
     this.showMeDevices(id);
+    
     this.auth.getUserPowerUsageByID(id).subscribe(
       (response: any) => {
         for (let user of this.allUsers) {
           if (user.id === id) {
+            this.activeItem = user.id;
             user.powerUsage = (response / 10).toFixed(2);
           }
         }
@@ -161,10 +247,16 @@ export class TableComponent implements OnInit {
 
   showMeDevices(id : string){
     this.getDeviceGroup();
+    console.log(id);
+    this.auth.getPowerUsageForDeviceByID(id).subscribe(
+      (response : any)=>{
+        
+        console.log(response);
+      }
+    )
     this.toggleTable = true;
     this.auth.getDeviceInfoUserByID(id).subscribe(
       (response : any) => {
-
         this.allUserDevices = response;
         for(let us of this.allUserDevices){
           for(let p of this.producers){
@@ -185,7 +277,7 @@ export class TableComponent implements OnInit {
           }
           }
         }
-        
+        // console.log(this.allUserDevices);
       }
     )
   }
@@ -220,6 +312,10 @@ export class TableComponent implements OnInit {
   toggleColumn(){
     this.toggleTable = !this.toggleTable;
   }
+
+  
+    
+  
 }
 
     
