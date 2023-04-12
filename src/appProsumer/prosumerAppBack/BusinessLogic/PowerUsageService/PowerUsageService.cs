@@ -1,4 +1,7 @@
-﻿using prosumerAppBack.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using prosumerAppBack.Models;
 using prosumerAppBack.Models.Device;
 using SendGrid.Helpers.Errors.Model;
 
@@ -52,4 +55,38 @@ public class PowerUsageService:IPowerUsageService
         }
         return powerUsages;
     }
+
+    public async Task<(Guid, double)> GetDeviceWithMaxPowerUsage24(Guid userID)
+    {
+        var devices = await _dataContext.Devices
+            .Where(d => d.OwnerID == userID)
+            .ToListAsync();
+
+        if (devices.Count == 0)
+        {
+            throw new Exception("User has no devices");
+        }
+
+        var devicePowerUsage = await _powerUsage.GetPowerUsageForDevicePast24Hours(devices[0].ID, -1);
+        var maxDeviceID = devices[0].ID;
+        var maxPowerUsage = devicePowerUsage.Sum();
+
+        for (int i = 1; i < devices.Count; i++)
+        {
+            devicePowerUsage = await _powerUsage.GetPowerUsageForDevicePast24Hours(devices[i].ID, -1);
+            var powerUsageSum = devicePowerUsage.Sum();
+
+            if (powerUsageSum > maxPowerUsage)
+            {
+                maxPowerUsage = powerUsageSum;
+                maxDeviceID = devices[i].ID;
+            }
+        }
+
+        return (maxDeviceID, maxPowerUsage);
+    }
+
+    
+
+
 }
