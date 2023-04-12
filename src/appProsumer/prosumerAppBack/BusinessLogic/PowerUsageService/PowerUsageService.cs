@@ -1,4 +1,7 @@
-﻿using prosumerAppBack.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using prosumerAppBack.Models;
 using prosumerAppBack.Models.Device;
 using SendGrid.Helpers.Errors.Model;
 
@@ -41,6 +44,16 @@ public class PowerUsageService:IPowerUsageService
             throw new NotFoundException();
         }
         return powerUsages;
+    }
+
+    public double CurrentSumPowerUsageSystem()
+    {
+        var powerUsage = _repository.CurrentSumPowerUsageSystem();
+        if (powerUsage == 0)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsage;
     }
 
     public PowerUsage GetForDevice(Guid deviceID)

@@ -1,4 +1,7 @@
-﻿using prosumerAppBack.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using prosumerAppBack.Models;
 
 namespace prosumerAppBack.BusinessLogic.PowerUsageService;
 
@@ -11,4 +14,5 @@ public interface IPowerUsageService
     Dictionary<DateTime, double> GetPowerUsageForADaySystem();
     public double GetCurrentPowerUsage();
     public double GetCurrentPowerUsageForDevice(Guid deviceID);
+    public double CurrentSumPowerUsageSystem();
 }

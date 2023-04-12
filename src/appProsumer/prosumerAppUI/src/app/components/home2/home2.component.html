@@ -1,14 +1,13 @@
 <app-nav class="desktop"></app-nav>
 <app-mob-nav class="mobile"></app-mob-nav>
 
-
-<div class="container">
-
-  <div id="kolone">
-        <div id="prvi">
+<div class="outer">
+  <div class="container">
+    <div class="row" >
+      <div id="prvi">
         <label>Total Number Of Devices</label>
         <div>
-          <img src="/assets/icons-devices-home/device-number.png">
+          <img id="deviceNumberImg" src="/assets/icons-devices-home/device-number.png">
         </div>
         </div>
         <div id="drugi">
@@ -23,8 +22,42 @@
             <img src="/assets/icons-devices-home/energy-consumption.png">
           </div>
         </div>
-  </div>
-  <app-my-devices></app-my-devices>
+    </div>
+    <div class="row" id="red">
+      <div class="col order-sm-1">
+        <app-my-devices></app-my-devices>
+      </div>
+
+        <div class="col order-sm-2">
+
+            <div class="card">
+                <div class="card-body">
+                <h5 class="card-title"> Summary of current devices usage:</h5>
+                <p class="card-text"  style="text-align: center;">  {{currentUsage}} kw </p>
+
+                </div>
+            </div>
+
+
+            <div class="card">
+                <div class="card-body">
+                <h5 class="card-title"> Average usage for the previous month:</h5>
+                <p class="card-text" style="text-align: center;"> {{averageUsage}} kw </p>
+
+                </div>
+            </div>
+
+            <div>
+              <canvas #myChart></canvas>
+            </div>
+
+       </div>
+
+    </div>
+
+    </div>
+
+
 </div>
 
 

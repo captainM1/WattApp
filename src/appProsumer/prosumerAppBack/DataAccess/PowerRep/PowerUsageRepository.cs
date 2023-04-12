@@ -90,6 +90,14 @@ public class PowerUsageRepository : IPowerUsageRepository
             double totalPowerUsage = powerUsageData.TimestampPowerPairs
                 .Where(pair => pair.Timestamp.Date == today)
                 .Sum(pair => pair.PowerUsage);
+            if (powerUsageData == null)
+            {
+                return 0;
+            }
+
+            double totalPowerUsage = powerUsageData.TimestampPowerPairs
+                .Where(pair => pair.Timestamp.Date == today)
+                .Sum(pair => pair.PowerUsage);
 
             return totalPowerUsage;
         }
@@ -127,10 +135,26 @@ public class PowerUsageRepository : IPowerUsageRepository
         IEnumerable<String> deviceTypeIds = _deviceRepository.GetDevicesForUser(userID).Select(d => d.DeviceTypeID.ToString().ToUpper());
 
         var powerUsageData = mongoCollection.AsQueryable()
-                .Where(p => deviceTypeIds.Contains(p.ID.ToString()))
-                .ToList()
-                .SelectMany(p => p.TimestampPowerPairs)
-                .Where(t => t.Timestamp == currentHourTimestamp);
+            .Where(p => deviceTypeIds.Contains(p.ID.ToString()))
+            .ToList()
+            .SelectMany(p => p.TimestampPowerPairs)
+            .Where(t => t.Timestamp == currentHourTimestamp);
+
+        double sum = powerUsageData.Sum(p => p.PowerUsage);
+
+        return sum;
+    }
+
+
+
+    public double CurrentSumPowerUsageSystem()
+    {
+        DateTime currentHourTimestamp = DateTime.Now.Date.AddHours(DateTime.Now.Hour);
+
+        var powerUsageData = mongoCollection.AsQueryable()
+            .ToList()
+            .SelectMany(p => p.TimestampPowerPairs)
+            .Where(t => t.Timestamp == currentHourTimestamp);
 
         double sum = powerUsageData.Sum(p => p.PowerUsage);
 

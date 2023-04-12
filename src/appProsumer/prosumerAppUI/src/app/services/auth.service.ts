@@ -13,7 +13,7 @@ import { Token } from '@angular/compiler';
   providedIn: 'root'
 })
 export class AuthService {
-  
+
   decoded! : Token;
   constructor(private http: HttpClient, private router:Router, private cookie: CookieService) { }
 
@@ -50,7 +50,7 @@ export class AuthService {
   }
 
   getToken() {
-    
+
     const jwtToken = this.cookie.get('jwtToken');
      const decoded :any = jwt_decode(jwtToken);
      return decoded.unique_name;
@@ -59,5 +59,5 @@ export class AuthService {
   signOut(){
     this.cookie.delete('jwtToken');
   }
-  
+
 }
