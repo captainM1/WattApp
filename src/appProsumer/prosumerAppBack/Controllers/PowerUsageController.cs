@@ -194,4 +194,25 @@ public class PowerUsageController : ControllerBase
         var powerUsages = _powerUsage.GetPowerUsageForDeviceNext24Hours(deviceID);
         return Ok(powerUsages);
     }
+
+    [HttpGet("power-usage/currentDay/system")]
+    public ActionResult<Dictionary<DateTime, double>> GetPowerUsageForAHourSystem()
+    {
+        var powerUsages = _powerUsage.GetPowerUsageForADaySystem();
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/currentHour/system")]
+    public ActionResult<Dictionary<DateTime, double>> GetCurrentPowerUsage()
+    {
+        var powerUsages = _powerUsage.GetCurrentPowerUsage();
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/currentPowerUsage/{deviceID}")]
+    public ActionResult<Dictionary<DateTime, double>> GetCurrentPowerUsageForDevice(Guid deviceID)
+    {
+        var powerUsages = _powerUsage.GetCurrentPowerUsageForDevice(deviceID);
+        return Ok(powerUsages);
+    }
 }
