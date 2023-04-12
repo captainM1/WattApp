@@ -106,6 +106,24 @@ public class PowerUsageService:IPowerUsageService
         return devicePowerUsageMax != null ? new Dictionary<Guid, double> { { devicePowerUsageMax.Key, devicePowerUsageMax.Value } } : new Dictionary<Guid, double>();
     }
 
+    public Dictionary<Guid, double> GetDevicePowerUsageForUserPreviousMonth(Guid userID)
+    {
+        var end = DateTime.UtcNow.AddDays(-1);
+        var start = end.AddMonths(-1); 
+
+        var devices = _dataContext.Devices.Where(d => d.OwnerID == userID).ToList();
+
+        var devicePowerUsageDictionary = new Dictionary<Guid, double>();
+
+        foreach (var device in devices)
+        {
+            var powerUsage = _powerUsage.GetPowerUsageForDevice(device.ID, start, end);
+            var totalPowerUsage = powerUsage.Sum(x => x.Value);
+            devicePowerUsageDictionary.Add(device.ID, totalPowerUsage);
+        }
+
+        return devicePowerUsageDictionary.OrderByDescending(x => x.Value).Take(1).ToDictionary(x => x.Key, x => x.Value);
+    }
 
 
 }
