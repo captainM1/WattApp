@@ -17,9 +17,13 @@ export class DeviceDetailsComponent implements OnInit, AfterViewInit {
   device: any;
   deviceId: any;
   deviceHistory: any;
-  deviceHistoryPower: any;
+  deviceHistoryPower: any = [];
+  deviceFuturePower: any = [];
+  deviceHistoryDate: any = [];
+  deviceFutureDate: any = [];
   deviceFuture: any;
   deviceToday: any;
+  devicevalue: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -31,6 +35,7 @@ export class DeviceDetailsComponent implements OnInit, AfterViewInit {
   {}
 
   ngOnInit() {
+    this.devicevalue = [1547.1628184460005, 1361.668379484121, 1425.6573144263273, 1677.3219977893327, 1308.1489318333208, 1679.8423387365494, 1484.189057002573];
     this.deviceId = this.route.snapshot.paramMap.get('id');
     console.log(this.deviceId);
 
@@ -66,6 +71,8 @@ export class DeviceDetailsComponent implements OnInit, AfterViewInit {
       this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/7daysFuture/${this.deviceId}`)
         .subscribe(data => {
           this.deviceFuture = data;
+          this.deviceFuturePower = this.deviceFuture.timestampPowerPairs.map((time:any) => time.powerUsage);
+          console.log(this.deviceFuturePower);
           console.log(data);
         },
         error => {
