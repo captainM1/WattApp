@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 using prosumerAppBack.BusinessLogic;
 using prosumerAppBack.Models;
@@ -145,6 +146,86 @@ namespace prosumerAppBack.DataAccess
                     manufacturerName = d.DeviceType.Manufacturer.Name
                 })
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<DeviceRule> AddDeviceRule(Guid id, [FromBody] DeviceRuleDto deviceRuleDto)
+        {
+            var newRule = new DeviceRule
+            {
+                DeviceID = id,
+                TurnOn = deviceRuleDto.TurnOn,
+                TurnOnStatus = deviceRuleDto.TurnOnStatus,
+                TurnOff = deviceRuleDto.TurnOff,
+                TurnOffStatus = deviceRuleDto.TurnOffStatus,
+                TurnOnEvery = deviceRuleDto.TurnOnEvery,
+                TurnOnEveryStatus = deviceRuleDto.TurnOnEveryStatus,
+            };
+
+            _dbContext.DeviceRules.Add(newRule);
+            await _dbContext.SaveChangesAsync();
+            return newRule;
+        }
+
+        public async Task<DeviceRule> UpdateDeviceRule(Guid id, [FromBody] DeviceRuleDto deviceRuleDto)
+        {
+            var deviceRuleToBeUpdated = await _dbContext.DeviceRules.FirstOrDefaultAsync(d => d.DeviceID == id);
+            if (deviceRuleToBeUpdated == null)
+            {
+                throw new NullReferenceException("Device id not found");
+            }
+
+            deviceRuleToBeUpdated.TurnOn = deviceRuleDto.TurnOn;
+            deviceRuleToBeUpdated.TurnOnStatus = deviceRuleDto.TurnOnStatus;
+            deviceRuleToBeUpdated.TurnOff = deviceRuleDto.TurnOff;
+            deviceRuleToBeUpdated.TurnOffStatus = deviceRuleDto.TurnOffStatus;
+            deviceRuleToBeUpdated.TurnOnEvery = deviceRuleDto.TurnOnEvery;
+            deviceRuleToBeUpdated.TurnOnEveryStatus = deviceRuleDto.TurnOnEveryStatus;
+
+            _dbContext.DeviceRules.Update(deviceRuleToBeUpdated);
+            await _dbContext.SaveChangesAsync();
+
+            return deviceRuleToBeUpdated;
+        }
+
+        public async Task<DeviceRequirement> AddDeviceRequirement(Guid id, [FromBody] DeviceRequirementDto deviceRequirementDto)
+        {
+            var newRequirement = new DeviceRequirement
+            {
+                DeviceID = id,
+                ChargedUpTo = deviceRequirementDto.ChargedUpTo,
+                ChargedUpToStatus = deviceRequirementDto.ChargedUpToStatus,
+                ChargedUntil = deviceRequirementDto.ChargedUntil,
+                ChargedUntilBattery = deviceRequirementDto.ChargedUntilBattery,
+                ChargedUntilBatteryStatus = deviceRequirementDto.ChargedUntilBatteryStatus,
+                ChargeEveryDay = deviceRequirementDto.ChargeEveryDay,
+                ChargeEveryDayStatus = deviceRequirementDto.ChargeEveryDayStatus,
+            };
+
+            _dbContext.DeviceRequirements.Add(newRequirement);
+            await _dbContext.SaveChangesAsync();
+            return newRequirement;
+        }
+
+        public async Task<DeviceRequirement> UpdateDeviceRequirement(Guid id, [FromBody] DeviceRequirementDto deviceRequirementDto)
+        {
+            var deviceRequirementToBeUpdated = await _dbContext.DeviceRequirements.FirstOrDefaultAsync(d => d.DeviceID == id);
+            if(deviceRequirementToBeUpdated == null)
+            {
+                throw new NullReferenceException("Device id not found");
+            }
+
+            deviceRequirementToBeUpdated.ChargedUpTo = deviceRequirementDto.ChargedUpTo;
+            deviceRequirementToBeUpdated.ChargedUpToStatus = deviceRequirementDto.ChargedUpToStatus;
+            deviceRequirementToBeUpdated.ChargedUntil = deviceRequirementDto.ChargedUntil;
+            deviceRequirementToBeUpdated.ChargedUntilBattery = deviceRequirementDto.ChargedUntilBattery;
+            deviceRequirementToBeUpdated.ChargedUntilBatteryStatus = deviceRequirementDto.ChargedUntilBatteryStatus;
+            deviceRequirementToBeUpdated.ChargeEveryDay = deviceRequirementDto.ChargeEveryDay;
+            deviceRequirementToBeUpdated.ChargeEveryDayStatus = deviceRequirementDto.ChargeEveryDayStatus;
+
+            _dbContext.DeviceRequirements.Update(deviceRequirementToBeUpdated);
+            await _dbContext.SaveChangesAsync();
+
+            return deviceRequirementToBeUpdated;
         }
 
         public async Task<bool> DeleteDevice(Guid deviceID)
