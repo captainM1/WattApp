@@ -21,6 +21,8 @@ export class DeviceDetailsComponent implements OnInit {
   deviceFuturePower: any = [];
   deviceHistoryDate: any = [];
   deviceFutureDate: any = [];
+  labels: any = [];
+  formattedLabels: any = [];
   deviceFuture: any;
   deviceToday: any;
   devicevalue: any;
@@ -35,7 +37,6 @@ export class DeviceDetailsComponent implements OnInit {
   {}
 
   ngOnInit() {
-    this.devicevalue = [1547.1628184460005, 1361.668379484121, 1425.6573144263273, 1677.3219977893327, 1308.1489318333208, 1679.8423387365494, 1484.189057002573];
     this.deviceId = this.route.snapshot.paramMap.get('id');
     console.log(this.deviceId);
 
@@ -74,6 +75,14 @@ export class DeviceDetailsComponent implements OnInit {
           this.deviceFuture = data;
           this.deviceFutureDate = this.deviceFuture.timestampPowerPairs.map((time:any) => time.timestamp);
           this.deviceFuturePower = this.deviceFuture.timestampPowerPairs.map((time:any) => time.powerUsage);
+          this.labels = [...this.deviceHistoryDate, new Date(), ...this.deviceFutureDate];
+          this.formattedLabels = this.labels.map((date:any) => {
+            const parsedDate = new Date(date);
+            const month = parsedDate.getMonth() + 1;
+            const day = parsedDate.getDate();
+            return `${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
+          });
+
           this.initializeChart();
         },
         error => {
@@ -85,6 +94,7 @@ export class DeviceDetailsComponent implements OnInit {
   goBack(){
     this.router.navigate(['/home2']);
   }
+
   del() {
     this.confirmationService.confirm({
       message: 'Do you want to delete this record?',
@@ -105,6 +115,7 @@ export class DeviceDetailsComponent implements OnInit {
       }
     });
   }
+
   deleteDevice(){
     this.http.delete(`${environment.apiUrl}/api/Device/delete-device/${this.deviceId}`)
     .subscribe(
@@ -133,15 +144,19 @@ export class DeviceDetailsComponent implements OnInit {
   initializeChart() {
     if (this.chartElement){
   const ctx = this.chartElement.nativeElement.getContext('2d');
+  const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+  gradient.addColorStop(0, '#FF8811'); // start color
+  gradient.addColorStop(0.5,'#9747FF');
+  gradient.addColorStop(1, '#9FEDD7');
   const chart = new Chart(ctx, {
     type: 'line',
     data: {
-      labels: [...this.deviceHistoryDate, ...this.deviceFutureDate],
+      labels: this.formattedLabels,
       datasets: [{
         label: 'Power Usage',
         data: [...this.deviceHistoryPower, this.deviceToday, ...this.deviceFuturePower],
         fill: true,
-        borderColor: 'rgb(75, 192, 192)',
+        borderColor: gradient,
         tension: 0.1
       }]
     },
@@ -152,14 +167,12 @@ export class DeviceDetailsComponent implements OnInit {
           title: {
             display: true,
             text: 'Power Usage (kW)'
-          },
-          max: 3000,
-          min:1000
+          }
         },
         x: {
           title: {
             display: true,
-            text: 'Day'
+            text: 'Date'
           }
         },
       }
