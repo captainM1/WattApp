@@ -85,3 +85,6 @@ label{
 .active {
   background-color: #026670;
 }
+.p-paginator{
+  display: block ruby;
+}

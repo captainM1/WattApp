@@ -1,9 +1,9 @@
 <app-nav></app-nav>
-<div class="outer" style="margin-top: 90px;">
+<div class="outer" style="margin-top: 90px; margin-left: 0; margin-right: 0;">
 <div class="container">
     <!-- WEATHER -->
             <div class="row" >
-                <h2 class="text-center" style="margin-top: 15px;margin-bottom: 10px;">Weather Details:</h2>
+                <h2 class="text-center" style="margin-top: 15px;margin-bottom: 10px;">Weather Details</h2>
                 <div class="col-sm-4" style="padding-top: 20px; padding-right: 60px; padding-left: 60px;">
                     <p class="text-left">
                         <img src="../../../assets/icons/weather-icons/compass.png" width="20px"> Your Time Zone : {{ this.weather.timezone }}
@@ -32,138 +32,83 @@
             </div>
     <!-- TOTAL DEVICES  -->
             <div class="row">
-                    <div class="col-sm-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title"> Total devices: {{total}}</h5>
-                                <p class="card-text"> Prosumer: {{producers.length}} </p>
-                                <p class="card-text"> Consumer: {{consumers.length}} </p>
-                                <p class="card-text"> Storage: {{storage.length}} </p>
-                            </div>
-                        </div>
+                <h1 style="text-align: center;">Device details</h1>
+                <div class="card-container">
+                    <div class="card">
+                        <h3 class="card-title" style="font-weight: 500; color: black; text-align: center;">Total devices:</h3>
+                        <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{total}}</p>
                     </div>
-                    <div class="col-sm-4">
-                        <div class="card">
-                            <div class="card-body">
-                            <h5 class="card-title"> Summary of power production for the previous month:</h5>
-                            <p class="card-text"  style="text-align: center;">  {{previousMonth}}kw </p>
-                            
-                            </div>
-                        </div>
+                    <div class="card">
+                        <h3 class="card-title" style="font-weight: 500; color: black; text-align: center;">Prosumers:</h3>
+                        <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{producers.length}}</p>
                     </div>
-                    <div class="col-sm-4">
-                        <div class="card">
-                            <div class="card-body">
-                            <h5 class="card-title"> Prediction of total electricity production for the next month</h5>
-                            <p class="card-text" style="text-align: center;">  {{nextMonthSummary}}kw </p>
-                            
-                            </div>
+                    <div class="card">
+                        <h3 class="card-title" style="font-weight: 500; color: black; text-align: center;">Consumers:</h3>
+                        <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{consumers.length}}
+                        </p>
                         </div>
+                    <div class="card">
+                        <h3 class="card-title" style="font-weight: 500; color: black; text-align: center;">Storage:</h3>
+                        <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{storage.length}}</p>
                     </div>
-                    <!-- <div class="col-sm-5">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Serbia electricity prices</th>
-                                    <th scope="col">Household, kWh</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td scope="row">Serbian Dinar</td>
-                                <td >
-                                    11.330
-                                </td>
-                            </tr>
-                            <tr>
-                                <td scope="row">EUR</td>
-                                <td>
-                                    95.92
-                                </td>
-                            </tr>
-                        </tbody>
-                        </table>
-                    </div> -->
-                    <!-- <div class="col-sm-4" style="padding: 0;">
-                        <div style="width:400px; height:400px;">
-                            <h1 class = "display-2" style="text-align: center;">Number of Devices</h1>
-                            <canvas #myChartForEveryTypeOfDevice style="height: 400px; width: 384px;"></canvas>
+                  </div>
+                
+                    <h1 style="text-align: center; padding-top: 10px;">Power Usage</h1>
+                    <div class="card-container">
+                        <div class="card">
+                            <h3 class="card-title" style="font-weight: 500; color: black; text-align: center;">{{hour | date:'MM/dd/yyyy hh:mm:ss a'}}:</h3>
+                            <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{currentHour}} kW/h</p>
                         </div>
-                    </div> -->
+                        <div class="card">
+                            <h3 class="card-title" style="font-weight: 500; color: black; text-align: center;">Average Current System:</h3>
+                            <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{currentSys}} kw/h</p>
+                        </div>
+                        <div class="card">
+                            <h3 class="card-title" style="font-weight: 500; color: black; text-align: center;">Prediction for {{next}}:</h3>
+                            <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{nextMonthSummary}} kw/h
+                            </p>
+                            </div>
+                        <div class="card">
+                            <h3 class="card-title" style="font-weight: 500; color: black; text-align: center;">History for {{month}}:</h3>
+                            <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{previousMonth}}</p>
+                        </div>
+                      </div>
+                    
+           <br>
+           <br>
+            <div class="col-sm-8" style="margin-left: 180px; margin-top:20px" >
+                <h1 style="text-align: center; font-size: 24px; font-weight: 500;  color: #026670;">Current Power Usage</h1>
+                <canvas #currentPowerusage></canvas>
             </div>
-    
-    
-    <!-- POWER USAGE -->
-    <div class="container" style="margin-top:90px">
-        <div class="row">
-               
-        </div>
-       
-        <div class="row">
-            <h2 style="text-align: center; font-size: 24px; font-weight: 500;  color: #026670;">Power Usage</h2>
-            
+            <br>
             <div class="col-sm-6">
-                    <h4 style="text-align: center; font-size: 20px; font-weight: 400;  color: #026670;">Previous Month</h4>
+                    <h4 style="text-align: center; font-size: 24px; font-weight: 500;  color: #026670;">Previous Month</h4>
                     <canvas #prevMonth></canvas>
             </div>
             
             <div class="col-sm-6">
-                <h4 style="text-align: center; font-size: 20px; font-weight: 400;  color: #026670;">Next Month</h4>
-                    
-                    <canvas #nextMonthChart></canvas>
+                <h4 style="text-align: center; font-size: 24px; font-weight: 500;  color: #026670;">Next Month</h4>
+                <canvas #nextMonthChart></canvas>
             </div>
            </div>
            
            <!-- POWER USAGE FOR EACH DEVICES -->
            <div class="row">
-            <h2 style="text-align: center;">Devices energy graph</h2>
+            <h1 style="text-align: center;">Devices energy graph</h1>
             <div class="col-sm-6">
                 <div>
-                    <h4 style="text-align: center; font-size: 24px; font-weight: 400;  color: #026670;">Previous Month for Each Device</h4>
+                    <h4 style="text-align: center; font-size: 24px; font-weight: 500;  color: #026670;">Previous Month for Each Device</h4>
                 <canvas #prevEachDevice></canvas>
                 </div>
             </div>
             <div class="col-sm-6">
                 <div>
-                    <h4 style="text-align: center; font-size: 24px; font-weight: 400;  color: #026670;">Next Month for Each Device</h4>
+                    <h4 style="text-align: center; font-size: 24px; font-weight: 500;  color: #026670;">Next Month for Each Device</h4>
                 <canvas #nextEachDevice></canvas>
                 </div>
             </div>
         </div>
     </div>
-    <!-- TABLE FOR CURRENT STATUS OF PRODUCERS?CONSUMERS?BATTERY?SOLAR -->
-    <div class="row">
-        <div class="col-sm-5">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>
-                            Solar Production
-                        </th>
-                        <th>
-                            Battery Production
-                        </th>
-                        <th>
-                            Energy Consumption
-                        </th>
-                        <th>
-                            Energy Production
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        
-    </div>
-    
 </div>
         
  

@@ -16,8 +16,10 @@ import { eachDevice } from 'models/eachDevice';
 export class HomeComponent implements OnInit, AfterViewInit{
 	
 	
+	
 	eachDevicePrev!: eachDevice[];
 	eachDeviceNext!: eachDevice[]
+	selectedOption: any;
 	
 
 	constructor(
@@ -26,18 +28,28 @@ export class HomeComponent implements OnInit, AfterViewInit{
 	
 
 	totalUsers!: number;
-
+	
 	weather! : Root;
 	User! : User[];
 	
 	previousMonthLabels: string[] = [];
 	everyDayUsagePreviousMonth: any;
 	everyDayUsageNextMonth:any;
-
+	currentDayUsage!:any;
+	
+	currentSys!:any;
 	previousMonth! : any;
 	nextMonth!: any;
 	nextMonthLabels:string[] = [];
 	nextMonthData: any;
+	currentHour!:any;
+	hour!:Date;
+
+
+	today!:Date;
+	MonthPrev!:Date;
+	MonthNext!:Date;
+
 
 	selectOption!: string;
 
@@ -71,6 +83,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 	@ViewChild('nextMonthChart') nextMonthChart! :ElementRef;
 	@ViewChild('prevEachDevice') prevEachDevice!: ElementRef;
 	@ViewChild('nextEachDevice') nextEachDevice!:ElementRef;
+	@ViewChild('currentPowerusage') currentPowerusage!:ElementRef;
 	
 	ngAfterViewInit(): void {
 		this.giveMeWeather();
@@ -78,33 +91,59 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			this.giveMeChartForTemperatureDaily();
 		},0)
 		
-		this.getNumberOfUsers();
-    	this.createMeChartForEveryDevice();
-    	setTimeout(() => {
-        	this.giveMeChartForUsers();
-    	}, 0);
-		
+		setTimeout(()=>{
+			this.getCurrentDay();
+		},0);
+		setTimeout(()=>{
+			this.powerUsagePreviousMonth();
+			this.nextMonthEveryDay();
+			
+		},10000)
+			
+			
+	
 	}
-							
-							
 	
-	
-		
-	ngOnInit(): void {
+	ngOnInit(): void {	
+		this.getDate();
 		this.getDeviceGroup();
-		this.powerUsagePreviousMonth();
+	// summarry for system
 		this.nextMonthSummary();
+		this.getCurrentDay();
+		this.powerUsagePreviousMonth();
+		this.getCurrentHourSystem();
+		this.getCurrentSys();
+
+	// foreach device 
 		this.previousMonthEachDevice();
 		this.nextMonthEachDevice();
+
+	// temperature
 		this.giveMeWeather();
-		
-		this.getNumberOfUsers();
-		this.createMeChartForEveryDevice();
-		this.getAllUserInfo();
 		this.giveMeChartForTemperatureDaily();
+		
+
+		this.getNumberOfUsers();
+		
+		// this.createMeChartForEveryDevice();
+		
+		this.getAllUserInfo();
+		
+
+
 	}
 
-
+	month:any;
+	next:any;
+	getDate(){
+		this.today = new Date();
+		this.MonthPrev = new Date(this.today.getFullYear(), this.today.getMonth() - 1);
+		this.month = this.MonthPrev.toLocaleString('default', { month: 'long', year: 'numeric' });
+		
+		
+		this.MonthNext = new Date(this.today.getFullYear(), this.today.getMonth() + 1);
+		this.next =  this.MonthNext.toLocaleString('default', { month: 'long', year: 'numeric' });
+	}
 	giveMeWeather(){
 		this.auth.getWeather().subscribe(
 			(response :any)=>{
@@ -115,6 +154,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		)
 	}
 
+	
 	giveMeChartForTemperatureDaily(){
 		const timeSlice = this.weather.hourly.time.slice(0,24);
 		const time = timeSlice.map((time)=>{
@@ -197,7 +237,6 @@ export class HomeComponent implements OnInit, AfterViewInit{
 							if(group.id === "77cbc929-1cf2-4750-900a-164de4abe28b")
 							{
 								this.producers = response;
-								console.log('PRODUCERS',this.producers);
 								
 							}else if(group.id === "18f30035-59de-474f-b9db-987476de551f")
 							{
@@ -357,7 +396,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		powerUsagePreviousMonth(){
 			this.auth.getPowerUsagePreviousMonthSummary().subscribe(
 				(response : any) => {
-					this.previousMonth = response;
+					this.previousMonth =  (response).toFixed(2);
 					this.previousMonthEveryDay()
 				}
 			)
@@ -437,7 +476,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			this.auth.getPowerUsageNextMonthSummary().subscribe(
 				(response : any)=>{
 					
-					this.nextMonthSummary = response;
+					this.nextMonthSummary = (response).toFixed(2);
 					this.nextMonthEveryDay();
 				}
 			)
@@ -528,7 +567,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 					}
 				}
 			}
-			console.log("LABEL",label)
+			
 			const dataEach = Object.values(this.eachDevicePrev).map((value) => value);
 			const data = {
 				labels: label,
@@ -643,7 +682,96 @@ export class HomeComponent implements OnInit, AfterViewInit{
 					options: options,
 				});
 		}
+
+		getCurrentDay(){
+			this.auth.getPowerUsageCurretDay().subscribe(
+				(response:any)=>{
+					this.currentDayUsage = response;
+					this.chartCurrentDay();
+				}
+			)
+		}
+		chartCurrentDay(){
+			const list =  Object.keys(this.currentDayUsage).map((key) =>
+				key.split('T')[1].split('.')[0]
+			);
+			const valuesList = [];
 	
+			for (const key in this.currentDayUsage) {
+				if (this.currentDayUsage.hasOwnProperty(key)) {
+					valuesList.push(this.currentDayUsage[key]);
+				}
+			}
+			const date = new Date();
+			const day = date.getDate();
+			const hour = date.getHours();
+			const minute = date.getMinutes();
+		   const data = {
+		   labels: list,
+		   datasets: [{
+			   label: 'Power Usage on '+date.getDate()+'.'+date.getMonth()+'.'+date.getFullYear()+'.',
+			   data: valuesList,
+			   fill: true,
+			   borderColor: 'rgb(54, 162, 235)',
+			   backgroundColor:'rgba(54, 162, 235, 0.5)',
+			   tension: 0.1,
+			   borderWidth: 1,
+		   }]
+	   }
+		   const options: ChartOptions = {
+			   scales: {
+			   x: {
+				   title: {
+				   display: true,
+				   text: 'Hours',
+				   },
+				   ticks: {
+				   font: {
+					   size: 14,
+				   },
+				   },
+			   },
+			   y: {
+				   title: {
+				   display: true,
+				   text: 'Current power usage in (kw/day)',
+				   },
+				   ticks: {
+				   font: {
+					   size: 14,
+				   },
+				   },
+			   },
+			   },
+		   };
+		   const stackedLine = new Chart(this.currentPowerusage.nativeElement, {
+			   type: 'line',
+			   data: data,
+			   options: options,
+		   });
+		}
+
+		getCurrentHourSystem(){
+			this.auth.getPowerUsageCurrentHour().subscribe(
+				(response:any)=>{
+					this.currentHour = (response).toFixed(2);
+					this.hour = new Date();
+				}
+			)
+		}
+
+		getCurrentSys(){
+		this.auth.getPowerUsageCurrentSystem().subscribe(
+			(response :any)=> {
+				this.currentSys = response.toFixed(2);
+			})
+ 
+
+		}
+
+		
+			
+		
 }
 
                

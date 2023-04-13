@@ -81,8 +81,8 @@ export class AuthService {
     return this.http.get(environment.apiUrl + '/api/Device/devices/info/user/'+userID);
   }
 
-  getPowerUsageForDeviceByID(deviceID: any){
-    return this.http.get(environment.apiUrl + '/api/PowerUsage/power-usage/current/'+deviceID);
+  getPowerUsageToday(deviceID: any) :Observable<any>{
+    return this.http.get(environment.apiUrl + '/api/PowerUsage/power-usage/today/'+deviceID);
   }
 
   getPowerUsagePreviousMonthSummary() :Observable<any>{
@@ -108,4 +108,24 @@ export class AuthService {
     return this.http.get(environment.apiUrl+"/api/PowerUsage/power-usage/nextMonth/each-device");
   }
 
+  getPowerUsageCurretDay():Observable<any>{
+    return this.http.get(environment.apiUrl+'/api/PowerUsage/power-usage/currentDay/system');
+  }
+
+  getPowerUsageCurrentHour():Observable<any>{
+    return this.http.get(environment.apiUrl + '/api/PowerUsage/power-usage/currentHour/system');
+  }
+
+  getPowerUsageCurrentSystem():Observable<any>{
+    return this.http.get(environment.apiUrl + '/api/PowerUsage/power-usage/current/system');
+  }
+
+  getPrevious24DevicePerHour(deviceID : string):Observable<any>
+  {
+    return this.http.get(environment.apiUrl + '/api/PowerUsage/power-usage/Previous24h/device-usage_per_hour/'+deviceID);
+  }
+
+  getPreviousMonth(userid : any):Observable<any>{
+    return this.http.get(environment.apiUrl + '/api/PowerUsage/power-usage/nextMonth/user-every-day-device-usage/'+userid);
+  }
 }

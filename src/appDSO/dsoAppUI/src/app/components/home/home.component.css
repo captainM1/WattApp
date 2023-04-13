@@ -55,3 +55,13 @@ p .text-center{
     color: #026670;
     font-size: 20px;
 }
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .card {
+    width: 25%;
+    padding: 20px;
+    box-sizing: border-box;
+  }

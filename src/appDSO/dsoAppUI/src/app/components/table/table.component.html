@@ -11,7 +11,7 @@
           <table tableexporter class="table-hover" #myTable id = "myTable">
               <thead>
                 <tr>
-                  <th ></th>
+                  <th style="width: 5%;"></th>
                   <th >First Name</th>
                   <th >Last Name</th>
                   <th >Address</th>
@@ -26,33 +26,37 @@
                   <td>{{user.lastName}}</td>
                   <td>{{user.address}}, {{user.city}}, {{user.country}}</td>
                   <td>{{user.powerUsage}}kw/h</td>
-                 
                   <td><input  [(ngModel)]="user.selected" type="checkbox" style="width: 20px;"></td>
               </tr>
               <tr>
                 
               </tr>
-              <tr>
-                <p-paginator class="w-100" [rows]="pageSize" [totalRecords]="lengthOfUsers" [rowsPerPageOptions]="pageSizeOptions" (onPageChange)="onPageChange($event)"></p-paginator>
-            </tr>
           </table>
+          <div class="col">
+            <tr style="width: 100%; display: flex; justify-content: center; text-align: center;">
+              <p-paginator class="w-100" [rows]="pageSize" [totalRecords]="lengthOfUsers" [rowsPerPageOptions]="pageSizeOptions" (onPageChange)="onPageChange($event)"></p-paginator>
+            </tr>
+          </div>
          
           <table>
             <thead>
               <tr>
+                <th></th>
                 <th>Device name</th>
-                <th>Type of Device</th>
                 <th>Device manifacture</th>
                 <th>Mac Address</th>
+                <th>Current Power Usage</th>
                 
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let device of allUserDevices">
-                <td>{{device.deviceTypeName}}</td>
-                <td>{{device.typeOfDevice}}</td>
+              <tr *ngFor="let device of allUserDevices" >
+                <td *ngIf = "showDevGraph"></td>
+                <td >{{device.deviceTypeName}}</td>
                 <td>{{device.manufacturerName}}</td>
                 <td>{{device.macAdress}}</td>
+                <td>{{device.typeOfDevice}} kw/h</td>
+                
               </tr>
             </tbody>
           </table>
@@ -62,15 +66,17 @@
     </div>
     <div class="col">
         <div id = "map" style="width: 450px; height: 300px;" >
-        </div>
+      </div>
     
       
       <!-- onclik on the device -->
-      <div class="card" style="width: 450px; height: 100px; margin-top: 10px">
+      <div class="card" id="graph-card" style="width: 450px; height: 270px; margin-top: 10px;">
         <div class="card-body">
-        <h5 class="card-title">Current power usage for device: </h5>
-        <p class="card-text"  style="text-align: center;">  kw </p>
+          <h5 class="card-title" style="text-align: center;">Power Usage </h5>
+          <p class="card-text" style="text-align: center;">
+          <canvas #perHourDevice></canvas>
+          </p>
+        </div>
       </div>
-    </div>
     </div>
  </div>

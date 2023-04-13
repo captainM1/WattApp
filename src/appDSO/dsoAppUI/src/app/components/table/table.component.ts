@@ -10,9 +10,11 @@ import { FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table'; 
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
-import { PaginatorModule } from 'primeng/paginator';import * as XLSX from 'xlsx';
+import { PaginatorModule } from 'primeng/paginator';
+import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { ProfileComponent } from 'app/profile/profile.component';
+import { Chart, ChartOptions } from 'chart.js';
 
 @Component({
   selector: 'app-table',
@@ -48,24 +50,27 @@ export class TableComponent implements OnInit {
   private address?: string;
 
   public toggleTable: boolean = false;
-
+  public showDevGraph:boolean = false;
 
   private map!: L.Map;
   private markers: L.Marker[] = [];
   private latlng: L.LatLng[] = [];
-
+  
   selected: string = "";
   pageSizeOptions = [5, 10, 25, 50];
 
   powerUsage!: string;
   deviceGroup!: any[];
-
+  values!:any[];
 // device type
   producers!: any[];
   consumers!: any[];
   storage!: any[];
- 
+
+  todayPowerUsageDevice!:any;
+  prev24DeviceID!:any;
   @ViewChild('myTable') myTable!: ElementRef;
+  @ViewChild('perHourDevice') perHourDevice!:ElementRef;
 
   constructor(
     private auth: AuthService,
@@ -87,6 +92,8 @@ export class TableComponent implements OnInit {
     this.showMeUsers(this.page, this.pageSize);
   }
 
+
+  
   currentSortOrder: string = 'asc';
   sortData(sortBy: string): void {
     this.currentSortOrder = this.currentSortOrder === 'asc' ? 'desc' : 'asc';
@@ -148,10 +155,11 @@ export class TableComponent implements OnInit {
       (response : any)=> {
         this.allUsers = response;
         for(let user of this.allUsers){
-          
+          console.log(user)
           this.auth.getUserPowerUsageByID(user.id).subscribe(
             (response: any) => {
-              user.powerUsage = (response/10).toFixed(2);
+              user.powerUsage = (response).toFixed(2);
+             
               user.selected = false;
             }
           )
@@ -210,7 +218,7 @@ export class TableComponent implements OnInit {
         for (let user of this.allUsers) {
           if (user.id === id) {
             this.activeItem = user.id;
-            user.powerUsage = (response / 10).toFixed(2);
+            user.powerUsage = (response).toFixed(2);
           }
         }
       }
@@ -233,43 +241,116 @@ export class TableComponent implements OnInit {
     );
   }  
 
+  
+  
   showMeDevices(id : string){
+    this.showDevGraph = !this.showDevGraph;
+    // this.auth.getPrevious24DevicePerHour(id).subscribe(
+    //   (response:any) => {
+    //     this.prev24DeviceID = response;
+    //     this.createChartFor24Previ();
+    //     console.log("24Prev",response);
+    //   }
+    // )
     this.getDeviceGroup();
     console.log(id);
-    this.auth.getPowerUsageForDeviceByID(id).subscribe(
-      (response : any)=>{
-        
-        console.log(response);
-      }
-    )
+    
     this.toggleTable = true;
     this.auth.getDeviceInfoUserByID(id).subscribe(
       (response : any) => {
         this.allUserDevices = response;
+        console.log("ALL USER DEVICES:",this.allUserDevices);
         for(let us of this.allUserDevices){
-          for(let p of this.producers){
-            for(let c of this.consumers){
-              for(let s of this.storage){
-                if(us.deviceTypeName === p['name'])
-                {
-                  us.typeOfDevice = 'Producer';
+          
+          this.auth.getPowerUsageToday(us.deviceId).subscribe(
+            (response : any)=>{
+              this.todayPowerUsageDevice = (response);
+              us.typeOfDevice = (response).toFixed(2);
+            }
+          )
+          // for(let p of this.producers){
+          //   for(let c of this.consumers){
+          //     for(let s of this.storage){
+          //       if(us.deviceTypeName === p['name'])
+          //       {
+          //         us.typeOfDevice = 'Producer';
                   
-                }
-                if(us.deviceTypeName === c['name']){
-                  us.typeOfDevice = "Consumer";
-                }
-                if(us.deviceTypeName === s['name']){
-                  us.typeOfDevice = 'Storage';
-                }
-              }
-          }
-          }
+          //       }
+          //       if(us.deviceTypeName === c['name']){
+          //         us.typeOfDevice = "Consumer";
+          //       }
+          //       if(us.deviceTypeName === s['name']){
+          //         us.typeOfDevice = 'Storage';
+          //       }
+          //     }
+          // }
+          // }
         }
-        // console.log(this.allUserDevices);
+      
       }
     )
+    console.log(this.allUserDevices);
   }
 
+  createChartFor24Previ(){
+    const list =  Object.keys(this.prev24DeviceID).map((key) =>
+				key.split('T')[1].split('.')[0]
+			);
+			const valuesList = [];
+	
+			for (const key in this.prev24DeviceID) {
+				if (this.prev24DeviceID.hasOwnProperty(key)) {
+					valuesList.push(this.prev24DeviceID[key]);
+				}
+			}
+      console.log(valuesList);
+	
+		   const data = {
+		   labels: list,
+		   datasets: [{
+			   label: 'Device power Usage',
+			   data: valuesList,
+			   fill: true,
+			   borderColor: 'rgb(75, 192, 192)',
+			   backgroundColor:'rgba(75, 192, 192, 0.5)',
+			   tension: 0.1,
+			   borderWidth: 1,
+		   }]
+	   }
+		   const options: ChartOptions = {
+			   scales: {
+			   x: {
+          
+				   title: {
+				   display: true,
+				   text: 'Hours',
+				   },
+				   ticks: {
+				   font: {
+					   size: 14,
+				   },
+				   },
+			   },
+			   y: {
+          suggestedMin: 0,
+				   title: {
+				   display: true,
+				   text: 'Current power usage in (kw/h)',
+				   },
+				   ticks: {
+				   font: {
+					   size: 14,
+				   },
+				   },
+			   },
+			   },
+		   };
+		   const stackedLine = new Chart(this.perHourDevice.nativeElement, {
+			   type: 'line',
+			   data: data,
+			   options: options,
+		   });
+  }
   
     getDeviceGroup(){
       this.auth.getDeviceGroup().subscribe(
