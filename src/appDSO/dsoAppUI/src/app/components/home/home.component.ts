@@ -86,25 +86,22 @@ export class HomeComponent implements OnInit, AfterViewInit{
 	@ViewChild('currentPowerusage') currentPowerusage!:ElementRef;
 	
 	ngAfterViewInit(): void {
-		this.giveMeWeather();
-		setTimeout(() =>{
-			this.giveMeChartForTemperatureDaily();
-		},0)
-		
+		setTimeout(()=>{
+			this.giveMeChartForTemperatureDaily()
+		},0);
+
 		setTimeout(()=>{
 			this.getCurrentDay();
 		},0);
+		
 		setTimeout(()=>{
 			this.powerUsagePreviousMonth();
 			this.nextMonthEveryDay();
-			
 		},10000)
-			
-			
-	
 	}
 	
 	ngOnInit(): void {	
+
 		this.getDate();
 		this.getDeviceGroup();
 	// summarry for system
@@ -128,33 +125,30 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		// this.createMeChartForEveryDevice();
 		
 		this.getAllUserInfo();
-		
-
-
 	}
-
+	dateForWeater:any;
 	month:any;
 	next:any;
 	getDate(){
 		this.today = new Date();
+		this.dateForWeater = this.today.toLocaleString('en-US',{ hour: 'numeric', minute: 'numeric', day:'numeric', month:'numeric', year:'numeric' });
+
 		this.MonthPrev = new Date(this.today.getFullYear(), this.today.getMonth() - 1);
 		this.month = this.MonthPrev.toLocaleString('default', { month: 'long', year: 'numeric' });
-		
 		
 		this.MonthNext = new Date(this.today.getFullYear(), this.today.getMonth() + 1);
 		this.next =  this.MonthNext.toLocaleString('default', { month: 'long', year: 'numeric' });
 	}
+//  --- weater ---	
 	giveMeWeather(){
 		this.auth.getWeather().subscribe(
 			(response :any)=>{
 				this.weather = response;
 				this.giveMeChartForTemperatureDaily();
-				
 			}
 		)
 	}
 
-	
 	giveMeChartForTemperatureDaily(){
 		const timeSlice = this.weather.hourly.time.slice(0,24);
 		const time = timeSlice.map((time)=>{
@@ -168,12 +162,14 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		const data = {
 		labels: labels,
 		datasets: [{
-			label: 'Temperature hourly',
+			label: 'Hourly temperature change',
 			data: this.weather.hourly.temperature_2m,
 			fill: true,
-			borderColor: 'rgb(115, 210, 222)',
-			backgroundColor:'rgb(115, 210, 222)',
-			tension: 0.1
+			borderColor: 'rgb(98, 183, 254)',
+			backgroundColor:'rgba(98, 183, 254,0.4)',
+			pointBackgroundColor: 'rgba(98, 183, 254,0.7)',
+			borderWidth: 1,
+			pointBorderColor:'rgb(98, 183, 254)'
 		}]
 	}
 	const options: ChartOptions = {
@@ -181,11 +177,11 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		  x: {
 			title: {
 			  display: true,
-			  text: 'Temperature in celsius and x hourly',
+			  text: 'Temperature hourly',
 			},
 			ticks: {
 			  font: {
-				size: 14,
+				size: 13,
 			  },
 			},
 		  },
@@ -196,7 +192,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			},
 			ticks: {
 			  font: {
-				size: 14,
+				size: 15,
 			  },
 			},
 		  },
@@ -427,16 +423,17 @@ export class HomeComponent implements OnInit, AfterViewInit{
 				}
 				
 	
-				
 				const data = {
 				labels: list,
 				datasets: [{
 					label: 'Power Usage For Previous Month',
 					data: valuesList,
 					fill: true,
-					borderColor: 'rgb(255, 159, 64)',
-					backgroundColor:'rgba(255, 159, 64, 0.5)',
-					tension: 0.1
+					borderColor: 'rgb(59, 193, 74)',
+					backgroundColor:'rgba(59, 193, 74,0.4)',
+					pointBackgroundColor: 'rgba(59, 193, 74,0.7)',
+					borderWidth: 1,
+					pointBorderColor:'rgb(59, 193, 74)'
 				}]
 			}
 				const options: ChartOptions = {
@@ -507,10 +504,11 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			   label: 'Power Usage For Next Month',
 			   data: valuesList,
 			   fill: true,
-			   borderColor: 'rgb(75, 192, 192)',
-			   backgroundColor:'rgba(75, 192, 192, 0.5)',
-			   tension: 0.1,
-			   borderWidth: 1,
+			   borderColor: 'rgb(255, 200, 0)',
+					backgroundColor:'rgba(255, 200, 0,0.4)',
+					pointBackgroundColor: 'rgba(255, 200, 0,0.7)',
+					borderWidth: 1,
+					pointBorderColor:'rgb(255, 200, 0)'
 		   }]
 	   }
 		   const options: ChartOptions = {
@@ -691,12 +689,12 @@ export class HomeComponent implements OnInit, AfterViewInit{
 				}
 			)
 		}
+		dateForChart:any;
 		chartCurrentDay(){
 			const list =  Object.keys(this.currentDayUsage).map((key) =>
-				key.split('T')[1].split('.')[0]
+				key.split('T')[1].split(':')[0] + ': 00'
 			);
 			const valuesList = [];
-	
 			for (const key in this.currentDayUsage) {
 				if (this.currentDayUsage.hasOwnProperty(key)) {
 					valuesList.push(this.currentDayUsage[key]);
@@ -706,16 +704,18 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			const day = date.getDate();
 			const hour = date.getHours();
 			const minute = date.getMinutes();
+			this.dateForChart = +date.getDate()+'.'+date.getMonth()+'.'+date.getFullYear()+'.';
 		   const data = {
 		   labels: list,
 		   datasets: [{
-			   label: 'Power Usage on '+date.getDate()+'.'+date.getMonth()+'.'+date.getFullYear()+'.',
+			   label: 'Energy consumption ',
 			   data: valuesList,
-			   fill: true,
-			   borderColor: 'rgb(54, 162, 235)',
-			   backgroundColor:'rgba(54, 162, 235, 0.5)',
-			   tension: 0.1,
+			   fill:true,
+			   borderColor: 'rgb(251, 97, 7)',
+			   backgroundColor:'rgba(251, 97, 7,0.4)',
+			   pointBackgroundColor: 'rgba(251, 97, 7,0.7)',
 			   borderWidth: 1,
+			   pointBorderColor:'rgb(251, 97, 7)'
 		   }]
 	   }
 		   const options: ChartOptions = {
@@ -766,10 +766,20 @@ export class HomeComponent implements OnInit, AfterViewInit{
 				this.currentSys = response.toFixed(2);
 			})
  
-
+			
 		}
-
-		
+		Previousbool : boolean = true;
+		Nextbool : boolean = false;
+		selectedOptionChart:string = 'Previous';
+		onOptionSelect(){
+			if(this.selectedOptionChart === 'Previous'){
+				this.Previousbool = true;
+				this.Nextbool = false;
+			}else if(this.selectedOptionChart === 'Next'){
+				this.Previousbool = false;
+				this.Nextbool = true;
+			}
+		}
 			
 		
 }
