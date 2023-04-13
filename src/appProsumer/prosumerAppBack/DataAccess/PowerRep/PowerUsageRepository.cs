@@ -92,46 +92,84 @@ public class PowerUsageRepository : IPowerUsageRepository
                 .Sum(pair => pair.PowerUsage);
             return totalPowerUsage;
         }
+        else if (deviceGroupName == "Producer")
+        {
+            
+        }
+
         return 1;
     }
 
 
     public PowerUsage GetPowerUsageFor7Days(Guid deviceId, int direction)
     {
-        var powerUsage = new PowerUsage();
-        powerUsage.TimestampPowerPairs = new List<TimestampPowerPair>();
-        var today = DateTime.Today;
+        Guid deviceTypeID = _dataContext.Devices
+            .Where(d => d.ID == deviceId)
+            .Select(d => d.DeviceTypeID)
+            .FirstOrDefault();
 
-        for (int i = 1; i <= 7; i++)
+        string deviceGroupName = _dataContext.DeviceGroups
+            .Where(g => g.ID == _dataContext.DeviceTypes
+                .Where(dt => dt.ID == deviceTypeID)
+                .Select(dt => dt.GroupID)
+                .FirstOrDefault())
+            .Select(g => g.Name)
+            .FirstOrDefault();
+
+        if (deviceGroupName == "Consumer")
         {
-            var day = today.AddDays(i * direction);
-            var powerUsageD = GetPowerUsageForDay(deviceId, day);
-            var ts = new TimestampPowerPair();
-            ts.PowerUsage = powerUsageD;
-            ts.Timestamp = day;
-            powerUsage.TimestampPowerPairs.Add(ts);
+            var powerUsage = new PowerUsage();
+            powerUsage.TimestampPowerPairs = new List<TimestampPowerPair>();
+            var today = DateTime.Today;
+
+            for (int i = 1; i <= 7; i++)
+            {
+                var day = today.AddDays(i * direction);
+                var powerUsageD = GetPowerUsageForDay(deviceId, day);
+                var ts = new TimestampPowerPair();
+                ts.PowerUsage = powerUsageD;
+                ts.Timestamp = day;
+                powerUsage.TimestampPowerPairs.Add(ts);
+
+            }
+
+            if (direction == -1)
+                powerUsage.TimestampPowerPairs.Reverse();
+            return powerUsage;
+        }
+        else if (deviceGroupName == "Producer")
+        {
 
         }
-
-        if (direction == -1)
-            powerUsage.TimestampPowerPairs.Reverse();
-        return powerUsage;
+        return null;
     }
 
     public double CurrentSumPowerUsage(Guid userID)
     {
+        double sum = 0;
         DateTime currentHourTimestamp = DateTime.Now.Date.AddHours(DateTime.Now.Hour);
 
         IEnumerable<String> deviceTypeIds = _deviceRepository.GetDevicesForUser(userID).Select(d => d.DeviceTypeID.ToString().ToUpper());
+        foreach(var deviceTypeId in deviceTypeIds)
+        {
+            string deviceGroupName = _dataContext.DeviceGroups
+                        .Where(g => g.ID == _dataContext.DeviceTypes
+                            .Where(dt => dt.ID.ToString().ToUpper() == deviceTypeId)
+                            .Select(dt => dt.GroupID)
+                            .FirstOrDefault())
+                        .Select(g => g.Name)
+                        .FirstOrDefault();
+            if (deviceGroupName == "Consumer")
+            {
+                var powerUsageData = mongoCollection.AsQueryable()
+                    .Where(p => deviceTypeIds.Contains(p.ID.ToString()))
+                    .ToList()
+                    .SelectMany(p => p.TimestampPowerPairs)
+                    .Where(t => t.Timestamp == currentHourTimestamp);
 
-        var powerUsageData = mongoCollection.AsQueryable()
-            .Where(p => deviceTypeIds.Contains(p.ID.ToString()))
-            .ToList()
-            .SelectMany(p => p.TimestampPowerPairs)
-            .Where(t => t.Timestamp == currentHourTimestamp);
-
-        double sum = powerUsageData.Sum(p => p.PowerUsage);
-
+                sum = powerUsageData.Sum(p => p.PowerUsage);
+            }
+        } 
         return sum;
     }
 
@@ -347,29 +385,41 @@ public class PowerUsageRepository : IPowerUsageRepository
         return powerUsageDictionary;
     }
 
-    public Dictionary<DateTime, double> GetPowerUsageForDeviceNext24Hours(Guid deviceID)
+    public PowerUsage GetPowerUsageForDeviceNext24Hours(Guid deviceID)
     {
-        var end = DateTime.UtcNow;
-        var start = end;
+        var startOf24Period = DateTime.Today;
+        var endOf24Period = DateTime.Today.AddDays(1).AddHours(-1);
+
+        Guid deviceTypeID = _dataContext.Devices
+            .Where(d => d.ID == deviceID)
+            .Select(d => d.DeviceTypeID)
+            .FirstOrDefault();
+
+        var powerUsage = new PowerUsage();
+        powerUsage.TimestampPowerPairs = new List<TimestampPowerPair>();
 
         var powerUsages = mongoCollection.AsQueryable()
-            .Where(p => deviceID.ToString().ToUpper().Contains(p.ID.ToString()))
+            .Where(p => p.ID.ToString() == deviceTypeID.ToString().ToUpper())
+            .ToList();
+        var temp = powerUsages
+            .SelectMany(t => t.TimestampPowerPairs)
+            .Where(t => t.Timestamp >= startOf24Period && t.Timestamp <= endOf24Period)
             .ToList();
 
-        var powerUsageDictionary = new Dictionary<DateTime, double>();
+        var sums = new Dictionary<DateTime, double>();
+        var currentDate = startOf24Period;
 
-        for (int i = 0; i < 24; i++)
+        while (currentDate <= endOf24Period)
         {
-            var hourStart = start.AddHours(i);
-            var hourEnd = hourStart.AddHours(1);
-            var powerUsage = powerUsages
-                .SelectMany(p => p.TimestampPowerPairs)
-                .Where(tp => tp.Timestamp >= hourStart && tp.Timestamp < hourEnd)
-                .Sum(tp => tp.PowerUsage);
-            powerUsageDictionary.Add(hourStart, powerUsage);
+            var ts = new TimestampPowerPair();
+            var sum = GetCurrentPowerUsage(currentDate, deviceTypeID);
+            ts.Timestamp = currentDate;
+            ts.PowerUsage = sum;
+            powerUsage.TimestampPowerPairs.Add(ts);
+            currentDate = currentDate.AddHours(1);
         }
 
-        return powerUsageDictionary;
+        return powerUsage;
     }
 
     public async Task<bool> DeleteDevice(Guid deviceID)
@@ -387,10 +437,13 @@ public class PowerUsageRepository : IPowerUsageRepository
         return true;
     }
 
-    public Dictionary<DateTime, double> GetPowerUsageForADaySystem()
+    public PowerUsage GetPowerUsageForADaySystem()
     {
-        var startOf24Period = DateTime.Now.AddDays(-1);
-        var endOf24Period = DateTime.Now;
+        var startOf24Period = DateTime.Today;
+        var endOf24Period = DateTime.Today.AddDays(1).AddHours(-1);               
+
+        var powerUsage = new PowerUsage();
+        powerUsage.TimestampPowerPairs = new List<TimestampPowerPair>();
 
         var powerUsages = mongoCollection.AsQueryable().ToList();
         var temp = powerUsages
@@ -403,22 +456,22 @@ public class PowerUsageRepository : IPowerUsageRepository
 
         while (currentDate <= endOf24Period)
         {
-            var sum = temp
-                .Where(tp => tp.Timestamp.Date == currentDate.Date)
-                .Sum(tp => tp.PowerUsage);
-
-            sums.Add(currentDate, sum);            
+            var ts = new TimestampPowerPair();
+            var sum = GetCurrentPowerUsage(currentDate);
+            ts.Timestamp = currentDate;
+            ts.PowerUsage = sum;
+            powerUsage.TimestampPowerPairs.Add(ts);            
             currentDate = currentDate.AddHours(1);
         }
 
-        return sums;
+        return powerUsage;        
     }
 
     public double GetCurrentPowerUsage()
     {
-        var startOfAnHour = DateTime.Now;
-        var endOfAnHour = DateTime.Now.AddHours(1);
-        
+        var startOfAnHour = DateTime.Now.AddHours(-1);
+        var endOfAnHour = DateTime.Now;
+
         var deviceUsages = mongoCollection.AsQueryable().ToList();
 
         var powerUsages = deviceUsages
@@ -426,11 +479,35 @@ public class PowerUsageRepository : IPowerUsageRepository
        
         return powerUsages;
     }
+    public double GetCurrentPowerUsage(DateTime date)
+    {
+        var startOfAnHour = date;
+        var endOfAnHour = date.AddHours(1);
+
+        var deviceUsages = mongoCollection.AsQueryable().ToList();
+
+        var powerUsages = deviceUsages
+            .Sum(p => p.TimestampPowerPairs.Where(t => t.Timestamp >= startOfAnHour && t.Timestamp < endOfAnHour).Sum(p => p.PowerUsage));
+
+        return powerUsages;
+    }
+    public double GetCurrentPowerUsage(DateTime date,Guid deviceTypeID)
+    {
+        var startOfAnHour = date;
+        var endOfAnHour = date.AddHours(1);
+
+        var deviceUsages = mongoCollection.AsQueryable().Where(p => p.ID.ToString() == deviceTypeID.ToString().ToUpper()).ToList();
+
+        var powerUsages = deviceUsages
+            .Sum(p => p.TimestampPowerPairs.Where(t => t.Timestamp >= startOfAnHour && t.Timestamp < endOfAnHour).Sum(p => p.PowerUsage));
+
+        return powerUsages;
+    }
 
     public double GetCurrentPowerUsageForDevice(Guid deviceID)
     {
-        var startOfAnHour = DateTime.Now;
-        var endOfAnHour = DateTime.Now.AddHours(1);
+        var startOfAnHour = DateTime.Now.AddHours(-1);
+        var endOfAnHour = DateTime.Now;
 
         Guid deviceTypeID = _dataContext.Devices
             .Where(d => d.ID == deviceID)
@@ -443,11 +520,11 @@ public class PowerUsageRepository : IPowerUsageRepository
 
         var temp = powerUsages
                 .SelectMany(p => p.TimestampPowerPairs)
-                .Where(tp => tp.Timestamp >= startOfAnHour && tp.Timestamp < endOfAnHour)
+                .Where(tp => tp.Timestamp >= startOfAnHour && tp.Timestamp <= endOfAnHour)
                 .Sum(tp => tp.PowerUsage);
 
 
-        return temp;
+        return temp;               
     }
 
 

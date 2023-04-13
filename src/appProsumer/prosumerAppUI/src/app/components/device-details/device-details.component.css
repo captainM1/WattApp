@@ -95,6 +95,7 @@
         color:#026670;
     }
 
+
 }
  
 @media (min-width: 481px) and (max-width: 1023px)  /*Tablet*/
@@ -141,7 +142,7 @@
     }
 
     .outer{ 
-        margin-top: 80px;
+        margin-top: 40px;
     }
 
     h3{
@@ -238,4 +239,21 @@ p{
 span{
     font-weight: bold;
     color:black;
+}
+
+select {
+    color: white;
+    background-color: #026670;
+    width:90%;
+    font-weight: bold;
+    font-size: 13px;
+    text-transform: uppercase;
+    border-radius: 10px;
+    text-align: center;
+    height: 50px;
+}
+
+select option:not(:checked) {
+    color: #026670;
+    background-color: white;
 }
