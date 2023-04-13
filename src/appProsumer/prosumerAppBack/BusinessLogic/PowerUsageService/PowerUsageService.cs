@@ -76,7 +76,7 @@ public class PowerUsageService:IPowerUsageService
         return powerUsages;
     }
 
-    public Dictionary<DateTime, double> GetPowerUsageForADaySystem()
+    public PowerUsage GetPowerUsageForADaySystem()
     {
         var powerUsages = _repository.GetPowerUsageForADaySystem();
         if (powerUsages == null)
