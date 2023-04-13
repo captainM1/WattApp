@@ -56,6 +56,16 @@ public class PowerUsageService:IPowerUsageService
         return powerUsage;
     }
 
+    public IEnumerable<TimestampPowerPair> GetForDeviceByHour(Guid deviceID)
+    {
+        var powerUsages = _repository.GetForDeviceByHour(deviceID);
+        if (powerUsages == null)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsages;
+    }
+
     public PowerUsage GetForDevice(Guid deviceID)
     {
         var powerUsages = _repository.GetForDevice(deviceID);

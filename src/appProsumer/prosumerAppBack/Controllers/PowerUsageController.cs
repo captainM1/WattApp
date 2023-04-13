@@ -231,7 +231,14 @@ public class PowerUsageController : ControllerBase
         var powerUsages = _powerUsage.GetCurrentPowerUsageForDevice(deviceID);
         return Ok(powerUsages);
     }
-
+    
+    [HttpGet("power-usage/today/currentPowerUsage/{deviceID}")]
+    public IActionResult GetDeviceDataHourToday(Guid deviceID)
+    {
+        var powerUsages = _powerUsage.GetForDeviceByHour(deviceID);
+        return Ok(powerUsages);
+    }
+    
     /*[HttpGet("power-usage/most-consumes/last-24hours/{userID}")]
     public ActionResult<Dictionary<DateTime, double>> GetMostConsumerPast24hours(Guid userID)
     {

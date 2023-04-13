@@ -90,21 +90,9 @@ public class PowerUsageRepository : IPowerUsageRepository
             double totalPowerUsage = powerUsageData.TimestampPowerPairs
                 .Where(pair => pair.Timestamp.Date == today)
                 .Sum(pair => pair.PowerUsage);
-            if (powerUsageData == null)
-            {
-                return 0;
-            }
-
-            double totalPowerUsage = powerUsageData.TimestampPowerPairs
-                .Where(pair => pair.Timestamp.Date == today)
-                .Sum(pair => pair.PowerUsage);
-
             return totalPowerUsage;
         }
-        else
-        {
-            return 1;
-        }
+        return 1;
     }
 
 
@@ -114,7 +102,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         powerUsage.TimestampPowerPairs = new List<TimestampPowerPair>();
         var today = DateTime.Today;
 
-        for (int i = 0; i < 7; i++)
+        for (int i = 1; i <= 7; i++)
         {
             var day = today.AddDays(i * direction);
             var powerUsageD = GetPowerUsageForDay(deviceId, day);
@@ -125,6 +113,8 @@ public class PowerUsageRepository : IPowerUsageRepository
 
         }
 
+        if (direction == -1)
+            powerUsage.TimestampPowerPairs.Reverse();
         return powerUsage;
     }
 
@@ -159,6 +149,24 @@ public class PowerUsageRepository : IPowerUsageRepository
         double sum = powerUsageData.Sum(p => p.PowerUsage);
 
         return sum;
+    }
+
+    public IEnumerable<TimestampPowerPair> GetForDeviceByHour(Guid deviceID)
+    {
+        DateTime currentHourTimestamp = DateTime.Today;
+        
+        Guid deviceTypeID = _dataContext.Devices
+            .Where(d => d.ID == deviceID)
+            .Select(d => d.DeviceTypeID)
+            .FirstOrDefault();
+
+        
+        var powerUsageData = mongoCollection.AsQueryable()
+            .FirstOrDefault(p => p.ID.ToString() == deviceTypeID.ToString().ToUpper())
+            ?.TimestampPowerPairs
+            .Where(t => t.Timestamp.Date == currentHourTimestamp);
+
+        return powerUsageData;
     }
 
     public double GetPowerUsageForAMonthSystem(int direction)

@@ -206,8 +206,7 @@ namespace prosumerAppBack.Controllers
 
             return Ok(new {Message = "device deleted successfully" });
         }
-	}
-
+        
         [HttpPost("add-rule/{id}")]
         public async Task<IActionResult> AddDeviceRule(Guid id, [FromBody] DeviceRuleDto deviceRuleDto)
         {
@@ -267,5 +266,6 @@ namespace prosumerAppBack.Controllers
                 throw new ArgumentException(ex.Message);
             }
         }
+	}
 }
 
