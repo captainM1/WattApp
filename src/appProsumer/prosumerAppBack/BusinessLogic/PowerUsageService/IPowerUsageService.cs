@@ -19,4 +19,5 @@ public interface IPowerUsageService
     public IEnumerable<TimestampPowerPair> GetForDeviceByHour(Guid deviceID);
 
     public (Guid maxDeviceID, double maxDeviceUsage) GetMaxUsagePast24Hours(Guid userID);
+    public (Guid maxDeviceID, double maxDeviceUsage) GetMaxUsagePreviousWeek(Guid userID);
 }

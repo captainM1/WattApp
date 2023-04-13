@@ -246,14 +246,14 @@ public class PowerUsageController : ControllerBase
         return Ok(powerUsages);
     }
 
-    /*
     [HttpGet("power-usage/most-consumes/last-week/{userID}")]
     public ActionResult<Dictionary<DateTime, double>> GetMostConsumerLastWeek(Guid userID)
     {
-        var powerUsages = _powerUsageService.GetDevicePowerUsageMaxForUserLastWeek(userID);
+        var powerUsages = _powerUsageService.GetMaxUsagePreviousWeek(userID);
         return Ok(powerUsages);
     }
 
+    /*
     [HttpGet("power-usage/most-consumes/last-month/{userID}")]
     public ActionResult<Dictionary<DateTime, double>> GetMostConsumerLastMonth(Guid userID)
     {
