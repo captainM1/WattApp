@@ -66,7 +66,7 @@ export class AuthService {
 
 
   getWeather():Observable<any>{
-    return this.http.get<any>('https://api.openweathermap.org/data/2.5/weather?q=Kragujevac&APPID=5aa0bb66ef67e76c36269e8d98cbc320');
+    return this.http.get<any>('https://api.open-meteo.com/v1/forecast?latitude=44.02&longitude=20.91&hourly=temperature_2m,relativehumidity_2m&daily=temperature_2m_max,temperature_2m_min&current_weather=true&timezone=auto');
   }
 
   getUserNumber(){
@@ -84,4 +84,28 @@ export class AuthService {
   getPowerUsageForDeviceByID(deviceID: any){
     return this.http.get(environment.apiUrl + '/api/PowerUsage/power-usage/current/'+deviceID);
   }
+
+  getPowerUsagePreviousMonthSummary() :Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/previousMonth/system");
+  }
+  getPowerUsagePreviousMonthEveryDayUsage():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/previousMonth/every-day-usage")
+  }
+
+  getPowerUsageNextMonthSummary():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/nextMonth/system");
+  }
+
+  getPowerUsageNextMonthEveryDay():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/nextMonth/every-day-usage")
+  }
+
+  getPowerUsagePreviousMonthEachDevice() : Observable<any>{
+    return this.http.get(environment.apiUrl+"/api/PowerUsage/power-usage/previousMonth/each-device");
+  }
+
+  getPowerUsageNextMonthEachDevice() : Observable<any>{
+    return this.http.get(environment.apiUrl+"/api/PowerUsage/power-usage/nextMonth/each-device");
+  }
+
 }

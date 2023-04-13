@@ -20,4 +20,6 @@ public interface IUserService
     Task<object> GetCoordinatesForUser(Guid id);
     Task<int> GetNumberOfUsers();
     Task<List<UserDto>> GetAllUsersAsync();
+    Task<Boolean> ApproveUserRequestToDso(Guid id);
+    Task<Boolean> DeclineUserRequestToDso(Guid id);
 }

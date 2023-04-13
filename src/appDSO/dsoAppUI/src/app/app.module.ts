@@ -14,7 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { GoogleMapsModule } from '@angular/google-maps';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
+
 import { NgChartsModule } from 'ng2-charts';
 import * as CanvasJSAngularChart from '../assets/canvasjs.angular.component';
 import { NavComponent } from './components/nav/nav.component';
@@ -23,10 +23,10 @@ import {MatTableModule} from '@angular/material/table';
 import { TableComponent } from './components/table/table.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { FormsModule } from '@angular/forms';
-
-import { WeatherComponent } from './components/weather/weather.component';
-
 import { RequirementsComponent } from './components/requirements/requirements.component';
+import { PaginatorModule } from 'primeng/paginator';
+import { FilterPipe } from './components/table/filer.pipe';
+import { ProfileComponent } from './profile/profile.component';
 
 
 var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
@@ -36,21 +36,15 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
   declarations: [
     AppComponent,
     LoginComponent,
-    DashboardComponent,
     CanvasJSChart,
     NavComponent,
     HomeComponent,
     TableComponent,
-
-
-    WeatherComponent,
-
     SignupComponent,
-
     RequirementsComponent,
-
-    
-  ],
+    FilterPipe,
+    ProfileComponent
+],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -65,9 +59,7 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     NgChartsModule,
     FormsModule,
     MatTableModule,
-    
-    
-
+    PaginatorModule
   ],
   providers: [],
   bootstrap: [AppComponent]

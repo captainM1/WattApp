@@ -1,4 +1,7 @@
-﻿using prosumerAppBack.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using prosumerAppBack.Models;
 using prosumerAppBack.Models.Device;
 using SendGrid.Helpers.Errors.Model;
 
@@ -43,9 +46,59 @@ public class PowerUsageService:IPowerUsageService
         return powerUsages;
     }
 
+    public double CurrentSumPowerUsageSystem()
+    {
+        var powerUsage = _repository.CurrentSumPowerUsageSystem();
+        if (powerUsage == 0)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsage;
+    }
+
+    public IEnumerable<TimestampPowerPair> GetForDeviceByHour(Guid deviceID)
+    {
+        var powerUsages = _repository.GetForDeviceByHour(deviceID);
+        if (powerUsages == null)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsages;
+    }
+
     public PowerUsage GetForDevice(Guid deviceID)
     {
         var powerUsages = _repository.GetForDevice(deviceID);
+        if (powerUsages == null)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsages;
+    }
+
+    public PowerUsage GetPowerUsageForADaySystem()
+    {
+        var powerUsages = _repository.GetPowerUsageForADaySystem();
+        if (powerUsages == null)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsages;
+    }
+
+    public double GetCurrentPowerUsage()
+    {
+        var powerUsages = _repository.GetCurrentPowerUsage();
+        if (powerUsages == null)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsages;
+    }
+
+    public double GetCurrentPowerUsageForDevice(Guid deviceID)
+    {
+        var powerUsages = _repository.GetCurrentPowerUsageForDevice(deviceID);
         if (powerUsages == null)
         {
             throw new NotFoundException();

@@ -13,8 +13,6 @@ namespace prosumerAppBack.BusinessLogic
         
         public PowerUsage GetPowerUsageFor7Days(Guid deviceId, int direction);
 
-        public double CurrentPowerUsage(Guid userID);
-
         public double GetPowerUsageForAMonthSystem(int direction);
         public Dictionary<Guid, double> GetPowerUsageSumByDevice(int direction);
         public Dictionary<DateTime, double> GetPowerUsagesForEachDay(int direction);
@@ -22,7 +20,13 @@ namespace prosumerAppBack.BusinessLogic
         public Dictionary<Guid, List<double>> GetPowerUsageForDevices(Guid userId, int direction);
         public List<double> GetPowerUsageForDevice(Guid deviceID, int direction);
         public Dictionary<DateTime, double> GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction);
-        public Dictionary<DateTime, double> GetPowerUsageForDeviceNext24Hours(Guid deviceID);
+        public PowerUsage GetPowerUsageForDeviceNext24Hours(Guid deviceID);
         public Task<bool> DeleteDevice(Guid deviceID);
-    }
+        PowerUsage GetPowerUsageForADaySystem();
+        public double GetCurrentPowerUsage();
+        public double GetCurrentPowerUsageForDevice(Guid deviceID);
+        public double CurrentSumPowerUsageSystem();
+        
+        public IEnumerable<TimestampPowerPair> GetForDeviceByHour(Guid deviceID);
+	}
 }

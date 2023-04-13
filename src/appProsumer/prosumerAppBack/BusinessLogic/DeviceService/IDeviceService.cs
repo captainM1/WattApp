@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using prosumerAppBack.DataAccess;
 using prosumerAppBack.Models.Device;
 
@@ -18,6 +19,10 @@ public interface IDeviceService
     Task<List<DeviceInfo>> GetDeviceInfoForUser(Guid userID);
     
     Task<DeviceInfo> GetDeviceInfoForDevice(Guid deviceID);
+    Task<DeviceRule> UpdateDeviceRule(Guid id, [FromBody] DeviceRuleDto deviceRuleDto);
+    Task<DeviceRule> AddDeviceRule(Guid id, [FromBody] DeviceRuleDto deviceRuleDto);
+    Task<DeviceRequirement> UpdateDeviceRequirement(Guid id, [FromBody] DeviceRequirementDto deviceRequirementDto);
+    Task<DeviceRequirement> AddDeviceRequirement(Guid id, [FromBody] DeviceRequirementDto deviceRequirementDto);
 
     Task<bool> DeleteDevice(Guid deviceID);
 }

@@ -124,10 +124,15 @@ public class UserController : ControllerBase
         return Ok(new { message = "user updated successfully" });
     }
 
-    [HttpPost("send-reset-email")]
+    [HttpPost("forgot-password")]
     public async Task<IActionResult> SendResetEmail([FromBody] ResetPasswordEmailDto resetPasswordEmailDto)
     {
         var user = await _userService.GetUserByEmailAsync(resetPasswordEmailDto.Email);
+
+        if(user == null)
+        {
+            return BadRequest("Email does not exists");
+        }
 
         var token = _tokenMaker.GenerateToken(user);
         var resetPasswordUrl = $"https://localhost:7182/api/user/reset-password?token={token}";
@@ -276,6 +281,36 @@ public class UserController : ControllerBase
             var results = await _userService.GetAllUsersAsync();
 
             return Ok(results);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpPost("approve-request-to-dso/{id}")]
+    public async Task<IActionResult> ApproveRequestForDso(Guid id)
+    {
+        try
+        { 
+            var result = await _userService.ApproveUserRequestToDso(id);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpPost("decline-request-to-dso/{id}")]
+    public async Task<IActionResult> DeclineRequestForDso(Guid id)
+    {
+        try
+        {
+            var result = await _userService.DeclineUserRequestToDso(id);
+
+            return Ok(result);
         }
         catch (Exception ex)
         {

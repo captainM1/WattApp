@@ -14,11 +14,11 @@ import { User } from 'src/app/models/user';
   styleUrls: ['./profile-prosumer.component.css']
 })
 export class ProfileProsumerComponent implements OnInit{
-  
+
   allUsers!: any[];
   userID!: User;
   token!:any;
- 
+
 
 
   constructor(
@@ -29,7 +29,6 @@ export class ProfileProsumerComponent implements OnInit{
   ngOnInit(): void {
     this.getUser();
     this.getToken();
-    
   }
 
   getUser(){
@@ -49,7 +48,7 @@ export class ProfileProsumerComponent implements OnInit{
        console.log(this.userID);
       }
     )
-  } 
+  }
 }
 
 
