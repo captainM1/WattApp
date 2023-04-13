@@ -21,11 +21,15 @@ export class DeviceDetailsComponent implements OnInit {
   deviceFuturePower: any = [];
   deviceHistoryDate: any = [];
   deviceFutureDate: any = [];
+  hours: any = [];
+  hourly: any = [];
+  data: any = [];
   labels: any = [];
   formattedLabels: any = [];
   deviceFuture: any;
   deviceToday: any;
   devicevalue: any;
+  chart:any;
 
   constructor(
     private route: ActivatedRoute,
@@ -35,6 +39,8 @@ export class DeviceDetailsComponent implements OnInit {
     private messageService: MessageService
   )
   {}
+
+  
 
   ngOnInit() {
     this.deviceId = this.route.snapshot.paramMap.get('id');
@@ -76,18 +82,25 @@ export class DeviceDetailsComponent implements OnInit {
           this.deviceFutureDate = this.deviceFuture.timestampPowerPairs.map((time:any) => time.timestamp);
           this.deviceFuturePower = this.deviceFuture.timestampPowerPairs.map((time:any) => time.powerUsage);
           this.labels = [...this.deviceHistoryDate, new Date(), ...this.deviceFutureDate];
-          this.formattedLabels = this.labels.map((date:any) => {
-            const parsedDate = new Date(date);
-            const month = parsedDate.getMonth() + 1;
-            const day = parsedDate.getDate();
-            return `${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
-          });
-
-          this.initializeChart();
+          this.onOptionSelect();
         },
         error => {
           console.error('Error fetching device future:', error);
         })
+      
+      this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/Previous24h/device-usage_per_hour/${this.deviceId}`)
+      .subscribe(data =>{/*
+
+        this.hours = data.map((item: any) => item.DateTime);
+        this.hourly = data.map((item: any) => item.Number);
+
+        console.log(this.hours);
+        console.log(this.hourly);
+        this.onOptionSelect();*/
+      },
+      error => {
+         console.error('Error fetching todays info:', error);
+      })
         
   }
 
@@ -140,21 +153,43 @@ export class DeviceDetailsComponent implements OnInit {
   }
 
   @ViewChild('chart', {static: true}) chartElement: ElementRef | undefined = undefined;
+  selectedOption: string = 'Week';
+
+  onOptionSelect() {
+  if (this.selectedOption === 'Today') {
+    this.data = [1600,1500,1485,1547,2147,1548,1584,1689,1584,1475,1578,1652];
+    this.formattedLabels = ['1','2','3','4','5','6','7','8','9','10','11','12'];
+    this.initializeChart();
+  } else if (this.selectedOption === 'Week') {
+    this.formattedLabels = this.labels.map((date:any) => {
+      const parsedDate = new Date(date);
+      const month = parsedDate.getMonth() + 1;
+      const day = parsedDate.getDate();
+      return `${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
+    });
+    this.data = [...this.deviceHistoryPower, this.deviceToday, ...this.deviceFuturePower];
+    this.initializeChart();
+  }
+  }
 
   initializeChart() {
     if (this.chartElement){
+      
+    if (this.chart) {
+      this.chart.destroy();
+    }
   const ctx = this.chartElement.nativeElement.getContext('2d');
   const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-  gradient.addColorStop(0, '#FF8811'); // start color
+  gradient.addColorStop(0, '#FF8811');
   gradient.addColorStop(0.5,'#9747FF');
   gradient.addColorStop(1, '#9FEDD7');
-  const chart = new Chart(ctx, {
+  this.chart = new Chart(ctx, {
     type: 'line',
     data: {
       labels: this.formattedLabels,
       datasets: [{
         label: 'Power Usage',
-        data: [...this.deviceHistoryPower, this.deviceToday, ...this.deviceFuturePower],
+        data: this.data,
         fill: true,
         borderColor: gradient,
         tension: 0.1
