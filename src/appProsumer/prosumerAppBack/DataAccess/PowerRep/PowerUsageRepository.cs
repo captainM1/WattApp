@@ -531,5 +531,67 @@ public class PowerUsageRepository : IPowerUsageRepository
         return (maxDeviceID, maxPowerUsage);
     }
 
+    public Dictionary<DateTime, double> GetPowerUsageForDevicePreviousMonth(Guid deviceID)
+    {
+        DateTime endDate = DateTime.UtcNow;
+        DateTime startDate = endDate.AddDays(-30);
+
+        return _dataContext.PowerUsages
+            .Where(p => p.DeviceID == deviceID && p.Timestamp >= startDate && p.Timestamp <= endDate)
+            .ToDictionary(p => p.Timestamp, p => p.Value);
+    }
+
+    public (Guid, double) GetDeviceWithMaxPowerUsagePreviousMonth(Guid userID)
+    {
+        List<Device> devices = _deviceRepository.GetDevicesForUser(userID);
+
+        if (devices.Count == 0)
+        {
+            return (default(Guid), default(double));
+        }
+
+        var maxDeviceID = Guid.Empty;
+        double maxPowerUsage = double.MinValue;
+
+        foreach (var device in devices)
+        {
+            Dictionary<DateTime, double> devicePowerUsage = this.GetPowerUsageForDevicePreviousMonth(device.ID);
+            double powerUsageSum = devicePowerUsage.Values.Max();
+
+            if (powerUsageSum > maxPowerUsage)
+            {
+                maxPowerUsage = powerUsageSum;
+                maxDeviceID = device.ID;
+            }
+        }
+
+        return (maxDeviceID, maxPowerUsage);
+    }
+
+    public (Guid, double) GetDeviceWithMaxPowerUsageCurrent(Guid userID)
+    {
+        TimeSpan timeRange = TimeSpan.FromSeconds(1);
+
+        List<Device> devices = _deviceRepository.GetDevicesForUser(userID);
+
+        if (devices.Count == 0)
+        {
+            return (default(Guid), default(double));
+        }
+
+        var maxDevice = devices
+            .Select(device => new
+            {
+                Device = device,
+                PowerUsageSum = _dataContext.PowerUsages
+                    .Where(p => p.DeviceID == device.ID && p.Timestamp >= DateTime.UtcNow.Subtract(timeRange))
+                    .Sum(p => p.Value)
+            })
+            .OrderByDescending(x => x.PowerUsageSum)
+            .First();
+
+        return (maxDevice.Device.ID, maxDevice.PowerUsageSum);
+    }
+
 
 }

@@ -31,6 +31,8 @@ namespace prosumerAppBack.BusinessLogic
 
         public (Guid, double) GetDeviceWithMaxPowerUsage24(Guid userID);
         public (Guid, double) GetDeviceWithMaxPowerUsagePreviousWeek(Guid userID);
+        public (Guid, double) GetDeviceWithMaxPowerUsagePreviousMonth(Guid userID);
+        public (Guid, double) GetDeviceWithMaxPowerUsageCurrent(Guid userID);
 
     }
 }
