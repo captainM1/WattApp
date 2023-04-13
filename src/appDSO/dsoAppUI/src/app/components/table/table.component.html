@@ -3,7 +3,9 @@
   <div class="col-lg-7">
     <div class="input-div">
       <input type="text" [(ngModel)]="_searchByName" placeholder="John Cena" (input)="applyFilters()">
-      <input type="text" [(ngModel)]="_searchByAddress" placeholder="Addres NN" (input)="applyFilters()">        
+      <input type="text" [(ngModel)]="_searchByAddress" placeholder="Addres NN" (input)="applyFilters()">
+      <button (click)="exportToExcel()">Export all</button>
+      <button (click)="exportSelectedData()">Export selected</button>
     </div>
       <div class="card">
           <table tableexporter class="table-hover" #myTable id = "myTable">

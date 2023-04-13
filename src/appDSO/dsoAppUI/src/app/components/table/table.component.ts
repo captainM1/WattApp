@@ -33,7 +33,6 @@ export class TableComponent implements OnInit {
 // export 
   filtered! : User[];
   activeItem:any;
-  exportData : any[] = [];
   exportSelected: boolean = false;
 // pagination
   public page = 1;
@@ -42,8 +41,6 @@ export class TableComponent implements OnInit {
   showAllUsersOnMap : boolean = true;
   lengthOfUsers!: number;
   allUsers!: User[];
-  allUserDevices! : Info[];
-  userIDCoords!:any[];
   private userCoords!: any[];
   private id: any;
   private firstName?: string;
@@ -52,20 +49,13 @@ export class TableComponent implements OnInit {
 
   public toggleTable: boolean = false;
 
-  showAllUsersOnMap: boolean = true;
 
   private map!: L.Map;
   private markers: L.Marker[] = [];
   private latlng: L.LatLng[] = [];
 
   selected: string = "";
-  page = 0;
-  pageSize = 5;
   pageSizeOptions = [5, 10, 25, 50];
-
-  public lengthOfUsers: number = 0;
-  allUsers: User[] = [];
-  filtered: User[] = [];
 
   powerUsage!: string;
   deviceGroup!: any[];
@@ -130,15 +120,15 @@ export class TableComponent implements OnInit {
       }
     }
 
-    exportToExcel(): void {
-      const worksheet = XLSX.utils.table_to_sheet(document.querySelector('#myTable'));
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-      const fileBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-      const blob = new Blob([fileBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-      saveAs(blob, 'table-data.xlsx');
-      console.log(worksheet)
-    }
+  exportToExcel(): void {
+    const worksheet = XLSX.utils.table_to_sheet(document.querySelector('#myTable'));
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+    const fileBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([fileBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    saveAs(blob, 'table-data.xlsx');
+    console.log(worksheet)
+  }
 
   exportSelectedData():void{
     const selectedRows = this.filtered.filter(user => user.selected);
@@ -153,9 +143,7 @@ export class TableComponent implements OnInit {
   }
  
  
-  public showMeUsers(){
-   
-    
+  public showMeUsers(page:any, pageSize:any){ 
     this.auth.getPagination(this.page, this.pageSize).subscribe(
       (response : any)=> {
         this.allUsers = response;
