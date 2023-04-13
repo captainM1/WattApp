@@ -105,4 +105,10 @@ public class PowerUsageService:IPowerUsageService
         }
         return powerUsages;
     }
+
+    public (Guid maxDeviceID, double maxDeviceUsage) GetMaxUsagePast24Hours(Guid userID)
+    {
+        (Guid maxID, double maxUsage) tuple = _repository.GetDeviceWithMaxPowerUsage24(userID);
+        return tuple;
+    }
 }

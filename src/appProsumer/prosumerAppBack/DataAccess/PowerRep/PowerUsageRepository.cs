@@ -1,3 +1,6 @@
+using Internal;
+using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -450,6 +453,45 @@ public class PowerUsageRepository : IPowerUsageRepository
         return temp;
     }
 
+    public (Guid, double) GetDeviceWithMaxPowerUsage24(Guid userID)
+    {
+        List<Device> devices = _deviceRepository.GetDevicesForUser(userID);
+
+        /*var devices = _dataContext.Devices
+             .Where(d => d.OwnerID == userID)
+             .ToList();*/
+        Console.WriteLine("device-a je:  " + devices.Count);
+        Console.WriteLine("id prvog divajsa: " + devices[0].ID);
+
+        if (devices.Count == 0)
+        {
+            return (default(Guid), default(double));
+        }
+
+        Dictionary<DateTime, double> devicePowerUsage = this.GetPowerUsageForDevicePast24Hours(devices[0].ID, -1);
+        var maxDeviceID = devices[0].ID;
+        double maxPowerUsage = devicePowerUsage.Values.Max();
+
+        Console.WriteLine("maksimalna prvi put je: " + maxPowerUsage);
+        Console.WriteLine("id maksimuma je: " + devices[0].ID);
+
+        for (int i = 1; i < devices.Count; i++)
+        {
+            Console.WriteLine("uslo je u if");
+            devicePowerUsage = this.GetPowerUsageForDevicePast24Hours(devices[i].ID, -1);
+            double powerUsageSum = devicePowerUsage.Values.Max();
+
+            if (powerUsageSum > maxPowerUsage)
+            {
+                maxPowerUsage = powerUsageSum;
+                Console.WriteLine("sledeci maksimum je: " + maxPowerUsage);
+                maxDeviceID = devices[i].ID;
+                Console.WriteLine("sledeci id maksimuma je: " + devices[i].ID);
+            }
+        }
+
+        return (maxDeviceID, maxPowerUsage);
+    }
 
 
 }

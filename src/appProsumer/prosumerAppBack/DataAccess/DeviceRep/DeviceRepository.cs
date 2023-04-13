@@ -32,9 +32,9 @@ namespace prosumerAppBack.DataAccess
 
             return true;
         }
-        public IEnumerable<Device> GetDevicesForUser(Guid userID)
+        public List<Device> GetDevicesForUser(Guid userID)
         {
-            return _dbContext.Devices.Where(d => d.OwnerID == userID).ToArray();
+            return _dbContext.Devices.Where(d => d.OwnerID == userID).ToList();
         }
         
         public IEnumerable<object> GetDevicesInfoForUser(Guid userID)
