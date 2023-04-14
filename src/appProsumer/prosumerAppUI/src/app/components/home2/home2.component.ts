@@ -91,8 +91,8 @@ export class Home2Component implements OnInit, AfterViewInit {
 			label: 'Temperature hourly',
 			data: this.weather.hourly.temperature_2m,
 			fill: true,
-			borderColor: 'rgb(115, 210, 222)',
-			backgroundColor:'rgb(115, 210, 222)',
+			borderColor: '#026670',
+			backgroundColor:'#7ed1da',
 			tension: 0.1
 		}]
 	}
