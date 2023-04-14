@@ -108,7 +108,7 @@ public class PowerUsageRepository : IPowerUsageRepository
             .Select(d => d.DeviceTypeID)
             .FirstOrDefault();
 
-        string deviceGroupName = _dataContext.DeviceGroups
+            string deviceGroupName = _dataContext.DeviceGroups
             .Where(g => g.ID == _dataContext.DeviceTypes
                 .Where(dt => dt.ID == deviceTypeID)
                 .Select(dt => dt.GroupID)
@@ -422,6 +422,42 @@ public class PowerUsageRepository : IPowerUsageRepository
         return powerUsage;
     }
 
+    public PowerUsage Get12hoursBefore12hoursAfter(Guid deviceID)
+    {
+        var moment = DateTime.Now;
+        var endOf12 = moment.AddHours(12);
+        var startOf12 = moment.AddHours(-12);
+
+        var powerUsage = new PowerUsage();
+        powerUsage.TimestampPowerPairs = new List<TimestampPowerPair>();
+
+        var powerUsages = mongoCollection.AsQueryable()
+            .Where(p => deviceID.ToString().Contains(p.ID.ToString()))
+            .FirstOrDefault();
+
+        if (powerUsage == null)
+        {
+            return null;
+        }
+
+        powerUsage.ID = powerUsages.ID;
+
+        var currentDate = startOf12;
+
+        while (currentDate <= endOf12)
+        {
+            var ts = new TimestampPowerPair();
+            var sum = GetCurrentPowerUsage(currentDate);
+            ts.Timestamp = currentDate;
+            ts.PowerUsage = sum;
+            powerUsage.TimestampPowerPairs.Add(ts);
+            currentDate = currentDate.AddHours(1);
+        }
+
+
+        return powerUsage;
+    }
+
     public async Task<bool> DeleteDevice(Guid deviceID)
     {
         var device = await _dataContext.Devices.FirstOrDefaultAsync(d => d.ID == deviceID);
@@ -491,6 +527,7 @@ public class PowerUsageRepository : IPowerUsageRepository
 
         return powerUsages;
     }
+
     public double GetCurrentPowerUsage(DateTime date,Guid deviceTypeID)
     {
         var startOfAnHour = date;

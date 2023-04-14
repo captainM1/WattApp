@@ -105,4 +105,14 @@ public class PowerUsageService:IPowerUsageService
         }
         return powerUsages;
     }
+
+    public PowerUsage GetPowerUsageFor12HoursUpDown(Guid deviceID)
+    {
+        var powerUsage = _repository.Get12hoursBefore12hoursAfter(deviceID);
+        if(powerUsage == null)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsage;
+    }
 }
