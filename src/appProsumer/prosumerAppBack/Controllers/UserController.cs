@@ -152,8 +152,6 @@ public class UserController : ControllerBase
             return BadRequest("Invalid token");
         }
 
-        //var id = _userService.GetID().Value;
-        //Task<User> user = _userService.GetUserByIdAsync(id);
         Task<User> user = _userService.GetUserByEmailAsync(resetPasswordDto.Email);
 
         var userCheck = _userService.GetUserByEmailAsync(resetPasswordDto.Email);
