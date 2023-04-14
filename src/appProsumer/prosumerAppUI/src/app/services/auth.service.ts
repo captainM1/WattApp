@@ -60,4 +60,8 @@ export class AuthService {
     this.cookie.delete('jwtToken');
   }
 
+  getWeather():Observable<any>{
+    return this.http.get<any>('https://api.open-meteo.com/v1/forecast?latitude=44.02&longitude=20.91&hourly=temperature_2m,relativehumidity_2m&daily=temperature_2m_max,temperature_2m_min&current_weather=true&timezone=auto');
+  }
+
 }

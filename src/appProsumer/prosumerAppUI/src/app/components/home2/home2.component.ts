@@ -1,5 +1,7 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Chart, ChartOptions } from 'chart.js';
 import { User } from 'src/app/models/user';
+import { Root } from 'src/app/models/weather';
 import { AuthUserService } from 'src/app/services/auth-user.service';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -13,6 +15,7 @@ export class Home2Component implements OnInit, AfterViewInit {
   averageUsage! : any;
   userID!: any;
   token!:any;
+  weather! : Root;
 
   constructor(
 		private auth : AuthService,
@@ -20,13 +23,18 @@ export class Home2Component implements OnInit, AfterViewInit {
 	){}
 
   @ViewChild('myChart') myChart!: ElementRef;
+  @ViewChild('hourlyTemp') hourlyTemp!: ElementRef;
 
   ngAfterViewInit(): void {
-    throw new Error('Method not implemented.');
+    this.giveMeWeather();
+		setTimeout(() =>{
+			this.giveMeChartForTemperatureDaily();
+		},0)
   }
 
   ngOnInit(): void {
     this.getToken();
+    this.giveMeWeather();
   }
 
   currentUsageUser(id:any){
@@ -58,5 +66,67 @@ export class Home2Component implements OnInit, AfterViewInit {
     )
   }
 
+  giveMeWeather(){
+		this.auth.getWeather().subscribe(
+			(response :any)=>{
+				this.weather = response;
+				this.giveMeChartForTemperatureDaily();
 
+			}
+		)
+	}
+  giveMeChartForTemperatureDaily(){
+		const timeSlice = this.weather.hourly.time.slice(0,24);
+		const time = timeSlice.map((time)=>{
+			const date = new Date(time);
+			const hours = date.getHours().toString().padStart(2,"0");
+			const minutes = date.getMinutes().toString().padStart(2,"0");
+			return hours+":"+minutes;
+		})
+
+		const labels = time;
+		const data = {
+		labels: labels,
+		datasets: [{
+			label: 'Temperature hourly',
+			data: this.weather.hourly.temperature_2m,
+			fill: true,
+			borderColor: 'rgb(115, 210, 222)',
+			backgroundColor:'rgb(115, 210, 222)',
+			tension: 0.1
+		}]
+	}
+	const options: ChartOptions = {
+		scales: {
+		  x: {
+			title: {
+			  display: true,
+			  text: 'Temperature in celsius and x hourly',
+			},
+			ticks: {
+			  font: {
+				size: 14,
+			  },
+			},
+		  },
+		  y: {
+			title: {
+			  display: true,
+			  text: 'Temperature (°C)',
+			},
+			ticks: {
+			  font: {
+				size: 14,
+			  },
+			},
+		  },
+		},
+	  };
+		const stackedLine = new Chart(this.hourlyTemp.nativeElement, {
+			type: 'line',
+			data: data,
+			options: options,
+		});
+
+};
 }

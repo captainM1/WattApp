@@ -4,24 +4,33 @@
 <div class="outer">
   <div class="container">
     <div class="row" >
-      <div id="prvi">
-        <label>Total Number Of Devices</label>
-        <div>
-          <img id="deviceNumberImg" src="/assets/icons-devices-home/device-number.png">
+        <h2 class="text-center" style="margin-top: 15px;margin-bottom: 10px;">Weather Details:</h2>
+        <div class="col-sm">
+            <p class="text-left">
+                <img src="../../../assets/weather-icons/compass.png"> Your Time Zone :<span style="color:#026670; font-weight:bold"> {{ this.weather.timezone }} </span>
+            </p>
+            <p class="text-left">
+              <img src="../../../assets/weather-icons/temperature(2).png"> Temperature: <span style="color:#026670; font-weight:bold">{{ this.weather.current_weather.temperature }} </span>
+            </p>
+            <p class="text-left">
+                <img src="../../../assets/weather-icons/hot.png"> Maximal Temperature: <span style="color:#026670; font-weight:bold">{{ this.weather.daily.temperature_2m_max[0]}} </span>
+              </p>
         </div>
+        <div class="col-sm">
+            <p class="text-left">
+                <img src="../../../assets/weather-icons/cold.png" >Minimal Temperature:<span style="color:#026670; font-weight:bold"> {{ this.weather.daily.temperature_2m_min[0]}} </span>
+              </p>
+              <p class="text-left">
+                <img src="../../../assets/weather-icons/storm.png">Wind Speed: <span style="color:#026670; font-weight:bold"> {{ this.weather.current_weather.windspeed}} </span>
+              </p>
+              <p class="text-left">
+                <img src="../../../assets/weather-icons/humidity.png">Humidity:<span style="color:#026670; font-weight:bold"> {{ this.weather.hourly.relativehumidity_2m[0]}} </span>
+              </p>
         </div>
-        <div id="drugi">
-          <label>The Largest Producer Of Electricity</label>
-          <div>
-            <img src="/assets/icons-devices-home/energy-production.png">
-          </div>
+        <div class="col-sm-4">
+            <canvas #hourlyTemp style="width: 200px; height: 100px;"></canvas>
         </div>
-        <div id="treci">
-          <label>The Biggest Consumer Of Electricity</label>
-          <div>
-            <img src="/assets/icons-devices-home/energy-consumption.png">
-          </div>
-        </div>
+
     </div>
     <div class="row" id="red">
       <div class="col order-sm-1">
