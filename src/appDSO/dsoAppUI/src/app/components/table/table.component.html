@@ -20,13 +20,13 @@
                   
                 </tr>
               </thead>
-              <tr *ngFor="let user of allUsers | filterName : _searchByName: _searchByAddress" (click) = "showMeOnMap(user.id)" [ngClass]="{'table-active': activeItem === user.id}" >
-                  <td> <i class="fa fa-angle-right fa-lg" (click) = "showMeDevices(user.id)" ></i> </td>
+              <tr *ngFor="let user of allUsers | filterName : _searchByName: _searchByAddress" (click) = "showMeOnMap(user.id)" (click) = "showMeDevices(user.id)" [ngClass]="{'table-active': activeItem === user.id}" >
+                  <td><input [(ngModel)]="user.selected" type="checkbox" style="width: 20px;"></td>  
                   <td>{{user.firstName}}</td>
                   <td>{{user.lastName}}</td>
                   <td>{{user.address}}, {{user.city}}, {{user.country}}</td>
                   <td>{{user.powerUsage}}kw/h</td>
-                  <td><input  [(ngModel)]="user.selected" type="checkbox" style="width: 20px;"></td>
+                  <td><button class="btn" (click)="openModel()">Show me profile</button></td>
               </tr>
               <tr>
                 
@@ -80,3 +80,55 @@
       </div>
     </div>
  </div>
+
+ <div class="modal" id="myModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">User Profile</h4>
+        <button type="button" class="btn-close" (click)="closeModel()" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <h1 class="text-center">{{userPopUp.firstName}} {{userPopUp.lastName}}</h1>
+          <div class="col-sm">
+            <h2 class="text-left">General information</h2>
+            <p>E-mail: {{userPopUp.email}}</p>
+            <p>Phone number: {{userPopUp.email}}</p>
+            <p>City: {{userPopUp.country}}, {{userPopUp.city}}/p>
+            <p>Address: {{userPopUp.address}}</p>
+          </div>
+          <div class="col-sm">
+            <h2 class="text-right">Device Details</h2>  
+            <p>Total numer of devices:</p>
+            <p>Prosumers:</p>
+            <p>Consumers:</p>
+            <p>Storage: </p>
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <p>{{powerUsagePopUp}}</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div>
+              <button id = "devices">Devices</button>
+              <button id = "system">System</button>
+            </div>
+            <div id = "showDevicePage">
+
+            </div>
+            <div id="showSystemPage">
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger"  (click)="closeModel()" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

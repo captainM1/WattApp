@@ -1,7 +1,7 @@
 import { write, writeXLSX } from 'xlsx';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import * as L from 'leaflet';
 import { Device, Info, User } from 'models/User';
 import { AuthService } from 'service/auth.service';
@@ -13,7 +13,6 @@ import {MatTableDataSource} from '@angular/material/table';
 import { PaginatorModule } from 'primeng/paginator';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
-import { ProfileComponent } from 'app/profile/profile.component';
 import { Chart, ChartOptions } from 'chart.js';
 
 @Component({
@@ -22,7 +21,7 @@ import { Chart, ChartOptions } from 'chart.js';
   styleUrls: ['./table.component.css'],
   
 })
-export class TableComponent implements OnInit {
+export class TableComponent implements OnInit, AfterViewInit {
 // filtriranje
   _searchByName: string = '';
   _searchByCity: string = '';
@@ -31,11 +30,12 @@ export class TableComponent implements OnInit {
 
   allUserDevices!: Info[];
   userIDCoords!: any[];
-
+  
 // export 
   filtered! : User[];
   activeItem:any;
   exportSelected: boolean = false;
+
 // pagination
   public page = 1;
   public pageSize = 5;
@@ -43,6 +43,7 @@ export class TableComponent implements OnInit {
   showAllUsersOnMap : boolean = true;
   lengthOfUsers!: number;
   allUsers!: User[];
+ 
   private userCoords!: any[];
   private id: any;
   private firstName?: string;
@@ -62,6 +63,7 @@ export class TableComponent implements OnInit {
   powerUsage!: string;
   deviceGroup!: any[];
   values!:any[];
+
 // device type
   producers!: any[];
   consumers!: any[];
@@ -69,6 +71,10 @@ export class TableComponent implements OnInit {
 
   todayPowerUsageDevice!:any;
   prev24DeviceID!:any;
+
+  userPopUp!:any;
+
+
   @ViewChild('myTable') myTable!: ElementRef;
   @ViewChild('perHourDevice') perHourDevice!:ElementRef;
 
@@ -78,6 +84,9 @@ export class TableComponent implements OnInit {
 
 
   ){}
+  ngAfterViewInit(): void {
+    throw new Error('Method not implemented.');
+  }
 
   ngOnInit(): void {
     this.showMeUsers(this.page,this.pageSize);
@@ -91,9 +100,6 @@ export class TableComponent implements OnInit {
     this.pageSize = event.rows;
     this.showMeUsers(this.page, this.pageSize);
   }
-
-
-  
   currentSortOrder: string = 'asc';
   sortData(sortBy: string): void {
     this.currentSortOrder = this.currentSortOrder === 'asc' ? 'desc' : 'asc';
@@ -212,7 +218,9 @@ export class TableComponent implements OnInit {
     }
     // poziv funkcije za svih uredjaja
     this.showMeDevices(id);
-    
+    // poziv informacija o user-u za pop-up
+    this.popUp(id);
+    console.log(id);
     this.auth.getUserPowerUsageByID(id).subscribe(
       (response: any) => {
         for (let user of this.allUsers) {
@@ -362,9 +370,8 @@ export class TableComponent implements OnInit {
                 if(group.id === "77cbc929-1cf2-4750-900a-164de4abe28b")
                 {
                   this.producers = response;
-                  
-                  
-                }else if(group.id === "18f30035-59de-474f-b9db-987476de551f")
+                }
+                else if(group.id === "18f30035-59de-474f-b9db-987476de551f")
                 {
                   this.consumers = response;
                 }
@@ -381,11 +388,60 @@ export class TableComponent implements OnInit {
   toggleColumn(){
     this.toggleTable = !this.toggleTable;
   }
+// pop-up
+  openModel(){
+    const modelDiv = document.getElementById('myModal');
+    if(modelDiv!=null){
+      modelDiv.style.display = 'block';
+    }
+  }
 
+  closeModel(){
+    const modelDiv = document.getElementById('myModal');
+    if(modelDiv!=null){
+      modelDiv.style.display = 'none';
+    }
+  }
   
-    
+  showDevices:boolean = false;
+  showSystem:boolean = false;
+  powerUsagePopUp!: number;
+  @ViewChild('powerUsageGraph') powerUsageGraph!:ElementRef;
+
+  popUp(id: string){
+    this.auth.getUserInformation(id).subscribe(
+      (response : any) => {
+        this.userPopUp = response;
+      }
+    )
+    this.auth.getUserPowerUsageByID(id).subscribe(
+      (response : any) => {
+        this.powerUsagePopUp = response;
+      }
+    )
+  }
+
+  // halfDought(){
+  //   const data = {
+  //     labels: 'Current Power Usage',
+  //     datasets: [{
+  //       label: 'Energy consumption ',
+  //       data: [this.powerUsagePopUp, 100-this.powerUsagePopUp],
+  //       fill:true,
+  //       borderColor: 'rgb(251, 97, 7)',
+  //       backgroundColor:'rgba(251, 97, 7,0.4)',
+  //       pointBackgroundColor: 'rgba(251, 97, 7,0.7)',
+  //       borderWidth: 1,
+  //       pointBorderColor:'rgb(251, 97, 7)'
+  //     }]
+  //   }
+  //   const stackedLine = new Chart(this.powerUsageGraph.nativeElement, {
+  //     type: 'doughnut',
+  //     data:data
+  //   });
+   }
   
-}
+
 
     
 

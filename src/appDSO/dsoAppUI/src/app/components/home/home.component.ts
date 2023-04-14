@@ -7,6 +7,7 @@ import { User } from 'models/User';
 import { animation } from '@angular/animations';
 import { Root } from 'models/weather';
 import { eachDevice } from 'models/eachDevice';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-home',

@@ -128,4 +128,11 @@ export class AuthService {
   getPreviousMonth(userid : any):Observable<any>{
     return this.http.get(environment.apiUrl + '/api/PowerUsage/power-usage/nextMonth/user-every-day-device-usage/'+userid);
   }
+
+
+
+  // popup
+  getUserInformation(id : string):Observable<any>{
+    return this.http.get(environment.apiUrl + '/api/User/users/' + id);
+  }
 }

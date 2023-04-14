@@ -15,18 +15,6 @@
   border-bottom: 1px solid #026670;
 
 }
-.card table tr:hover {
-  background-color: #026670; 
-  color:white;
-  font-weight: 800;
-  cursor: pointer;
-}
-.card table tr:active{
-  background-color: #026670; 
-  color:white;
-  font-weight: 800;
-  cursor: pointer;
-}
 
 .card table tr td{
   padding: 15px;
@@ -82,9 +70,14 @@ label{
   padding-right: 10px;
   padding-top: 5px;
 }
-.active {
-  background-color: #026670;
-}
+
 .p-paginator{
   display: block ruby;
+}
+app-profile{
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  z-index: 10000;
+
 }
