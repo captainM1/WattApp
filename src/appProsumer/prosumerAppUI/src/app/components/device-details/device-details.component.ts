@@ -17,10 +17,14 @@ export class DeviceDetailsComponent implements OnInit {
   device: any;
   deviceId: any;
   deviceHistory: any;
-  deviceHistoryPower: any = [];
-  deviceFuturePower: any = [];
-  deviceHistoryDate: any = [];
-  deviceFutureDate: any = [];
+  deviceHistoryWeekPower: any = [];
+  deviceFutureWeekPower: any = [];
+  deviceHistoryWeekDate: any = [];
+  deviceFutureWeekDate: any = [];
+  deviceFutureMonthPower: any = [];
+  deviceFutureMonthDate: any = [];
+  deviceHistoryMonthPower: any = [];
+  deviceHistoryMonthDate: any = [];
   hours: any = [];
   hourly: any = [];
   data: any = [];
@@ -54,12 +58,12 @@ export class DeviceDetailsComponent implements OnInit {
         console.error('Error fetching device information:', error);
       });
     
-      this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/7daysHistory/${this.deviceId}`)
+      this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/7daysHistory/device/${this.deviceId}`)
         .subscribe(data => {
           this.deviceHistory = data;
-          this.deviceHistoryDate = this.deviceHistory.timestampPowerPairs.map((time:any) => time.timestamp);
-          this.deviceHistoryPower = this.deviceHistory.timestampPowerPairs.map((time:any) => time.powerUsage);
-          console.log(this.deviceHistoryDate);
+          this.deviceHistoryWeekDate = this.deviceHistory.timestampPowerPairs.map((time:any) => time.timestamp);
+          this.deviceHistoryWeekPower = this.deviceHistory.timestampPowerPairs.map((time:any) => time.powerUsage);
+          console.log(this.deviceHistoryWeekDate);
         },
         error => {
           console.error('Error fetching device history:', error);
@@ -73,12 +77,12 @@ export class DeviceDetailsComponent implements OnInit {
           console.error('Error fetching device today:', error);
         })
       
-      this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/7daysFuture/${this.deviceId}`)
+      this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/7daysFuture/device/${this.deviceId}`)
         .subscribe(data => {
           this.deviceFuture = data;
-          this.deviceFutureDate = this.deviceFuture.timestampPowerPairs.map((time:any) => time.timestamp);
-          this.deviceFuturePower = this.deviceFuture.timestampPowerPairs.map((time:any) => time.powerUsage);
-          this.labels = [...this.deviceHistoryDate, new Date(), ...this.deviceFutureDate];
+          this.deviceFutureWeekDate = this.deviceFuture.timestampPowerPairs.map((time:any) => time.timestamp);
+          this.deviceFutureWeekPower = this.deviceFuture.timestampPowerPairs.map((time:any) => time.powerUsage);
+          this.labels = [...this.deviceHistoryWeekDate, new Date(), ...this.deviceFutureWeekDate];
           this.onOptionSelect();
         },
         error => {
@@ -94,6 +98,28 @@ export class DeviceDetailsComponent implements OnInit {
       },
       error => {
          console.error('Error fetching todays info:', error);
+      })
+
+      this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/PreviousMonth/device-usage/${this.deviceId}`)
+      .subscribe(data =>{
+        this.deviceHistory = data;
+        this.deviceHistoryMonthDate = this.deviceHistory.timestampPowerPairs.map((item: any) => item.timestamp);
+        this.deviceHistoryMonthPower = this.deviceHistory.timestampPowerPairs.map((item: any) => item.powerUsage);
+        this.onOptionSelect();
+      },
+      error => {
+         console.error('Error fetching months history info:', error);
+      })
+
+      this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/NextMonth/device-usage/${this.deviceId}`)
+      .subscribe(data =>{
+        this.deviceFuture = data;
+        this.deviceFutureMonthDate = this.deviceFuture.timestampPowerPairs.map((item: any) => item.timestamp);
+        this.deviceFutureMonthPower = this.deviceFuture.timestampPowerPairs.map((item: any) => item.powerUsage);
+        this.onOptionSelect();
+      },
+      error => {
+         console.error('Error fetching months history info:', error);
       })
         
   }
@@ -166,7 +192,27 @@ export class DeviceDetailsComponent implements OnInit {
       const day = parsedDate.getDate();
       return `${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
     });
-    this.data = [...this.deviceHistoryPower, this.deviceToday, ...this.deviceFuturePower];
+    this.data = [...this.deviceHistoryWeekPower, this.deviceToday, ...this.deviceFutureWeekPower];
+    this.initializeChart();
+  }
+  else if (this.selectedOption === 'Last Month'){
+    this.formattedLabels = this.deviceHistoryMonthDate.map((date:any) => {
+      const parsedDate = new Date(date);
+      const month = parsedDate.getMonth() + 1;
+      const day = parsedDate.getDate();
+      return `${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
+    });
+    this.data = this.deviceHistoryMonthPower;
+    this.initializeChart();
+  }
+  else if (this.selectedOption === 'Next Month'){
+    this.formattedLabels = this.deviceFutureMonthDate.map((date:any) => {
+      const parsedDate = new Date(date);
+      const month = parsedDate.getMonth() + 1;
+      const day = parsedDate.getDate();
+      return `${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
+    });
+    this.data = this.deviceFutureMonthPower;
     this.initializeChart();
   }
   }
