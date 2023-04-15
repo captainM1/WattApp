@@ -36,10 +36,40 @@ public class PowerUsageService:IPowerUsageService
         return powerUsages;
     }
 
-    public double CurrentSumPowerUsage(Guid userID)
+    public double AverageSumPowerUsageProduction(Guid userID)
     {
-        var powerUsages = _repository.CurrentSumPowerUsage(userID);
-        if (powerUsages == null)
+        var powerUsages = _repository.AveragePowerUsageProduction(userID);
+        if (powerUsages == 0)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsages;
+    }
+
+    public double AverageSumPowerUsageConsumtion(Guid userID)
+    {
+        var powerUsages = _repository.AveragePowerUsageConsumption(userID);
+        if (powerUsages == 0)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsages;
+    }
+
+    public double CurrentSumPowerUsageProduction(Guid userID) 
+    {
+        var powerUsages = _repository.CurrentSumPowerUsageProduction(userID);
+        if (powerUsages == 0)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsages;
+    }
+
+    public double CurrentSumPowerUsageConsumption(Guid userID)
+    {
+        var powerUsages = _repository.CurrentSumPowerUsageConsumption(userID);
+        if (powerUsages == 0)
         {
             throw new NotFoundException();
         }

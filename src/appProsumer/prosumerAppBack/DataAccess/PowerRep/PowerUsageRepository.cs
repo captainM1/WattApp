@@ -48,16 +48,75 @@ public class PowerUsageRepository : IPowerUsageRepository
         return filteredPowerUsageData;
     }
 
-    public double CurrentPowerUsage(Guid userID)
+    public double AveragePowerUsageProduction(Guid userID)
     {
         var devices = _deviceRepository.GetDevicesForUser(userID);
 
         double sum = 0;
-        foreach (var VARIABLE in devices)
-        {
-            sum += GetForDevice(VARIABLE.ID).TimestampPowerPairs[0].PowerUsage;
-        }
 
+        foreach (var device in devices)
+        {
+            Guid deviceTypeID = _dataContext.Devices
+           .Where(d => d.ID == device.ID)
+           .Select(d => d.DeviceTypeID)
+           .FirstOrDefault();
+
+            string deviceGroupName = _dataContext.DeviceGroups
+                .Where(g => g.ID == _dataContext.DeviceTypes
+                    .Where(dt => dt.ID == deviceTypeID)
+                    .Select(dt => dt.GroupID)
+                    .FirstOrDefault())
+                .Select(g => g.Name)
+                .FirstOrDefault();
+
+            if (deviceGroupName == null)
+            {
+                return 0;
+            }
+
+            if (deviceGroupName == "Producer")
+            {
+                foreach (var VARIABLE in devices)
+                {
+                    sum += GetForDevice(VARIABLE.ID).TimestampPowerPairs[0].PowerUsage;
+                }
+            }          
+        }
+        return sum / devices.Count();
+    }
+
+    public double AveragePowerUsageConsumption(Guid userID)
+    {
+        var devices = _deviceRepository.GetDevicesForUser(userID);
+
+        double sum = 0;
+
+        foreach (var device in devices)
+        {
+            Guid deviceTypeID = _dataContext.Devices
+           .Where(d => d.ID == device.ID)
+           .Select(d => d.DeviceTypeID)
+           .FirstOrDefault();
+
+            string deviceGroupName = _dataContext.DeviceGroups
+                .Where(g => g.ID == _dataContext.DeviceTypes
+                    .Where(dt => dt.ID == deviceTypeID)
+                    .Select(dt => dt.GroupID)
+                    .FirstOrDefault())
+                .Select(g => g.Name)
+                .FirstOrDefault();
+
+            if(deviceGroupName == null)
+            {
+                return 0;
+            }
+
+            if (deviceGroupName == "Consumer")
+            {              
+                    sum += GetForDevice(device.ID).TimestampPowerPairs[0].PowerUsage;
+                    Console.WriteLine("suma: " + sum);
+            }
+        }
         return sum / devices.Count();
     }
 
@@ -68,16 +127,6 @@ public class PowerUsageRepository : IPowerUsageRepository
             .Select(d => d.DeviceTypeID)
             .FirstOrDefault();
 
-        string deviceGroupName = _dataContext.DeviceGroups
-            .Where(g => g.ID == _dataContext.DeviceTypes
-                .Where(dt => dt.ID == deviceTypeID)
-                .Select(dt => dt.GroupID)
-                .FirstOrDefault())
-            .Select(g => g.Name)
-            .FirstOrDefault();
-
-        if (deviceGroupName == "Consumer")
-        {
             var powerUsageData = mongoCollection
                 .AsQueryable()
                 .FirstOrDefault(p => p.ID.ToString() == deviceTypeID.ToString().ToUpper());
@@ -91,13 +140,7 @@ public class PowerUsageRepository : IPowerUsageRepository
                 .Where(pair => pair.Timestamp.Date == today)
                 .Sum(pair => pair.PowerUsage);
             return totalPowerUsage;
-        }
-        else if (deviceGroupName == "Producer")
-        {
-            
-        }
 
-        return 1;
     }
 
 
@@ -108,16 +151,6 @@ public class PowerUsageRepository : IPowerUsageRepository
             .Select(d => d.DeviceTypeID)
             .FirstOrDefault();
 
-            string deviceGroupName = _dataContext.DeviceGroups
-            .Where(g => g.ID == _dataContext.DeviceTypes
-                .Where(dt => dt.ID == deviceTypeID)
-                .Select(dt => dt.GroupID)
-                .FirstOrDefault())
-            .Select(g => g.Name)
-            .FirstOrDefault();
-
-        if (deviceGroupName == "Consumer")
-        {
             var powerUsage = new PowerUsage();
             powerUsage.TimestampPowerPairs = new List<TimestampPowerPair>();
             var today = DateTime.Today;
@@ -135,45 +168,69 @@ public class PowerUsageRepository : IPowerUsageRepository
 
             if (direction == -1)
                 powerUsage.TimestampPowerPairs.Reverse();
-            return powerUsage;
-        }
-        else if (deviceGroupName == "Producer")
-        {
 
-        }
-        return null;
+        return powerUsage;
     }
 
-    public double CurrentSumPowerUsage(Guid userID)
+    public double CurrentSumPowerUsageConsumption(Guid userID)
     {
         double sum = 0;
         DateTime currentHourTimestamp = DateTime.Now.Date.AddHours(DateTime.Now.Hour);
 
-        IEnumerable<String> deviceTypeIds = _deviceRepository.GetDevicesForUser(userID).Select(d => d.DeviceTypeID.ToString().ToUpper());
-        foreach(var deviceTypeId in deviceTypeIds)
+        IEnumerable<String> devicesTypes = _deviceRepository.GetDevicesForUser(userID).Select(p => p.DeviceTypeID.ToString().ToUpper());
+        foreach(var device in devicesTypes)
         {
             string deviceGroupName = _dataContext.DeviceGroups
-                        .Where(g => g.ID == _dataContext.DeviceTypes
-                            .Where(dt => dt.ID.ToString().ToUpper() == deviceTypeId)
-                            .Select(dt => dt.GroupID)
-                            .FirstOrDefault())
-                        .Select(g => g.Name)
-                        .FirstOrDefault();
+                .Where(g => g.ID == _dataContext.DeviceTypes
+                    .Where(dt => dt.ID.ToString().ToUpper() == device.ToString().ToUpper())
+                    .Select(dt => dt.GroupID)
+                    .FirstOrDefault())
+                .Select(g => g.Name)
+                .FirstOrDefault();
+
             if (deviceGroupName == "Consumer")
             {
                 var powerUsageData = mongoCollection.AsQueryable()
-                    .Where(p => deviceTypeIds.Contains(p.ID.ToString()))
+                    .Where(p => device.Contains(p.ID.ToString()))
                     .ToList()
                     .SelectMany(p => p.TimestampPowerPairs)
                     .Where(t => t.Timestamp == currentHourTimestamp);
 
-                sum = powerUsageData.Sum(p => p.PowerUsage);
+                sum += powerUsageData.Sum(p => p.PowerUsage);
             }
         } 
         return sum;
     }
 
+    public double CurrentSumPowerUsageProduction(Guid userID)
+    {
+        double sum = 0;
+        DateTime currentHourTimestamp = DateTime.Now.Date.AddHours(DateTime.Now.Hour);
 
+        IEnumerable<String> devicesTypes = _deviceRepository.GetDevicesForUser(userID).Select(p => p.DeviceTypeID.ToString().ToUpper());
+        foreach (var device in devicesTypes)
+        {
+            string deviceGroupName = _dataContext.DeviceGroups
+                .Where(g => g.ID == _dataContext.DeviceTypes
+                    .Where(dt => dt.ID.ToString().ToUpper() == device.ToString().ToUpper())
+                    .Select(dt => dt.GroupID)
+                    .FirstOrDefault())
+                .Select(g => g.Name)
+                .FirstOrDefault();
+
+            if (deviceGroupName == "Producer")
+            {
+                var powerUsageData = mongoCollection.AsQueryable()
+                    .Where(p => device.Contains(p.ID.ToString()))
+                    .ToList()
+                    .SelectMany(p => p.TimestampPowerPairs)
+                    .Where(t => t.Timestamp == currentHourTimestamp);
+
+                sum += powerUsageData.Sum(p => p.PowerUsage);
+            }
+        }
+        return sum;
+    }
 
     public double CurrentSumPowerUsageSystem()
     {
@@ -273,7 +330,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         return sums;
     }
 
-    public double GetAveragePowerUsageByUser(Guid userID)
+   /* public double GetAveragePowerUsageByUser(Guid userID)
     {
         IEnumerable<String> deviceTypeIds = _deviceRepository.GetDevicesForUser(userID).Select(d => d.DeviceTypeID.ToString().ToUpper());
 
@@ -288,7 +345,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         double average = powerUsageData.Average(p => p.PowerUsage);
 
         return average;
-    }
+    } */
 
     public Dictionary<Guid, List<double>> GetPowerUsageForDevices(Guid userID, int direction)
     {

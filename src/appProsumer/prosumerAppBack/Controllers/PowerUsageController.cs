@@ -97,12 +97,12 @@ public class PowerUsageController : ControllerBase
         }
     }
 
-    [HttpGet("power-usage/currentUsageUser/summary/{userID}")]
-    public ActionResult<double> GetForUser(Guid userID)
+    [HttpGet("power-usage/currentUsageUser/average-production/{userID}")]
+    public ActionResult<double> GetForUserProduction(Guid userID)
     {
         try
         {
-            var powerUsages = _powerUsageService.CurrentSumPowerUsage(userID);
+            var powerUsages = _powerUsageService.AverageSumPowerUsageProduction(userID);
 
             return Ok(powerUsages);
         }
@@ -110,6 +110,35 @@ public class PowerUsageController : ControllerBase
         {
             throw new ArgumentException(ex.Message);
         }
+    }
+
+    [HttpGet("power-usage/currentUsageUser/average-consumtion/{userID}")]
+    public ActionResult<double> GetForUserConsumption(Guid userID)
+    {
+        try
+        {
+            var powerUsages = _powerUsageService.AverageSumPowerUsageConsumtion(userID);
+
+            return Ok(powerUsages);
+        }
+        catch (ArgumentNullException ex)
+        {
+            throw new ArgumentException(ex.Message);
+        }
+    }
+
+    [HttpGet("power-usage/currentUsageUser/sum-consumtion/{userID}")]
+    public ActionResult<double> GetForUserSumConsumption(Guid userID)
+    {
+        var powerUsages = _powerUsageService.CurrentSumPowerUsageConsumption(userID);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/currentUsageUser/sum-production/{userID}")]
+    public ActionResult<double> GetForUserSumProduction(Guid userID)
+    {
+        var powerUsages = _powerUsageService.CurrentSumPowerUsageProduction(userID);
+        return Ok(powerUsages);
     }
 
     [HttpGet("power-usage/previousMonth/system")]
@@ -154,12 +183,12 @@ public class PowerUsageController : ControllerBase
         return Ok(powerUsages);
     }
 
-    [HttpGet("power-usage/PreviousMonth/average-user-usage/{userID}")]
+   /* [HttpGet("power-usage/PreviousMonth/average-user-usage/{userID}")]
     public ActionResult<double> GetAvgPowerUsage(Guid userID)
     {
         double avgUsage = _powerUsage.GetAveragePowerUsageByUser(userID);
         return Ok(avgUsage);
-    }
+    }*/
 
     [HttpGet("power-usage/PreviousMonth/user-every-day-device-usage/{userID}")]
     public ActionResult<Dictionary<Guid, List<double>>> GetPowerUsageEachDayOfEachDevicePrevMonth(Guid userID)
