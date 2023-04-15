@@ -60,7 +60,7 @@ export class DeviceDetailsComponent implements OnInit {
           console.error('Error fetching device history:', error);
         })
 
-      this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/today/currentPowerUsage/${this.deviceId}`)
+      this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/current/device/${this.deviceId}`)
         .subscribe(data => {
           this.deviceToday = data;
           console.log(data);
