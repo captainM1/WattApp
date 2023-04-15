@@ -24,17 +24,22 @@ export class Home2Component implements OnInit, AfterViewInit {
 
   @ViewChild('myChart') myChart!: ElementRef;
   @ViewChild('hourlyTemp') hourlyTemp!: ElementRef;
+  @ViewChild('currentPowerUsageGraph') currentPowerUsageGraph!:ElementRef;
 
   ngAfterViewInit(): void {
-    this.giveMeWeather();
 		setTimeout(() =>{
 			this.giveMeChartForTemperatureDaily();
+
 		},0)
   }
+
+
 
   ngOnInit(): void {
     this.getToken();
     this.giveMeWeather();
+		this.giveMeChartForTemperatureDaily();
+
   }
 
   currentUsageUser(id:any){
@@ -42,6 +47,7 @@ export class Home2Component implements OnInit, AfterViewInit {
       (response : any) => {
         this.currentUsage = response.toFixed(2);
         console.log(response);
+        this.halfDoughnut(response);
       }
     )
   }
@@ -76,57 +82,96 @@ export class Home2Component implements OnInit, AfterViewInit {
 		)
 	}
   giveMeChartForTemperatureDaily(){
-		const timeSlice = this.weather.hourly.time.slice(0,24);
-		const time = timeSlice.map((time)=>{
-			const date = new Date(time);
-			const hours = date.getHours().toString().padStart(2,"0");
-			const minutes = date.getMinutes().toString().padStart(2,"0");
-			return hours+":"+minutes;
-		})
+    const timeSlice = this.weather.hourly.time.slice(0,24);
+    const time = timeSlice.map((time)=>{
+        const date = new Date(time);
+        const hours = date.getHours().toString().padStart(2,"0");
+        const minutes = date.getMinutes().toString().padStart(2,"0");
+        return hours+":"+minutes;
+    })
 
-		const labels = time;
-		const data = {
-		labels: labels,
-		datasets: [{
-			label: 'Temperature hourly',
-			data: this.weather.hourly.temperature_2m,
-			fill: true,
-			borderColor: '#026670',
-			backgroundColor:'#7ed1da',
-			tension: 0.1
-		}]
-	}
-	const options: ChartOptions = {
-		scales: {
-		  x: {
-			title: {
-			  display: true,
-			  text: 'Temperature in celsius and x hourly',
-			},
-			ticks: {
-			  font: {
-				size: 14,
-			  },
-			},
-		  },
-		  y: {
-			title: {
-			  display: true,
-			  text: 'Temperature (°C)',
-			},
-			ticks: {
-			  font: {
-				size: 14,
-			  },
-			},
-		  },
-		},
-	  };
-		const stackedLine = new Chart(this.hourlyTemp.nativeElement, {
-			type: 'line',
-			data: data,
-			options: options,
-		});
+    const labels = time;
+    const data = {
+        labels: labels,
+        datasets: [{
+            label: 'Temperature hourly',
+            data: this.weather.hourly.temperature_2m,
+            fill: true,
+            borderColor: '#026670',
+            backgroundColor:'#7ed1da',
+            tension: 0.1
+        }]
+    }
+    const options: ChartOptions = {
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Temperature in celsius and x hourly',
+            },
+            ticks: {
+              font: {
+                size: 14,
+              },
+            },
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Temperature (°C)',
+            },
+            ticks: {
+              font: {
+                size: 14,
+              },
+            },
+          },
+        },
+      };
+
+        const stackedLine = new Chart(this.hourlyTemp.nativeElement, {
+            type: 'line',
+            data: data,
+            options: options,
+        });
 
 };
+
+
+halfDoughnut(usage: any){
+  const d = usage;
+  const data = {
+    labels: ['Energy consumption'],
+    datasets: [
+      {
+        label: 'Energy consumption',
+        data: [d, 1000-d],
+        backgroundColor: ['#026670', '#ECEFF1'],
+      },
+    ],
+  };
+
+  const options = {
+   circumference:180,
+   rotation:270,
+   aspectRation: 2
+
+
+
+  };
+
+  const chart = new Chart(this.currentPowerUsageGraph.nativeElement, {
+    type: 'doughnut',
+    data: data,
+    options: options,
+  });
 }
+
+
+
+
+}
+
+
+
+

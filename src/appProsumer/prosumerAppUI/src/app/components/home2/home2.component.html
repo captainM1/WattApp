@@ -13,7 +13,7 @@
               <img src="../../../assets/weather-icons/temperature(2).png"> Temperature: <span style="color:#026670; font-weight:bold; padding-left:5px;">{{ this.weather.current_weather.temperature }} </span>
             </p>
             <p class="text-left">
-                <img src="../../../assets/weather-icons/hot.png"> Maximal Temperature: <span style="color:#026670; font-weight:bold; padding-left:5px;">{{ this.weather.daily.temperature_2m_max[0]}} </span>
+                <img src="../../../assets/weather-icons/hot.png"> Maximal Temperature: <span  style="color:#026670; font-weight:bold; padding-left:5px;">{{ this.weather.daily.temperature_2m_max[0]}} </span>
               </p>
         </div>
         <div class="col-sm">
@@ -37,19 +37,38 @@
       <div class="col">
         <canvas #myChart></canvas>
       </div>
+      <div class="col">
+
+        <div class="card">
+          <div class="card-body">
+          <h5 class="card-title"> Current power usage:</h5>
+            <canvas #currentPowerUsageGraph></canvas>
+            <p class="card-text"  style="text-align: center; margin-top: -50px;">  {{currentUsage}} kW </p>
+          </div>
+       </div>
+
+
+      <div class="card">
+          <div class="card-body">
+          <h5 class="card-title"> Bill of the month:</h5>
+          <p class="card-text" style="text-align: center;"> {{averageUsage}} kW </p>
+
+          </div>
+      </div>
+      </div>
     </div>
 
     <div class="row" >
-      <div class="col order-sm-1">
+      <div class="col-sm">
         <app-my-devices></app-my-devices>
       </div>
 
-        <div class="col order-sm-2">
+        <div class="col-sm" style="margin-bottom: 50px;">
 
             <div class="card">
                 <div class="card-body">
-                <h5 class="card-title"> Summary of current devices usage:</h5>
-                <p class="card-text"  style="text-align: center;">  {{currentUsage}} kw </p>
+                <h5 class="card-title"> The largest producer of electricity:</h5>
+                <p class="card-text"  style="text-align: center;">  {{currentUsage}} kW </p>
 
                 </div>
             </div>
@@ -57,11 +76,12 @@
 
             <div class="card">
                 <div class="card-body">
-                <h5 class="card-title"> Average usage for the previous month:</h5>
-                <p class="card-text" style="text-align: center;"> {{averageUsage}} kw </p>
+                <h5 class="card-title"> The biggest consumer of electricity:</h5>
+                <p class="card-text" style="text-align: center;"> {{averageUsage}} kW </p>
 
                 </div>
             </div>
+
 
        </div>
 
