@@ -22,6 +22,9 @@ import { Chart, ChartOptions } from 'chart.js';
   
 })
 export class TableComponent implements OnInit, AfterViewInit {
+
+
+  @ViewChild('powerUsageGraph') powerUsageGraph!:ElementRef;
 // filtriranje
   _searchByName: string = '';
   _searchByCity: string = '';
@@ -93,6 +96,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.onInitMap();
     this.showCoordsForEveryUser();
     this.getDeviceGroup();
+    
   }
 
   onPageChange(event: any) {
@@ -100,6 +104,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.pageSize = event.rows;
     this.showMeUsers(this.page, this.pageSize);
   }
+
   currentSortOrder: string = 'asc';
   sortData(sortBy: string): void {
     this.currentSortOrder = this.currentSortOrder === 'asc' ? 'desc' : 'asc';
@@ -406,7 +411,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   showDevices:boolean = false;
   showSystem:boolean = false;
   powerUsagePopUp!: number;
-  @ViewChild('powerUsageGraph') powerUsageGraph!:ElementRef;
+ 
 
   popUp(id: string){
     this.auth.getUserInformation(id).subscribe(
@@ -416,34 +421,44 @@ export class TableComponent implements OnInit, AfterViewInit {
     )
     this.auth.getUserPowerUsageByID(id).subscribe(
       (response : any) => {
-        this.powerUsagePopUp = response;
+        this.powerUsagePopUp = (response).toFixed(2);
       }
     )
+    this.halfDought();
   }
 
-  // halfDought(){
-  //   const data = {
-  //     labels: 'Current Power Usage',
-  //     datasets: [{
-  //       label: 'Energy consumption ',
-  //       data: [this.powerUsagePopUp, 100-this.powerUsagePopUp],
-  //       fill:true,
-  //       borderColor: 'rgb(251, 97, 7)',
-  //       backgroundColor:'rgba(251, 97, 7,0.4)',
-  //       pointBackgroundColor: 'rgba(251, 97, 7,0.7)',
-  //       borderWidth: 1,
-  //       pointBorderColor:'rgb(251, 97, 7)'
-  //     }]
-  //   }
-  //   const stackedLine = new Chart(this.powerUsageGraph.nativeElement, {
-  //     type: 'doughnut',
-  //     data:data
-  //   });
-   }
+  halfDought(){
+    const d = this.powerUsagePopUp;
+    const data = {
+      labels: ['Used'],
+      datasets: [
+        {
+          label: 'Energy consumption',
+          data: [d, 1000-d],
+          backgroundColor: ['#FFC107', '#ECEFF1'],
+        },
+      ],
+    };
+
+    const options = {
+     circumference:180,
+     rotation:270,
+     aspectRation: 2
+      
+     
+      
+    };
+
+    const chart = new Chart(this.powerUsageGraph.nativeElement, {
+      type: 'doughnut',
+      data: data,
+      options: options,
+    });
+  }
   
 
 
-    
+  }
 
 
   

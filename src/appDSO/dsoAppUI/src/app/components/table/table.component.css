@@ -81,3 +81,14 @@ app-profile{
   z-index: 10000;
 
 }
+.text_below{
+  position: absolute;
+  left: 80px;
+  top: 370px;
+
+}
+.chart{
+  display: flex;
+  text-align: center;
+  justify-content: center;
+}

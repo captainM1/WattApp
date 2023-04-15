@@ -38,25 +38,21 @@
             </tr>
           </div>
          
-          <table>
-            <thead>
-              <tr>
-                <th></th>
+          <table  *ngIf="allUserDevices.length">
+            <thead *ngIf="allUserDevices.length > 0">
+              <tr >
                 <th>Device name</th>
                 <th>Device manifacture</th>
                 <th>Mac Address</th>
                 <th>Current Power Usage</th>
-                
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let device of allUserDevices" >
-                <td *ngIf = "showDevGraph"></td>
                 <td >{{device.deviceTypeName}}</td>
                 <td>{{device.manufacturerName}}</td>
                 <td>{{device.macAdress}}</td>
                 <td>{{device.typeOfDevice}} kw/h</td>
-                
               </tr>
             </tbody>
           </table>
@@ -81,7 +77,7 @@
     </div>
  </div>
 
- <div class="modal" id="myModal">
+ <div class="modal" >
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -107,9 +103,13 @@
           </div>
         </div>
         <div class="row">
-          <div>
-            <p>{{powerUsagePopUp}}</p>
+          <div class="col-sm-4" style="width: 200px; height: 200px;" >
+            <div  class="chart">
+              <p class = "text_below">{{powerUsagePopUp}}</p>
+              <canvas #powerUsageGraph ></canvas>
+            </div>
           </div>
+          
         </div>
         <div class="row">
           <div class="col">
