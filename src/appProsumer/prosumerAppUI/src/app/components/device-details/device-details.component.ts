@@ -12,12 +12,24 @@ import { ConfirmationService, MessageService, ConfirmEventType } from 'primeng/a
   templateUrl: './device-details.component.html',
   styleUrls: ['./device-details.component.css']
 })
-export class DeviceDetailsComponent implements OnInit, AfterViewInit {
+export class DeviceDetailsComponent implements OnInit {
 
   device: any;
   deviceId: any;
   deviceHistory: any;
+  deviceHistoryPower: any = [];
+  deviceFuturePower: any = [];
+  deviceHistoryDate: any = [];
+  deviceFutureDate: any = [];
+  hours: any = [];
+  hourly: any = [];
+  data: any = [];
+  labels: any = [];
+  formattedLabels: any = [];
   deviceFuture: any;
+  deviceToday: any;
+  devicevalue: any;
+  chart:any;
 
   constructor(
     private route: ActivatedRoute,
@@ -28,6 +40,8 @@ export class DeviceDetailsComponent implements OnInit, AfterViewInit {
   )
   {}
 
+  
+
   ngOnInit() {
     this.deviceId = this.route.snapshot.paramMap.get('id');
     console.log(this.deviceId);
@@ -35,8 +49,6 @@ export class DeviceDetailsComponent implements OnInit, AfterViewInit {
     this.http.get<any[]>(`${environment.apiUrl}/api/Device/devices/info/${this.deviceId}`)
       .subscribe(data => {
         this.device = data;
-        console.log(data);
-        console.log(this.device);
       },
       error => {
         console.error('Error fetching device information:', error);
@@ -45,25 +57,51 @@ export class DeviceDetailsComponent implements OnInit, AfterViewInit {
       this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/7daysHistory/${this.deviceId}`)
         .subscribe(data => {
           this.deviceHistory = data;
-          console.log(data);
+          this.deviceHistoryDate = this.deviceHistory.timestampPowerPairs.map((time:any) => time.timestamp);
+          this.deviceHistoryPower = this.deviceHistory.timestampPowerPairs.map((time:any) => time.powerUsage);
+          console.log(this.deviceHistoryDate);
         },
         error => {
           console.error('Error fetching device history:', error);
         })
 
+      this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/today/${this.deviceId}`)
+        .subscribe(data => {
+          this.deviceToday = data;
+        },
+        error => {
+          console.error('Error fetching device today:', error);
+        })
+      
       this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/7daysFuture/${this.deviceId}`)
         .subscribe(data => {
           this.deviceFuture = data;
-          console.log(data);
+          this.deviceFutureDate = this.deviceFuture.timestampPowerPairs.map((time:any) => time.timestamp);
+          this.deviceFuturePower = this.deviceFuture.timestampPowerPairs.map((time:any) => time.powerUsage);
+          this.labels = [...this.deviceHistoryDate, new Date(), ...this.deviceFutureDate];
+          this.onOptionSelect();
         },
         error => {
           console.error('Error fetching device future:', error);
         })
+      
+      this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/Next24h/device-usage_per_hour/${this.deviceId}`)
+      .subscribe(data =>{
+        this.hourly = data;
+        this.hours = this.hourly.timestampPowerPairs.map((item: any) => item.timestamp);
+        this.hourly = this.hourly.timestampPowerPairs.map((item: any) => item.powerUsage);
+        this.onOptionSelect();
+      },
+      error => {
+         console.error('Error fetching todays info:', error);
+      })
+        
   }
 
   goBack(){
     this.router.navigate(['/home2']);
   }
+
   del() {
     this.confirmationService.confirm({
       message: 'Do you want to delete this record?',
@@ -84,6 +122,7 @@ export class DeviceDetailsComponent implements OnInit, AfterViewInit {
       }
     });
   }
+
   deleteDevice(){
     this.http.delete(`${environment.apiUrl}/api/Device/delete-device/${this.deviceId}`)
     .subscribe(
@@ -108,19 +147,50 @@ export class DeviceDetailsComponent implements OnInit, AfterViewInit {
   }
 
   @ViewChild('chart', {static: true}) chartElement: ElementRef | undefined = undefined;
+  selectedOption: string = 'Week';
 
-  ngAfterViewInit() {
+  onOptionSelect() {
+  if (this.selectedOption === 'Today') {
+    this.data = this.hourly;
+    this.formattedLabels = this.hours.map((date:any) => {
+      const parsedDate = new Date(date);
+      const hours = parsedDate.getHours() + 1;
+      const minutes = parsedDate.getMinutes();
+      return `${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}`;
+    });
+    this.initializeChart();
+  } else if (this.selectedOption === 'Week') {
+    this.formattedLabels = this.labels.map((date:any) => {
+      const parsedDate = new Date(date);
+      const month = parsedDate.getMonth() + 1;
+      const day = parsedDate.getDate();
+      return `${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
+    });
+    this.data = [...this.deviceHistoryPower, this.deviceToday, ...this.deviceFuturePower];
+    this.initializeChart();
+  }
+  }
+
+  initializeChart() {
     if (this.chartElement){
+      
+    if (this.chart) {
+      this.chart.destroy();
+    }
   const ctx = this.chartElement.nativeElement.getContext('2d');
-  const chart = new Chart(ctx, {
+  const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+  gradient.addColorStop(0, '#FF8811');
+  gradient.addColorStop(0.5,'#9747FF');
+  gradient.addColorStop(1, '#9FEDD7');
+  this.chart = new Chart(ctx, {
     type: 'line',
     data: {
-      labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7', 'Day 8', 'Day 9', 'Day 10', 'Day 11', 'Day 12', 'Day 13', 'Day 14'],
+      labels: this.formattedLabels,
       datasets: [{
         label: 'Power Usage',
-        data: [12, 15, 20, 18, 25, 23, 19, 22, 17, 14, 16, 21, 24, 26],
-        fill: false,
-        borderColor: 'rgb(75, 192, 192)',
+        data: this.data,
+        fill: true,
+        borderColor: gradient,
         tension: 0.1
       }]
     },
@@ -136,9 +206,9 @@ export class DeviceDetailsComponent implements OnInit, AfterViewInit {
         x: {
           title: {
             display: true,
-            text: 'Day'
+            text: 'Date'
           }
-        }
+        },
       }
     }
     

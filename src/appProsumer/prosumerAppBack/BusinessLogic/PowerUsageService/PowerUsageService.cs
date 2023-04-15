@@ -66,7 +66,7 @@ public class PowerUsageService:IPowerUsageService
         return powerUsages;
     }
 
-    public PowerUsage GetForDevice(Guid deviceID)
+    public double GetForDevice(Guid deviceID)
     {
         var powerUsages = _repository.GetForDevice(deviceID);
         if (powerUsages == null)
@@ -76,7 +76,7 @@ public class PowerUsageService:IPowerUsageService
         return powerUsages;
     }
 
-    public Dictionary<DateTime, double> GetPowerUsageForADaySystem()
+    public PowerUsage GetPowerUsageForADaySystem()
     {
         var powerUsages = _repository.GetPowerUsageForADaySystem();
         if (powerUsages == null)
