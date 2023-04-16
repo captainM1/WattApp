@@ -78,12 +78,12 @@ namespace prosumerAppBack.Controllers
             }
         }
         
-        [HttpGet("devices/info/user/{id}")]
-        public IActionResult GetDevicesInfoForUser(Guid id)
+        [HttpGet("devices/info/user/{userID}")]
+        public IActionResult GetDevicesInfoForUser(Guid userID)
         {
             try
             {
-                var devices = _deviceService.GetDeviceInfoForUser(id);
+                var devices = _deviceService.GetDeviceInfoForUser(userID);
                 return Ok(devices.Result);
             }
             catch (ArgumentNullException ex)
@@ -92,12 +92,12 @@ namespace prosumerAppBack.Controllers
             }
         }
         
-        [HttpGet("devices/info/{id}")]
-        public IActionResult GetDevicesInfo(Guid id)
+        [HttpGet("devices/info/{deviceID}")]
+        public IActionResult GetDevicesInfo(Guid deviceID)
         {
             try
             {
-                var device = _deviceService.GetDeviceInfoForDevice(id);
+                var device = _deviceService.GetDeviceInfoForDevice(deviceID);
                 return Ok(device.Result);
             }
             catch (ArgumentNullException ex)
