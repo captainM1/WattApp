@@ -82,12 +82,27 @@ public class PowerUsageController : ControllerBase
         }
     }
     
-    [HttpGet("power-usage/current/system")]
-    public ActionResult<IEnumerable<PowerUsage>> GetForSystem()
+    [HttpGet("power-usage/current-consumption/system")]
+    public ActionResult<IEnumerable<PowerUsage>> GetForSystemConsumer()
     {        
         try
         {
-            var powerUsages = _powerUsageService.CurrentSumPowerUsageSystem();
+            var powerUsages = _powerUsageService.CurrentSumPowerUsageSystemConsumer();
+
+            return Ok(powerUsages);
+        }
+        catch (ArgumentNullException ex)
+        {
+            throw new ArgumentException(ex.Message);
+        }
+    }
+
+    [HttpGet("power-usage/current-production/system")]
+    public ActionResult<IEnumerable<PowerUsage>> CurrentSumPowerUsageSystemProducer()
+    {
+        try
+        {
+            var powerUsages = _powerUsageService.CurrentSumPowerUsageSystemProducer();
 
             return Ok(powerUsages);
         }
@@ -141,17 +156,31 @@ public class PowerUsageController : ControllerBase
         return Ok(powerUsages);
     }
 
-    [HttpGet("power-usage/previousMonth/system")]
-    public ActionResult<double> GetSystemPowerUsageForPreviousMonth()
+    [HttpGet("power-usage/previousMonth/consumption/system")]
+    public ActionResult<double> GetSystemPowerUsageForPreviousMonthConsumption()
     {
-        var powerUsages = _powerUsage.GetPowerUsageForAMonthSystem(-1);
+        var powerUsages = _powerUsageService.GetPoweUsageForAMonthSystemConsumer(-1);
         return Ok(powerUsages);
     }
 
-    [HttpGet("power-usage/nextMonth/system")]
+    [HttpGet("power-usage/nextMonth/consumption/system")]
+    public ActionResult<double> GetSystemPowerUsageForNextMonthConsumption()
+    {
+        var powerUsages = _powerUsageService.GetPoweUsageForAMonthSystemConsumer(1);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/previousMonth/production/system")]
+    public ActionResult<double> GetSystemPowerUsageForPreviousMonthProduction()
+    {
+        var powerUsages = _powerUsageService.GetPoweUsageForAMonthSystemProducer(-1);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/nextMonth/production/system")]
     public ActionResult<double> GetSystemPowerUsageForNextMonth()
     {
-        var powerUsages = _powerUsage.GetPowerUsageForAMonthSystem(1);
+        var powerUsages = _powerUsageService.GetPoweUsageForAMonthSystemProducer(1);
         return Ok(powerUsages);
     }
 

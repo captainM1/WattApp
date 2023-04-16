@@ -16,7 +16,8 @@ namespace prosumerAppBack.BusinessLogic
         
         public PowerUsage GetPowerUsageFor7Days(Guid deviceId, int direction);
 
-        public double GetPowerUsageForAMonthSystem(int direction);
+        public double GetPowerUsageForAMonthSystemConsumer(int direction);
+        public double GetPowerUsageForAMonthSystemProducer(int direction);
         public Dictionary<Guid, double> GetPowerUsageSumByDevice(int direction);
         public Dictionary<DateTime, double> GetPowerUsagesForEachDay(int direction);
         //public double GetAveragePowerUsageByUser(Guid userID);
@@ -28,8 +29,9 @@ namespace prosumerAppBack.BusinessLogic
         PowerUsage GetPowerUsageForADaySystem();
         public double GetCurrentPowerUsage();
         public double GetCurrentPowerUsageForDevice(Guid deviceID);
-        public double CurrentSumPowerUsageSystem();
-        
+        public double CurrentSumPowerUsageSystemConsumer();
+        public double CurrentSumPowerUsageSystemProducer();
+
         public IEnumerable<TimestampPowerPair> GetForDeviceByHour(Guid deviceID);
 
         public PowerUsage Get12hoursBefore12hoursAfter(Guid deviceID);

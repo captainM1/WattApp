@@ -232,16 +232,61 @@ public class PowerUsageRepository : IPowerUsageRepository
         return sum;
     }
 
-    public double CurrentSumPowerUsageSystem()
+    public double CurrentSumPowerUsageSystemProducer()
     {
-        DateTime currentHourTimestamp = DateTime.Now.Date.AddHours(DateTime.Now.Hour);
+        DateTime currentHourTimestamp = DateTime.Now;
+        double sum = 0;
 
         var powerUsageData = mongoCollection.AsQueryable()
-            .ToList()
-            .SelectMany(p => p.TimestampPowerPairs)
-            .Where(t => t.Timestamp == currentHourTimestamp);
+           .Select(d => d.ID)
+           .ToList();
 
-        double sum = powerUsageData.Sum(p => p.PowerUsage);
+        foreach (var device in powerUsageData)
+        {
+
+            string deviceGroupName = _dataContext.DeviceGroups
+           .Where(g => g.ID == _dataContext.DeviceTypes
+               .Where(dt => dt.ID == device)
+               .Select(dt => dt.GroupID)
+               .FirstOrDefault())
+           .Select(g => g.Name)
+           .FirstOrDefault();
+
+            if (deviceGroupName == "Producer")
+            {
+                sum += GetCurrentPowerUsage(currentHourTimestamp, device);
+            }
+        }    
+
+        return sum;
+    }
+
+    public double CurrentSumPowerUsageSystemConsumer()
+    {
+        DateTime currentHourTimestamp = DateTime.Now;
+        double sum = 0;
+
+        var powerUsageData = mongoCollection.AsQueryable()
+           .Select(d => d.ID)
+           .ToList();
+
+        foreach (var device in powerUsageData)
+        {
+
+            string deviceGroupName = _dataContext.DeviceGroups
+           .Where(g => g.ID == _dataContext.DeviceTypes
+               .Where(dt => dt.ID == device)
+               .Select(dt => dt.GroupID)
+               .FirstOrDefault())
+           .Select(g => g.Name)
+           .FirstOrDefault();
+
+
+            if (deviceGroupName == "Consumer")
+            {
+                sum += GetCurrentPowerUsage(currentHourTimestamp, device);
+            }
+        }
 
         return sum;
     }
@@ -264,16 +309,61 @@ public class PowerUsageRepository : IPowerUsageRepository
         return powerUsageData;
     }
 
-    public double GetPowerUsageForAMonthSystem(int direction)
+    public double GetPowerUsageForAMonthSystemConsumer(int direction)
     {
         var startOfMonth = DateTime.Now.AddDays(-DateTime.Now.Day + 1).AddMonths(direction); // pocetak proslog meseca (npr 04.05.)
         var endOfMonth = startOfMonth.AddMonths(1); // (04. 06.)
 
-        var deviceUsages = mongoCollection.AsQueryable().ToList();
+        var deviceTypes = mongoCollection.AsQueryable().ToList();
 
-        var powerUsages = deviceUsages
-            .Sum(p => p.TimestampPowerPairs.Where(t => t.Timestamp >= startOfMonth && t.Timestamp <= endOfMonth).Sum(p => p.PowerUsage));
+        double powerUsages = 0;
+        foreach (var device in deviceTypes)
+        {
+            string deviceGroupName = _dataContext.DeviceGroups
+               .Where(g => g.ID == _dataContext.DeviceTypes
+                   .Where(dt => dt.ID.ToString().ToUpper() == device.ID.ToString().ToUpper())
+                   .Select(dt => dt.GroupID)
+                   .FirstOrDefault())
+               .Select(g => g.Name)
+               .FirstOrDefault();
 
+
+            if (deviceGroupName == "Consumer")
+            {
+                 powerUsages = deviceTypes
+                .Sum(p => p.TimestampPowerPairs.Where(t => t.Timestamp >= startOfMonth && t.Timestamp <= endOfMonth).Sum(p => p.PowerUsage));
+
+            }
+        }     
+        return powerUsages;
+    }
+
+    public double GetPowerUsageForAMonthSystemProducer(int direction)
+    {
+        var startOfMonth = DateTime.Now.AddDays(-DateTime.Now.Day + 1).AddMonths(direction); // pocetak proslog meseca (npr 04.05.)
+        var endOfMonth = startOfMonth.AddMonths(1); // (04. 06.)
+
+        var deviceTypes = mongoCollection.AsQueryable().ToList();
+
+        double powerUsages = 0;
+        foreach (var device in deviceTypes)
+        {
+            string deviceGroupName = _dataContext.DeviceGroups
+               .Where(g => g.ID == _dataContext.DeviceTypes
+                   .Where(dt => dt.ID.ToString().ToUpper() == device.ID.ToString().ToUpper())
+                   .Select(dt => dt.GroupID)
+                   .FirstOrDefault())
+               .Select(g => g.Name)
+               .FirstOrDefault();
+
+
+            if (deviceGroupName == "Producer")
+            {
+                powerUsages = deviceTypes
+               .Sum(p => p.TimestampPowerPairs.Where(t => t.Timestamp >= startOfMonth && t.Timestamp <= endOfMonth).Sum(p => p.PowerUsage));
+
+            }
+        }
         return powerUsages;
     }
 
@@ -620,7 +710,5 @@ public class PowerUsageRepository : IPowerUsageRepository
 
         return temp;               
     }
-
-
 
 }

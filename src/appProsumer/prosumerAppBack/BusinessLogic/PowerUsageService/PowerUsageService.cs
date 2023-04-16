@@ -76,9 +76,39 @@ public class PowerUsageService:IPowerUsageService
         return powerUsages;
     }
 
-    public double CurrentSumPowerUsageSystem()
+    public double CurrentSumPowerUsageSystemConsumer()
     {
-        var powerUsage = _repository.CurrentSumPowerUsageSystem();
+        var powerUsage = _repository.CurrentSumPowerUsageSystemConsumer();
+        if (powerUsage == 0)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsage;
+    }
+
+    public double CurrentSumPowerUsageSystemProducer()
+    {
+        var powerUsage = _repository.CurrentSumPowerUsageSystemProducer();
+        if (powerUsage == 0)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsage;
+    }
+
+    public double GetPoweUsageForAMonthSystemProducer(int direction)
+    {
+        var powerUsage = _repository.GetPowerUsageForAMonthSystemProducer(direction);
+        if (powerUsage == 0)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsage;
+    }
+
+    public double GetPoweUsageForAMonthSystemConsumer(int direction)
+    {
+        var powerUsage = _repository.GetPowerUsageForAMonthSystemConsumer(direction);
         if (powerUsage == 0)
         {
             throw new NotFoundException();
