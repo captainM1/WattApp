@@ -1,6 +1,12 @@
-﻿using System;
-using SendGrid;
-using SendGrid.Helpers.Mail;
+﻿using Microsoft.Extensions.Configuration;
+using System;
+using System.Net;
+using System.Net.Mail;
+using System.Net.Mime;
+using Task = System.Threading.Tasks.Task;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
+//using SendGrid;
+//using SendGrid.Helpers.Mail;
 
 namespace prosumerAppBack.Helper
 {
@@ -12,17 +18,33 @@ namespace prosumerAppBack.Helper
         {
             _configuration = configuration;
         }
-
-        public async Task SendEmailAsync(string email, string subject, string message)
+       
+        public async Task SendEmailAsync(string email,string link)
         {
-            var apiKey = _configuration.GetValue<string>("ApiKey");
-            var client = new SendGridClient(apiKey);
-            var from = new EmailAddress("noreply@prosumerapp.com", "Energy Solvix");
-            var to = new EmailAddress(email);
-            var textContent = message;
-            var htmlContext = $"<div>{message}</div>";
-            var mail = MailHelper.CreateSingleEmail(from, to, subject, textContent, htmlContext);
-            await client.SendEmailAsync(mail);
+            var smtpClient = new SmtpClient();
+            smtpClient.Host = "smtp.gmail.com";
+            smtpClient.Port = 587;
+            smtpClient.EnableSsl = true;
+            smtpClient.UseDefaultCredentials = false;
+            smtpClient.Credentials = new NetworkCredential("energysolvix@gmail.com", "pafwmwmqrtdfdqzb");
+
+            // Create a new email message
+            var message = new MailMessage();
+            message.From = new MailAddress("energysolvix@gmail.com");
+            message.To.Add(email);
+            message.Subject = "Reset password for Energy Solvix";
+            message.Body = link;
+
+            try
+            {
+                // Send the email message
+                smtpClient.Send(message);
+                Console.WriteLine("Email sent successfully!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error sending email: " + ex.Message);
+            }
         }
     }
 }

@@ -137,15 +137,18 @@ namespace prosumerAppBack.DataAccess
             return _dbContext.Devices
                 .Include(d => d.DeviceType)
                 .ThenInclude(dt => dt.Manufacturer)
+                .Include(d => d.DeviceType)
+                .ThenInclude(dt => dt.Group)
                 .Where(d => d.ID == deviceID)
                 .Select(d => new DeviceInfo()
                 {
                     deviceId = d.ID,
                     deviceTypeName = d.DeviceType.Name, 
                     macAdress = d.MacAdress,
-                    manufacturerName = d.DeviceType.Manufacturer.Name
+                    manufacturerName = d.DeviceType.Manufacturer.Name,
+                    groupName = d.DeviceType.Group.Name
                 })
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync();   
         }
 
         public async Task<DeviceRule> AddDeviceRule(Guid id, [FromBody] DeviceRuleDto deviceRuleDto)
@@ -248,7 +251,8 @@ namespace prosumerAppBack.DataAccess
         public Guid deviceId { get; set; }
         public string deviceTypeName { get; set; }
         public string macAdress { get; set; }
-        public string manufacturerName { get; set; }
+        public string manufacturerName { get; set; }       
+        public string groupName { get; set; }
     }
 
     public class ManufacturerDto

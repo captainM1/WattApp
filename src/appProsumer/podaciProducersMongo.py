@@ -48,13 +48,13 @@ for device in average_power_productions['power']:
 
             # If the device is off during this hour, set the power production to 0
             if is_off:
-                timestamp_power_pairs.append({"timestamp": current_date.replace(hour=i, minute=0, second=0, microsecond=0).isoformat(), "power_production": 0})
+                timestamp_power_pairs.append({"timestamp": current_date.replace(hour=i, minute=0, second=0, microsecond=0).isoformat(), "power_usage": 0})
             else:
                 # Add some random variation to the power production (between -10% and +10%)
                 power_production = average_power_production * random.uniform(0.9, 1.1)
 
                 # Add the timestamp and power production pair to the list
-                timestamp_power_pairs.append({"timestamp": current_date.replace(hour=i, minute=0, second=0, microsecond=0).isoformat(), "power_production": power_production / 24})
+                timestamp_power_pairs.append({"timestamp": current_date.replace(hour=i, minute=0, second=0, microsecond=0).isoformat(), "power_usage": power_production / 24})
 
         # Move to the next day
         current_date += timedelta(days=1)

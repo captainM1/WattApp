@@ -66,7 +66,7 @@ public class PowerUsageService:IPowerUsageService
         return powerUsages;
     }
 
-    public PowerUsage GetForDevice(Guid deviceID)
+    public double GetForDevice(Guid deviceID)
     {
         var powerUsages = _repository.GetForDevice(deviceID);
         if (powerUsages == null)
@@ -76,9 +76,18 @@ public class PowerUsageService:IPowerUsageService
         return powerUsages;
     }
 
-    public Dictionary<DateTime, double> GetPowerUsageForADaySystem()
+    public PowerUsage GetPowerProducedForADaySystem()
     {
-        var powerUsages = _repository.GetPowerUsageForADaySystem();
+        var powerUsages = _repository.GetPowerProducedForADaySystem();
+        if (powerUsages == null)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsages;
+    }
+    public PowerUsage GetPowerConsumedForADaySystem()
+    {
+        var powerUsages = _repository.GetPowerConsumedForADaySystem();
         if (powerUsages == null)
         {
             throw new NotFoundException();
@@ -86,9 +95,18 @@ public class PowerUsageService:IPowerUsageService
         return powerUsages;
     }
 
-    public double GetCurrentPowerUsage()
+    public double GetCurrentPowerConsumption()
     {
-        var powerUsages = _repository.GetCurrentPowerUsage();
+        var powerUsages = _repository.GetCurrentPowerConsumption();
+        if (powerUsages == null)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsages;
+    }
+    public double GetCurrentPowerProduction()
+    {
+        var powerUsages = _repository.GetCurrentPowerProduction();
         if (powerUsages == null)
         {
             throw new NotFoundException();
