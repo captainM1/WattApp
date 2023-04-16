@@ -7,7 +7,7 @@ namespace prosumerAppBack.BusinessLogic
 {
 	public interface IPowerUsageRepository
 	{
-		public PowerUsage GetForDevice(Guid deviceID);
+		public double GetForDevice(Guid deviceID);
 		public double CurrentSumPowerUsage(Guid userID);
         public double GetPowerUsageForDay(Guid deviceId, DateTime today);
         
