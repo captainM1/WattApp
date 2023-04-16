@@ -22,8 +22,10 @@ namespace prosumerAppBack.BusinessLogic
         public PowerUsage GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction);
         public PowerUsage GetPowerUsageForDeviceNext24Hours(Guid deviceID);
         public Task<bool> DeleteDevice(Guid deviceID);
-        PowerUsage GetPowerUsageForADaySystem();
-        public double GetCurrentPowerUsage();
+        public PowerUsage GetPowerConsumedForADaySystem();
+        public PowerUsage GetPowerProducedForADaySystem();
+        public double GetCurrentPowerConsumption();
+        public double GetCurrentPowerProduction();
         public double GetCurrentPowerUsageForDevice(Guid deviceID);
         public double CurrentSumPowerUsageSystem();
         

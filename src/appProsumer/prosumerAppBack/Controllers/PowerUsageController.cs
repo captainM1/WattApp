@@ -211,17 +211,31 @@ public class PowerUsageController : ControllerBase
         return Ok(powerUsages);
     }
 
-    [HttpGet("power-usage/currentDay/system")]
+    [HttpGet("power-usage/currentDay-consumption/system")]
     public ActionResult<Dictionary<DateTime, double>> GetPowerUsageForAHourSystem()
     {
-        var powerUsages = _powerUsage.GetPowerUsageForADaySystem();
+        var powerUsages = _powerUsage.GetPowerConsumedForADaySystem();
         return Ok(powerUsages);
     }
 
-    [HttpGet("power-usage/currentHour/system")]
-    public ActionResult<Dictionary<DateTime, double>> GetCurrentPowerUsage()
+    [HttpGet("power-usage/currentDay-production/system")]
+    public ActionResult<Dictionary<DateTime, double>> GetPowerProducedForADaySystem()
     {
-        var powerUsages = _powerUsage.GetCurrentPowerUsage();
+        var powerUsages = _powerUsage.GetPowerProducedForADaySystem();
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/current-hour-production/system")]
+    public ActionResult<Dictionary<DateTime, double>> GetCurrentPowerProduction()
+    {
+        var powerUsages = _powerUsageService.GetCurrentPowerProduction();
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/current-hour-consumption/system")]
+    public ActionResult<Dictionary<DateTime, double>> GetCurrentPowerConsumption()
+    {
+        var powerUsages = _powerUsageService.GetCurrentPowerConsumption();
         return Ok(powerUsages);
     }
 
