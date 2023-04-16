@@ -30,5 +30,11 @@ namespace prosumerAppBack.BusinessLogic
         public double CurrentSumPowerUsageSystem();
         
         public IEnumerable<TimestampPowerPair> GetForDeviceByHour(Guid deviceID);
-	}
+
+        public (Guid, double) GetDeviceWithMaxPowerUsage24(Guid userID);
+        public (Guid, double) GetDeviceWithMaxPowerUsagePreviousWeek(Guid userID);
+        public (Guid, double) GetDeviceWithMaxPowerUsagePreviousMonth(Guid userID);
+        public (Guid, double) GetDeviceWithMaxPowerUsageCurrent(Guid userID);
+
+    }
 }

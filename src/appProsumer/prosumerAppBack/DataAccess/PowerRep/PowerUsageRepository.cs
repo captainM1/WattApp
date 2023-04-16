@@ -1,3 +1,6 @@
+using Internal;
+using System;
+using System.Collections.Generic;
 using System.Collections.Concurrent;
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Bson;
@@ -606,6 +609,145 @@ public class PowerUsageRepository : IPowerUsageRepository
         return temp;               
     }
 
+    public (Guid, double) GetDeviceWithMaxPowerUsage24(Guid userID)
+    {
+        List<Device> devices = _deviceRepository.GetDevicesForUser(userID);
+
+        /*var devices = _dataContext.Devices
+             .Where(d => d.OwnerID == userID)
+             .ToList();*/
+        //Console.WriteLine("device-a je:  " + devices.Count);
+
+        if (devices.Count == 0)
+        {
+            return (default(Guid), default(double));
+        }
+
+        Dictionary<DateTime, double> devicePowerUsage = this.GetPowerUsageForDevicePast24Hours(devices[0].ID, -1);
+        var maxDeviceID = devices[0].ID;
+        double maxPowerUsage = devicePowerUsage.Values.Max();
+
+        //Console.WriteLine("maksimalna prvi put je: " + maxPowerUsage);
+        //Console.WriteLine("id maksimuma je: " + devices[0].ID);
+
+        for (int i = 1; i < devices.Count; i++)
+        {
+            devicePowerUsage = this.GetPowerUsageForDevicePast24Hours(devices[i].ID, -1);
+            double powerUsageSum = devicePowerUsage.Values.Max();
+
+            if (powerUsageSum > maxPowerUsage)
+            {
+                maxPowerUsage = powerUsageSum;
+                //Console.WriteLine("sledeci maksimum je: " + maxPowerUsage);
+                maxDeviceID = devices[i].ID;
+                //Console.WriteLine("sledeci id maksimuma je: " + devices[i].ID);
+            }
+        }
+
+        return (maxDeviceID, maxPowerUsage);
+    }
+
+    public Dictionary<DateTime, double> GetPowerUsageForDevicePreviousWeek(Guid deviceID)
+    {
+        DateTime endDate = DateTime.UtcNow;
+        DateTime startDate = endDate.AddDays(-7);
+
+        var dictionary = _dataContext.PowerUsages
+            .Where(p => p.DeviceID == deviceID && p.Timestamp >= startDate && p.Timestamp <= endDate)
+            .ToDictionary(p => p.Timestamp, p => p.Value);
+
+        return dictionary;
+      
+    }
+
+    public (Guid, double) GetDeviceWithMaxPowerUsagePreviousWeek(Guid userID)
+    {
+        List<Device> devices = _deviceRepository.GetDevicesForUser(userID);
+
+        if (devices.Count == 0)
+        {
+            return (default(Guid), default(double));
+        }
+
+        var maxDeviceID = Guid.Empty;
+        double maxPowerUsage = double.MinValue;
+
+        foreach (var device in devices)
+        {
+            Dictionary<DateTime, double> devicePowerUsage = this.GetPowerUsageForDevicePreviousWeek(device.ID);
+            double powerUsageSum = devicePowerUsage.Values.Max();
+
+            if (powerUsageSum > maxPowerUsage)
+            {
+                maxPowerUsage = powerUsageSum;
+                maxDeviceID = device.ID;
+            }
+        }
+
+        return (maxDeviceID, maxPowerUsage);
+    }
+
+    public Dictionary<DateTime, double> GetPowerUsageForDevicePreviousMonth(Guid deviceID)
+    {
+        DateTime endDate = DateTime.UtcNow;
+        DateTime startDate = endDate.AddDays(-30);
+
+        return _dataContext.PowerUsages
+            .Where(p => p.DeviceID == deviceID && p.Timestamp >= startDate && p.Timestamp <= endDate)
+            .ToDictionary(p => p.Timestamp, p => p.Value);
+    }
+
+    public (Guid, double) GetDeviceWithMaxPowerUsagePreviousMonth(Guid userID)
+    {
+        List<Device> devices = _deviceRepository.GetDevicesForUser(userID);
+
+        if (devices.Count == 0)
+        {
+            return (default(Guid), default(double));
+        }
+
+        var maxDeviceID = Guid.Empty;
+        double maxPowerUsage = double.MinValue;
+
+        foreach (var device in devices)
+        {
+            Dictionary<DateTime, double> devicePowerUsage = this.GetPowerUsageForDevicePreviousMonth(device.ID);
+            double powerUsageSum = devicePowerUsage.Values.Max();
+
+            if (powerUsageSum > maxPowerUsage)
+            {
+                maxPowerUsage = powerUsageSum;
+                maxDeviceID = device.ID;
+            }
+        }
+
+        return (maxDeviceID, maxPowerUsage);
+    }
+
+    public (Guid, double) GetDeviceWithMaxPowerUsageCurrent(Guid userID)
+    {
+        TimeSpan timeRange = TimeSpan.FromSeconds(1);
+
+        List<Device> devices = _deviceRepository.GetDevicesForUser(userID);
+
+        if (devices.Count == 0)
+        {
+            return (default(Guid), default(double));
+        }
+
+        var maxDevice = devices
+            .Select(device => new
+            {
+                Device = device,
+                PowerUsageSum = _dataContext.PowerUsages
+                    .Where(p => p.DeviceID == device.ID && p.Timestamp >= DateTime.UtcNow.Subtract(timeRange))
+                    .Sum(p => p.Value)
+            })
+            .OrderByDescending(x => x.PowerUsageSum)
+            .First();
+
+        return (maxDevice.Device.ID, maxDevice.PowerUsageSum);
+    }
 
 
 }

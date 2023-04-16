@@ -10,7 +10,7 @@ namespace prosumerAppBack.BusinessLogic
 	{
 		Task<Boolean> UpdateDevice(Guid id,UpdateDeviceDto updateDeviceDto);
         
-        IEnumerable<Device> GetDevicesForUser(Guid userID);
+        List<Device> GetDevicesForUser(Guid userID);
         Task<Device> AddDevice(Models.Device.AddDeviceDto addDeviceDto);
 
         public IEnumerable<DeviceGroup> GetDeviceGroups();
