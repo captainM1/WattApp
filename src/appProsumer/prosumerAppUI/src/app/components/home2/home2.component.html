@@ -3,7 +3,10 @@
 
 <div class="outer">
   <div class="container">
-    <div class="row" >
+    <div class="row">
+      <input type="button" value="Weather Details" (click)="showWeatherDetails()" style="width:300px; height:40px">
+    </div>
+    <div class="row" *ngIf="showDetails">
         <h2 class="text-center" style="margin-bottom: 15px;">Weather Details:</h2>
         <div class="col-sm">
             <p class="text-left">
@@ -27,7 +30,7 @@
                 <img src="../../../assets/weather-icons/humidity.png">Humidity:<span style="color:#026670; font-weight:bold; padding-left:5px;"> {{ this.weather.hourly.relativehumidity_2m[0]}} </span>
               </p>
         </div>
-        <div class="col-sm-4">
+        <div class="col-sm">
             <canvas #hourlyTemp style="width: 200px; height: 85px;"></canvas>
         </div>
 

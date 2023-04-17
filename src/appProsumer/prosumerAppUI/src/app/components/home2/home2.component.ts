@@ -167,7 +167,11 @@ halfDoughnut(usage: any){
   });
 }
 
-
+showDetails: boolean = false;
+showWeatherDetails()
+{
+  this.showDetails = !this.showDetails;
+}
 
 
 }
