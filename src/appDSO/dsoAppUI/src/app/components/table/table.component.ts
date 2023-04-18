@@ -88,7 +88,7 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   ){}
   ngAfterViewInit(): void {
-    throw new Error('Method not implemented.');
+    this.showMeUsers(this.page,this.pageSize);
   }
 
   ngOnInit(): void {
@@ -119,11 +119,11 @@ export class TableComponent implements OnInit, AfterViewInit {
         }
       });
     }
-    console.log(this.currentSortOrder);
   }
 
     toggleExportSelected(): void {
       this.exportSelected = !this.exportSelected;
+      console.log(this.exportSelected);
     }
     activeColIndex: number = -1;
 
@@ -170,7 +170,6 @@ export class TableComponent implements OnInit, AfterViewInit {
           this.auth.getUserPowerUsageByID(user.id).subscribe(
             (response: any) => {
               user.powerUsage = (response).toFixed(2);
-             
               user.selected = false;
             }
           )
@@ -221,21 +220,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     for (const mark of this.markers) {
       this.map.removeLayer(mark);
     }
-    // poziv funkcije za svih uredjaja
-    this.showMeDevices(id);
-    // poziv informacija o user-u za pop-up
-    this.popUp(id);
-    console.log(id);
-    this.auth.getUserPowerUsageByID(id).subscribe(
-      (response: any) => {
-        for (let user of this.allUsers) {
-          if (user.id === id) {
-            this.activeItem = user.id;
-            user.powerUsage = (response).toFixed(2);
-          }
-        }
-      }
-    );
+
   
     // get the user's coordinates
     this.auth.getCoordsByUserID(id).subscribe(
@@ -250,6 +235,21 @@ export class TableComponent implements OnInit, AfterViewInit {
   
         // zoom the map to the user's marker
         this.map.setView(latlng, 15); // 15 is the zoom level, you can adjust it as needed
+      }
+    );
+     // poziv funkcije za svih uredjaja
+     this.showMeDevices(id);
+    // // poziv informacija o user-u za pop-up
+     this.popUp(id);
+
+      this.auth.getUserPowerUsageByID(id).subscribe(
+      (response: any) => {
+        for (let user of this.allUsers) {
+          if (user.id === id) {
+            this.activeItem = user.id;
+            user.powerUsage = (response).toFixed(2);
+          }
+        }
       }
     );
   }  
@@ -422,6 +422,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.auth.getUserPowerUsageByID(id).subscribe(
       (response : any) => {
         this.powerUsagePopUp = (response).toFixed(2);
+        console.log(this.powerUsagePopUp);
       }
     )
     this.halfDought();
@@ -430,7 +431,6 @@ export class TableComponent implements OnInit, AfterViewInit {
   halfDought(){
     const d = this.powerUsagePopUp;
     const data = {
-      labels: ['Used'],
       datasets: [
         {
           label: 'Energy consumption',
@@ -444,9 +444,6 @@ export class TableComponent implements OnInit, AfterViewInit {
      circumference:180,
      rotation:270,
      aspectRation: 2
-      
-     
-      
     };
 
     const chart = new Chart(this.powerUsageGraph.nativeElement, {

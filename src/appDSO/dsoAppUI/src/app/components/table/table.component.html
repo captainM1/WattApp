@@ -2,8 +2,14 @@
 <div class="row" style="margin-top: 100px;">
   <div class="col-lg-7">
     <div class="input-div">
-      <input type="text" [(ngModel)]="_searchByName" placeholder="John Cena" (input)="applyFilters()">
-      <input type="text" [(ngModel)]="_searchByAddress" placeholder="Addres NN" (input)="applyFilters()">
+      <div>
+        <p>Search user by name:</p>
+        <input type="text" [(ngModel)]="_searchByName" placeholder="John Cena" (input)="applyFilters()">
+      </div>
+      <div>
+        <p>Search user by address:</p>
+        <input type="text" [(ngModel)]="_searchByAddress" placeholder="Addres NN" (input)="applyFilters()">
+      </div>
       <button (click)="exportToExcel()">Export all</button>
       <button (click)="exportSelectedData()">Export selected</button>
     </div>
@@ -14,15 +20,15 @@
                   <th style="width: 5%;"></th>
                   <th >First Name</th>
                   <th >Last Name</th>
-                  <th >Address</th>
-                  <th (click)="sortData('powerUsage')"><i class="fa fa-arrow-up" aria-hidden="true" style = "color:white" *ngIf="currentSortOrder ==='asc'"></i><i class="fa fa-arrow-down"  style ="color:white" *ngIf="currentSortOrder === 'desc'"></i>Power Usage</th>
-                  <th></th>
+                  <th style="width: 20%;">Address</th>
+                  <th style="width: 15%;"(click)="sortData('powerUsage')"><i class="fa fa-arrow-up" aria-hidden="true" style = "color:white" *ngIf="currentSortOrder ==='asc'"></i><i class="fa fa-arrow-down"  style ="color:white" *ngIf="currentSortOrder === 'desc'"></i>Power Usage</th>
+                  <th style="width: 20%;"></th>
                   
                 </tr>
               </thead>
-              <tr *ngFor="let user of allUsers | filterName : _searchByName: _searchByAddress" (click) = "showMeOnMap(user.id)" (click) = "showMeDevices(user.id)" [ngClass]="{'table-active': activeItem === user.id}" >
-                  <td><input [(ngModel)]="user.selected" type="checkbox" style="width: 20px;"></td>  
-                  <td>{{user.firstName}}</td>
+              <tr *ngFor="let user of allUsers | filterName : _searchByName: _searchByAddress" (click) = "showMeOnMap(user.id)">
+                  <td><input [(ngModel)]="user.selected"  type = "checkbox" style="width: 20px;" (click) = "toggleExportSelected()"></td>  
+                  <td (click) = "showMeDevices(user.id)">{{user.firstName}}</td>
                   <td>{{user.lastName}}</td>
                   <td>{{user.address}}, {{user.city}}, {{user.country}}</td>
                   <td>{{user.powerUsage}}kw/h</td>
@@ -38,9 +44,9 @@
             </tr>
           </div>
          
-          <table  *ngIf="allUserDevices.length">
-            <thead *ngIf="allUserDevices.length > 0">
-              <tr >
+          <table >
+            <thead>
+              <tr>
                 <th>Device name</th>
                 <th>Device manifacture</th>
                 <th>Mac Address</th>
@@ -56,28 +62,17 @@
               </tr>
             </tbody>
           </table>
-          
-          
+      
         </div> 
     </div>
     <div class="col">
-        <div id = "map" style="width: 450px; height: 300px;" >
+        <div id = "map" style="width: 550px; height: 400px;" >
       </div>
-    
       
-      <!-- onclik on the device -->
-      <div class="card" id="graph-card" style="width: 450px; height: 270px; margin-top: 10px;">
-        <div class="card-body">
-          <h5 class="card-title" style="text-align: center;">Power Usage </h5>
-          <p class="card-text" style="text-align: center;">
-          <canvas #perHourDevice></canvas>
-          </p>
-        </div>
-      </div>
     </div>
  </div>
-
- <div class="modal" >
+ 
+ <div class="modal" id="myModal">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -96,13 +91,13 @@
           </div>
           <div class="col-sm">
             <h2 class="text-right">Device Details</h2>  
-            <p>Total numer of devices:</p>
-            <p>Prosumers:</p>
-            <p>Consumers:</p>
-            <p>Storage: </p>
+            <p>Total numer of devices: {{allUserDevices.length}} </p>
+            <p>Prosumers: {{producers.length}}</p>
+            <p>Consumers: {{consumers.length}}</p>
+            <p>Storage: {{storage.length}}</p>
           </div>
         </div>
-        <div class="row">
+        <!-- <div class="row">
           <div class="col-sm-4" style="width: 200px; height: 200px;" >
             <div  class="chart">
               <p class = "text_below">{{powerUsagePopUp}}</p>
@@ -110,7 +105,7 @@
             </div>
           </div>
           
-        </div>
+        </div> -->
         <div class="row">
           <div class="col">
             <div>
@@ -118,17 +113,34 @@
               <button id = "system">System</button>
             </div>
             <div id = "showDevicePage">
-
+              <table >
+                <thead>
+                  <tr>
+                    <th>Device name</th>
+                    <th>Device manifacture</th>
+                    <th>Mac Address</th>
+                    <th>Current Power Usage</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let device of allUserDevices" >
+                    <td >{{device.deviceTypeName}}</td>
+                    <td>{{device.manufacturerName}}</td>
+                    <td>{{device.macAdress}}</td>
+                    <td>{{device.typeOfDevice}} kw/h</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
             <div id="showSystemPage">
-
+              
             </div>
           </div>
         </div>
       </div>
-      <div class="modal-footer">
+      <!-- <div class="modal-footer">
         <button type="button" class="btn btn-danger"  (click)="closeModel()" data-bs-dismiss="modal">Close</button>
-      </div>
+      </div> -->
     </div>
   </div>
-</div>
+</div> 
