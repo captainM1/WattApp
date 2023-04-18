@@ -28,7 +28,6 @@ export class Home2Component implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
 		setTimeout(() =>{
-			this.giveMeChartForTemperatureDaily();
 
 		},0)
   }
@@ -38,7 +37,6 @@ export class Home2Component implements OnInit, AfterViewInit {
   ngOnInit(): void {
     this.getToken();
     this.giveMeWeather();
-		this.giveMeChartForTemperatureDaily();
 
   }
 
@@ -72,70 +70,71 @@ export class Home2Component implements OnInit, AfterViewInit {
     )
   }
 
-  giveMeWeather(){
-		this.auth.getWeather().subscribe(
-			(response :any)=>{
-				this.weather = response;
-				this.giveMeChartForTemperatureDaily();
-
-			}
-		)
-	}
-  giveMeChartForTemperatureDaily(){
-    const timeSlice = this.weather.hourly.time.slice(0,24);
-    const time = timeSlice.map((time)=>{
-        const date = new Date(time);
-        const hours = date.getHours().toString().padStart(2,"0");
-        const minutes = date.getMinutes().toString().padStart(2,"0");
-        return hours+":"+minutes;
-    })
-
-    const labels = time;
-    const data = {
-        labels: labels,
-        datasets: [{
-            label: 'Temperature hourly',
-            data: this.weather.hourly.temperature_2m,
-            fill: true,
-            borderColor: '#026670',
-            backgroundColor:'#7ed1da',
-            tension: 0.1
-        }]
-    }
-    const options: ChartOptions = {
-        scales: {
-          x: {
-            title: {
-              display: true,
-              text: 'Temperature in celsius and x hourly',
-            },
-            ticks: {
-              font: {
-                size: 14,
-              },
-            },
-          },
-          y: {
-            title: {
-              display: true,
-              text: 'Temperature (°C)',
-            },
-            ticks: {
-              font: {
-                size: 14,
-              },
-            },
-          },
-        },
-      };
-
-        const stackedLine = new Chart(this.hourlyTemp.nativeElement, {
-            type: 'line',
-            data: data,
-            options: options,
+  giveMeWeather() {
+    this.auth.getWeather().subscribe(
+      (response: any) => {
+        this.weather = response;
+        const timeSlice = this.weather.hourly.time.slice(0, 24);
+        const time = timeSlice.map((time) => {
+          const date = new Date(time);
+          const hours = date.getHours().toString().padStart(2, "0");
+          const minutes = date.getMinutes().toString().padStart(2, "0");
+          return hours + ":" + minutes;
         });
 
-};
+        const labels = time;
+        const data = {
+          labels: labels,
+          datasets: [
+            {
+              label: "Temperature hourly",
+              data: this.weather.hourly.temperature_2m,
+              fill: true,
+              borderColor: "#026670",
+              backgroundColor: "#7ed1da",
+              tension: 0.1,
+            },
+          ],
+        };
+        const options: ChartOptions = {
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: "Temperature in celsius and x hourly",
+              },
+              ticks: {
+                font: {
+                  size: 14,
+                },
+              },
+            },
+            y: {
+              title: {
+                display: true,
+                text: "Temperature (°C)",
+              },
+              ticks: {
+                font: {
+                  size: 14,
+                },
+              },
+            },
+          },
+        };
+
+        const stackedLine = new Chart(
+          this.hourlyTemp.nativeElement,
+          {
+            type: "line",
+            data: data,
+            options: options,
+          }
+        );
+      }
+    );
+  }
+
 
 
 halfDoughnut(usage: any){
