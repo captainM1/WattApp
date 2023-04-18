@@ -3,8 +3,8 @@
 
 <div class="outer">
   <div class="container">
-    <div class="row">
-      <input type="button" value="Weather Details" (click)="showWeatherDetails()" style="width:300px; height:40px">
+    <div class="row" style="background-color: #EDEAE5;">
+      <input id="buttonWeather" type="button" value="Weather Details" (click)="showWeatherDetails()">
     </div>
     <div class="row" *ngIf="showDetails">
         <h2 class="text-center" style="margin-bottom: 15px;">Weather Details:</h2>
