@@ -116,6 +116,26 @@ public class PowerUsageService:IPowerUsageService
         return powerUsage;
     }
 
+    public List<PowerUsage> GetPowerUsageSumByDeviceProducer(int direction)
+    {
+        var powerUsage = _repository.GetPowerUsageSumByDeviceProducer(direction);
+        if (powerUsage == null)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsage;
+    }
+
+    public List<PowerUsage> GetPowerUsageSumByDeviceConsumer(int direction)
+    {
+        var powerUsage = _repository.GetPowerUsageSumByDeviceConsumer(direction);
+        if (powerUsage == null)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsage;
+    }
+
     public IEnumerable<TimestampPowerPair> GetForDeviceByHour(Guid deviceID)
     {
         var powerUsages = _repository.GetForDeviceByHour(deviceID);

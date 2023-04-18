@@ -184,17 +184,31 @@ public class PowerUsageController : ControllerBase
         return Ok(powerUsages);
     }
 
-    [HttpGet("power-usage/previousMonth/each-device")]
-    public ActionResult<List<double>> GetPowerUsagesOfEachDevicePreviousMonth()
+    [HttpGet("power-usage/previousMonth/consumption/each-device")]
+    public ActionResult<List<PowerUsage>> GetPowerUsagesOfEachDevicePreviousMonthConsumption()
     {
-        var powerUsages = _powerUsage.GetPowerUsageSumByDevice(-1);
+        var powerUsages = _powerUsageService.GetPowerUsageSumByDeviceConsumer(-1);
         return Ok(powerUsages);
     }
 
-    [HttpGet("power-usage/nextMonth/each-device")]
-    public ActionResult<List<double>> GetPowerUsagesOfEachDeviceNextMonth()
+    [HttpGet("power-usage/previousMonth/production/each-device")]
+    public ActionResult<List<PowerUsage>> GetPowerUsagesOfEachDevicePreviousMonthProduction()
     {
-        var powerUsages = _powerUsage.GetPowerUsageSumByDevice(1);
+        var powerUsages = _powerUsageService.GetPowerUsageSumByDeviceProducer(-1);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/nextMonth/consumption/each-device")]
+    public ActionResult<List<PowerUsage>> GetPowerUsagesOfEachDeviceNextMonthConsumption()
+    {
+        var powerUsages = _powerUsageService.GetPowerUsageSumByDeviceConsumer(1);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/nextMonth/production/each-device")]
+    public ActionResult<List<PowerUsage>> GetPowerUsagesOfEachDeviceNextMonthProduction()
+    {
+        var powerUsages = _powerUsageService.GetPowerUsageSumByDeviceProducer(1);
         return Ok(powerUsages);
     }
 

@@ -21,6 +21,8 @@ public interface IPowerUsageService
     public double CurrentSumPowerUsageSystemProducer();
     public double GetPoweUsageForAMonthSystemProducer(int direction);
     public double GetPoweUsageForAMonthSystemConsumer(int direction);
+    public List<PowerUsage> GetPowerUsageSumByDeviceConsumer(int direction);
+    public List<PowerUsage> GetPowerUsageSumByDeviceProducer(int direction);
     public IEnumerable<TimestampPowerPair> GetForDeviceByHour(Guid deviceID);
 
     public PowerUsage GetPowerUsageFor12HoursUpDown(Guid deviceID);
