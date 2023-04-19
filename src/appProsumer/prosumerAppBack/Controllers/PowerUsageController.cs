@@ -136,7 +136,7 @@ public class PowerUsageController : ControllerBase
     [HttpGet("power-usage/Next24h/device-usage_per_hour/{deviceID}")]
     public ActionResult<Dictionary<DateTime, double>> GetDeviceUsageForNext24(Guid deviceID)
     {
-        var powerUsages = _powerUsage.GetPowerUsageForDeviceNext24Hours(deviceID);
+        var powerUsages = _powerUsage.GetPowerUsageForDevicePast24Hours(deviceID, 1);
         return Ok(powerUsages);
     }
     
@@ -177,13 +177,6 @@ public class PowerUsageController : ControllerBase
         return Ok(powerUsages);
     }
 
-    [HttpGet("power-usage/currentDay/system")]
-    public ActionResult<Dictionary<DateTime, double>> GetPowerUsageForAHourSystem()
-    {
-        var powerUsages = _powerUsage.GetPowerUsageForADaySystem();
-        return Ok(powerUsages);
-    }
-
     [HttpGet("power-usage/previousMonth/each-device")]
     public ActionResult<List<double>> GetPowerUsagesOfEachDevicePreviousMonth()
     {
@@ -212,69 +205,6 @@ public class PowerUsageController : ControllerBase
         return Ok(powerUsages);
     }
 
-    [HttpGet("power-usage/PreviousMonth/average-user-usage/{userID}")]
-    public ActionResult<double> GetAvgPowerUsage(Guid userID)
-    {
-        double avgUsage = _powerUsage.GetAveragePowerUsageByUser(userID);
-        return Ok(avgUsage);
-    }
-
-    [HttpGet("power-usage/PreviousMonth/user-every-day-device-usage/{userID}")]
-    public ActionResult<Dictionary<Guid, List<double>>> GetPowerUsageEachDayOfEachDevicePrevMonth(Guid userID)
-    {
-        var powerUsages = _powerUsage.GetPowerUsageForDevices(userID, -1);
-        return Ok(powerUsages);
-    }
-
-    [HttpGet("power-usage/nextMonth/user-every-day-device-usage/{userID}")]
-    public ActionResult<Dictionary<Guid, List<double>>> GetPowerUsageEachDayOfEachDeviceNextMonth(Guid userID)
-    {
-        var powerUsages = _powerUsage.GetPowerUsageForDevices(userID, 1);
-        return Ok(powerUsages);
-    }
-
-    [HttpGet("power-usage/PreviousMonth/device-usage/{deviceID}")]
-    public ActionResult<List<double>> GetDeviceUsageForPreviousMonth(Guid deviceID)
-    {
-        var powerUsages = _powerUsage.GetPowerUsageForDevices(deviceID, -1);
-        if(powerUsages == null)
-        {
-            return BadRequest("device does not exist");
-        }
-        return Ok(powerUsages);
-    }
-
-    [HttpGet("power-usage/NextMonth/device-usage/{deviceID}")]
-    public ActionResult<List<double>> GetDeviceUsageForNextMonth(Guid deviceID)
-    {
-        var powerUsages = _powerUsage.GetPowerUsageForDevices(deviceID, 1);
-        if (powerUsages == null)
-        {
-            return BadRequest("device does not exist");
-        }
-        return Ok(powerUsages);
-    }
-
-    [HttpGet("power-usage/Previous24h/device-usage_per_hour/{deviceID}")]
-    public ActionResult<Dictionary<DateTime, double>> GetDeviceUsageForPrev24(Guid deviceID)
-    {
-        var powerUsages = _powerUsage.GetPowerUsageForDevicePast24Hours(deviceID, - 1);
-        return Ok(powerUsages);
-    }
-
-    [HttpGet("power-usage/Next24h/device-usage_per_hour/{deviceID}")]
-    public ActionResult<Dictionary<DateTime, double>> GetDeviceUsageForNext24(Guid deviceID)
-    {
-        var powerUsages = _powerUsage.GetPowerUsageForDeviceNext24Hours(deviceID);
-        return Ok(powerUsages);
-    }
-
-    [HttpGet("power-usage/currentDay-consumption/system")]
-    public ActionResult<Dictionary<DateTime, double>> GetPowerUsageForAHourSystem()
-    {
-        var powerUsages = _powerUsage.GetPowerConsumedForADaySystem();
-        return Ok(powerUsages);
-    }
 
     [HttpGet("power-usage/currentDay-production/system")]
     public ActionResult<Dictionary<DateTime, double>> GetPowerProducedForADaySystem()
@@ -301,13 +231,6 @@ public class PowerUsageController : ControllerBase
     public ActionResult<Dictionary<DateTime, double>> GetCurrentPowerUsageForDevice(Guid deviceID)
     {
         var powerUsages = _powerUsage.GetCurrentPowerUsageForDevice(deviceID);
-        return Ok(powerUsages);
-    }
-    
-    [HttpGet("power-usage/today/currentPowerUsage/{deviceID}")]
-    public IActionResult GetDeviceDataHourToday(Guid deviceID)
-    {
-        var powerUsages = _powerUsage.GetForDeviceByHour(deviceID);
         return Ok(powerUsages);
     }
     

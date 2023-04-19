@@ -36,8 +36,7 @@ public class PowerUsageRepository : IPowerUsageRepository
             .FirstOrDefault(d => d.ID.ToString().ToUpper() == deviceTypeID.ToString().ToUpper());
 
         var data = powerUsageData.TimestampPowerPairs.Find(p => p.Timestamp == currentHourTimestamp);
-    
-        Console.WriteLine(data.Timestamp);
+        
         if (data != null)
             return data.PowerUsage;
         
@@ -350,78 +349,34 @@ public class PowerUsageRepository : IPowerUsageRepository
         return result;
     }
 
-    public PowerUsage GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction)
+    public Dictionary<DateTime, double> GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction)
     {
-        var startOf24Period = DateTime.Today.AddDays(-1);
-        var endOf24Period = DateTime.Today.AddHours(-1);
+        var utcNow = DateTime.UtcNow;
+
+        var startOf24Period = direction > 0
+            ? utcNow 
+            : utcNow.AddHours(-24);
+
+        var endOf24Period = direction > 0 
+            ? utcNow.AddHours(24) 
+            : utcNow.AddHours(-1);
+
 
         Guid deviceTypeID = _dataContext.Devices
             .Where(d => d.ID == deviceID)
             .Select(d => d.DeviceTypeID)
             .FirstOrDefault();
 
-        var powerUsage = new PowerUsage();
-        powerUsage.TimestampPowerPairs = new List<TimestampPowerPair>();
-
         var powerUsages = mongoCollection.AsQueryable()
-            .Where(p => p.ID.ToString() == deviceTypeID.ToString().ToUpper())
-            .ToList();
-        var temp = powerUsages
-            .SelectMany(t => t.TimestampPowerPairs)
-            .Where(t => t.Timestamp >= startOf24Period && t.Timestamp <= endOf24Period)
-            .ToList();
-
-        var sums = new Dictionary<DateTime, double>();
-        var currentDate = startOf24Period;
-
-        while (currentDate <= endOf24Period)
-        {
-            var ts = new TimestampPowerPair();
-            var sum = GetCurrentPowerUsage(currentDate, deviceTypeID);
-            ts.Timestamp = currentDate;
-            ts.PowerUsage = sum;
-            powerUsage.TimestampPowerPairs.Add(ts);
-            currentDate = currentDate.AddHours(1);
-        }
-
-        return powerUsage;
-    }
-
-    public PowerUsage GetPowerUsageForDeviceNext24Hours(Guid deviceID)
-    {
-        var startOf24Period = DateTime.Today;
-        var endOf24Period = DateTime.Today.AddDays(1).AddHours(-1);
-
-        Guid deviceTypeID = _dataContext.Devices
-            .Where(d => d.ID == deviceID)
-            .Select(d => d.DeviceTypeID)
-            .FirstOrDefault();
-
-        var powerUsage = new PowerUsage();
-        powerUsage.TimestampPowerPairs = new List<TimestampPowerPair>();
-
-        var powerUsages = mongoCollection.AsQueryable()
-            .Where(p => p.ID.ToString() == deviceTypeID.ToString().ToUpper())
-            .ToList();
-        var temp = powerUsages
-            .SelectMany(t => t.TimestampPowerPairs)
-            .Where(t => t.Timestamp >= startOf24Period && t.Timestamp <= endOf24Period)
+            .Where(p => p.ID.ToString().ToUpper() == deviceTypeID.ToString().ToUpper())
+            .SelectMany(p => p.TimestampPowerPairs)
+            .ToList()
+            .Where(t => TimeZoneInfo.ConvertTimeToUtc(t.Timestamp) >= startOf24Period && TimeZoneInfo.ConvertTimeToUtc(t.Timestamp) <= endOf24Period)
             .ToList();
 
-        var sums = new Dictionary<DateTime, double>();
-        var currentDate = startOf24Period;
+        var powerUsageData = powerUsages.ToDictionary(p => p.Timestamp, p => p.PowerUsage);
 
-        while (currentDate <= endOf24Period)
-        {
-            var ts = new TimestampPowerPair();
-            var sum = GetCurrentPowerUsage(currentDate, deviceTypeID);
-            ts.Timestamp = currentDate;
-            ts.PowerUsage = sum;
-            powerUsage.TimestampPowerPairs.Add(ts);
-            currentDate = currentDate.AddHours(1);
-        }
-
-        return powerUsage;
+        return powerUsageData;
     }
 
     public async Task<bool> DeleteDevice(Guid deviceID)
@@ -649,15 +604,26 @@ public class PowerUsageRepository : IPowerUsageRepository
 
     public Dictionary<DateTime, double> GetPowerUsageForDevicePreviousWeek(Guid deviceID)
     {
-        DateTime endDate = DateTime.UtcNow;
-        DateTime startDate = endDate.AddDays(-7);
+        var endDate = DateTime.Now;
+        var startDate = endDate.AddDays(-7);
 
-        var dictionary = _dataContext.PowerUsages
-            .Where(p => p.DeviceID == deviceID && p.Timestamp >= startDate && p.Timestamp <= endDate)
-            .ToDictionary(p => p.Timestamp, p => p.Value);
+        Guid deviceTypeID = _dataContext.Devices
+            .Where(d => d.ID == deviceID)
+            .Select(d => d.DeviceTypeID)
+            .FirstOrDefault();
+
+        var query = mongoCollection.AsQueryable()
+            .Where(p => p.ID.ToString() == deviceTypeID.ToString().ToUpper())
+            .SelectMany(p => p.TimestampPowerPairs)
+            .Where(tp => tp.Timestamp >= startDate && tp.Timestamp <= endDate);
+        
+        var dictionary = new Dictionary<DateTime, double>();
+        foreach (var result in query)
+        {
+            dictionary.Add(result.Timestamp, result.PowerUsage);
+        }
 
         return dictionary;
-      
     }
 
     public (Guid, double) GetDeviceWithMaxPowerUsagePreviousWeek(Guid userID)
@@ -689,12 +655,26 @@ public class PowerUsageRepository : IPowerUsageRepository
 
     public Dictionary<DateTime, double> GetPowerUsageForDevicePreviousMonth(Guid deviceID)
     {
-        DateTime endDate = DateTime.UtcNow;
+        DateTime endDate = DateTime.Now;
         DateTime startDate = endDate.AddDays(-30);
+        
+        Guid deviceTypeID = _dataContext.Devices
+            .Where(d => d.ID == deviceID)
+            .Select(d => d.DeviceTypeID)
+            .FirstOrDefault();
+        
+        var query = mongoCollection.AsQueryable()
+            .Where(p => p.ID.ToString() == deviceTypeID.ToString().ToUpper())
+            .SelectMany(p => p.TimestampPowerPairs)
+            .Where(tp => tp.Timestamp >= startDate && tp.Timestamp <= endDate);
+        
+        var dictionary = new Dictionary<DateTime, double>();
+        foreach (var result in query)
+        {
+            dictionary.Add(result.Timestamp, result.PowerUsage);
+        }
 
-        return _dataContext.PowerUsages
-            .Where(p => p.DeviceID == deviceID && p.Timestamp >= startDate && p.Timestamp <= endDate)
-            .ToDictionary(p => p.Timestamp, p => p.Value);
+        return dictionary;
     }
 
     public (Guid, double) GetDeviceWithMaxPowerUsagePreviousMonth(Guid userID)
@@ -726,28 +706,32 @@ public class PowerUsageRepository : IPowerUsageRepository
 
     public (Guid, double) GetDeviceWithMaxPowerUsageCurrent(Guid userID)
     {
-        TimeSpan timeRange = TimeSpan.FromSeconds(1);
+        List<String> deviceTypeIds = _deviceRepository.GetDevicesForUser(userID)
+            .Select(d => d.DeviceTypeID.ToString().ToUpper())
+            .ToList();
 
-        List<Device> devices = _deviceRepository.GetDevicesForUser(userID);
+        DateTime currentHourTimestamp = DateTime.UtcNow;
 
-        if (devices.Count == 0)
+        if (deviceTypeIds.Count == 0)
         {
             return (default(Guid), default(double));
         }
 
-        var maxDevice = devices
-            .Select(device => new
-            {
-                Device = device,
-                PowerUsageSum = _dataContext.PowerUsages
-                    .Where(p => p.DeviceID == device.ID && p.Timestamp >= DateTime.UtcNow.Subtract(timeRange))
-                    .Sum(p => p.Value)
-            })
-            .OrderByDescending(x => x.PowerUsageSum)
-            .First();
+        var powerUsageData = mongoCollection.AsQueryable()
+            .Where(p => deviceTypeIds.Contains(p.ID.ToString()))
+            .ToList()
+            .SelectMany(p => p.TimestampPowerPairs.Select(t => new { ID = p.ID, Timestamp = t.Timestamp, PowerUsage = t.PowerUsage }))
+            .Where(t => t.Timestamp == currentHourTimestamp)
+            .OrderByDescending(t => t.PowerUsage)
+            .FirstOrDefault();
+        
 
-        return (maxDevice.Device.ID, maxDevice.PowerUsageSum);
+        if (powerUsageData == null)
+        {
+            return (default(Guid), default(double));
+        }
+
+        return (powerUsageData.ID, powerUsageData.PowerUsage);
     }
-
 
 }
