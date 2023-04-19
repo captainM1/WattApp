@@ -27,17 +27,13 @@ export class Home2Component implements OnInit, AfterViewInit {
   @ViewChild('currentPowerUsageGraph') currentPowerUsageGraph!:ElementRef;
 
   ngAfterViewInit(): void {
-		setTimeout(() =>{
-
-		},0)
+    this.giveMeWeather();
   }
 
 
 
   ngOnInit(): void {
     this.getToken();
-    this.giveMeWeather();
-
   }
 
   currentUsageUser(id:any){
