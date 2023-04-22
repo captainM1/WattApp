@@ -12,6 +12,7 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class Home2Component implements OnInit, AfterViewInit {
   currentUsage! : any;
+  currentProduction! : any;
   averageUsage! : any;
   userID!: any;
   token!:any;
@@ -25,6 +26,7 @@ export class Home2Component implements OnInit, AfterViewInit {
   @ViewChild('myChart') myChart!: ElementRef;
   @ViewChild('hourlyTemp') hourlyTemp!: ElementRef;
   @ViewChild('currentPowerUsageGraph') currentPowerUsageGraph!:ElementRef;
+  @ViewChild('currentProductionGraph') currentProductionGraph!:ElementRef;
 
   ngAfterViewInit(): void {
     this.giveMeWeather();
@@ -37,11 +39,21 @@ export class Home2Component implements OnInit, AfterViewInit {
   }
 
   currentUsageUser(id:any){
-    this.auth1.getCurrentUsageUserSummary(id).subscribe(
+    this.auth1.getCurrentConsumptionSummary(id).subscribe(
       (response : any) => {
         this.currentUsage = response.toFixed(2);
         console.log(response);
         this.halfDoughnut(response);
+      }
+    )
+  }
+
+  currentProductionUser(id:any)
+  {
+    this.auth1.getCurrentProductionSummary(id).subscribe(
+      (response : any) => {
+        this.currentProduction = response.toFixed(2);
+        this.halfDoughnutProduction(response);
       }
     )
   }
@@ -61,6 +73,7 @@ export class Home2Component implements OnInit, AfterViewInit {
        this.userID = response.id;
        console.log(this.userID);
        this.currentUsageUser(this.userID);
+       this.currentProductionUser(this.userID);
        this.averageUsegaUser(this.userID);
       }
     )
@@ -141,7 +154,7 @@ halfDoughnut(usage: any){
       {
         label: 'Energy consumption',
         data: [d, 1000-d],
-        backgroundColor: ['#026670', '#ECEFF1'],
+        backgroundColor: ['#FF8811', '#ECEFF1'],
       },
     ],
   };
@@ -156,6 +169,35 @@ halfDoughnut(usage: any){
   };
 
   const chart = new Chart(this.currentPowerUsageGraph.nativeElement, {
+    type: 'doughnut',
+    data: data,
+    options: options,
+  });
+}
+
+halfDoughnutProduction(usage: any){
+  const d = usage;
+  const data = {
+    labels: ['Energy production'],
+    datasets: [
+      {
+        label: 'Energy production',
+        data: [d, 1000-d],
+        backgroundColor: ['#026670', '#ECEFF1'],
+      },
+    ],
+  };
+
+  const options = {
+   circumference:180,
+   rotation:270,
+   aspectRation: 2
+
+
+
+  };
+
+  const chart = new Chart(this.currentProductionGraph.nativeElement, {
     type: 'doughnut',
     data: data,
     options: options,

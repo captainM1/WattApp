@@ -44,7 +44,7 @@
 
         <div class="card">
           <div class="card-body">
-          <h5 class="card-title"> Current power usage:</h5>
+          <h5 class="card-title"> Current Consumption:</h5>
             <canvas #currentPowerUsageGraph></canvas>
             <p class="card-text"  style="text-align: center; margin-top: -50px;">  {{currentUsage}} kW </p>
           </div>
@@ -53,8 +53,9 @@
 
       <div class="card">
           <div class="card-body">
-          <h5 class="card-title"> Bill of the month:</h5>
-          <p class="card-text" style="text-align: center;"> {{averageUsage}} kW </p>
+          <h5 class="card-title"> Current Production:</h5>
+          <canvas #currentProductionGraph></canvas>
+          <p class="card-text" style="text-align: center;"> {{currentProduction}} kW </p>
 
           </div>
       </div>
