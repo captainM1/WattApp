@@ -22,7 +22,7 @@ public class PowerUsageController : ControllerBase
         _powerUsageService = powerUsageService;
         _powerUsage = powerUsage;
     }
-    [HttpGet("power-usage/current/user/{userID}")]
+   /* [HttpGet("power-usage/current/user/{userID}")]
     public ActionResult<double> GetForUser(Guid userID)
     {
         try
@@ -40,7 +40,7 @@ public class PowerUsageController : ControllerBase
     [HttpGet("power-usage/PreviousMonth/average-user-usage/{userID}")]
     public ActionResult<double> GetAvgPowerUsage(Guid userID)
     {
-        double avgUsage = _powerUsage.GetAveragePowerUsageByUser(userID);
+        double avgUsage = _powerUsageService.GetAveragePowerUsageByUser(userID);
         return Ok(avgUsage);
     }
 
@@ -78,7 +78,7 @@ public class PowerUsageController : ControllerBase
             return BadRequest("device does not exist");
         }
         return Ok(powerUsages);
-    }
+    }*/
     
     
     [HttpGet("power-usage/current/device/{deviceID}")]
@@ -193,12 +193,12 @@ public class PowerUsageController : ControllerBase
         }
     }
 
-    [HttpGet("power-usage/currentUsageUser/summary/{userID}")]
-    public ActionResult<double> GetForUser(Guid userID)
+    [HttpGet("power-usage/currentUsageUser/average-consumption/{userID}")]
+    public ActionResult<double> GetForUserConsumption(Guid userID)
     {
         try
         {
-            var powerUsages = _powerUsageService.CurrentSumPowerUsage(userID);
+            var powerUsages = _powerUsageService.AverageSumPowerUsageConsumtion(userID);
 
             return Ok(powerUsages);
         }
@@ -208,7 +208,37 @@ public class PowerUsageController : ControllerBase
         }
     }
 
-    [HttpGet("power-usage/previousMonth/system")]
+     [HttpGet("power-usage/currentUsageUser/consumption-summary/{userID}")]
+     public ActionResult<double> GetForUserCurrentConsumption(Guid userID)
+     {
+         try
+         {
+             var powerUsages = _powerUsageService.CurrentSumPowerUsageConsumption(userID);
+
+             return Ok(powerUsages);
+         }
+         catch (ArgumentNullException ex)
+         {
+             throw new ArgumentException(ex.Message);
+         }
+     }
+
+    [HttpGet("power-usage/currentUsageUser/production-summary/{userID}")]
+    public ActionResult<double> GetForUserCurrentProduction(Guid userID)
+    {
+        try
+        {
+            var powerUsages = _powerUsageService.CurrentSumPowerUsageProduction(userID);
+
+            return Ok(powerUsages);
+        }
+        catch (ArgumentNullException ex)
+        {
+            throw new ArgumentException(ex.Message);
+        }
+    }
+
+    [HttpGet("power-usage/previousMonth/production/system")]
     public ActionResult<double> GetSystemPowerUsageForPreviousMonth()
     {
         var powerUsages = _powerUsageService.GetPoweUsageForAMonthSystemProducer(-1);
@@ -222,17 +252,24 @@ public class PowerUsageController : ControllerBase
         return Ok(powerUsages);
     }
 
+    [HttpGet("power-usage/previousMonth/consumption/system")]
+    public ActionResult<double> GetSystemPowerConsumptionForPreviousMonth()
+    {
+        var powerUsages = _powerUsageService.GetPoweUsageForAMonthSystemConsumer(-1);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/nextMonth/consumption/system")]
+    public ActionResult<double> GetSystemPowerConsumptionForNextMonth()
+    {
+        var powerUsages = _powerUsageService.GetPoweUsageForAMonthSystemConsumer(1);
+        return Ok(powerUsages);
+    }
+
     [HttpGet("power-usage/previousMonth/consumption/each-device")]
     public ActionResult<List<PowerUsage>> GetPowerUsagesOfEachDevicePreviousMonthConsumption()
     {
         var powerUsages = _powerUsageService.GetPowerUsageSumByDeviceConsumer(-1);
-        return Ok(powerUsages);
-    }
-
-    [HttpGet("power-usage/previousMonth/production/each-device")]
-    public ActionResult<List<PowerUsage>> GetPowerUsagesOfEachDevicePreviousMonthProduction()
-    {
-        var powerUsages = _powerUsageService.GetPowerUsageSumByDeviceProducer(-1);
         return Ok(powerUsages);
     }
 
@@ -242,6 +279,13 @@ public class PowerUsageController : ControllerBase
         var powerUsages = _powerUsageService.GetPowerUsageSumByDeviceConsumer(1);
         return Ok(powerUsages);
     }
+
+    [HttpGet("power-usage/previousMonth/production/each-device")]
+    public ActionResult<List<PowerUsage>> GetPowerUsagesOfEachDevicePreviousMonthProduction()
+    {
+        var powerUsages = _powerUsageService.GetPowerUsageSumByDeviceProducer(-1);
+        return Ok(powerUsages);
+    }    
 
     [HttpGet("power-usage/nextMonth/production/each-device")]
     public ActionResult<List<PowerUsage>> GetPowerUsagesOfEachDeviceNextMonthProduction()
@@ -285,24 +329,24 @@ public class PowerUsageController : ControllerBase
          return Ok(avgUsage);
      }*/
 
-    [HttpGet("power-usage/PreviousMonth/consumption/user-every-day-device-usage/{userID}")]
+    [HttpGet("power-usage/previousMonth/consumption/user-every-day-device-usage/{userID}")]
     public ActionResult<List<PowerUsage>> GetPowerUsageEachDayOfEachDevicePrevMonthConsumption(Guid userID)
     {
         var powerUsages = _powerUsageService.GetPowerUsageForDevicesConsumption(userID, -1);
         return Ok(powerUsages);
     }
 
-    [HttpGet("power-usage/nextMonth/consumtion/user-every-day-device-usage/{userID}")]
+    [HttpGet("power-usage/nextMonth/consumption/user-every-day-device-usage/{userID}")]
     public ActionResult<List<PowerUsage>> GetPowerUsageEachDayOfEachDeviceNextMonthConsumption(Guid userID)
     {
         var powerUsages = _powerUsageService.GetPowerUsageForDevicesConsumption(userID, 1);
         return Ok(powerUsages);
     }
 
-    [HttpGet("power-usage/PreviousMonth/production/user-every-day-device-usage/{userID}")]
+    [HttpGet("power-usage/previousMonth/production/user-every-day-device-usage/{userID}")]
     public ActionResult<List<PowerUsage>> GetPowerUsageEachDayOfEachDevicePrevMonthProduction(Guid userID)
     {
-        var powerUsages = _powerUsage.GetPowerProducedForADaySystem();
+        var powerUsages = _powerUsageService.GetPowerUsageForDevicesProduction(userID, -1);
         return Ok(powerUsages);
     }
 
@@ -410,5 +454,5 @@ public class PowerUsageController : ControllerBase
     {
         var powerUsages = _powerUsageService.GetMaxUsagePreviousCurrent(userID);
         return Ok(powerUsages);
-    }
+    }*/
 }

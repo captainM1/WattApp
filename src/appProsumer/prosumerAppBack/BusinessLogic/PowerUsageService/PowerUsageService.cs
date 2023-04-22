@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.IdentityModel.Tokens;
 using prosumerAppBack.Models;
 using prosumerAppBack.Models.Device;
 using SendGrid.Helpers.Errors.Model;
@@ -160,7 +161,7 @@ public class PowerUsageService:IPowerUsageService
     public List<PowerUsage> GetPowerUsageForDevicesProduction(Guid userID, int direction)
     {
         var powerUsages = _repository.GetPowerUsageForDevicesProduction(userID, direction);
-        if (powerUsages == null)
+        if (!powerUsages.Any())
         {
             throw new NotFoundException();
         }
@@ -170,7 +171,7 @@ public class PowerUsageService:IPowerUsageService
     public List<PowerUsage> GetPowerUsageForDevicesConsumption(Guid userID, int direction)
     {
         var powerUsages = _repository.GetPowerUsageForDevicesConsumption(userID, direction);
-        if (powerUsages == null)
+        if (!powerUsages.Any())
         {
             throw new NotFoundException();
         }
