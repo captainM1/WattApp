@@ -8,7 +8,6 @@ import { Device } from '../../models/device.model';
 import { Storage } from '../../models/storage.model';
 import { newDeviceDTO } from 'src/app/models/newDeviceDTO';
 import { CookieService } from 'ngx-cookie-service';
-//import { NgToastService } from 'ng-angular-popup';
 @Component({
   selector: 'app-add-device',
   templateUrl: './add-device.component.html',

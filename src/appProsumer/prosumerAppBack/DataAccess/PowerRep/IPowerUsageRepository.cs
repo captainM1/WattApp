@@ -7,7 +7,7 @@ namespace prosumerAppBack.BusinessLogic
 {
 	public interface IPowerUsageRepository
 	{
-		public PowerUsage GetForDevice(Guid deviceID);
+		public double GetForDevice(Guid deviceID);
         public double AveragePowerUsageProduction(Guid userID); // prosecna potrosnja svih uredjaja korisnika inace
         public double AveragePowerUsageConsumption(Guid userID);
         public double CurrentSumPowerUsageConsumption(Guid userID); // trenutna ukupna potrosnja svih uredjaja korisnika
@@ -28,17 +28,20 @@ namespace prosumerAppBack.BusinessLogic
         public List<PowerUsage> GetPowerUsageForDevicesConsumption(Guid userID, int direction);
         public List<double> GetPowerUsageForDevice(Guid deviceID, int direction);
         public Dictionary<DateTime, double> GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction);
-        public PowerUsage GetPowerUsageForDeviceNext24Hours(Guid deviceID);
         public Task<bool> DeleteDevice(Guid deviceID);
-        PowerUsage GetPowerUsageForADaySystem();
-        public double GetCurrentPowerUsage();
+        public PowerUsage GetPowerConsumedForADaySystem();
+        public PowerUsage GetPowerProducedForADaySystem();
+        public double GetCurrentPowerConsumption();
+        public double GetCurrentPowerProduction();
         public double GetCurrentPowerUsageForDevice(Guid deviceID);
         public double CurrentSumPowerUsageSystemConsumer();
         public double CurrentSumPowerUsageSystemProducer();
 
         public IEnumerable<TimestampPowerPair> GetForDeviceByHour(Guid deviceID);
 
+        public (Guid, double) GetDeviceWithMaxPowerUsage24(Guid userID);
+        public (Guid, double) GetDeviceWithMaxPowerUsagePreviousWeek(Guid userID);
+        public (Guid, double) GetDeviceWithMaxPowerUsagePreviousMonth(Guid userID);
+        public (Guid, double) GetDeviceWithMaxPowerUsageCurrent(Guid userID);
         public PowerUsage Get12hoursBefore12hoursAfter(Guid deviceID);
-
-    }
 }

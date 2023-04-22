@@ -135,9 +135,9 @@ public class UserController : ControllerBase
         }
 
         var token = _tokenMaker.GenerateToken(user);
-        var resetPasswordUrl = $"https://localhost:7182/api/user/reset-password?token={token}";
+        var resetPasswordUrl = $"https://localhost:4200/reset-password?token={token}";
         var message = $"Please click the following link to reset your password: {resetPasswordUrl}";
-        await _emailService.SendEmailAsync(user.Email, "Reset password", message);
+        await _emailService.SendEmailAsync(user.Email,message);
 
         return Ok(new { message = "Reset password link has been sent to your email" });
     }
@@ -152,8 +152,7 @@ public class UserController : ControllerBase
             return BadRequest("Invalid token");
         }
 
-        var id = _userService.GetID().Value;
-        Task<User> user = _userService.GetUserByIdAsync(id);
+        Task<User> user = _userService.GetUserByEmailAsync(resetPasswordDto.Email);
 
         var userCheck = _userService.GetUserByEmailAsync(resetPasswordDto.Email);
 
