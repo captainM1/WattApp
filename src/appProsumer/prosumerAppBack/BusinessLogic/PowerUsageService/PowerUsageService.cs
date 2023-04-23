@@ -236,16 +236,6 @@ public class PowerUsageService:IPowerUsageService
         return powerUsages;
     }
 
-    public double GetCurrentPowerUsageForDevice(Guid deviceID)
-    {
-        var powerUsages = _repository.GetCurrentPowerUsageForDevice(deviceID);
-        if (powerUsages == null)
-        {
-            throw new NotFoundException();
-        }
-        return powerUsages;
-    }
-
     public PowerUsage GetPowerUsageFor12HoursUpDown(Guid deviceID)
     {
         var powerUsage = _repository.Get12hoursBefore12hoursAfter(deviceID);
@@ -278,5 +268,14 @@ public class PowerUsageService:IPowerUsageService
     {
         (Guid maxID, double maxUsage) tuple = _repository.GetDeviceWithMaxPowerUsageCurrent(userID);
         return tuple;
+    }
+    public Dictionary<DateTime, double> GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction)
+    {
+        var powerUsage = _repository.GetPowerUsageForDevicePast24Hours(deviceID, direction);
+        if (powerUsage == null)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsage;
     }
 }

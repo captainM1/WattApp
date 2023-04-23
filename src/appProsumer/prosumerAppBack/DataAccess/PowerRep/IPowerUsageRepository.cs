@@ -7,14 +7,14 @@ namespace prosumerAppBack.BusinessLogic
 {
     public interface IPowerUsageRepository
     {
-        public double GetForDevice(Guid deviceID);
+        public double GetForDevice(Guid deviceID);// provereno
         public double AveragePowerUsageProduction(Guid userID); // prosecna potrosnja svih uredjaja korisnika inace
         public double AveragePowerUsageConsumption(Guid userID);
         public double CurrentSumPowerUsageConsumption(Guid userID); // trenutna ukupna potrosnja svih uredjaja korisnika
         public double CurrentSumPowerUsageProduction(Guid userID);
-        public double GetPowerUsageForDay(Guid deviceId, DateTime today);
+        public double GetPowerUsageForDay(Guid deviceId, DateTime today);// provereno
 
-        public PowerUsage GetPowerUsageFor7Days(Guid deviceId, int direction);
+        public PowerUsage GetPowerUsageFor7Days(Guid deviceId, int direction);// provereno
 
         public double GetPowerUsageForAMonthSystemConsumer(int direction);
         public double GetPowerUsageForAMonthSystemProducer(int direction);
@@ -25,19 +25,16 @@ namespace prosumerAppBack.BusinessLogic
         //public double GetAveragePowerUsageByUser(Guid userID);
         //   public Dictionary<Guid, List<double>> GetPowerUsageForDevices(Guid userId, int direction);
         public List<PowerUsage> GetPowerUsageForDevicesProduction(Guid userID, int direction);
-        public List<PowerUsage> GetPowerUsageForDevicesConsumption(Guid userID, int direction);
-        public List<double> GetPowerUsageForDevice(Guid deviceID, int direction);
-        public Dictionary<DateTime, double> GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction);
-        public Task<bool> DeleteDevice(Guid deviceID);
+        public List<PowerUsage> GetPowerUsageForDevicesConsumption(Guid userID, int direction);        
+        public Dictionary<DateTime, double> GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction);//radi ali vraca dictionary        
         public PowerUsage GetPowerConsumedForADaySystem();
         public PowerUsage GetPowerProducedForADaySystem();
         public double GetCurrentPowerConsumption();
-        public double GetCurrentPowerProduction();
-        public double GetCurrentPowerUsageForDevice(Guid deviceID);
+        public double GetCurrentPowerProduction();        
         public double CurrentSumPowerUsageSystemConsumer();
         public double CurrentSumPowerUsageSystemProducer();
 
-        public IEnumerable<TimestampPowerPair> GetForDeviceByHour(Guid deviceID);
+        public IEnumerable<TimestampPowerPair> GetForDeviceByHour(Guid deviceID);//provereno i promenjeno da vraca do trenutnog_sata -1 a ne za ceo dan
 
         public (Guid, double) GetDeviceWithMaxPowerUsage24(Guid userID);
         public (Guid, double) GetDeviceWithMaxPowerUsagePreviousWeek(Guid userID);
