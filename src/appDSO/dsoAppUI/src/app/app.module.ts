@@ -26,6 +26,7 @@ import { FormsModule } from '@angular/forms';
 import { RequirementsComponent } from './components/requirements/requirements.component';
 import { PaginatorModule } from 'primeng/paginator';
 import { FilterPipe } from './components/table/filer.pipe';
+import { WelcomeComponent } from './components/welcome/welcome.component';
 
 
 
@@ -44,6 +45,7 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     SignupComponent,
     RequirementsComponent,
     FilterPipe,
+    WelcomeComponent,
 
 ],
   imports: [

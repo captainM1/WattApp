@@ -6,6 +6,7 @@ import { NavComponent } from './components/nav/nav.component'
 import { TableComponent } from './components/table/table.component';
 import { RequirementsComponent } from './components/requirements/requirements.component';
 import { SignupComponent } from './components/signup/signup.component';
+import { WelcomeComponent } from './components/welcome/welcome.component';
 
 
 const routes: Routes = [
@@ -28,6 +29,9 @@ const routes: Routes = [
   {
     path: 'requirements', component: RequirementsComponent
   },
+  {
+    path:'welcome', component:WelcomeComponent
+  }
 
 ]
 
