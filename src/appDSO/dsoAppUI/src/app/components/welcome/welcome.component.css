@@ -86,23 +86,7 @@ button{
     
     
   }
-.btn1{
-    width: 120px;
-    height: 40px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    padding-left: 8px;
-    padding-right: 8px;
-    background-color: #026670;
-    color: white;
-    border-radius: 5px;
-    font-size: 15px;
-    font-weight: 500;
-    letter-spacing: 1px;
-    border: none;
-    
-    
-  }
+
   .btn{
     display: block;
     margin: 20px;

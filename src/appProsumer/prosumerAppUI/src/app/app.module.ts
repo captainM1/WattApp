@@ -44,6 +44,7 @@ import { PermissionsComponent } from './components/permissions/permissions.compo
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { FilterPipe } from './filter.pipe';
+import { WelcomeComponent } from './components/welcome/welcome.component';
 
 @NgModule({
   declarations: [
@@ -69,7 +70,8 @@ import { FilterPipe } from './filter.pipe';
     Home2Component,
     DeviceDetailsComponent,
     PermissionsComponent,
-    FilterPipe
+    FilterPipe,
+    WelcomeComponent
   ],
   imports: [
     BrowserModule,
