@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Data;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using prosumerAppBack.BusinessLogic;
@@ -11,7 +13,8 @@ namespace prosumerAppBack.Controllers
 {
 	[ApiController]
 	[Route("api/[controller]")]
-	public class DeviceController : ControllerBase
+    [Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
+    public class DeviceController : ControllerBase
 	{
         private readonly IDeviceService _deviceService;
 		private readonly IUserService _userService;
@@ -19,9 +22,10 @@ namespace prosumerAppBack.Controllers
 		{
 			_deviceService = deviceService;
 			_userService = userService;
-		}
+        }
 
         [HttpPost("update/{id}")]
+       // [Authorize(Roles = "UnapprovedUser,RegularUser")]
         public async Task<IActionResult> UpdateDevice(Guid id,[FromBody] UpdateDeviceDto updateDeviceDto)
         {
             try
@@ -36,6 +40,7 @@ namespace prosumerAppBack.Controllers
             }            
         }
         [HttpPost("devices/add-new")]
+       // [Authorize(Roles = "UnapprovedUser,RegularUser")]
         public async Task<IActionResult> AddDevice([FromBody] AddDeviceDto addDeviceDto)
         {
             try
@@ -50,6 +55,7 @@ namespace prosumerAppBack.Controllers
             }
         }
         [HttpGet("devices/{userID}")]
+       // [Authorize(Roles = "Dispatcher,Admin")]
         public IActionResult GetDevicesForUser(Guid userID)
         {
             try
@@ -64,6 +70,7 @@ namespace prosumerAppBack.Controllers
             }
         }
         [HttpGet("devices/info")]
+       // [Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
         public IActionResult GetDevicesInfoForUser()
         {
             try
@@ -78,12 +85,13 @@ namespace prosumerAppBack.Controllers
             }
         }
         
-        [HttpGet("devices/info/user/{id}")]
-        public IActionResult GetDevicesInfoForUser(Guid id)
+        [HttpGet("devices/info/user/{userID}")]
+       // [Authorize(Roles = "Dispatcher,Admin")]
+        public IActionResult GetDevicesInfoForUser(Guid userID)
         {
             try
             {
-                var devices = _deviceService.GetDeviceInfoForUser(id);
+                var devices = _deviceService.GetDeviceInfoForUser(userID);
                 return Ok(devices.Result);
             }
             catch (ArgumentNullException ex)
@@ -92,12 +100,13 @@ namespace prosumerAppBack.Controllers
             }
         }
         
-        [HttpGet("devices/info/{id}")]
-        public IActionResult GetDevicesInfo(Guid id)
+        [HttpGet("devices/info/{deviceID}")]
+       // [Authorize(Roles = "Dispatcher,Admin")]
+        public IActionResult GetDevicesInfo(Guid deviceID)
         {
             try
             {
-                var device = _deviceService.GetDeviceInfoForDevice(id);
+                var device = _deviceService.GetDeviceInfoForDevice(deviceID);
                 return Ok(device.Result);
             }
             catch (ArgumentNullException ex)
@@ -108,6 +117,7 @@ namespace prosumerAppBack.Controllers
         }
         
         [HttpGet("groups")]
+       // [Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
         public IActionResult GetGroups()
         {
             try
@@ -122,6 +132,7 @@ namespace prosumerAppBack.Controllers
             }
         }
         [HttpGet("manufacturers")]
+       // [Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
         public IActionResult GetManufacturers()
         {	        
             try
@@ -137,6 +148,7 @@ namespace prosumerAppBack.Controllers
         }
         
         [HttpGet("manufacturers/{groupID}")]
+       // [Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
         public IActionResult GetDeviceManufacturersBasedOnGroup(Guid groupID)
         {
             try
@@ -152,6 +164,7 @@ namespace prosumerAppBack.Controllers
         }
         
         [HttpGet("manufacturer/{manID}")]
+       // [Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
         public IActionResult GetDevicesBasedOnManufacturer(Guid manID)
         {
             try
@@ -167,6 +180,7 @@ namespace prosumerAppBack.Controllers
         }
         
         [HttpGet("groups/{groupID}")]
+       // [Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
         public IActionResult GetDeviceTypesGroup(Guid groupID)
         {
             try
@@ -182,6 +196,7 @@ namespace prosumerAppBack.Controllers
         }
         
         [HttpGet("{groupID}/{manufID}")]
+       // [Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
         public IActionResult GetDeviceTypesGroup(Guid groupID,Guid manufID)
         {
             try
@@ -196,6 +211,7 @@ namespace prosumerAppBack.Controllers
             }
         }
         [HttpDelete("delete-device/{deviceID}")]
+       // [Authorize(Roles = "UnapprovedUser,RegularUser")]
         public async Task<IActionResult> DeleteDevice(Guid deviceID)
         {
             var action = await _deviceService.DeleteDevice(deviceID);
@@ -208,6 +224,7 @@ namespace prosumerAppBack.Controllers
         }
         
         [HttpPost("add-rule/{id}")]
+      //  [Authorize(Roles = "UnapprovedUser,RegularUser")]
         public async Task<IActionResult> AddDeviceRule(Guid id, [FromBody] DeviceRuleDto deviceRuleDto)
         {
             try
@@ -223,6 +240,7 @@ namespace prosumerAppBack.Controllers
         }
 
         [HttpPost("update-rule/{id}")]
+      //  [Authorize(Roles = "UnapprovedUser,RegularUser")]
         public async Task<IActionResult> UpdateDeviceRule(Guid id, [FromBody] DeviceRuleDto deviceRuleDto)
         {
             try
@@ -238,6 +256,7 @@ namespace prosumerAppBack.Controllers
         }
 
         [HttpPost("add-requirement/{id}")]
+       // [Authorize(Roles = "UnapprovedUser,RegularUser")]
         public async Task<IActionResult> AddDeviceRequirement(Guid id, [FromBody] DeviceRequirementDto deviceRequirementDto)
         {
             try
@@ -253,6 +272,7 @@ namespace prosumerAppBack.Controllers
         }
 
         [HttpPost("update-requirement/{id}")]
+       // [Authorize(Roles = "UnapprovedUser,RegularUser")]
         public async Task<IActionResult> UpdateDeviceRequirement(Guid id, [FromBody] DeviceRequirementDto deviceRequirementDto)
         {
             try

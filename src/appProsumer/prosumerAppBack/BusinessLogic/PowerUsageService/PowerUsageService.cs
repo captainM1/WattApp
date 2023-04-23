@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.IdentityModel.Tokens;
 using prosumerAppBack.Models;
 using prosumerAppBack.Models.Device;
 using SendGrid.Helpers.Errors.Model;
@@ -36,24 +37,145 @@ public class PowerUsageService:IPowerUsageService
         return powerUsages;
     }
 
-    public double CurrentSumPowerUsage(Guid userID)
+    public double AverageSumPowerUsageProduction(Guid userID)
     {
-        var powerUsages = _repository.CurrentSumPowerUsage(userID);
-        if (powerUsages == null)
+        var powerUsages = _repository.AveragePowerUsageProduction(userID);
+        if (powerUsages == 0)
         {
             throw new NotFoundException();
         }
         return powerUsages;
     }
 
-    public double CurrentSumPowerUsageSystem()
+    public double AverageSumPowerUsageConsumtion(Guid userID)
     {
-        var powerUsage = _repository.CurrentSumPowerUsageSystem();
+        var powerUsages = _repository.AveragePowerUsageConsumption(userID);
+        if (powerUsages == 0)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsages;
+    }
+
+    public double CurrentSumPowerUsageProduction(Guid userID) 
+    {
+        var powerUsages = _repository.CurrentSumPowerUsageProduction(userID);
+        if (powerUsages == 0)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsages;
+    }
+
+    public double CurrentSumPowerUsageConsumption(Guid userID)
+    {
+        var powerUsages = _repository.CurrentSumPowerUsageConsumption(userID);
+        if (powerUsages == 0)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsages;
+    }
+
+    public double CurrentSumPowerUsageSystemConsumer()
+    {
+        var powerUsage = _repository.CurrentSumPowerUsageSystemConsumer();
         if (powerUsage == 0)
         {
             throw new NotFoundException();
         }
         return powerUsage;
+    }
+
+    public double CurrentSumPowerUsageSystemProducer()
+    {
+        var powerUsage = _repository.CurrentSumPowerUsageSystemProducer();
+        if (powerUsage == 0)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsage;
+    }
+
+    public double GetPoweUsageForAMonthSystemProducer(int direction)
+    {
+        var powerUsage = _repository.GetPowerUsageForAMonthSystemProducer(direction);
+        if (powerUsage == 0)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsage;
+    }
+
+    public double GetPoweUsageForAMonthSystemConsumer(int direction)
+    {
+        var powerUsage = _repository.GetPowerUsageForAMonthSystemConsumer(direction);
+        if (powerUsage == 0)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsage;
+    }
+
+    public List<PowerUsage> GetPowerUsageSumByDeviceProducer(int direction)
+    {
+        var powerUsage = _repository.GetPowerUsageSumByDeviceProducer(direction);
+        if (powerUsage == null)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsage;
+    }
+
+    public List<PowerUsage> GetPowerUsageSumByDeviceConsumer(int direction)
+    {
+        var powerUsage = _repository.GetPowerUsageSumByDeviceConsumer(direction);
+        if (powerUsage == null)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsage;
+    }
+
+    /*    public PowerUsage GetPowerUsagesForEachDayProduction(int direction)
+        {
+            var powerUsage = _repository.GetPowerUsagesForEachDayProduction(direction);
+            if (powerUsage == null)
+            {
+                throw new NotFoundException();
+            }
+            return powerUsage;
+        }
+
+        public PowerUsage GetPowerUsagesForEachDayConsumtion(int direction)
+        {
+            var powerUsage = _repository.GetPowerUsagesForEachDayConsumption(direction);
+            if (powerUsage == null)
+            {
+                throw new NotFoundException();
+            }
+            return powerUsage;
+        }
+    */
+
+    public List<PowerUsage> GetPowerUsageForDevicesProduction(Guid userID, int direction)
+    {
+        var powerUsages = _repository.GetPowerUsageForDevicesProduction(userID, direction);
+        if (!powerUsages.Any())
+        {
+            throw new NotFoundException();
+        }
+        return powerUsages;
+    }
+
+    public List<PowerUsage> GetPowerUsageForDevicesConsumption(Guid userID, int direction)
+    {
+        var powerUsages = _repository.GetPowerUsageForDevicesConsumption(userID, direction);
+        if (!powerUsages.Any())
+        {
+            throw new NotFoundException();
+        }
+        return powerUsages;
     }
 
     public IEnumerable<TimestampPowerPair> GetForDeviceByHour(Guid deviceID)
@@ -66,7 +188,7 @@ public class PowerUsageService:IPowerUsageService
         return powerUsages;
     }
 
-    public PowerUsage GetForDevice(Guid deviceID)
+    public double GetForDevice(Guid deviceID)
     {
         var powerUsages = _repository.GetForDevice(deviceID);
         if (powerUsages == null)
@@ -76,9 +198,18 @@ public class PowerUsageService:IPowerUsageService
         return powerUsages;
     }
 
-    public PowerUsage GetPowerUsageForADaySystem()
+    public PowerUsage GetPowerProducedForADaySystem()
     {
-        var powerUsages = _repository.GetPowerUsageForADaySystem();
+        var powerUsages = _repository.GetPowerProducedForADaySystem();
+        if (powerUsages == null)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsages;
+    }
+    public PowerUsage GetPowerConsumedForADaySystem()
+    {
+        var powerUsages = _repository.GetPowerConsumedForADaySystem();
         if (powerUsages == null)
         {
             throw new NotFoundException();
@@ -86,9 +217,18 @@ public class PowerUsageService:IPowerUsageService
         return powerUsages;
     }
 
-    public double GetCurrentPowerUsage()
+    public double GetCurrentPowerConsumption()
     {
-        var powerUsages = _repository.GetCurrentPowerUsage();
+        var powerUsages = _repository.GetCurrentPowerConsumption();
+        if (powerUsages == null)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsages;
+    }
+    public double GetCurrentPowerProduction()
+    {
+        var powerUsages = _repository.GetCurrentPowerProduction();
         if (powerUsages == null)
         {
             throw new NotFoundException();
@@ -96,13 +236,46 @@ public class PowerUsageService:IPowerUsageService
         return powerUsages;
     }
 
-    public double GetCurrentPowerUsageForDevice(Guid deviceID)
+    public PowerUsage GetPowerUsageFor12HoursUpDown(Guid deviceID)
     {
-        var powerUsages = _repository.GetCurrentPowerUsageForDevice(deviceID);
-        if (powerUsages == null)
+        var powerUsage = _repository.Get12hoursBefore12hoursAfter(deviceID);
+        if(powerUsage == null)
         {
             throw new NotFoundException();
         }
-        return powerUsages;
+        return powerUsage;
+    }
+
+    public (Guid maxDeviceID, double maxDeviceUsage) GetMaxUsagePast24Hours(Guid userID)
+    {
+        (Guid maxID, double maxUsage) tuple = _repository.GetDeviceWithMaxPowerUsage24(userID);
+        return tuple;
+    }
+
+    public (Guid maxDeviceID, double maxDeviceUsage) GetMaxUsagePreviousWeek(Guid userID)
+    {
+        (Guid maxID, double maxUsage) tuple = _repository.GetDeviceWithMaxPowerUsagePreviousWeek(userID);
+        return tuple;
+    }
+
+    public (Guid maxDeviceID, double maxDeviceUsage) GetMaxUsagePreviousMonth(Guid userID)
+    {
+        (Guid maxID, double maxUsage) tuple = _repository.GetDeviceWithMaxPowerUsagePreviousMonth(userID);
+        return tuple;
+    }
+
+    public (Guid maxDeviceID, double maxDeviceUsage) GetMaxUsagePreviousCurrent(Guid userID)
+    {
+        (Guid maxID, double maxUsage) tuple = _repository.GetDeviceWithMaxPowerUsageCurrent(userID);
+        return tuple;
+    }
+    public Dictionary<DateTime, double> GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction)
+    {
+        var powerUsage = _repository.GetPowerUsageForDevicePast24Hours(deviceID, direction);
+        if (powerUsage == null)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsage;
     }
 }
