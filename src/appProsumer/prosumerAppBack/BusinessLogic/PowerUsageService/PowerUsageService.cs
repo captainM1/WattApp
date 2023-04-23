@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.IdentityModel.Tokens;
 using prosumerAppBack.Models;
 using prosumerAppBack.Models.Device;
 using SendGrid.Helpers.Errors.Model;
@@ -160,7 +161,7 @@ public class PowerUsageService:IPowerUsageService
     public List<PowerUsage> GetPowerUsageForDevicesProduction(Guid userID, int direction)
     {
         var powerUsages = _repository.GetPowerUsageForDevicesProduction(userID, direction);
-        if (powerUsages == null)
+        if (!powerUsages.Any())
         {
             throw new NotFoundException();
         }
@@ -170,7 +171,7 @@ public class PowerUsageService:IPowerUsageService
     public List<PowerUsage> GetPowerUsageForDevicesConsumption(Guid userID, int direction)
     {
         var powerUsages = _repository.GetPowerUsageForDevicesConsumption(userID, direction);
-        if (powerUsages == null)
+        if (!powerUsages.Any())
         {
             throw new NotFoundException();
         }
@@ -235,16 +236,6 @@ public class PowerUsageService:IPowerUsageService
         return powerUsages;
     }
 
-    public double GetCurrentPowerUsageForDevice(Guid deviceID)
-    {
-        var powerUsages = _repository.GetCurrentPowerUsageForDevice(deviceID);
-        if (powerUsages == null)
-        {
-            throw new NotFoundException();
-        }
-        return powerUsages;
-    }
-
     public PowerUsage GetPowerUsageFor12HoursUpDown(Guid deviceID)
     {
         var powerUsage = _repository.Get12hoursBefore12hoursAfter(deviceID);
@@ -277,5 +268,14 @@ public class PowerUsageService:IPowerUsageService
     {
         (Guid maxID, double maxUsage) tuple = _repository.GetDeviceWithMaxPowerUsageCurrent(userID);
         return tuple;
+    }
+    public Dictionary<DateTime, double> GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction)
+    {
+        var powerUsage = _repository.GetPowerUsageForDevicePast24Hours(deviceID, direction);
+        if (powerUsage == null)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsage;
     }
 }

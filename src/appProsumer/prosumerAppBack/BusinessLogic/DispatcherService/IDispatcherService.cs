@@ -12,5 +12,6 @@ namespace prosumerAppBack.BusinessLogic.DispatcherService
         Task<Dispatcher> CheckEmail(string email);
         Task<Dispatcher> CreateDispatcher(DispatcherRegisterDto dispatcherRegisterDto);
         Task<Dispatcher> CheckUsername(string username);
+        Task<List<Dispatcher>> GetAllDispatchersAsync();
     }
 }

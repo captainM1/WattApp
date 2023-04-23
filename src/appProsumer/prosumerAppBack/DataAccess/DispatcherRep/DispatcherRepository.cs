@@ -1,6 +1,7 @@
 ﻿using prosumerAppBack.Helper;
 using Microsoft.EntityFrameworkCore;
 using prosumerAppBack.Models.Dispatcher;
+using prosumerAppBack.Models;
 
 namespace prosumerAppBack.DataAccess.DispatcherRep;
 
@@ -108,5 +109,20 @@ public class DispatcherRepository : IDispatcherRepository
         }
 
         return dispatcher;
+    }
+
+    public async Task<List<Dispatcher>> GetAllDispatchersAsync()
+    {
+        var dispatchers = await _dbContext.Dispatchers
+            .Select(u => new Dispatcher
+            {
+                ID = u.ID,
+                UserName = u.UserName,
+                Role = u.Role,
+                Email = u.Email
+            })
+            .ToListAsync();
+
+        return dispatchers;
     }
 }
