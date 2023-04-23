@@ -13,7 +13,6 @@ import { AuthService } from 'src/app/services/auth.service';
 export class Home2Component implements OnInit, AfterViewInit {
   currentUsage! : any;
   currentProduction! : any;
-  averageUsage! : any;
   userID!: any;
   token!:any;
   weather! : Root;
@@ -53,18 +52,13 @@ export class Home2Component implements OnInit, AfterViewInit {
     this.auth1.getCurrentProductionSummary(id).subscribe(
       (response : any) => {
         this.currentProduction = response.toFixed(2);
+        console.log(response);
         this.halfDoughnutProduction(response);
       }
     )
   }
 
-  averageUsegaUser(id:any){
-    this.auth1.getAverageUserUsage(id).subscribe(
-      (response : any) => {
-        this.averageUsage = response.toFixed(2);
-      }
-    )
-  }
+
 
   getToken(){
     this.token = this.auth.getToken();
@@ -74,7 +68,6 @@ export class Home2Component implements OnInit, AfterViewInit {
        console.log(this.userID);
        this.currentUsageUser(this.userID);
        this.currentProductionUser(this.userID);
-       this.averageUsegaUser(this.userID);
       }
     )
   }

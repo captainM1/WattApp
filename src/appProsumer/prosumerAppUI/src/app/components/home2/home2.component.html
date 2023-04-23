@@ -46,7 +46,7 @@
           <div class="card-body">
           <h5 class="card-title"> Current Consumption:</h5>
             <canvas #currentPowerUsageGraph></canvas>
-            <p class="card-text"  style="text-align: center; margin-top: -50px;">  {{currentUsage}} kW </p>
+            <p class="card-text"  style="text-align: center; margin-top: -50px;">  {{currentUsage}} kWh </p>
           </div>
        </div>
 
@@ -54,8 +54,7 @@
       <div class="card">
           <div class="card-body">
           <h5 class="card-title"> Current Production:</h5>
-          <canvas #currentProductionGraph></canvas>
-          <p class="card-text" style="text-align: center;"> {{currentProduction}} kW </p>
+          <p class="card-text" style="text-align: center;"> {{currentProduction}} kWh </p>
 
           </div>
       </div>
@@ -63,16 +62,16 @@
     </div>
 
     <div class="row" >
-      <div class="col-sm">
+      <div class="col-sm order-sm-1">
         <app-my-devices></app-my-devices>
       </div>
 
-        <div class="col-sm" style="margin-bottom: 50px;">
+        <div class="col-sm order-sm-2" style="margin-bottom: 50px;">
 
             <div class="card">
                 <div class="card-body">
-                <h5 class="card-title"> The largest producer of electricity:</h5>
-                <p class="card-text"  style="text-align: center;">  {{currentUsage}} kW </p>
+                <h5 class="card-title"> The biggest consumer of electricity:</h5>
+                <p class="card-text"  style="text-align: center;">  {{currentUsage}} kWh </p>
 
                 </div>
             </div>
@@ -80,8 +79,8 @@
 
             <div class="card">
                 <div class="card-body">
-                <h5 class="card-title"> The biggest consumer of electricity:</h5>
-                <p class="card-text" style="text-align: center;"> {{averageUsage}} kW </p>
+                <h5 class="card-title"> The largest producer of electricity:</h5>
+                <p class="card-text" style="text-align: center;"> kWh</p>
 
                 </div>
             </div>

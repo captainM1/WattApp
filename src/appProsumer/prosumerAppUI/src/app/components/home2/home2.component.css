@@ -130,6 +130,13 @@ img
     margin-top: 50px;
   }
 
+  .order-sm-1 {
+    order: 2;
+  }
+  .order-sm-2 {
+    order: 1;
+  }
+
   #buttonWeather
   {
     width:150px;
