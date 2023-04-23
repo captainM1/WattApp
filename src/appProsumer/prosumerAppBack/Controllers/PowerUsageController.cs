@@ -1,16 +1,18 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 using prosumerAppBack.BusinessLogic;
 using prosumerAppBack.BusinessLogic.PowerUsageService;
 using prosumerAppBack.Models;
 using prosumerAppBack.Models.Device;
-
 namespace prosumerAppBack.Controllers;
 
 [ApiController]
+[Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
 [Route("api/[controller]")]
 public class PowerUsageController : ControllerBase
 {
@@ -149,6 +151,7 @@ public class PowerUsageController : ControllerBase
     }    
 
     [HttpGet("power-usage/current-consumption/system")]
+    [Authorize(Roles = "Dispatcher,Admin")]
     public ActionResult<IEnumerable<PowerUsage>> GetForSystemConsumer()
     {        
         try
@@ -164,6 +167,7 @@ public class PowerUsageController : ControllerBase
     }
 
     [HttpGet("power-usage/current-production/system")]
+    [Authorize(Roles = "Dispatcher,Admin")]
     public ActionResult<IEnumerable<PowerUsage>> CurrentSumPowerUsageSystemProducer()
     {
         try
@@ -239,6 +243,7 @@ public class PowerUsageController : ControllerBase
     }
 
     [HttpGet("power-usage/previousMonth/production/system")]
+    [Authorize(Roles = "Dispatcher,Admin")]
     public ActionResult<double> GetSystemPowerUsageForPreviousMonth()
     {
         var powerUsages = _powerUsageService.GetPoweUsageForAMonthSystemProducer(-1);
@@ -246,6 +251,7 @@ public class PowerUsageController : ControllerBase
     }
 
     [HttpGet("power-usage/nextMonth/production/system")]
+    [Authorize(Roles = "Dispatcher,Admin")]
     public ActionResult<double> GetSystemPowerUsageForNextMonth()
     {
         var powerUsages = _powerUsageService.GetPoweUsageForAMonthSystemProducer(1);
@@ -253,6 +259,7 @@ public class PowerUsageController : ControllerBase
     }
 
     [HttpGet("power-usage/previousMonth/consumption/system")]
+    [Authorize(Roles = "Dispatcher,Admin")]
     public ActionResult<double> GetSystemPowerConsumptionForPreviousMonth()
     {
         var powerUsages = _powerUsageService.GetPoweUsageForAMonthSystemConsumer(-1);
@@ -260,6 +267,7 @@ public class PowerUsageController : ControllerBase
     }
 
     [HttpGet("power-usage/nextMonth/consumption/system")]
+    [Authorize(Roles = "Dispatcher,Admin")]
     public ActionResult<double> GetSystemPowerConsumptionForNextMonth()
     {
         var powerUsages = _powerUsageService.GetPoweUsageForAMonthSystemConsumer(1);

@@ -33,6 +33,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("username")]
+    [Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
     public async Task<ActionResult<string>> Username()
     {
         Guid? nullableGuid = _userService.GetID();
@@ -48,6 +49,7 @@ public class UserController : ControllerBase
         return Ok(JsonSerializer.Serialize(username));
     }
     [HttpPost("signup")]
+    [AllowAnonymous]
     public async Task<IActionResult> Register([FromBody] UserRegisterDto userRegisterDto)
     {
         try
@@ -65,6 +67,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("signin")]
+    [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] UserLoginDto userLoginDto)
     {        
         try
@@ -81,6 +84,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("validate-token")]
+    [Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
     public ActionResult<object> ValidateToken([FromBody] object body)
     {
         string token = body.ToString();
@@ -95,6 +99,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("users/{id}")]
+    [Authorize(Roles = "Dispatcher,Admin")]
     public async Task<ActionResult<User>> GetUser(Guid id)
     {        
         try
@@ -110,6 +115,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("users")]
+    [Authorize(Roles = "Dispatcher,Admin")]
     public async Task<List<UserDto>> GetUsers([FromQuery]int pageNumber,[FromQuery] int pageSize)
     {
         var users = await _userService.GetAllUsersAsync(pageNumber,pageSize);
@@ -117,6 +123,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("users/{id}")]
+    [Authorize(Roles = "UnapprovedUser,RegularUser")]
     public async Task<IActionResult> UpdateUser(Guid id, [FromBody] UserUpdateDto userUpdateDto)
     {
         await _userService.UpdateUser(id, userUpdateDto);
@@ -125,6 +132,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("forgot-password")]
+    [AllowAnonymous]
     public async Task<IActionResult> SendResetEmail([FromBody] ResetPasswordEmailDto resetPasswordEmailDto)
     {
         var user = await _userService.GetUserByEmailAsync(resetPasswordEmailDto.Email);
@@ -143,6 +151,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("reset-password")]
+    [AllowAnonymous]
     public async Task<IActionResult> ResetPassword([FromQuery] string token,[FromBody] ResetPasswordDto resetPasswordDto)
     {
         bool result = _tokenMaker.ValidateJwtToken(token);
@@ -172,6 +181,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("coordinatesForEveryUser")]
+    [Authorize(Roles = "Dispatcher,Admin")]
     public async Task<ActionResult<IEnumerable<object>>> GetCoordinatesForAllUsers()
     {
         try
@@ -187,10 +197,11 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("send-request-to-dso/{id}")]
+    [Authorize(Roles = "UnapprovedUser")]
     public async Task<IActionResult> CreateRequestForDso(Guid id)
     {
         try
-        {
+        {            
             var user = await _userService.GetUserByIdAsync(id);
             
             var result = await _userService.CreateUserRequestToDso(user);
@@ -204,7 +215,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("update-user")]
-    [Authorize]
+    [Authorize(Roles = "UnapprovedUser,RegularUser")]
     public async Task<IActionResult> UpdateUserInformation([FromBody] UserUpdateDto userUpdateDto)
     {        
         try
@@ -224,7 +235,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("update-user/update-password")]
-    [Authorize]
+    [Authorize(Roles = "UnapprovedUser,RegularUser")]
     public async Task<IActionResult> UpdateUserPassword([FromBody] UserUpdateDto userUpdateDto)
     {       
         try
@@ -244,6 +255,7 @@ public class UserController : ControllerBase
     }
     
     [HttpGet("coordinates/{id}")]
+    [Authorize(Roles = "Dispatcher,Admin")]
     public async Task<IActionResult> GetCoordinatesForUser(Guid id)
     {
         try
@@ -258,6 +270,7 @@ public class UserController : ControllerBase
         }  
     }
     [HttpGet("userNumber")]
+    [Authorize(Roles = "Dispatcher,Admin")]
     public async Task<IActionResult> GetNumberOfUsers()
     {
         try
@@ -273,6 +286,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("allUserInfo")]
+    [Authorize(Roles = "Dispatcher,Admin")]
     public async Task<IActionResult> AllUsersInfo()
     {
         try
@@ -288,6 +302,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("approve-request-to-dso/{id}")]
+    [Authorize(Roles = "Dispatcher,Admin")]
     public async Task<IActionResult> ApproveRequestForDso(Guid id)
     {
         try
@@ -303,6 +318,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("decline-request-to-dso/{id}")]
+    [Authorize(Roles = "Dispatcher,Admin")]
     public async Task<IActionResult> DeclineRequestForDso(Guid id)
     {
         try

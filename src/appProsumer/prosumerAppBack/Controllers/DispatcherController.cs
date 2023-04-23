@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using prosumerAppBack.BusinessLogic.DispatcherService;
 using prosumerAppBack.Helper;
 using prosumerAppBack.Models.Dispatcher;
+using System.Data;
 using System.Text.Json;
 
 namespace prosumerAppBack.Controllers;
@@ -19,6 +21,7 @@ public class DispatcherController : ControllerBase
     }
 
     [HttpPost("signup")]
+    //[Authorize(Roles = "Admin")]
     public async Task<IActionResult> Register([FromBody] DispatcherRegisterDto userRegisterDto)
     {
         try
@@ -37,6 +40,7 @@ public class DispatcherController : ControllerBase
     }
 
     [HttpPost("signin")]
+    [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] DispatcherLoginDto dispatcherLoginDto)
     {
         try
@@ -53,6 +57,7 @@ public class DispatcherController : ControllerBase
     }
 
     [HttpPost("validate-token")]
+    //[Authorize(Roles = "Dispatcher,Admin")]
     public ActionResult<object> ValidateToken([FromBody] object body)
     {
         string token = body.ToString();
@@ -67,6 +72,7 @@ public class DispatcherController : ControllerBase
     }
 
     [HttpGet("get-all-dispatchers")]
+    [Authorize(Roles = "Dispatcher,Admin")]
     public async Task<IActionResult> AllUsersInfo()
     {
         try
