@@ -12,8 +12,8 @@ using prosumerAppBack.Models.Device;
 namespace prosumerAppBack.Controllers;
 
 [ApiController]
-[Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
 [Route("api/[controller]")]
+[Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
 public class PowerUsageController : ControllerBase
 {
     private readonly IPowerUsageService _powerUsageService;

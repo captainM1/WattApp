@@ -10,6 +10,7 @@ namespace prosumerAppBack.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize(Roles = "Dispatcher,Admin")]
 public class DispatcherController : ControllerBase
 {
     private readonly IDispatcherService _dispatcherService;
@@ -21,7 +22,7 @@ public class DispatcherController : ControllerBase
     }
 
     [HttpPost("signup")]
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Register([FromBody] DispatcherRegisterDto userRegisterDto)
     {
         try
@@ -57,7 +58,6 @@ public class DispatcherController : ControllerBase
     }
 
     [HttpPost("validate-token")]
-    //[Authorize(Roles = "Dispatcher,Admin")]
     public ActionResult<object> ValidateToken([FromBody] object body)
     {
         string token = body.ToString();
@@ -72,7 +72,6 @@ public class DispatcherController : ControllerBase
     }
 
     [HttpGet("get-all-dispatchers")]
-    [Authorize(Roles = "Dispatcher,Admin")]
     public async Task<IActionResult> AllUsersInfo()
     {
         try

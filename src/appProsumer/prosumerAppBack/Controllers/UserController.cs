@@ -15,6 +15,7 @@ namespace prosumerAppBack.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
 public class UserController : ControllerBase
 {
     private readonly IUserRepository _userRepository;
@@ -84,7 +85,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("validate-token")]
-    [Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
+   // [Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
     public ActionResult<object> ValidateToken([FromBody] object body)
     {
         string token = body.ToString();
@@ -99,7 +100,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("users/{id}")]
-    [Authorize(Roles = "Dispatcher,Admin")]
+   // [Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
     public async Task<ActionResult<User>> GetUser(Guid id)
     {        
         try
@@ -115,7 +116,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("users")]
-    [Authorize(Roles = "Dispatcher,Admin")]
+   // [Authorize(Roles = "Dispatcher,Admin")]
     public async Task<List<UserDto>> GetUsers([FromQuery]int pageNumber,[FromQuery] int pageSize)
     {
         var users = await _userService.GetAllUsersAsync(pageNumber,pageSize);
@@ -123,7 +124,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("users/{id}")]
-    [Authorize(Roles = "UnapprovedUser,RegularUser")]
+   // [Authorize(Roles = "UnapprovedUser,RegularUser")]
     public async Task<IActionResult> UpdateUser(Guid id, [FromBody] UserUpdateDto userUpdateDto)
     {
         await _userService.UpdateUser(id, userUpdateDto);
@@ -181,7 +182,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("coordinatesForEveryUser")]
-    [Authorize(Roles = "Dispatcher,Admin")]
+   // [Authorize(Roles = "Dispatcher,Admin")]
     public async Task<ActionResult<IEnumerable<object>>> GetCoordinatesForAllUsers()
     {
         try
@@ -255,7 +256,7 @@ public class UserController : ControllerBase
     }
     
     [HttpGet("coordinates/{id}")]
-    [Authorize(Roles = "Dispatcher,Admin")]
+   // [Authorize(Roles = "Dispatcher,Admin")]
     public async Task<IActionResult> GetCoordinatesForUser(Guid id)
     {
         try
@@ -270,7 +271,7 @@ public class UserController : ControllerBase
         }  
     }
     [HttpGet("userNumber")]
-    [Authorize(Roles = "Dispatcher,Admin")]
+   // [Authorize(Roles = "Dispatcher,Admin")]
     public async Task<IActionResult> GetNumberOfUsers()
     {
         try
@@ -286,7 +287,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("allUserInfo")]
-    [Authorize(Roles = "Dispatcher,Admin")]
+    //[Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
     public async Task<IActionResult> AllUsersInfo()
     {
         try
