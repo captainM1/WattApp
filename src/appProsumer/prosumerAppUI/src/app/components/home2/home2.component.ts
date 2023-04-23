@@ -52,7 +52,6 @@ export class Home2Component implements OnInit, AfterViewInit {
     this.auth1.getCurrentProductionSummary(id).subscribe(
       (response : any) => {
         this.currentProduction = response.toFixed(2);
-        console.log(response);
         this.halfDoughnutProduction(response);
       }
     )

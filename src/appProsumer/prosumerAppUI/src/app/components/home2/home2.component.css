@@ -68,6 +68,12 @@ p .text-center{
   margin-top: 50px;
 }
 
+.order-sm-1 {
+  order: 2;
+}
+.order-sm-2 {
+  order: 1;
+}
 
 label
 {
@@ -106,8 +112,8 @@ img
 .card-text
 {
   font-weight: bold;
-  padding-top: 20px;
-  font-size: 15px;
+  padding-top: 50px;
+  font-size: 10px;
 }
 
 #buttonWeather
@@ -166,7 +172,7 @@ img
 
   .card
   {
-    width:43%;
+    width:45%;
     background-color: #fff;
     float:left;
     margin-left: 15px;
@@ -185,10 +191,9 @@ img
   .card-text
   {
     font-weight: bold;
-    padding-top: 20px;
-    font-size: 20px;
+    padding-top: 40px;
+    font-size: 15px;
   }
-
 
 }
 
