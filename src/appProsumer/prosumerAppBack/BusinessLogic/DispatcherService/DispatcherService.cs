@@ -95,5 +95,16 @@ namespace prosumerAppBack.BusinessLogic.DispatcherService
 
             return dispatcher;
         }
+
+        public async Task<List<Dispatcher>> GetAllDispatchersAsync()
+        {
+            var dispatchers = await _repository.GetAllDispatchersAsync();
+            if (dispatchers == null)
+            {
+                throw new NotFoundException("no dispatchers found");
+            }
+
+            return dispatchers;
+        }
     }
 }

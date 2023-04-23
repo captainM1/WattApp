@@ -65,5 +65,20 @@ public class DispatcherController : ControllerBase
 
         return true;
     }
+
+    [HttpGet("get-all-dispatchers")]
+    public async Task<IActionResult> AllUsersInfo()
+    {
+        try
+        {
+            var results = await _dispatcherService.GetAllDispatchersAsync();
+
+            return Ok(results);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
 }
 
