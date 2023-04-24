@@ -1,13 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using prosumerAppBack.BusinessLogic.DispatcherService;
 using prosumerAppBack.Helper;
 using prosumerAppBack.Models.Dispatcher;
+using System.Data;
 using System.Text.Json;
 
 namespace prosumerAppBack.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize(Roles = "Dispatcher,Admin")]
 public class DispatcherController : ControllerBase
 {
     private readonly IDispatcherService _dispatcherService;
@@ -19,6 +22,7 @@ public class DispatcherController : ControllerBase
     }
 
     [HttpPost("signup")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Register([FromBody] DispatcherRegisterDto userRegisterDto)
     {
         try
@@ -37,6 +41,7 @@ public class DispatcherController : ControllerBase
     }
 
     [HttpPost("signin")]
+    [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] DispatcherLoginDto dispatcherLoginDto)
     {
         try
@@ -64,6 +69,21 @@ public class DispatcherController : ControllerBase
         }
 
         return true;
+    }
+
+    [HttpGet("get-all-dispatchers")]
+    public async Task<IActionResult> AllUsersInfo()
+    {
+        try
+        {
+            var results = await _dispatcherService.GetAllDispatchersAsync();
+
+            return Ok(results);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
     }
 }
 
