@@ -24,41 +24,9 @@ public class PowerUsageController : ControllerBase
         _powerUsageService = powerUsageService;
         _powerUsage = powerUsage;
     }
-   /* [HttpGet("power-usage/current/user/{userID}")]
-    public ActionResult<double> GetForUser(Guid userID)
-    {
-        try
-        {
-            var powerUsages = _powerUsageService.CurrentSumPowerUsage(userID);
-
-            return Ok(powerUsages);
-        }
-        catch (ArgumentNullException ex)
-        {
-            throw new ArgumentException(ex.Message);
-        }
-    }
+   /*
     
-    [HttpGet("power-usage/PreviousMonth/average-user-usage/{userID}")]
-    public ActionResult<double> GetAvgPowerUsage(Guid userID)
-    {
-        double avgUsage = _powerUsageService.GetAveragePowerUsageByUser(userID);
-        return Ok(avgUsage);
-    }
 
-    [HttpGet("power-usage/PreviousMonth/user-every-day-device-usage/{userID}")]
-    public ActionResult<Dictionary<Guid, List<double>>> GetPowerUsageEachDayOfEachDevicePrevMonth(Guid userID)
-    {
-        var powerUsages = _powerUsage.GetPowerUsageForDevices(userID, -1);
-        return Ok(powerUsages);
-    }
-
-    [HttpGet("power-usage/nextMonth/user-every-day-device-usage/{userID}")]
-    public ActionResult<Dictionary<Guid, List<double>>> GetPowerUsageEachDayOfEachDeviceNextMonth(Guid userID)
-    {
-        var powerUsages = _powerUsage.GetPowerUsageForDevices(userID, 1);
-        return Ok(powerUsages);
-    }
 
     [HttpGet("power-usage/PreviousMonth/device-usage/{userID}")]
     public ActionResult<List<double>> GetDeviceUsageForPreviousMonth(Guid userID)
@@ -330,12 +298,6 @@ public class PowerUsageController : ControllerBase
         return Ok(powerUsages);
     }
 */
-    /* [HttpGet("power-usage/PreviousMonth/average-user-usage/{userID}")]
-     public ActionResult<double> GetAvgPowerUsage(Guid userID)
-     {
-         double avgUsage = _powerUsage.GetAveragePowerUsageByUser(userID);
-         return Ok(avgUsage);
-     }*/
 
     [HttpGet("power-usage/previousMonth/consumption/user-every-day-device-usage/{userID}")]
     public ActionResult<List<PowerUsage>> GetPowerUsageEachDayOfEachDevicePrevMonthConsumption(Guid userID)
@@ -365,55 +327,19 @@ public class PowerUsageController : ControllerBase
         return Ok(powerUsages);
     }
 
-  /*  [HttpGet("power-usage/current-hour-consumption/system")]
-    public ActionResult<Dictionary<DateTime, double>> GetCurrentPowerConsumption()
+    [HttpGet("power-usage/currentDay/consumption/system")]
+    public ActionResult<PowerUsage> GetPowerUsageForAHourSystemConsumed()
     {
-        var powerUsages = _powerUsage.GetPowerUsageForDevices(deviceID, -1);
-        if(powerUsages == null)
-        {
-            return BadRequest("device does not exist");
-        }
+        var powerUsages = _powerUsage.GetPowerConsumedForADaySystem();
         return Ok(powerUsages);
     }
 
-    [HttpGet("power-usage/NextMonth/device-usage/{deviceID}")]
-    public ActionResult<List<double>> GetDeviceUsageForNextMonth(Guid deviceID)
+    [HttpGet("power-usage/currentDay/production/system")]
+    public ActionResult<PowerUsage> GetPowerUsageForAHourSystemProduced()
     {
-        var powerUsages = _powerUsage.GetPowerUsageForDevices(deviceID, 1);
-        if (powerUsages == null)
-        {
-            return BadRequest("device does not exist");
-        }
+        var powerUsages = _powerUsage.GetPowerProducedForADaySystem();
         return Ok(powerUsages);
     }
-
-    [HttpGet("power-usage/Previous24h/device-usage_per_hour/{deviceID}")]
-    public ActionResult<Dictionary<DateTime, double>> GetDeviceUsageForPrev24(Guid deviceID)
-    {
-        var powerUsages = _powerUsage.GetPowerUsageForDevicePast24Hours(deviceID, - 1);
-        return Ok(powerUsages);
-    }
-
-    [HttpGet("power-usage/Next24h/device-usage_per_hour/{deviceID}")]
-    public ActionResult<Dictionary<DateTime, double>> GetDeviceUsageForNext24(Guid deviceID)
-    {
-        var powerUsages = _powerUsage.GetPowerUsageForDeviceNext24Hours(deviceID);
-        return Ok(powerUsages);
-    }
-
-    [HttpGet("power-usage/currentDay/system")]
-    public ActionResult<Dictionary<DateTime, double>> GetPowerUsageForAHourSystem()
-    {
-        var powerUsages = _powerUsage.GetPowerUsageForADaySystem();
-        return Ok(powerUsages);
-    }
-
-    [HttpGet("power-usage/currentHour/system")]
-    public ActionResult<Dictionary<DateTime, double>> GetCurrentPowerUsage()
-    {
-        var powerUsages = _powerUsage.GetCurrentPowerUsage();
-        return Ok(powerUsages);
-    } 
 
     [HttpGet("power-usage/12hours/{deviceID}")]
     public ActionResult<PowerUsage> GetPowerUsage12(Guid deviceID)
@@ -421,7 +347,7 @@ public class PowerUsageController : ControllerBase
         var powerUsages = _powerUsageService.GetPowerUsageFor12HoursUpDown(deviceID);
         return Ok(powerUsages);
     }
-    
+
     /*[HttpGet("power-usage/most-consumes/last-24hours/{userID}")]
     public ActionResult<Dictionary<DateTime, double>> GetMostConsumerPast24hours(Guid userID)
     {

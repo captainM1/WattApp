@@ -573,23 +573,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         return sums;
     }
    */
-    /* public double GetAveragePowerUsageByUser(Guid userID)
-     {
-         IEnumerable<String> deviceTypeIds = _deviceRepository.GetDevicesForUser(userID).Select(d => d.DeviceTypeID.ToString().ToUpper());
-
-         var monthAgo = DateTime.UtcNow.AddMonths(-1);
-
-         var powerUsageData = mongoCollection.AsQueryable()
-                 .Where(p => deviceTypeIds.Contains(p.ID.ToString()))
-                 .ToList()
-                 .SelectMany(p => p.TimestampPowerPairs)
-                 .Where(t => t.Timestamp >= monthAgo);
-
-         double average = powerUsageData.Average(p => p.PowerUsage);
-
-         return average;
-     } */
-
+    
     public List<PowerUsage> GetPowerUsageForDevicesConsumption(Guid userID, int direction)
     {
         IEnumerable<String> deviceTypeIds = _deviceRepository.GetDevicesForUser(userID).Select(d => d.DeviceTypeID.ToString().ToUpper());
@@ -730,14 +714,19 @@ public class PowerUsageRepository : IPowerUsageRepository
         var endOf12 = moment.AddHours(12);
         var startOf12 = moment.AddHours(-12);
 
+        Guid deviceTypeID = _dataContext.Devices
+            .Where(d => d.ID == deviceID)
+            .Select(d => d.DeviceTypeID)
+            .FirstOrDefault();
+
         var powerUsage = new PowerUsage();
         powerUsage.TimestampPowerPairs = new List<TimestampPowerPair>();
 
         var powerUsages = mongoCollection.AsQueryable()
-            .Where(p => deviceID.ToString().Contains(p.ID.ToString()))
+            .Where(p => deviceTypeID.ToString().ToUpper().Contains(p.ID.ToString().ToUpper()))
             .FirstOrDefault();
 
-        if (powerUsage == null)
+        if (powerUsages == null)
         {
             return null;
         }
@@ -925,11 +914,6 @@ public class PowerUsageRepository : IPowerUsageRepository
     {
         List<Device> devices = _deviceRepository.GetDevicesForUser(userID);
 
-        /*var devices = _dataContext.Devices
-             .Where(d => d.OwnerID == userID)
-             .ToList();*/
-        //Console.WriteLine("device-a je:  " + devices.Count);
-
         if (devices.Count == 0)
         {
             return (default(Guid), default(double));
@@ -939,9 +923,6 @@ public class PowerUsageRepository : IPowerUsageRepository
         var maxDeviceID = devices[0].ID;
         double maxPowerUsage = devicePowerUsage.Values.Max();
 
-        //Console.WriteLine("maksimalna prvi put je: " + maxPowerUsage);
-        //Console.WriteLine("id maksimuma je: " + devices[0].ID);
-
         for (int i = 1; i < devices.Count; i++)
         {
             devicePowerUsage = this.GetPowerUsageForDevicePast24Hours(devices[i].ID, -1);
@@ -950,9 +931,7 @@ public class PowerUsageRepository : IPowerUsageRepository
             if (powerUsageSum > maxPowerUsage)
             {
                 maxPowerUsage = powerUsageSum;
-                //Console.WriteLine("sledeci maksimum je: " + maxPowerUsage);
                 maxDeviceID = devices[i].ID;
-                //Console.WriteLine("sledeci id maksimuma je: " + devices[i].ID);
             }
         }
 
