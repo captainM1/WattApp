@@ -13,7 +13,7 @@
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "applicationUrl": "http://localhost:5172",
+      "applicationUrl": "http://softeng.pmf.kg.ac.rs:10041",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

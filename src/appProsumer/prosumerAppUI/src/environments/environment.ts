@@ -4,5 +4,5 @@
 
 export const environment = {
   production: false,
-  apiUrl : "http://localhost:5172"
+  apiUrl : "http://softeng.pmf.kg.ac.rs:10041/"
 };
