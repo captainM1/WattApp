@@ -253,9 +253,9 @@ border-radius: 10px; */
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 20px;
+    margin-top: 20px;
     font-weight: 600;
-
+    font-size: 30px;
   }
 
   i{
@@ -314,9 +314,8 @@ border-radius: 10px; */
     height: fit-content;
     text-align: center;
     color: black;
-    font-style: italic;
     font-size: 12px;
-    opacity: 0.8;
+    opacity: 0.9;
   }
 
   #form-user-enter{
@@ -338,6 +337,7 @@ border-radius: 10px; */
     border-radius: 8px;
     border: 2px solid white;
 
+
   }
   #img-btn{
     display: flex;
@@ -345,9 +345,7 @@ border-radius: 10px; */
     justify-content: center;
     background-color: #EDEAE5;
     margin: 0;
-    margin-top: 5px;
-
-    margin-top: 10px;padding-bottom: 20px;padding-top: 20px;
+    padding-top: 20px;
   }
   #col-img-btn{
     display: flex;
