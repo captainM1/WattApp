@@ -54,61 +54,61 @@
                     </div>
                   </div>
                 
-                    <h2 class= "text-center"style="text-align: center; padding-top: 10px;">Power Usage</h2>
+                    <h2 class= "text-center"style="text-align: center; padding-top: 10px;">Production</h2>
                     <div class="card-container">
                         <div class="card">
-                            <h3 class="card-title">{{hour | date:'MM/dd/yyyy hh:mm:ss a'}}:</h3>
-                            <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{currentHour}} kWh</p>
+                            <h3 class="card-title">Current: </h3>
+                            <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{currentProcuctionSys}} kWh</p>
+                            <canvas #currentProductionSYS></canvas>
                         </div>
                         <div class="card">
-                            <h3 class="card-title">Average Current System:</h3>
-                            <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{currentSys}} kWh</p>
+                            <h3 class="card-title">Previous Month System:</h3>
+                            <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{currentProcuctionSys}} kWh</p>
+                            <canvas #prevMonthProductionSYS></canvas>
                         </div>
                         <div class="card">
-                            <h3 class="card-title">History for {{month}}:</h3>
-                            <p class="card-text" >{{previousMonth}}</p>
+                            <h3 class="card-title">Prediction for Next Month System: </h3>
+                            <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{currentProcuctionSys}} kWh</p>
+                            <canvas #nextMonthProductionSYS></canvas>
                         </div>
                         <div class="card">
-                            <h3 class="card-title">Prediction for {{next}}:</h3>
-                            <p class="card-text">{{nextMonthSummary}} kWh</p>
+                            <h3 class="card-title">Each Device in System: </h3>
+                            <select>
+                                <option>Previous month</option>
+                                <option>Next month</option>
+                            </select>
                         </div>
+
+                    
+                    </div>
+                    <h2 class= "text-center"style="text-align: center; padding-top: 10px;">Consumtion:</h2>
+                    <div class="card-container">
+                        <div class="card">
+                            <h3 class="card-title">Current: </h3>
+                            <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{currentConsumptionSys}} kWh</p>
+                            <canvas #currentConsumptionSYS></canvas>
+                        </div>
+                        <div class="card">
+                            <h3 class="card-title">Previous Month System: </h3>
+                            <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{prevMonthConsumptionSys}} kWh</p>
+                            <canvas #prevMonthConsumptionSYS></canvas>
+                        </div>
+                        <div class="card">
+                            <h3 class="card-title">Prediction for Next Month System: </h3>
+                            <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{nextMonthConsumptionSys}} kWh</p>
+                            <canvas #nextMonthConsumptionSYS></canvas>
+                        </div>
+                        <div class="card">
+                            <h3 class="card-title">Each Device in System: </h3>
+                            <select>
+                                <option>Previous month</option>
+                                <option>Next month</option>
+                            </select>
+                        </div>
+                        
                     </div>
                     
-          <div class="row" id='graphInline' >
-            <div class="col-sm-6" style="display: grid;">
-                <h1 style="text-align: center; font-size: 24px; font-weight: 500;  color: #026670;">Energy consumption for the day {{dateForChart}}</h1>
-                <canvas #currentPowerusage></canvas>
-            </div>
-           <div class="col-sm-6">
-                <select [(ngModel)]="selectedOptionChart" (ngModelChange)="onOptionSelect()">
-                    <option value="Previous">Previous Month</option>
-                    <option value="Next">Next Month</option>
-                </select>
-                <div  *ngIf = "Previousbool">
-                    <canvas #prevMonth></canvas>
-                </div>
-                <div *ngIf="Nextbool">
-                    <canvas #nextMonthChart></canvas>
-                </div>
-           </div>
-            
-           </div>
-        </div>
-           <!-- POWER USAGE FOR EACH DEVICES -->
-           <div class="row">
-            <h2 class="text-center">Devices energy graph</h2>
-            <div class="col-sm-6">
-                <div>
-                    <h4 style="text-align: center; font-size: 24px; font-weight: 500;  color: #026670;">Previous Month for Each Device</h4>
-                <canvas #prevEachDevice></canvas>
-                </div>
-            </div>
-            <div class="col-sm-6">
-                <div>
-                    <h4 style="text-align: center; font-size: 24px; font-weight: 500;  color: #026670;">Next Month for Each Device</h4>
-                <canvas #nextEachDevice></canvas>
-                </div>
-            </div>
+         
         </div>
     </div>
 </div>
@@ -118,4 +118,3 @@
     
    
 
-    

@@ -1,12 +1,11 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { deviceGroup, deviceGroupManifacturers, deviceManifacturers } from 'models/Devices';
+import { deviceGroup, deviceGroupManifacturers, deviceManifacturers, eachDevice } from 'models/Devices';
 import { AuthService } from 'service/auth.service';
 import { Chart, elements } from 'chart.js';
 import { ChartOptions } from 'chart.js';
 import { User } from 'models/User';
 import { animation } from '@angular/animations';
 import { Root } from 'models/weather';
-import { eachDevice } from 'models/eachDevice';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -18,9 +17,10 @@ export class HomeComponent implements OnInit, AfterViewInit{
 	
 	
 	
-	eachDevicePrev!: eachDevice[];
-	eachDeviceNext!: eachDevice[]
+	// eachDevicePrev!: eachDevice[];
+	// eachDeviceNext!: eachDevice[]
 	selectedOption: any;
+	
 	
 
 	constructor(
@@ -36,7 +36,15 @@ export class HomeComponent implements OnInit, AfterViewInit{
 	previousMonthLabels: string[] = [];
 	everyDayUsagePreviousMonth: any;
 	everyDayUsageNextMonth:any;
-	currentDayUsage!:any;
+
+	currentConsumptionSys!:any;
+	prevMonthConsumptionSys!:any;
+	nextMonthConsumptionSys!:any;
+	prevMonthEachDeviceConsumption!: eachDevice[];
+
+	currentProcuctionSys!:any;
+	prevMonthProductionSys!: any;
+	prevMonextMonthConsumptionSys!:any;
 	
 	currentSys!:any;
 	previousMonth! : any;
@@ -80,41 +88,43 @@ export class HomeComponent implements OnInit, AfterViewInit{
 	@ViewChild('myChartUsers') myChartUsers!:ElementRef;
 	@ViewChild('myChartForEveryTypeOfDevice') myChartForEveryTypeOfDevice!: ElementRef;
 	@ViewChild('hourlyTemp') hourlyTemp!: ElementRef;
-	@ViewChild('prevMonth') prevMonth!: ElementRef;
-	@ViewChild('nextMonthChart') nextMonthChart! :ElementRef;
-	@ViewChild('prevEachDevice') prevEachDevice!: ElementRef;
-	@ViewChild('nextEachDevice') nextEachDevice!:ElementRef;
-	@ViewChild('currentPowerusage') currentPowerusage!:ElementRef;
+	
+
+	@ViewChild('currentConsumptionSYS') currentConsumptionSYS!:ElementRef;
+	@ViewChild('prevMonthConsumptionSYS') prevMonthConsumptionSYS!:ElementRef;
+	@ViewChild('nextMonthConsumptionSYS') nextMonthConsumptionSYS!:ElementRef;
+
+
+	@ViewChild('currentProductionSYS') currentProductionSYS!:ElementRef;
+	@ViewChild('prevMonthProductionSYS') prevMonthProductionSYS!:ElementRef;
+	@ViewChild('nextMonthProductionSYS') nextMonthProductionSYS!:ElementRef;
 	
 	ngAfterViewInit(): void {
 		setTimeout(()=>{
 			this.giveMeChartForTemperatureDaily()
 		},0);
+		setTimeout(() => {
+			this.getConsumptionCurrent();
+			this.getProductionCurrent();
+			this.getConsumtionPrevMonth();
+		}, 1000)
 
-		setTimeout(()=>{
-			this.getCurrentDay();
-		},0);
 		
-		setTimeout(()=>{
-			this.powerUsagePreviousMonth();
-			this.nextMonthEveryDay();
-		},10000)
+		
 	}
 	
 	ngOnInit(): void {	
+	// consumption 
+		this.getConsumptionCurrent();
+		this.getConsumtionPrevMonth();
+		this.getConsumtionNextMonth();
 
+		this.getProductionCurrent();
+
+		this.allDevices();
 		this.getDate();
 		this.getDeviceGroup();
-	// summarry for system
-		this.nextMonthSummary();
-		this.getCurrentDay();
-		this.powerUsagePreviousMonth();
-		this.getCurrentHourSystem();
-		this.getCurrentSys();
-
-	// foreach device 
-		this.previousMonthEachDevice();
-		this.nextMonthEachDevice();
+		this.prevMonthEachDevice();
 
 	// temperature
 		this.giveMeWeather();
@@ -127,6 +137,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		
 		this.getAllUserInfo();
 	}
+
 	dateForWeater:any;
 	month:any;
 	next:any;
@@ -389,386 +400,254 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		}
 
 	
-	
-		powerUsagePreviousMonth(){
-			this.auth.getPowerUsagePreviousMonthSummary().subscribe(
-				(response : any) => {
-					this.previousMonth =  (response).toFixed(2);
-					this.previousMonthEveryDay()
-				}
-			)
-		}
-	
-		previousMonthEveryDay(){
-			this.auth.getPowerUsagePreviousMonthEveryDayUsage().subscribe(
-				(response:any)=>{
-					this.everyDayUsagePreviousMonth = response;
-					this.charthForPreviusMonth();
-					
-				}
-			)
-		}
-	
 		
 	
-		charthForPreviusMonth(){
-				 
-				 const list =  Object.keys(this.everyDayUsagePreviousMonth).map((key) => key.split('T')[0]);
-				 
-				 const valuesList = [];
 	
-				for (const key in this.everyDayUsagePreviousMonth) {
-					if (this.everyDayUsagePreviousMonth.hasOwnProperty(key)) {
-						valuesList.push(this.everyDayUsagePreviousMonth[key]);
-					}
+	
+// CONSUMPTION 
+		getConsumptionCurrent(){
+			this.auth.currentConsumptionSystem().subscribe(
+				(response:any)=>{
+					this.currentConsumptionSys = response.toFixed(2);
+					this.halfDoughnutConsumtionSys(this.currentConsumptionSys);
 				}
+			)
+		}
+
+		
+		halfDoughnutConsumtionSys(usage: any){
+		  const d = usage;
+		  const data = {
+			labels: ['Energy consumption'],
+			datasets: [
+			  {
+				label: 'Energy consumption',
+				data: [d, 1000-d],
+				backgroundColor: ['#FF8811', '#ECEFF1'],
+			  },
+			],
+		  };
+		
+		  const options = {
+		   circumference:180,
+		   rotation:270,
+		   aspectRation: 2
+		  };
+		
+		  const chart = new Chart(this.currentConsumptionSYS.nativeElement, {
+			type: 'doughnut',
+			data: data,
+			options: options,
+		  });
+		}
+
+
+		getConsumtionPrevMonth(){
+			this.auth.prevMonthConsumptionSystem().subscribe(
+				(response : any) => {
+					this.prevMonthConsumptionSys = response.toFixed(2);
+					this.halfDoughnutPrevMonthConsumtionSys(this.prevMonthConsumptionSys);
+				}
+			)
+		}
+// prevMonthConsumptionSYS
+		halfDoughnutPrevMonthConsumtionSys(usage: any){
+			const d = usage;
+			const data = {
+			labels: ['Energy consumption'],
+			datasets: [
+				{
+				label: 'Energy consumption',
+				data: [d, 1000-d],
+				backgroundColor: ['#FF8811', '#ECEFF1'],
+				},
+			],
+			};
+		
+			const options = {
+			circumference:180,
+			rotation:270,
+			aspectRation: 2
+			};
+		
+			const chart = new Chart(this.prevMonthConsumptionSYS.nativeElement, {
+			type: 'doughnut',
+			data: data,
+			options: options,
+			});
+		}
+
+		getConsumtionNextMonth(){
+			this.auth.nextMonthConsumtionSystem().subscribe(
+				(response : any) => {
+					this.nextMonthConsumptionSys = response.toFixed(2);
+					this.halfDoughnutNextMonthConsumtionSys(this.nextMonthConsumptionSys);
+				}
+			)
+		}
+// prevMonthConsumptionSYS
+		halfDoughnutNextMonthConsumtionSys(usage: any){
+			const d = usage;
+			const data = {
+			labels: ['Energy consumption'],
+			datasets: [
+				{
+				label: 'Energy consumption',
+				data: [d, 1000-d],
+				backgroundColor: ['#FF8811', '#ECEFF1'],
+				},
+			],
+			};
+		
+			const options = {
+			circumference:180,
+			rotation:270,
+			aspectRation: 2
+			};
+		
+			const chart = new Chart(this.nextMonthConsumptionSYS.nativeElement, {
+			type: 'doughnut',
+			data: data,
+			options: options,
+			});
+		}
+// prevMonthEachDevice
+
+		prevMonthEachDevice(){
+			this.auth.eachDevicePrevMonth().subscribe(
+				(response : any) => {
+					this.prevMonthEachDeviceConsumption = response;
+					console.log("PREV EACH DEVICE::: ",this.prevMonthEachDeviceConsumption);
+				}
+			)
+		}
+// PRODUCTION 
+// currentProductionSYS
+		prevMonthProductionSystem(){
+			this.auth.currentProcustionSystem().subscribe(
+				(response : any) => {
+					this.prevMonthConsumptionSys = response.toFixed(2);
+					this.halfDoughnutPrevMonthProductionSys(this.prevMonthConsumptionSys);
+				}
+			)
+		}
+		halfDoughnutPrevMonthProductionSys(usage: any){
+			const d = usage;
+			const data = {
+			labels: ['Energy consumption'],
+			datasets: [
+				{
+				label: 'Energy consumption',
+				data: [d, 1000-d],
+				backgroundColor: ['#FF8811', '#ECEFF1'],
+				},
+			],
+			};
+		
+			const options = {
+			circumference:180,
+			rotation:270,
+			aspectRation: 2
+			};
+		
+			const chart = new Chart(this.prevMonthProductionSYS.nativeElement, {
+			type: 'doughnut',
+			data: data,
+			options: options,
+			});
+		}
+		
+		getProductionCurrent(){
+			this.auth.currentProcustionSystem().subscribe(
+				(response : any) => {
+					this.currentConsumptionSys = response.toFixed(2);
+					this.halfDoughnutProductionSys(this.currentProcuctionSys);
+				}
+			)
+		}
+		halfDoughnutProductionSys(usage: any){
+			const d = usage;
+			const data = {
+			labels: ['Energy consumption'],
+			datasets: [
+				{
+				label: 'Energy consumption',
+				data: [d, 1000-d],
+				backgroundColor: ['#FF8811', '#ECEFF1'],
+				},
+			],
+			};
+		
+			const options = {
+			circumference:180,
+			rotation:270,
+			aspectRation: 2
+			};
+		
+			const chart = new Chart(this.currentProductionSYS.nativeElement, {
+			type: 'doughnut',
+			data: data,
+			options: options,
+			});
+		}	
+
+		nextMonthProductionSystem(){
+			this.auth.nextMonthProductionSystem().subscribe(
+				(response : any) => {
+					this.nextMonthConsumptionSys = response.toFixed(2);
+					this.halfDoughnutNextMonthProductionSys(this.prevMonextMonthConsumptionSys);
+				}
+			)
+		}
+		halfDoughnutNextMonthProductionSys(usage: any){
+			const d = usage;
+			const data = {
+			labels: ['Energy consumption'],
+			datasets: [
+				{
+				label: 'Energy consumption',
+				data: [d, 1000-d],
 				
-	
-				const data = {
-				labels: list,
-				datasets: [{
-					label: 'Power Usage For Previous Month',
-					data: valuesList,
-					fill: true,
-					borderColor: 'rgb(59, 193, 74)',
-					backgroundColor:'rgba(59, 193, 74,0.4)',
-					pointBackgroundColor: 'rgba(59, 193, 74,0.7)',
-					borderWidth: 1,
-					pointBorderColor:'rgb(59, 193, 74)'
-				}]
-			}
-				const options: ChartOptions = {
-					scales: {
-					x: {
-						title: {
-						display: true,
-						text: 'Date and Time',
-						},
-						ticks: {
-						font: {
-							size: 14,
-						},
-						},
-					},
-					y: {
-						title: {
-						display: true,
-						text: 'Power Consuming in (kw/day)',
-						},
-						ticks: {
-						font: {
-							size: 14,
-						},
-						},
-					},
-					},
-				};
-				const stackedLine = new Chart(this.prevMonth.nativeElement, {
-					type: 'line',
-					data: data,
-					options: options,
-				});
-		}
-	
-		nextMonthSummary(){
-			this.auth.getPowerUsageNextMonthSummary().subscribe(
-				(response : any)=>{
-					
-					this.nextMonthSummary = (response).toFixed(2);
-					this.nextMonthEveryDay();
-				}
-			)
-		}
-	
-		nextMonthEveryDay(){
-			this.auth.getPowerUsageNextMonthEveryDay().subscribe(
-				(response :any)=>{
-					
-					this.everyDayUsageNextMonth = response;
-					this.chartForNextMonth();
-				}
-			)
-		}
-		chartForNextMonth(){
-			const list =  Object.keys(this.everyDayUsageNextMonth).map((key) => key.split('T')[0]);
-			const valuesList = [];
-	
-			for (const key in this.everyDayUsageNextMonth) {
-				if (this.everyDayUsageNextMonth.hasOwnProperty(key)) {
-					valuesList.push(this.everyDayUsageNextMonth[key]);
-				}
-			}
-	
-		   const data = {
-		   labels: list,
-		   datasets: [{
-			   label: 'Power Usage For Next Month',
-			   data: valuesList,
-			   fill: true,
-			   borderColor: 'rgb(255, 200, 0)',
-					backgroundColor:'rgba(255, 200, 0,0.4)',
-					pointBackgroundColor: 'rgba(255, 200, 0,0.7)',
-					borderWidth: 1,
-					pointBorderColor:'rgb(255, 200, 0)'
-		   }]
-	   }
-		   const options: ChartOptions = {
-			   scales: {
-			   x: {
-				   title: {
-				   display: true,
-				   text: 'Date and Time',
-				   },
-				   ticks: {
-				   font: {
-					   size: 14,
-				   },
-				   },
-			   },
-			   y: {
-				   title: {
-				   display: true,
-				   text: 'Power Consuming in (kw/day)',
-				   },
-				   ticks: {
-				   font: {
-					   size: 14,
-				   },
-				   },
-			   },
-			   },
-		   };
-		   const stackedLine = new Chart(this.nextMonthChart.nativeElement, {
-			   type: 'line',
-			   data: data,
-			   options: options,
-		   });
-		}
-	
-	
-		previousMonthEachDevice(){
-			this.auth.getPowerUsagePreviousMonthEachDevice().subscribe(
-				(response : any) =>{
-					this.eachDevicePrev = response;
-					this.chartPreviousMonthEachDevice()
-					
-				}
-			)
-		}
-	
-		chartPreviousMonthEachDevice(){
-			const label: string[] =[];
-			const producersUnique = Array.from(new Set(this.producers))
-			for(const key in this.eachDevicePrev){
-				for(let pro of producersUnique){
-					if(key === pro.id){
-						label.push(pro.name);
-					}
-				}
-			}
-			
-			const dataEach = Object.values(this.eachDevicePrev).map((value) => value);
-			const data = {
-				labels: label,
-				datasets: [{
-					label: 'Previous Month for Each Device',
-					data: dataEach,
-					fill: true,
-					borderColor: 'rgb(255, 159, 64)',
-					backgroundColor:'rgba(255, 159, 64, 0.5)',
-					tension: 0.1,
-					borderWidth: 1,
-				}]
-			}
-				const options: ChartOptions = {
-					indexAxis: 'y',
-					scales: {
-					x: {
-						title: {
-						display: true,
-						text: 'Power Consuming in (kw/day)',
-						},
-						ticks: {
-						font: {
-							size: 14,
-						},
-						},
-					},
-					y: {
-						title: {
-						display: true,
-						text: '',
-						},
-						ticks: {
-						font: {
-							size: 14,
-						},
-						},
-					},
-					},
-				};
-				const stackedLine = new Chart(this.prevEachDevice.nativeElement, {
-					type: 'bar',
-					data: data,
-					options: options,
-				});
-		}
-	
-		nextMonthEachDevice(){
-			this.auth.getPowerUsageNextMonthEachDevice().subscribe(
-				(response : any)=>{
-					this.eachDeviceNext = response;
-					this.chartNextMonthEachDevice();
-				}
-			)
-		}
-	
-		chartNextMonthEachDevice(){
-			const label: string[] =[];
-			const producersUnique = Array.from(new Set(this.producers))
-			
-			for(const key in this.eachDeviceNext){
-				for(let pro of producersUnique){
-					if(key === pro.id){
-						label.push(pro.name);
-					}
-				}
-			}
-	
-			const dataEach = Object.values(this.eachDeviceNext).map((value) => value);
-			const data = {
-				labels: label,
-				datasets: [{
-					label: 'Next Month for Each Device',
-					data: dataEach,
-					fill: true,
-					borderColor: 'rgb(75, 192, 192)',
-					   backgroundColor:'rgba(75, 192, 192, 0.5)',
-					tension: 0.1,
-					borderWidth: 1,
-				}]
-			}
-				const options: ChartOptions = {
-					indexAxis: 'y',
-					scales: {
-					x: {
-						title: {
-						display: true,
-						text: 'Power Consuming in (kw/day)',
-						},
-						ticks: {
-						font: {
-							size: 14,
-						},
-						},
-					},
-					y: {
-						title: {
-						display: true,
-						text: '',
-						},
-						ticks: {
-						font: {
-							size: 14,
-						},
-						},
-					},
-					},
-				};
-				const stackedLine = new Chart(this.nextEachDevice.nativeElement, {
-					type: 'bar',
-					data: data,
-					options: options,
-				});
+				},
+			],
+			};
+		
+			const options = {
+				circumference:180,
+				rotation:270,
+				aspectRation: 2,
+				borderColor: 'rgb(59, 193, 74)', // ZELENA
+				backgroundColor:'rgba(59, 193, 74,0.4)',
+				pointBackgroundColor: 'rgba(59, 193, 74,0.7)',
+				borderWidth: 1,
+				pointBorderColor:'rgb(59, 193, 74)',
+			};
+		
+			const chart = new Chart(this.nextMonthProductionSYS.nativeElement, {
+			type: 'doughnut',
+			data: data,
+			options: options,
+			});
 		}
 
-		getCurrentDay(){
-			this.auth.getPowerUsageCurretDay().subscribe(
-				(response:any)=>{
-					this.currentDayUsage = response;
-					this.chartCurrentDay();
-				}
-			)
-		}
-		dateForChart:any;
-		chartCurrentDay(){
-			const list =  Object.keys(this.currentDayUsage).map((key) =>
-				key.split('T')[1].split(':')[0] + ': 00'
-			);
-			const valuesList = [];
-			for (const key in this.currentDayUsage) {
-				if (this.currentDayUsage.hasOwnProperty(key)) {
-					valuesList.push(this.currentDayUsage[key]);
-				}
+
+
+	allDevices(){
+		this.auth.AllDevices().subscribe(
+			(response : any)=>{
+				console.log("all devices: ",response);
 			}
-			const date = new Date();
-			const day = date.getDate();
-			const hour = date.getHours();
-			const minute = date.getMinutes();
-			this.dateForChart = +date.getDate()+'.'+date.getMonth()+'.'+date.getFullYear()+'.';
-		   const data = {
-		   labels: list,
-		   datasets: [{
-			   label: 'Energy consumption ',
-			   data: valuesList,
-			   fill:true,
-			   borderColor: 'rgb(251, 97, 7)',
-			   backgroundColor:'rgba(251, 97, 7,0.4)',
-			   pointBackgroundColor: 'rgba(251, 97, 7,0.7)',
-			   borderWidth: 1,
-			   pointBorderColor:'rgb(251, 97, 7)'
-		   }]
-	   }
-		   const options: ChartOptions = {
-			   scales: {
-			   x: {
-				   title: {
-				   display: true,
-				   text: 'Hours',
-				   },
-				   ticks: {
-				   font: {
-					   size: 14,
-				   },
-				   },
-			   },
-			   y: {
-				   title: {
-				   display: true,
-				   text: 'Current power usage in (kw/day)',
-				   },
-				   ticks: {
-				   font: {
-					   size: 14,
-				   },
-				   },
-			   },
-			   },
-		   };
-		   const stackedLine = new Chart(this.currentPowerusage.nativeElement, {
-			   type: 'line',
-			   data: data,
-			   options: options,
-		   });
-		}
+		)
+	}
 
-		getCurrentHourSystem(){
-			this.auth.getPowerUsageCurrentHour().subscribe(
-				(response:any)=>{
-					this.currentHour = (response).toFixed(2);
-					this.hour = new Date();
-				}
-			)
-		}
-
-		getCurrentSys(){
-		this.auth.getPowerUsageCurrentSystem().subscribe(
-			(response :any)=> {
-				this.currentSys = response.toFixed(2);
-			})
- 
-			
-		}
+	giveMeDeviceByID(id : any){
+		this.auth.device(id).subscribe(
+			(response : any) => {
+				console.log("dev : ",response);
+			}
+		)
+	}
+		
 		Previousbool : boolean = true;
 		Nextbool : boolean = false;
 		selectedOptionChart:string = 'Previous';
