@@ -19,11 +19,14 @@ export interface Device{
    
 }
 export interface Info{
+    powerusage: any;
     deviceId: string;
     deviceTypeName: string;
     macAdress: string;
     manufacturerName: string;
     typeOfDevice: string;
+    powerUsage:string;
+
 }
 
 export interface DeviceType{

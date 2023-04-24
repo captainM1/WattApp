@@ -20,7 +20,7 @@
                   <th style="width: 5%;"></th>
                   <th >First Name</th>
                   <th >Last Name</th>
-                  <th style="width: 20%;">Address</th>
+                  <th style="width: 23%;">Address</th>
                   <th style="width: 15%;"(click)="sortData('powerUsage')"><i class="fa fa-arrow-up" aria-hidden="true" style = "color:white" *ngIf="currentSortOrder ==='asc'"></i><i class="fa fa-arrow-down"  style ="color:white" *ngIf="currentSortOrder === 'desc'"></i>Power Usage</th>
                   <th style="width: 20%;"></th>
                   
@@ -28,7 +28,8 @@
               </thead>
               <tr *ngFor="let user of allUsers | filterName : _searchByName: _searchByAddress" (click) = "showMeOnMap(user.id)">
                   <td><input [(ngModel)]="user.selected"  type = "checkbox" style="width: 20px;" (click) = "toggleExportSelected()"></td>  
-                  <td (click) = "showMeDevices(user.id)">{{user.firstName}}</td>
+                  <!-- (click) = "showMeDevices(user.id)" -->
+                  <td >{{user.firstName}}</td> 
                   <td>{{user.lastName}}</td>
                   <td>{{user.address}}, {{user.city}}, {{user.country}}</td>
                   <td>{{user.powerUsage}}kw/h</td>
@@ -44,24 +45,7 @@
             </tr>
           </div>
          
-          <table >
-            <thead>
-              <tr>
-                <th>Device name</th>
-                <th>Device manifacture</th>
-                <th>Mac Address</th>
-                <th>Current Power Usage</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let device of allUserDevices" >
-                <td >{{device.deviceTypeName}}</td>
-                <td>{{device.manufacturerName}}</td>
-                <td>{{device.macAdress}}</td>
-                <td>{{device.typeOfDevice}} kw/h</td>
-              </tr>
-            </tbody>
-          </table>
+         
       
         </div> 
     </div>
@@ -119,7 +103,9 @@
                     <th>Device name</th>
                     <th>Device manifacture</th>
                     <th>Mac Address</th>
-                    <th>Current Power Usage</th>
+                    <th>Type of Device</th>
+                    <th>Current</th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -127,7 +113,8 @@
                     <td >{{device.deviceTypeName}}</td>
                     <td>{{device.manufacturerName}}</td>
                     <td>{{device.macAdress}}</td>
-                    <td>{{device.typeOfDevice}} kw/h</td>
+                    <td>{{device.typeOfDevice}}</td>
+                    <td>{{device.powerUsage}} kw/h</td>
                   </tr>
                 </tbody>
               </table>

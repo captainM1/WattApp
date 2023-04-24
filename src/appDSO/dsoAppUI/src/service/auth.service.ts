@@ -82,7 +82,7 @@ export class AuthService {
   }
 
   getPowerUsageToday(deviceID: any) :Observable<any>{
-    return this.http.get(environment.apiUrl + '/api/PowerUsage/power-usage/today/'+deviceID);
+    return this.http.get(environment.apiUrl + '/api/PowerUsage/power-usage/current/device/'+deviceID);
   }
 
   

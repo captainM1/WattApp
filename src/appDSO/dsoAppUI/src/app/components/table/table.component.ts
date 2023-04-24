@@ -41,7 +41,7 @@ export class TableComponent implements OnInit, AfterViewInit {
 
 // pagination
   public page = 1;
-  public pageSize = 5;
+  public pageSize = 10;
   
   showAllUsersOnMap : boolean = true;
   lengthOfUsers!: number;
@@ -61,7 +61,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   private latlng: L.LatLng[] = [];
   
   selected: string = "";
-  pageSizeOptions = [5, 10, 25, 50];
+  pageSizeOptions = [10, 25, 50];
 
   powerUsage!: string;
   deviceGroup!: any[];
@@ -248,6 +248,7 @@ export class TableComponent implements OnInit, AfterViewInit {
           if (user.id === id) {
             this.activeItem = user.id;
             user.powerUsage = (response).toFixed(2);
+            console.log("POWER USAGE : ", user.powerUsage);
           }
         }
       }
@@ -272,37 +273,35 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.auth.getDeviceInfoUserByID(id).subscribe(
       (response : any) => {
         this.allUserDevices = response;
-        console.log("ALL USER DEVICES:",this.allUserDevices);
+        console.log("ALL USER DEVICES : " ,this.allUserDevices);
         for(let us of this.allUserDevices){
-          
           this.auth.getPowerUsageToday(us.deviceId).subscribe(
             (response : any)=>{
               this.todayPowerUsageDevice = (response);
-              us.typeOfDevice = (response).toFixed(2);
+              us.powerUsage = (response).toFixed(2);
             }
           )
-          // for(let p of this.producers){
-          //   for(let c of this.consumers){
-          //     for(let s of this.storage){
-          //       if(us.deviceTypeName === p['name'])
-          //       {
-          //         us.typeOfDevice = 'Producer';
-                  
-          //       }
-          //       if(us.deviceTypeName === c['name']){
-          //         us.typeOfDevice = "Consumer";
-          //       }
-          //       if(us.deviceTypeName === s['name']){
-          //         us.typeOfDevice = 'Storage';
-          //       }
-          //     }
-          // }
-          // }
+          for(let p of this.producers){
+            for(let c of this.consumers){
+              for(let s of this.storage){
+                if(us.deviceTypeName === p['name'])
+                {
+                  us.typeOfDevice = 'Producer';
+                }
+                if(us.deviceTypeName === c['name']){
+                  us.typeOfDevice = "Consumer";
+                }
+                if(us.deviceTypeName === s['name']){
+                  us.typeOfDevice = 'Storage';
+                  console.log("TYPE", us.typeOfDevice);
+                }
+              }
+          }
+          }
         }
       
       }
     )
-    console.log(this.allUserDevices);
   }
 
   createChartFor24Previ(){
