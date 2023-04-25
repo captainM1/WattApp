@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -37,6 +37,7 @@ import { MyDevicesComponent } from './components/my-devices/my-devices.component
 
 import { MobNavComponent } from './components/mob-nav/mob-nav.component';
 import { Home2Component } from './components/home2/home2.component';
+import {TokenInterceptor} from 'src/app/interceptors/token.interceptor'
 import { DeviceDetailsComponent } from './components/device-details/device-details.component';
 import { CommonModule } from '@angular/common';
 import { PermissionsComponent } from './components/permissions/permissions.component';
@@ -91,7 +92,7 @@ import { WelcomeComponent } from './components/welcome/welcome.component';
     ConfirmDialogModule,
     Ng2SearchPipeModule
   ],
-  providers: [MessageService,ConfirmationService],
+  providers: [MessageService,ConfirmationService,{provide:HTTP_INTERCEPTORS,useClass:TokenInterceptor,multi:true}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
