@@ -6,8 +6,8 @@ import {
   HttpInterceptor,
   HttpErrorResponse
 } from '@angular/common/http';
-import { catchError, Observable, throwError } from 'rxjs';
-import { AuthService } from '../services/auth.service';
+import { catchError, Observable, tap, throwError } from 'rxjs';
+import { AuthService } from 'service/auth.service';
 import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 
@@ -22,7 +22,7 @@ export class TokenInterceptor implements HttpInterceptor {
   ) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    if (request.url.endsWith('/signin') || request.url.endsWith('/signup')) {
+    if (request.url.endsWith('/signin') || request.url.endsWith('/signup') || request.url.startsWith('https://api.open-meteo.com') || request.url.startsWith('https://maps.googleapis.com') || request.url.startsWith('https://maps.googleapis.com')) {
       return next.handle(request);
     }
 
@@ -33,6 +33,7 @@ export class TokenInterceptor implements HttpInterceptor {
         setHeaders: {Authorization:`Bearer ${myToken}`}
       })
     }
+
     return next.handle(request).pipe(
       catchError((err : any) =>{
         if(err instanceof HttpErrorResponse){
@@ -40,8 +41,14 @@ export class TokenInterceptor implements HttpInterceptor {
             this.msg.add({severity: 'Error', summary: "Error", detail: "Your token has expired"});
             this.router.navigate(['signin']);
           }
+          // Log the error to the console or send it to a logging service
+          console.error(`HTTP Error: ${err.message}`);
         }
-        return throwError(() => new Error("Some other error occour."));
+        return throwError(() => new Error("Some other error occurred."));
+      }),
+      tap(() => {
+        // Log the success of the HTTP request
+        console.log(`HTTP request successful`);
       })
     );
   }

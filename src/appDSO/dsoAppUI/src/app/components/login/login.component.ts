@@ -47,7 +47,7 @@ export class LoginComponent implements OnInit{
           this.cookie.set('jwtToken', response);
           this.messageService.add({ severity: 'success', summary: 'Logged in', detail: 'Welcome back' });
           setTimeout(() => {
-            this.router.navigate(['dashboard'])
+            this.router.navigate(['home'])
           }, 1000);
         },
         (error) => {

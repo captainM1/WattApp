@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'app/environments/environment';
 import { Info } from 'models/User';
 import { Observable } from 'rxjs';
+import { CookieService } from "ngx-cookie-service"
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,8 @@ import { Observable } from 'rxjs';
 export class AuthService {
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private cookie:CookieService
   ) { }
 
   getCoords():Observable<any>{
@@ -32,7 +34,11 @@ export class AuthService {
       password: password
     })
   }
-
+  
+  getFullToken() {
+    const jwtToken = this.cookie.get('jwtToken');
+    return jwtToken;
+  }
   getPagination(pageNumber : number, pageSize : number) : Observable<any>{
     return this.http.get<any>(environment.apiUrl + "/api/User/users", {
       params: {

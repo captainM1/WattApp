@@ -56,6 +56,11 @@ export class AuthService {
      return decoded.unique_name;
   }
 
+  getFullToken() {
+    const jwtToken = this.cookie.get('jwtToken');
+    return jwtToken;
+  }
+
   signOut(){
     this.cookie.delete('jwtToken');
   }
