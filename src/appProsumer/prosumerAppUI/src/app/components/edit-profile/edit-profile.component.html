@@ -6,9 +6,9 @@
 <br>
     <div class="container">
         <div class="row" id = "edit-profile">
-               
+
             <div class="col">
-                <i class="fa fa-arrow-left fa-lg"  id = "arrow" routerLink="/profile-prosumer"></i>
+                <i style="cursor:pointer"class="fa fa-arrow-left fa-lg"  id = "arrow" routerLink="/profile-prosumer"></i>
                 <h1>Edit Profile</h1>
             </div>
         </div>
@@ -18,11 +18,11 @@
                 <form class="p-4 border" id = "form-user-enter">
                     <div class="form-group" >
                         <label for="username">First Name:</label>
-                        <input style = "width: 100%" type="text" class="form-control" id="first-name" aria-describedby="First Namse" placeholder="Enetr your first name">
+                        <input style = "width: 100%" type="text" class="form-control" id="first-name" aria-describedby="First Namse" name="firstName"  [(ngModel)]="firstName">
                     </div>
                     <div class="form-group">
                         <label for="First Name">Last Name:</label>
-                        <input style = "width: 100%" type="text" class="form-control" id="last-name" placeholder="Enter your last name">
+                        <input style = "width: 100%" type="text" class="form-control" id="last-name"  name="lastName"  [(ngModel)]="lastName">
                     </div>
                 </form>
                 <div class="row" id = "img-btn" >
@@ -36,33 +36,33 @@
             </div>
             <div class="col-sm-7" id = "bottom">
                 <form  class="p-3"id = "form-user-enter">
-                   
+
                     <div class="form-group">
                         <label for="Email Address">Email Address:</label>
-                        <input style = "width: 100%" type="text" class="form-control" id="email-address" placeholder="Enter your email address">
+                        <input style = "width: 100%" type="text" class="form-control" id="email-address"  name="email"  [(ngModel)]="email">
                     </div>
                     <div class="form-group">
                         <label for="Contact Number">Contact Number</label>
-                        <input style = "width: 100%" type="text" class="form-control" id="contact-numer" placeholder="Enter your contact number">
+                        <input style = "width: 100%" type="text" class="form-control" id="contact-numer"  name="phoneNumber"  [(ngModel)]="phoneNumber">
                     </div>
                     <div class="form-group">
                         <label for="Address">Address:</label>
-                        <input style = "width: 100%" type="text" class="form-control" id="address" placeholder="Enter you address">
+                        <input style = "width: 100%" type="text" class="form-control" id="address" name="address"  [(ngModel)]="address">
                     </div>
+                    <div class="form-group">
+                      <label for="City">City:</label>
+                      <input style = "width: 100%" type="text" class="form-control" id="city" name="city"  [(ngModel)]="city">
+                  </div>
                     <div class="form-group">
                         <label for="Country">Country:</label>
-                        <input style = "width: 100%" type="text" class="form-control" id="country" placeholder="Select your country">
-                    </div>
-                    <div class="form-group">
-                        <label for="Time-zone">Time zone:</label>
-                        <input style = "width: 100%" type="text" class="form-control" id="time-zone" placeholder="Select your time zone">
+                        <input style = "width: 100%" type="text" class="form-control" id="country" name="country"  [(ngModel)]="country">
                     </div>
                     <div class="form-group" id = "change-pass">
                         <button id = "btnbtn"type="button" id = "change" routerLink="/reset-password">Change Password</button>
                     </div>
                 </form>
             </div>
-            
+
             <div class="row-2"id = "btn-save">
                 <div class="col-sm-6" id="col-img-btn-main" >
                     <button id = "save" type="submit">Save Changes</button>
@@ -70,7 +70,6 @@
             </div>
         </div>
 
-        
 
 
-    
+

@@ -10,6 +10,9 @@
           <a class="text-reset me-3">
             <i class="fa fa-columns me-1"  routerLink = "/table" routerLinkActive #rlt ="routerLinkActive" [routerLinkActive]="'active'"></i><br>
           </a>
+          <a class="text-reset me-3">
+            <i class="fa fa-plus me-1"  routerLink = "/signup" routerLinkActive #rlw ="routerLinkActive" [routerLinkActive]="'active'"></i><br>
+          </a>
          
         </div>
 
@@ -20,6 +23,7 @@
           
           <span *ngIf="rld.isActive">Home</span>
           <span *ngIf="rlt.isActive">Tables</span>
+          <span *ngIf="rlw.isActive">Add Worker</span>
           <span *ngIf="rln.isActive">Notifications</span>
           <span *ngIf="rlp.isActive">Profile</span>
         </div>

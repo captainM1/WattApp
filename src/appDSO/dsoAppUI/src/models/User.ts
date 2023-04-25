@@ -10,20 +10,23 @@ export interface User{
    
 }
 export interface Device{
-    id: string,
-    macAddress: string,
-    deviceTypeID: string,
-    deviceType : DeviceType;
-    ownerID: string,
-    owner: User
-   
-}
-export interface Info{
     deviceId: string;
     deviceTypeName: string;
     macAdress: string;
     manufacturerName: string;
     typeOfDevice: string;
+    powerusage:number;
+   
+}
+export interface Info{
+    powerusage: any;
+    deviceId: string;
+    deviceTypeName: string;
+    macAdress: string;
+    manufacturerName: string;
+    typeOfDevice: string;
+    powerUsage:string;
+
 }
 
 export interface DeviceType{

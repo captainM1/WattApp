@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -26,7 +26,11 @@ import { FormsModule } from '@angular/forms';
 import { RequirementsComponent } from './components/requirements/requirements.component';
 import { PaginatorModule } from 'primeng/paginator';
 import { FilterPipe } from './components/table/filer.pipe';
-import { ProfileComponent } from './profile/profile.component';
+import { WelcomeComponent } from './components/welcome/welcome.component';
+import { MessageService } from 'primeng/api';
+import { TokenInterceptor } from './interceptors/interceptor';
+
+
 
 
 var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
@@ -43,7 +47,8 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     SignupComponent,
     RequirementsComponent,
     FilterPipe,
-    ProfileComponent
+    WelcomeComponent,
+
 ],
   imports: [
     BrowserModule,
@@ -61,7 +66,7 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     MatTableModule,
     PaginatorModule
   ],
-  providers: [],
+  providers: [MessageService,{provide:HTTP_INTERCEPTORS,useClass:TokenInterceptor,multi:true}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

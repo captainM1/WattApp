@@ -1,7 +1,7 @@
 import { write, writeXLSX } from 'xlsx';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import * as L from 'leaflet';
 import { Device, Info, User } from 'models/User';
 import { AuthService } from 'service/auth.service';
@@ -10,9 +10,10 @@ import { FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table'; 
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
-import { PaginatorModule } from 'primeng/paginator';import * as XLSX from 'xlsx';
+import { PaginatorModule } from 'primeng/paginator';
+import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
-import { ProfileComponent } from 'app/profile/profile.component';
+import { Chart, ChartOptions } from 'chart.js';
 
 @Component({
   selector: 'app-table',
@@ -20,7 +21,10 @@ import { ProfileComponent } from 'app/profile/profile.component';
   styleUrls: ['./table.component.css'],
   
 })
-export class TableComponent implements OnInit {
+export class TableComponent implements OnInit, AfterViewInit {
+
+
+  @ViewChild('powerUsageGraph') powerUsageGraph!:ElementRef;
 // filtriranje
   _searchByName: string = '';
   _searchByCity: string = '';
@@ -29,18 +33,20 @@ export class TableComponent implements OnInit {
 
   allUserDevices!: Info[];
   userIDCoords!: any[];
-
+  
 // export 
   filtered! : User[];
   activeItem:any;
   exportSelected: boolean = false;
+
 // pagination
   public page = 1;
-  public pageSize = 5;
+  public pageSize = 10;
   
   showAllUsersOnMap : boolean = true;
   lengthOfUsers!: number;
   allUsers!: User[];
+ 
   private userCoords!: any[];
   private id: any;
   private firstName?: string;
@@ -48,24 +54,32 @@ export class TableComponent implements OnInit {
   private address?: string;
 
   public toggleTable: boolean = false;
-
+  public showDevGraph:boolean = false;
 
   private map!: L.Map;
   private markers: L.Marker[] = [];
   private latlng: L.LatLng[] = [];
-
+  
   selected: string = "";
-  pageSizeOptions = [5, 10, 25, 50];
+  pageSizeOptions = [10, 25, 50];
 
   powerUsage!: string;
   deviceGroup!: any[];
+  values!:any[];
 
 // device type
   producers!: any[];
   consumers!: any[];
   storage!: any[];
- 
+
+  todayPowerUsageDevice!:any;
+  prev24DeviceID!:any;
+
+  userPopUp!:any;
+
+
   @ViewChild('myTable') myTable!: ElementRef;
+  @ViewChild('perHourDevice') perHourDevice!:ElementRef;
 
   constructor(
     private auth: AuthService,
@@ -73,12 +87,16 @@ export class TableComponent implements OnInit {
 
 
   ){}
+  ngAfterViewInit(): void {
+    this.showMeUsers(this.page,this.pageSize);
+  }
 
   ngOnInit(): void {
     this.showMeUsers(this.page,this.pageSize);
     this.onInitMap();
     this.showCoordsForEveryUser();
     this.getDeviceGroup();
+    
   }
 
   onPageChange(event: any) {
@@ -101,11 +119,11 @@ export class TableComponent implements OnInit {
         }
       });
     }
-    console.log(this.currentSortOrder);
   }
 
     toggleExportSelected(): void {
       this.exportSelected = !this.exportSelected;
+      console.log(this.exportSelected);
     }
     activeColIndex: number = -1;
 
@@ -148,10 +166,10 @@ export class TableComponent implements OnInit {
       (response : any)=> {
         this.allUsers = response;
         for(let user of this.allUsers){
-          
+          console.log(user)
           this.auth.getUserPowerUsageByID(user.id).subscribe(
             (response: any) => {
-              user.powerUsage = (response/10).toFixed(2);
+              user.powerUsage = (response).toFixed(2);
               user.selected = false;
             }
           )
@@ -202,19 +220,7 @@ export class TableComponent implements OnInit {
     for (const mark of this.markers) {
       this.map.removeLayer(mark);
     }
-    // poziv funkcije za svih uredjaja
-    this.showMeDevices(id);
-    
-    this.auth.getUserPowerUsageByID(id).subscribe(
-      (response: any) => {
-        for (let user of this.allUsers) {
-          if (user.id === id) {
-            this.activeItem = user.id;
-            user.powerUsage = (response / 10).toFixed(2);
-          }
-        }
-      }
-    );
+
   
     // get the user's coordinates
     this.auth.getCoordsByUserID(id).subscribe(
@@ -231,45 +237,132 @@ export class TableComponent implements OnInit {
         this.map.setView(latlng, 15); // 15 is the zoom level, you can adjust it as needed
       }
     );
+     // poziv funkcije za svih uredjaja
+     this.showMeDevices(id);
+    // // poziv informacija o user-u za pop-up
+     this.popUp(id);
+
+      this.auth.getUserPowerUsageByID(id).subscribe(
+      (response: any) => {
+        for (let user of this.allUsers) {
+          if (user.id === id) {
+            this.activeItem = user.id;
+            user.powerUsage = (response).toFixed(2);
+            console.log("POWER USAGE : ", user.powerUsage);
+          }
+        }
+      }
+    );
   }  
 
+  
+  
   showMeDevices(id : string){
+    this.showDevGraph = !this.showDevGraph;
+    // this.auth.getPrevious24DevicePerHour(id).subscribe(
+    //   (response:any) => {
+    //     this.prev24DeviceID = response;
+    //     this.createChartFor24Previ();
+    //     console.log("24Prev",response);
+    //   }
+    // )
     this.getDeviceGroup();
     console.log(id);
-    this.auth.getPowerUsageForDeviceByID(id).subscribe(
-      (response : any)=>{
-        
-        console.log(response);
-      }
-    )
+    
     this.toggleTable = true;
     this.auth.getDeviceInfoUserByID(id).subscribe(
       (response : any) => {
         this.allUserDevices = response;
+        console.log("ALL USER DEVICES : " ,this.allUserDevices);
         for(let us of this.allUserDevices){
+          this.auth.getPowerUsageToday(us.deviceId).subscribe(
+            (response : any)=>{
+              this.todayPowerUsageDevice = (response);
+              us.powerUsage = (response).toFixed(2);
+            }
+          )
           for(let p of this.producers){
             for(let c of this.consumers){
               for(let s of this.storage){
                 if(us.deviceTypeName === p['name'])
                 {
                   us.typeOfDevice = 'Producer';
-                  
                 }
                 if(us.deviceTypeName === c['name']){
                   us.typeOfDevice = "Consumer";
                 }
                 if(us.deviceTypeName === s['name']){
                   us.typeOfDevice = 'Storage';
+                  console.log("TYPE", us.typeOfDevice);
                 }
               }
           }
           }
         }
-        // console.log(this.allUserDevices);
+      
       }
     )
   }
 
+  createChartFor24Previ(){
+    const list =  Object.keys(this.prev24DeviceID).map((key) =>
+				key.split('T')[1].split('.')[0]
+			);
+			const valuesList = [];
+	
+			for (const key in this.prev24DeviceID) {
+				if (this.prev24DeviceID.hasOwnProperty(key)) {
+					valuesList.push(this.prev24DeviceID[key]);
+				}
+			}
+      console.log(valuesList);
+	
+		   const data = {
+		   labels: list,
+		   datasets: [{
+			   label: 'Device power Usage',
+			   data: valuesList,
+			   fill: true,
+			   borderColor: 'rgb(75, 192, 192)',
+			   backgroundColor:'rgba(75, 192, 192, 0.5)',
+			   tension: 0.1,
+			   borderWidth: 1,
+		   }]
+	   }
+		   const options: ChartOptions = {
+			   scales: {
+			   x: {
+          
+				   title: {
+				   display: true,
+				   text: 'Hours',
+				   },
+				   ticks: {
+				   font: {
+					   size: 14,
+				   },
+				   },
+			   },
+			   y: {
+          suggestedMin: 0,
+				   title: {
+				   display: true,
+				   text: 'Current power usage in (kw/h)',
+				   },
+				   ticks: {
+				   font: {
+					   size: 14,
+				   },
+				   },
+			   },
+			   },
+		   };
+		   const stackedLine = new Chart(this.perHourDevice.nativeElement, {
+			   type: 'line',
+			   data: data,
+			   options: options,
+		   });
+  }
   
     getDeviceGroup(){
       this.auth.getDeviceGroup().subscribe(
@@ -281,9 +374,8 @@ export class TableComponent implements OnInit {
                 if(group.id === "77cbc929-1cf2-4750-900a-164de4abe28b")
                 {
                   this.producers = response;
-                  
-                  
-                }else if(group.id === "18f30035-59de-474f-b9db-987476de551f")
+                }
+                else if(group.id === "18f30035-59de-474f-b9db-987476de551f")
                 {
                   this.consumers = response;
                 }
@@ -300,13 +392,69 @@ export class TableComponent implements OnInit {
   toggleColumn(){
     this.toggleTable = !this.toggleTable;
   }
+// pop-up
+  openModel(){
+    const modelDiv = document.getElementById('myModal');
+    if(modelDiv!=null){
+      modelDiv.style.display = 'block';
+    }
+  }
 
+  closeModel(){
+    const modelDiv = document.getElementById('myModal');
+    if(modelDiv!=null){
+      modelDiv.style.display = 'none';
+    }
+  }
   
-    
-  
-}
+  showDevices:boolean = false;
+  showSystem:boolean = false;
+  powerUsagePopUp!: number;
+ 
 
-    
+  popUp(id: string){
+    this.auth.getUserInformation(id).subscribe(
+      (response : any) => {
+        this.userPopUp = response;
+      }
+    )
+    this.auth.getUserPowerUsageByID(id).subscribe(
+      (response : any) => {
+        this.powerUsagePopUp = (response).toFixed(2);
+        console.log(this.powerUsagePopUp);
+      }
+    )
+    this.halfDought();
+  }
+
+  halfDought(){
+    const d = this.powerUsagePopUp;
+    const data = {
+      datasets: [
+        {
+          label: 'Energy consumption',
+          data: [d, 1000-d],
+          backgroundColor: ['#FFC107', '#ECEFF1'],
+        },
+      ],
+    };
+
+    const options = {
+     circumference:180,
+     rotation:270,
+     aspectRation: 2
+    };
+
+    const chart = new Chart(this.powerUsageGraph.nativeElement, {
+      type: 'doughnut',
+      data: data,
+      options: options,
+    });
+  }
+  
+
+
+  }
 
 
   
