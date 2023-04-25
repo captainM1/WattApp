@@ -738,7 +738,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         while (currentDate <= endOf12)
         {
             var ts = new TimestampPowerPair();
-            var sum = GetCurrentPowerUsage(currentDate);
+            var sum = GetCurrentPowerUsage(currentDate, powerUsages.ID);
             ts.Timestamp = currentDate;
             ts.PowerUsage = sum;
             powerUsage.TimestampPowerPairs.Add(ts);
@@ -910,162 +910,390 @@ public class PowerUsageRepository : IPowerUsageRepository
         return powerUsages;
     }
 
-    public (Guid, double) GetDeviceWithMaxPowerUsage24(Guid userID)
+    public PowerUsage GetDeviceWithMaxPowerUsage24Consumption(Guid userID)
     {
-        List<Device> devices = _deviceRepository.GetDevicesForUser(userID);
-
-        if (devices.Count == 0)
-        {
-            return (default(Guid), default(double));
-        }
-
-        Dictionary<DateTime, double> devicePowerUsage = this.GetPowerUsageForDevicePast24Hours(devices[0].ID, -1);
-        var maxDeviceID = devices[0].ID;
-        double maxPowerUsage = devicePowerUsage.Values.Max();
-
-        for (int i = 1; i < devices.Count; i++)
-        {
-            devicePowerUsage = this.GetPowerUsageForDevicePast24Hours(devices[i].ID, -1);
-            double powerUsageSum = devicePowerUsage.Values.Max();
-
-            if (powerUsageSum > maxPowerUsage)
-            {
-                maxPowerUsage = powerUsageSum;
-                maxDeviceID = devices[i].ID;
-            }
-        }
-
-        return (maxDeviceID, maxPowerUsage);
-    }
-
-    public Dictionary<DateTime, double> GetPowerUsageForDevicePreviousWeek(Guid deviceID)
-    {
-        var endDate = DateTime.Now;
-        var startDate = endDate.AddDays(-7);
-
-        Guid deviceTypeID = _dataContext.Devices
-            .Where(d => d.ID == deviceID)
-            .Select(d => d.DeviceTypeID)
-            .FirstOrDefault();
-
-        var query = mongoCollection.AsQueryable()
-            .Where(p => p.ID.ToString() == deviceTypeID.ToString().ToUpper())
-            .SelectMany(p => p.TimestampPowerPairs)
-            .Where(tp => tp.Timestamp >= startDate && tp.Timestamp <= endDate);
-        
-        var dictionary = new Dictionary<DateTime, double>();
-        foreach (var result in query)
-        {
-            dictionary.Add(result.Timestamp, result.PowerUsage);
-        }
-
-        return dictionary;
-    }
-
-    public (Guid, double) GetDeviceWithMaxPowerUsagePreviousWeek(Guid userID)
-    {
-        List<Device> devices = _deviceRepository.GetDevicesForUser(userID);
-
-        if (devices.Count == 0)
-        {
-            return (default(Guid), default(double));
-        }
+        var deviceTypes = _deviceRepository.GetDevicesForUser(userID).Select(p => p.DeviceTypeID);
 
         var maxDeviceID = Guid.Empty;
-        double maxPowerUsage = double.MinValue;
+        double maxPowerUsage = 0;
 
-        foreach (var device in devices)
+        DateTime endTime = DateTime.Now;
+        DateTime startTime = endTime.AddDays(-1);
+        DateTime currentTime = startTime;
+
+        PowerUsage pu = new PowerUsage();
+        pu.TimestampPowerPairs = new List<TimestampPowerPair>();
+        TimestampPowerPair tsp = new TimestampPowerPair();
+
+        foreach(var device in deviceTypes)
         {
-            Dictionary<DateTime, double> devicePowerUsage = this.GetPowerUsageForDevicePreviousWeek(device.ID);
-            double powerUsageSum = devicePowerUsage.Values.Max();
 
-            if (powerUsageSum > maxPowerUsage)
+            string deviceGroupName = _dataContext.DeviceGroups
+                        .Where(g => g.ID == _dataContext.DeviceTypes
+                            .Where(dt => dt.ID == device)
+                            .Select(dt => dt.GroupID)
+                            .FirstOrDefault())
+                        .Select(g => g.Name)
+                        .FirstOrDefault();
+            if(deviceGroupName == "Consumer")
             {
-                maxPowerUsage = powerUsageSum;
-                maxDeviceID = device.ID;
+                while (currentTime <= endTime)
+                {
+                    double powerUsageSum = GetCurrentPowerUsage(currentTime, device);
+                    if (powerUsageSum > maxPowerUsage)
+                    {
+                        maxPowerUsage = powerUsageSum;
+                        maxDeviceID = device;
+                    }
+
+                    currentTime = currentTime.AddHours(1);
+                }
             }
         }
 
-        return (maxDeviceID, maxPowerUsage);
+        pu.ID = maxDeviceID;
+        tsp.PowerUsage = maxPowerUsage;
+        pu.TimestampPowerPairs.Add(tsp);
+
+        return pu;
     }
 
-    public Dictionary<DateTime, double> GetPowerUsageForDevicePreviousMonth(Guid deviceID)
+    public PowerUsage GetDeviceWithMaxPowerUsage24Production(Guid userID)
+    {
+        var deviceTypes = _deviceRepository.GetDevicesForUser(userID).Select(p => p.DeviceTypeID);
+
+        var maxDeviceID = Guid.Empty;
+        double maxPowerUsage = 0;
+
+        DateTime endTime = DateTime.Now;
+        DateTime startTime = endTime.AddDays(-1);
+        DateTime currentTime = startTime;
+
+        PowerUsage pu = new PowerUsage();
+        pu.TimestampPowerPairs = new List<TimestampPowerPair>();
+        TimestampPowerPair tsp = new TimestampPowerPair();
+
+        foreach (var device in deviceTypes)
+        {
+
+            string deviceGroupName = _dataContext.DeviceGroups
+                        .Where(g => g.ID == _dataContext.DeviceTypes
+                            .Where(dt => dt.ID == device)
+                            .Select(dt => dt.GroupID)
+                            .FirstOrDefault())
+                        .Select(g => g.Name)
+                        .FirstOrDefault();
+            if (deviceGroupName == "Producer")
+            {
+                while (currentTime <= endTime)
+                {
+                    double powerUsageSum = GetCurrentPowerUsage(currentTime, device);
+                    if (powerUsageSum > maxPowerUsage)
+                    {
+                        maxPowerUsage = powerUsageSum;
+                        maxDeviceID = device;
+                    }
+
+                    currentTime = currentTime.AddHours(1);
+                }
+            }
+        }
+
+        pu.ID = maxDeviceID;
+        tsp.PowerUsage = maxPowerUsage;
+        pu.TimestampPowerPairs.Add(tsp);
+
+        return pu;
+    }
+
+    public PowerUsage GetDeviceWithMaxPowerUsagePreviousWeekProduction(Guid userID)
+    {
+        var deviceTypes = _deviceRepository.GetDevicesForUser(userID).Select(p => p.DeviceTypeID);
+
+        var maxDeviceID = Guid.Empty;
+        double maxPowerUsage = 0;
+
+        PowerUsage pu = new PowerUsage();
+        pu.TimestampPowerPairs = new List<TimestampPowerPair>();
+        TimestampPowerPair tsp = new TimestampPowerPair();
+
+        DateTime endDate = DateTime.Now;
+        DateTime startDate = endDate.AddDays(-7);
+        DateTime currentTime = startDate;
+
+        foreach (var device in deviceTypes)
+        {
+
+            string deviceGroupName = _dataContext.DeviceGroups
+                        .Where(g => g.ID == _dataContext.DeviceTypes
+                            .Where(dt => dt.ID == device)
+                            .Select(dt => dt.GroupID)
+                            .FirstOrDefault())
+                        .Select(g => g.Name)
+                        .FirstOrDefault();
+
+            if(deviceGroupName == "Producer")
+            {
+                while (currentTime <= endDate)
+                {
+                    double powerUsageSum = GetCurrentPowerUsage(currentTime, device);
+                    if (powerUsageSum > maxPowerUsage)
+                    {
+                        maxPowerUsage = powerUsageSum;
+                        maxDeviceID = device;
+                    }
+
+                    currentTime = currentTime.AddHours(1);
+                }
+            }
+
+        }
+
+        pu.ID = maxDeviceID;
+        tsp.PowerUsage = maxPowerUsage;
+        pu.TimestampPowerPairs.Add(tsp);
+
+        return pu;
+    }
+
+    public PowerUsage GetDeviceWithMaxPowerUsagePreviousWeekConsumption(Guid userID)
+    {
+        var deviceTypes = _deviceRepository.GetDevicesForUser(userID).Select(p => p.DeviceTypeID);
+
+        var maxDeviceID = Guid.Empty;
+        double maxPowerUsage = 0;
+
+        PowerUsage pu = new PowerUsage();
+        pu.TimestampPowerPairs = new List<TimestampPowerPair>();
+        TimestampPowerPair tsp = new TimestampPowerPair();
+
+        DateTime endDate = DateTime.Now;
+        DateTime startDate = endDate.AddDays(-7);
+        DateTime currentTime = startDate;
+
+        foreach (var device in deviceTypes)
+        {
+
+            string deviceGroupName = _dataContext.DeviceGroups
+                        .Where(g => g.ID == _dataContext.DeviceTypes
+                            .Where(dt => dt.ID == device)
+                            .Select(dt => dt.GroupID)
+                            .FirstOrDefault())
+                        .Select(g => g.Name)
+                        .FirstOrDefault();
+
+            if (deviceGroupName == "Consumer")
+            {
+                while (currentTime <= endDate)
+                {
+                    double powerUsageSum = GetCurrentPowerUsage(currentTime, device);
+                    if (powerUsageSum > maxPowerUsage)
+                    {
+                        maxPowerUsage = powerUsageSum;
+                        maxDeviceID = device;
+                    }
+
+                    currentTime = currentTime.AddHours(1);
+                }
+            }
+
+        }
+
+        pu.ID = maxDeviceID;
+        tsp.PowerUsage = maxPowerUsage;
+        pu.TimestampPowerPairs.Add(tsp);
+
+        return pu;
+    }
+
+    public PowerUsage GetDeviceWithMaxPowerUsagePreviousMonthConsumption(Guid userID)
     {
         DateTime endDate = DateTime.Now;
         DateTime startDate = endDate.AddDays(-30);
-        
-        Guid deviceTypeID = _dataContext.Devices
-            .Where(d => d.ID == deviceID)
-            .Select(d => d.DeviceTypeID)
-            .FirstOrDefault();
-        
-        var query = mongoCollection.AsQueryable()
-            .Where(p => p.ID.ToString() == deviceTypeID.ToString().ToUpper())
-            .SelectMany(p => p.TimestampPowerPairs)
-            .Where(tp => tp.Timestamp >= startDate && tp.Timestamp <= endDate);
-        
-        var dictionary = new Dictionary<DateTime, double>();
-        foreach (var result in query)
-        {
-            dictionary.Add(result.Timestamp, result.PowerUsage);
-        }
 
-        return dictionary;
-    }
+        PowerUsage pu = new PowerUsage();
+        pu.TimestampPowerPairs = new List<TimestampPowerPair>();
+        TimestampPowerPair tsp = new TimestampPowerPair();
 
-    public (Guid, double) GetDeviceWithMaxPowerUsagePreviousMonth(Guid userID)
-    {
-        List<Device> devices = _deviceRepository.GetDevicesForUser(userID);
-
-        if (devices.Count == 0)
-        {
-            return (default(Guid), default(double));
-        }
+        var devices = _deviceRepository.GetDevicesForUser(userID).Select(dt => dt.DeviceTypeID);
 
         var maxDeviceID = Guid.Empty;
-        double maxPowerUsage = double.MinValue;
+        double maxPowerUsage = 0;
 
         foreach (var device in devices)
         {
-            Dictionary<DateTime, double> devicePowerUsage = this.GetPowerUsageForDevicePreviousMonth(device.ID);
-            double powerUsageSum = devicePowerUsage.Values.Max();
 
-            if (powerUsageSum > maxPowerUsage)
+            string deviceGroupName = _dataContext.DeviceGroups
+                        .Where(g => g.ID == _dataContext.DeviceTypes
+                            .Where(dt => dt.ID == device)
+                            .Select(dt => dt.GroupID)
+                            .FirstOrDefault())
+                        .Select(g => g.Name)
+                        .FirstOrDefault();
+
+            DateTime currentTime = startDate;
+
+            if(deviceGroupName == "Consumer")
             {
-                maxPowerUsage = powerUsageSum;
-                maxDeviceID = device.ID;
+                while (currentTime <= endDate)
+                {
+                    double powerUsageSum = GetCurrentPowerUsage(currentTime, device);
+
+                    if (powerUsageSum > maxPowerUsage)
+                    {
+                        maxPowerUsage = powerUsageSum;
+                        maxDeviceID = device;
+                    }
+                    currentTime = currentTime.AddHours(1);
+                }
             }
         }
 
-        return (maxDeviceID, maxPowerUsage);
+           pu.ID = maxDeviceID;
+           tsp.PowerUsage = maxPowerUsage;
+           pu.TimestampPowerPairs.Add(tsp);
+
+           return pu;
     }
 
-    public (Guid, double) GetDeviceWithMaxPowerUsageCurrent(Guid userID)
+    public PowerUsage GetDeviceWithMaxPowerUsagePreviousMonthProduction(Guid userID)
     {
-        List<String> deviceTypeIds = _deviceRepository.GetDevicesForUser(userID)
-            .Select(d => d.DeviceTypeID.ToString().ToUpper())
-            .ToList();
+        DateTime endDate = DateTime.Now;
+        DateTime startDate = endDate.AddDays(-30);
 
-        DateTime currentHourTimestamp = DateTime.UtcNow;
+        PowerUsage pu = new PowerUsage();
+        pu.TimestampPowerPairs = new List<TimestampPowerPair>();
+        TimestampPowerPair tsp = new TimestampPowerPair();
 
-        if (deviceTypeIds.Count == 0)
+        var devices = _deviceRepository.GetDevicesForUser(userID).Select(dt => dt.DeviceTypeID);
+
+        var maxDeviceID = Guid.Empty;
+        double maxPowerUsage = 0;
+
+        foreach (var device in devices)
         {
-            return (default(Guid), default(double));
+
+            string deviceGroupName = _dataContext.DeviceGroups
+                        .Where(g => g.ID == _dataContext.DeviceTypes
+                            .Where(dt => dt.ID == device)
+                            .Select(dt => dt.GroupID)
+                            .FirstOrDefault())
+                        .Select(g => g.Name)
+                        .FirstOrDefault();
+
+            DateTime currentTime = startDate;
+
+            if (deviceGroupName == "Producer")
+            {
+                while (currentTime <= endDate)
+                {
+                    double powerUsageSum = GetCurrentPowerUsage(currentTime, device);
+
+                    if (powerUsageSum > maxPowerUsage)
+                    {
+                        maxPowerUsage = powerUsageSum;
+                        maxDeviceID = device;
+                    }
+                    currentTime = currentTime.AddHours(1);
+                }
+            }
         }
 
-        var powerUsageData = mongoCollection.AsQueryable()
-            .Where(p => deviceTypeIds.Contains(p.ID.ToString()))
-            .ToList()
-            .SelectMany(p => p.TimestampPowerPairs.Select(t => new { ID = p.ID, Timestamp = t.Timestamp, PowerUsage = t.PowerUsage }))
-            .Where(t => t.Timestamp == currentHourTimestamp)
-            .OrderByDescending(t => t.PowerUsage)
-            .FirstOrDefault();
-                if (powerUsageData == null)
+        pu.ID = maxDeviceID;
+        tsp.PowerUsage = maxPowerUsage;
+        pu.TimestampPowerPairs.Add(tsp);
+
+        return pu;
+    }
+
+    public PowerUsage GetDeviceWithMaxPowerUsageCurrentProduction(Guid userID)
+    {
+        var deviceTypeIds = _deviceRepository.GetDevicesForUser(userID).Select(d => d.DeviceTypeID);
+
+        DateTime endHour = DateTime.UtcNow;
+        DateTime startHour = endHour.AddHours(-1);
+
+        PowerUsage pu = new PowerUsage();
+        pu.TimestampPowerPairs = new List<TimestampPowerPair>();
+        TimestampPowerPair tsp = new TimestampPowerPair();
+
+        var maxDeviceID = Guid.Empty;
+        double maxPowerUsage = 0;
+
+        foreach (var device in deviceTypeIds)
         {
-            return (default(Guid), default(double));
+
+            string deviceGroupName = _dataContext.DeviceGroups
+                        .Where(g => g.ID == _dataContext.DeviceTypes
+                            .Where(dt => dt.ID == device)
+                            .Select(dt => dt.GroupID)
+                            .FirstOrDefault())
+                        .Select(g => g.Name)
+                        .FirstOrDefault();
+
+            if(deviceGroupName == "Producer")
+            {
+                double powerUsageSum = GetCurrentPowerUsage(startHour, device);
+
+                if (powerUsageSum > maxPowerUsage)
+                {
+                    maxPowerUsage = powerUsageSum;
+                    maxDeviceID = device;
+                }
+            }
         }
 
-        return (powerUsageData.ID, powerUsageData.PowerUsage);
+        pu.ID = maxDeviceID;
+        tsp.PowerUsage = maxPowerUsage;
+        pu.TimestampPowerPairs.Add(tsp);
+
+        return pu;
+
+    }
+
+    public PowerUsage GetDeviceWithMaxPowerUsageCurrentConsumption(Guid userID)
+    {
+        var deviceTypeIds = _deviceRepository.GetDevicesForUser(userID).Select(d => d.DeviceTypeID);
+
+        DateTime endHour = DateTime.UtcNow;
+        DateTime startHour = endHour.AddHours(-1);
+
+        PowerUsage pu = new PowerUsage();
+        pu.TimestampPowerPairs = new List<TimestampPowerPair>();
+        TimestampPowerPair tsp = new TimestampPowerPair();
+
+        var maxDeviceID = Guid.Empty;
+        double maxPowerUsage = 0;
+
+        foreach (var device in deviceTypeIds)
+        {
+
+            string deviceGroupName = _dataContext.DeviceGroups
+                        .Where(g => g.ID == _dataContext.DeviceTypes
+                            .Where(dt => dt.ID == device)
+                            .Select(dt => dt.GroupID)
+                            .FirstOrDefault())
+                        .Select(g => g.Name)
+                        .FirstOrDefault();
+
+            if (deviceGroupName == "Consumer")
+            {
+                double powerUsageSum = GetCurrentPowerUsage(startHour, device);
+
+                if (powerUsageSum > maxPowerUsage)
+                {
+                    maxPowerUsage = powerUsageSum;
+                    maxDeviceID = device;
+                }
+            }
+        }
+
+        pu.ID = maxDeviceID;
+        tsp.PowerUsage = maxPowerUsage;
+        pu.TimestampPowerPairs.Add(tsp);
+
+        return pu;
+
     }
 
 }

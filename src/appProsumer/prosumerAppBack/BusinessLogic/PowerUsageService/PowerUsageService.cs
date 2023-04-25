@@ -246,29 +246,54 @@ public class PowerUsageService:IPowerUsageService
         return powerUsage;
     }
 
-    public (Guid maxDeviceID, double maxDeviceUsage) GetMaxUsagePast24Hours(Guid userID)
+    public PowerUsage GetMaxUsagePast24HoursConsumption(Guid userID)
     {
-        (Guid maxID, double maxUsage) tuple = _repository.GetDeviceWithMaxPowerUsage24(userID);
-        return tuple;
+        PowerUsage result = _repository.GetDeviceWithMaxPowerUsage24Consumption(userID);
+        return result;
     }
 
-    public (Guid maxDeviceID, double maxDeviceUsage) GetMaxUsagePreviousWeek(Guid userID)
+    public PowerUsage GetMaxUsagePast24HoursProduction(Guid userID)
     {
-        (Guid maxID, double maxUsage) tuple = _repository.GetDeviceWithMaxPowerUsagePreviousWeek(userID);
-        return tuple;
+        PowerUsage result = _repository.GetDeviceWithMaxPowerUsage24Production(userID);
+        return result;
     }
 
-    public (Guid maxDeviceID, double maxDeviceUsage) GetMaxUsagePreviousMonth(Guid userID)
+    public PowerUsage GetMaxUsagePreviousWeekConsumption(Guid userID)
     {
-        (Guid maxID, double maxUsage) tuple = _repository.GetDeviceWithMaxPowerUsagePreviousMonth(userID);
-        return tuple;
+        PowerUsage result = _repository.GetDeviceWithMaxPowerUsagePreviousWeekConsumption(userID);
+        return result;
     }
 
-    public (Guid maxDeviceID, double maxDeviceUsage) GetMaxUsagePreviousCurrent(Guid userID)
+    public PowerUsage GetMaxUsagePreviousMonthConsumption(Guid userID)
     {
-        (Guid maxID, double maxUsage) tuple = _repository.GetDeviceWithMaxPowerUsageCurrent(userID);
-        return tuple;
+        PowerUsage result = _repository.GetDeviceWithMaxPowerUsagePreviousMonthConsumption(userID);
+        return result;
     }
+
+    public PowerUsage GetMaxUsagePreviousCurrentConsumption(Guid userID)
+    {
+        PowerUsage result = _repository.GetDeviceWithMaxPowerUsageCurrentConsumption(userID);
+        return result;
+    }
+
+    public PowerUsage GetMaxUsagePreviousWeekProductoin(Guid userID)
+    {
+        PowerUsage result = _repository.GetDeviceWithMaxPowerUsagePreviousWeekProduction(userID);
+        return result;
+    }
+
+    public PowerUsage GetMaxUsagePreviousMonthProduction(Guid userID)
+    {
+        PowerUsage result = _repository.GetDeviceWithMaxPowerUsagePreviousMonthProduction(userID);
+        return result;
+    }
+
+    public PowerUsage GetMaxUsagePreviousCurrentProduction(Guid userID)
+    {
+        PowerUsage result = _repository.GetDeviceWithMaxPowerUsageCurrentProduction(userID);
+        return result;
+    }
+
     public Dictionary<DateTime, double> GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction)
     {
         var powerUsage = _repository.GetPowerUsageForDevicePast24Hours(deviceID, direction);
