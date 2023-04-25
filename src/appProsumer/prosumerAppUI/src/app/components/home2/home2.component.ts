@@ -28,6 +28,7 @@ export class Home2Component implements OnInit, AfterViewInit {
   @ViewChild('currentProductionGraph') currentProductionGraph!:ElementRef;
 
   ngAfterViewInit(): void {
+    this.showWeatherDetails();
 
   }
 
@@ -35,8 +36,8 @@ export class Home2Component implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.getToken();
-    this.giveMeWeather();
-    this.showWeatherDetails();
+
+
   }
 
   currentUsageUser(id:any){

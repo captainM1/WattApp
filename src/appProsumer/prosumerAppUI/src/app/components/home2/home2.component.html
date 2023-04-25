@@ -10,9 +10,9 @@
 
     </div>
     <div class="row" *ngIf="showDetails">
-        <div class="col-sm">
+        <div class="col-sm" *ngIf="weather">
             <p class="text-left">
-                <img src="../../../assets/weather-icons/compass.png"> Your Time Zone :<span style="color:#026670; font-weight:bold; padding-left:5px;"> {{ weather.timezone }} </span>
+                <img src="../../../assets/weather-icons/compass.png" > Your Time Zone :<span style="color:#026670; font-weight:bold; padding-left:5px;"> {{ weather.timezone }} </span>
             </p>
             <p class="text-left">
               <img src="../../../assets/weather-icons/temperature(2).png"> Temperature: <span style="color:#026670; font-weight:bold; padding-left:5px;">{{ weather.current_weather.temperature }} </span>
@@ -21,7 +21,7 @@
                 <img src="../../../assets/weather-icons/hot.png"> Maximal Temperature: <span  style="color:#026670; font-weight:bold; padding-left:5px;">{{ weather.daily.temperature_2m_max[0]}} </span>
               </p>
         </div>
-        <div class="col-sm">
+        <div class="col-sm" *ngIf="weather">
             <p class="text-left">
                 <img src="../../../assets/weather-icons/cold.png" >Minimal Temperature:<span style="color:#026670; font-weight:bold; padding-left:5px;"> {{ weather.daily.temperature_2m_min[0]}} </span>
               </p>
