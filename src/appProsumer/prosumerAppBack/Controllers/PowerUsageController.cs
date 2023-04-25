@@ -404,31 +404,61 @@ public class PowerUsageController : ControllerBase
         return Ok(powerUsages);
     }
 
-    /*[HttpGet("power-usage/most-consumes/last-24hours/{userID}")]
-    public ActionResult<Dictionary<DateTime, double>> GetMostConsumerPast24hours(Guid userID)
+    // ------------------------------------------------------------------------------------
+
+    [HttpGet("power-usage/most-consumes/last-24hours/{userID}")]
+    public ActionResult<Dictionary<DateTime, double>> GetMostConsumerPast24hoursConsumption(Guid userID)
     {
-        var powerUsages = _powerUsageService.GetMaxUsagePast24Hours(userID);
+        var powerUsages = _powerUsageService.GetMaxUsagePast24HoursConsumption(userID);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/most-produces/last-24hours/{userID}")]
+    public ActionResult<Dictionary<DateTime, double>> GetMostConsumerPast24hoursPriduction(Guid userID)
+    {
+        var powerUsages = _powerUsageService.GetMaxUsagePast24HoursProduction(userID);
         return Ok(powerUsages);
     }
 
     [HttpGet("power-usage/most-consumes/last-week/{userID}")]
-    public ActionResult<Dictionary<DateTime, double>> GetMostConsumerLastWeek(Guid userID)
+    public ActionResult<Dictionary<DateTime, double>> GetMostConsumerLastWeekConsumption(Guid userID)
     {
-        var powerUsages = _powerUsageService.GetMaxUsagePreviousWeek(userID);
+        var powerUsages = _powerUsageService.GetMaxUsagePreviousWeekConsumption(userID);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/most-produces/last-week/{userID}")]
+    public ActionResult<Dictionary<DateTime, double>> GetMostConsumerLastWeekProduction(Guid userID)
+    {
+        var powerUsages = _powerUsageService.GetMaxUsagePreviousWeekProductoin(userID);
         return Ok(powerUsages);
     }
 
     [HttpGet("power-usage/most-consumes/last-month/{userID}")]
-    public ActionResult<Dictionary<DateTime, double>> GetMostConsumerLastMonth(Guid userID)
+    public ActionResult<PowerUsage> GetMostConsumerLastMonthConsumption(Guid userID)
     {
-        var powerUsages = _powerUsageService.GetMaxUsagePreviousMonth(userID);
+        var powerUsages = _powerUsageService.GetMaxUsagePreviousMonthConsumption(userID);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/most-produces/last-month/{userID}")]
+    public ActionResult<PowerUsage> GetMostConsumerLastMonthPRoduction(Guid userID)
+    {
+        var powerUsages = _powerUsageService.GetMaxUsagePreviousMonthProduction(userID);
         return Ok(powerUsages);
     }
 
     [HttpGet("power-usage/most-consumes/current/{userID}")]
-    public ActionResult<Dictionary<DateTime, double>> GetMostConsumerCurrent(Guid userID)
+    public ActionResult<PowerUsage> GetMostConsumerCurrentConsumption(Guid userID)
     {
-        var powerUsages = _powerUsageService.GetMaxUsagePreviousCurrent(userID);
+        var powerUsages = _powerUsageService.GetMaxUsagePreviousCurrentConsumption(userID);
         return Ok(powerUsages);
-    }*/
+    }
+
+    [HttpGet("power-usage/most-produces/current/{userID}")]
+    public ActionResult<PowerUsage> GetMostConsumerCurrentProduction(Guid userID)
+    {
+        var powerUsages = _powerUsageService.GetMaxUsagePreviousCurrentProduction(userID);
+        return Ok(powerUsages);
+    }
 }
