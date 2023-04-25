@@ -46,6 +46,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { FilterPipe } from './filter.pipe';
 import { WelcomeComponent } from './components/welcome/welcome.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -90,7 +91,8 @@ import { WelcomeComponent } from './components/welcome/welcome.component';
     MatToolbarModule,
     CommonModule,
     ConfirmDialogModule,
-    Ng2SearchPipeModule
+    Ng2SearchPipeModule,
+    [MatProgressSpinnerModule]
   ],
   providers: [MessageService,ConfirmationService,{provide:HTTP_INTERCEPTORS,useClass:TokenInterceptor,multi:true}],
   bootstrap: [AppComponent]

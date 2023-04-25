@@ -9,7 +9,7 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class HomeComponent implements OnInit{
 
-
+  isLoading = false;
   showMeHome:boolean = false;
   showMeHome2:boolean = false;
   data:any;
@@ -27,9 +27,9 @@ export class HomeComponent implements OnInit{
     this.auth.getData().subscribe((data) => {
       this.data = "Welcome, " + data;
     });*/
-    
+    this.isLoading = true;
     this.numberOfDevices();
-    
+    this.isLoading = false;
   }
 
 
