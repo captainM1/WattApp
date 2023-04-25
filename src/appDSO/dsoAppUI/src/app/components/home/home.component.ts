@@ -15,53 +15,16 @@ import { FormsModule } from '@angular/forms';
 })
 export class HomeComponent implements OnInit, AfterViewInit{
 	
-	
-	
-	// eachDevicePrev!: eachDevice[];
-	// eachDeviceNext!: eachDevice[]
-	selectedOption: any;
-	
-	
 
 	constructor(
 		private auth : AuthService
 	){}
 	
-
+// users
 	totalUsers!: number;
-	
-	weather! : Root;
 	User! : User[];
-	
-	previousMonthLabels: string[] = [];
-	everyDayUsagePreviousMonth: any;
-	everyDayUsageNextMonth:any;
 
-	currentConsumptionSys!:any;
-	prevMonthConsumptionSys!:any;
-	nextMonthConsumptionSys!:any;
-	prevMonthEachDeviceConsumption!: eachDevice[];
-
-	currentProcuctionSys!:any;
-	prevMonthProductionSys!: any;
-	prevMonextMonthConsumptionSys!:any;
-	
-	currentSys!:any;
-	previousMonth! : any;
-	nextMonth!: any;
-	nextMonthLabels:string[] = [];
-	nextMonthData: any;
-	currentHour!:any;
-	hour!:Date;
-
-
-	today!:Date;
-	MonthPrev!:Date;
-	MonthNext!:Date;
-
-
-	selectOption!: string;
-
+// devices 
 	deviceGroup!: deviceGroup[];
 	deviceManifaturers!: deviceManifacturers[];
 	deviceManifacturersByGroupID!: deviceGroupManifacturers[];
@@ -70,77 +33,76 @@ export class HomeComponent implements OnInit, AfterViewInit{
 	producers!: deviceGroupManifacturers[];
 	consumers! : deviceGroupManifacturers[];
 	storage!: deviceGroupManifacturers[]; 
+	
+	total!: number;
 
 	labProducers!: string[];
 	labConsumers!: string[];
 	labStorages!:string[];
-
-	total!: number;
-	data : any;
 	
-	chart!: any;
-	chart1!: any;
-	chart2!: any;
-	chart3!: any;
-	chart4!: any;
+// consumption 
+	currentConsumptionSys!:any;
+	prevMonthConsumptionSys!:any;
+	nextMonthConsumptionSys!:any;
+	prevMonthEachDeviceConsumption!: eachDevice[];
+
+// production
+	currentProcuctionSys!:any;
+	prevMonthProductionSys!: any;
+	prevMonextMonthConsumptionSys!:any;
+
+// weather
+	weather! : Root;
+	today!:Date;
+	MonthPrev!:Date;
+	MonthNext!:Date;
+	dateForWeater!:any;
+	next!:any;
+	month!:any;
 	
 	@ViewChild('myChart') myChart!: ElementRef;
 	@ViewChild('myChartUsers') myChartUsers!:ElementRef;
 	@ViewChild('myChartForEveryTypeOfDevice') myChartForEveryTypeOfDevice!: ElementRef;
 	@ViewChild('hourlyTemp') hourlyTemp!: ElementRef;
-	
 
 	@ViewChild('currentConsumptionSYS') currentConsumptionSYS!:ElementRef;
 	@ViewChild('prevMonthConsumptionSYS') prevMonthConsumptionSYS!:ElementRef;
 	@ViewChild('nextMonthConsumptionSYS') nextMonthConsumptionSYS!:ElementRef;
 
-
 	@ViewChild('currentProductionSYS') currentProductionSYS!:ElementRef;
 	@ViewChild('prevMonthProductionSYS') prevMonthProductionSYS!:ElementRef;
 	@ViewChild('nextMonthProductionSYS') nextMonthProductionSYS!:ElementRef;
 	
-	ngAfterViewInit(): void {
-		setTimeout(()=>{
-			this.giveMeChartForTemperatureDaily()
-		},0);
-		setTimeout(() => {
-			this.getConsumptionCurrent();
-			this.getProductionCurrent();
-			this.getConsumtionPrevMonth();
-		}, 1000)
 
-		
-		
-	}
 	
 	ngOnInit(): void {	
-	// consumption 
+	
+		// temperature
+		this.giveMeWeather();
+
+		this.getAllUserInfo();
+		this.allDevices();
+		this.getDate();
+		this.getNumberOfUsers();
+		this.getDeviceGroup();
+		this.prevMonthEachDevice();
+	
+		
+	}
+
+	ngAfterViewInit(): void {
+		this.giveMeChartForTemperatureDaily();
+		
 		this.getConsumptionCurrent();
 		this.getConsumtionPrevMonth();
 		this.getConsumtionNextMonth();
 
 		this.getProductionCurrent();
-
-		this.allDevices();
-		this.getDate();
-		this.getDeviceGroup();
-		this.prevMonthEachDevice();
-
-	// temperature
-		this.giveMeWeather();
-		this.giveMeChartForTemperatureDaily();
-		
-
-		this.getNumberOfUsers();
-		
-		// this.createMeChartForEveryDevice();
-		
-		this.getAllUserInfo();
+		this.nextMonthProductionSystem();
+		this.prevMonthProductionSystem()
 	}
-
-	dateForWeater:any;
-	month:any;
-	next:any;
+	
+	
 	getDate(){
 		this.today = new Date();
 		this.dateForWeater = this.today.toLocaleString('en-US',{ hour: 'numeric', minute: 'numeric', day:'numeric', month:'numeric', year:'numeric' });
@@ -156,7 +118,8 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		this.auth.getWeather().subscribe(
 			(response :any)=>{
 				this.weather = response;
-				this.giveMeChartForTemperatureDaily();
+				console.log(this.weather);
+				
 			}
 		)
 	}
@@ -256,16 +219,13 @@ export class HomeComponent implements OnInit, AfterViewInit{
 							}
 							
 							this.total = this.producers.length + this.consumers.length + this.storage.length;
-							this.createChartDevices();
 							
-							 
 							this.labProducers = [...new Set(this.producers.map(element => element.name))];
 							this.labConsumers = [...new Set(this.consumers.map(element => element.name))];
 							this.labStorages = [...new Set(this.storage.map(element => element.name))];
 							
-							this.createMeChartForEveryDevice();
 							this.getNumberOfUsers();
-							this.giveMeChartForUsers();
+							
 						}
 					 )
 					}
@@ -274,134 +234,6 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		}
 		
 		  
-	createChartDevices(){
-		this.chart = new Chart(this.myChart.nativeElement, {
-		type: 'doughnut',
-		data: {
-			labels: ['Prosumer', 'Consumer', 'Storage'],
-			datasets: [{
-			data: [this.producers.length, this.consumers.length, this.storage.length],
-			backgroundColor: [
-				'rgba(255, 159, 64, 0.5)',
-				'rgba(54, 162, 235, 0.5)',
-				'rgba(75, 192, 192, 0.5)'
-				
-			],
-			borderColor:[
-				'rgb(255, 159, 64)',
-				'rgb(54, 162, 235)',
-				'rgb(75, 192, 192)',
-			],
-			hoverOffset: 4,
-			borderWidth: 1,
-			}]
-		},
-		options: {
-			responsive: true,
-			maintainAspectRatio: false
-		}
-		});
-	}
-
-	
-
-	giveMeChartForUsers(){
-		const tot = this.totalUsers;
-		this.chart1 = new Chart(this.myChartUsers.nativeElement, {
-			type: 'doughnut',
-			data: {
-				labels: ['Users'],
-				datasets: [{
-				data: [this.totalUsers, 100-this.totalUsers],
-				backgroundColor: [
-					'rgb(241, 143, 1)',
-					'rgb(255, 255, 255)'
-				],
-				borderWidth: 0
-				}]
-			},
-			options: {
-				cutout:'60',
-				aspectRatio:30,
-				responsive: true,
-      			maintainAspectRatio: false,
-			}
-		});
-	}
-
-	
-
-	createMeChartForEveryDevice(){
-		const dataProducers: number[] = [];
-		let label : string[] = this.labProducers.concat(this.labConsumers).concat(this.labStorages);
-		
-		this.producers.forEach(element => {
-		const index = label.indexOf(element.name);
-			dataProducers[index] = dataProducers[index] ? dataProducers[index] + 1 : 1;
-		});
-
-		const dataConsumers: number[] = [];
-		
-		this.consumers.forEach(element => {
-		const index = label.indexOf(element.name);
-			dataConsumers[index] = dataConsumers[index] ? dataConsumers[index] + 1 : 1;
-		});
-
-		const dataStorages: number[] = [];
-		
-		this.storage.forEach(element => {
-		const index = label.indexOf(element.name);
-			dataStorages[index] = dataStorages[index] ? dataStorages[index] + 1 : 1;
-		});
-
-		
-	
-	
-
-	const chartData = {
-    labels: label,
-    datasets: [
-        {
-            label: 'Producers',
-            backgroundColor: 'rgba(255, 159, 64, 0.5)',
-            borderColor: 'rgb(255, 159, 64)',
-            borderWidth: 1,
-            data: dataProducers
-        },
-        {
-            label: 'Consumers',
-            backgroundColor: 'rgba(54, 162, 235, 0.5)',
-            borderColor:   'rgb(54, 162, 235)',
-            borderWidth: 1,
-            data: dataConsumers
-        },
-        {
-            label: 'Storages',
-            backgroundColor: 'rgba(75, 192, 192, 0.5)',
-            borderColor: 'rgb(75, 192, 192)',
-            borderWidth: 1,
-            data: dataStorages
-        }
-    	]
-	};
-
-		this.chart = new Chart(this.myChartForEveryTypeOfDevice.nativeElement, {
-			type: 'bar',
-			data: chartData,
-			options: {
-				indexAxis: 'y',
-				scales: {
-					y: {
-						beginAtZero: true
-					}
-				}
-			}
-		});
-		}
-
-	
-		
-	
 	
 	
 // CONSUMPTION 
@@ -514,13 +346,15 @@ export class HomeComponent implements OnInit, AfterViewInit{
 // prevMonthEachDevice
 
 		prevMonthEachDevice(){
-			this.auth.eachDevicePrevMonth().subscribe(
+			this.auth.eachDevicePrevMonthConsumption().subscribe(
 				(response : any) => {
 					this.prevMonthEachDeviceConsumption = response;
-					console.log("PREV EACH DEVICE::: ",this.prevMonthEachDeviceConsumption);
+					console.log("PREV EACH DEVICE::: ",response);
 				}
 			)
 		}
+
+
 // PRODUCTION 
 // currentProductionSYS
 		prevMonthProductionSystem(){
@@ -641,23 +475,25 @@ export class HomeComponent implements OnInit, AfterViewInit{
 	}
 
 	giveMeDeviceByID(id : any){
-		this.auth.device(id).subscribe(
+		this.auth.deviceInfoByID(id).subscribe(
 			(response : any) => {
 				console.log("dev : ",response);
 			}
 		)
 	}
-		
-		Previousbool : boolean = true;
-		Nextbool : boolean = false;
-		selectedOptionChart:string = 'Previous';
-		onOptionSelect(){
-			if(this.selectedOptionChart === 'Previous'){
-				this.Previousbool = true;
-				this.Nextbool = false;
-			}else if(this.selectedOptionChart === 'Next'){
-				this.Previousbool = false;
-				this.Nextbool = true;
+	
+	
+	selectedOption!:string;
+		onOptionChange(){
+			switch(this.selectedOption){
+				case 'option1':
+				//	data = data1;
+					break;
+				case 'option2':
+				// data = data2;
+					break;
+				default:
+					
 			}
 		}
 			

@@ -17,22 +17,23 @@
           <table tableexporter class="table-hover" #myTable id = "myTable">
               <thead>
                 <tr>
-                  <th style="width: 5%;"></th>
+                  <th style="width: 3%;"></th>
                   <th >First Name</th>
                   <th >Last Name</th>
                   <th style="width: 23%;">Address</th>
-                  <th style="width: 15%;"(click)="sortData('powerUsage')"><i class="fa fa-arrow-up" aria-hidden="true" style = "color:white" *ngIf="currentSortOrder ==='asc'"></i><i class="fa fa-arrow-down"  style ="color:white" *ngIf="currentSortOrder === 'desc'"></i>Power Usage</th>
+                  <th style="width: 15%;"(click)="sortData('consumption')"><i class="fa fa-arrow-up" aria-hidden="true" style = "color:white" *ngIf="currentSortOrder ==='asc'"></i><i class="fa fa-arrow-down"  style ="color:white" *ngIf="currentSortOrder === 'desc'"></i>Consumption</th>
+                  <th style="width: 15%;"(click)="sortData('production')"><i class="fa fa-arrow-up" aria-hidden="true" style = "color:white" *ngIf="currentSortOrder ==='asc'"></i><i class="fa fa-arrow-down"  style ="color:white" *ngIf="currentSortOrder === 'desc'"></i>Production</th>
                   <th style="width: 20%;"></th>
                   
                 </tr>
               </thead>
               <tr *ngFor="let user of allUsers | filterName : _searchByName: _searchByAddress" (click) = "showMeOnMap(user.id)">
-                  <td><input [(ngModel)]="user.selected"  type = "checkbox" style="width: 20px;" (click) = "toggleExportSelected()"></td>  
-                  <!-- (click) = "showMeDevices(user.id)" -->
+                  <td *ngIf="user"><input [(ngModel)]="user.selected"  type = "checkbox" style="width: 20px;" (click) = "toggleExportSelected()"></td>  
                   <td >{{user.firstName}}</td> 
                   <td>{{user.lastName}}</td>
                   <td>{{user.address}}, {{user.city}}, {{user.country}}</td>
-                  <td>{{user.powerUsage}}kw/h</td>
+                  <td>{{user.production}} kWh</td>
+                  <td>{{user.consumption}} kWh</td>
                   <td><button class="btn" (click)="openModel()">Show me profile</button></td>
               </tr>
               <tr>
@@ -63,7 +64,7 @@
         <h4 class="modal-title">User Profile</h4>
         <button type="button" class="btn-close" (click)="closeModel()" data-bs-dismiss="modal"></button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" *ngIf="userPopUp">
         <div class="row">
           <h1 class="text-center">{{userPopUp.firstName}} {{userPopUp.lastName}}</h1>
           <div class="col-sm">

@@ -92,8 +92,9 @@ export class TableComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.showMeUsers(this.page,this.pageSize);
     this.onInitMap();
+    this.showMeUsers(this.page,this.pageSize);
+    
     this.showCoordsForEveryUser();
     this.getDeviceGroup();
     
@@ -108,11 +109,22 @@ export class TableComponent implements OnInit, AfterViewInit {
   currentSortOrder: string = 'asc';
   sortData(sortBy: string): void {
     this.currentSortOrder = this.currentSortOrder === 'asc' ? 'desc' : 'asc';
-    if (sortBy === 'powerUsage') {
+    if (sortBy === 'consumption') {
       this.allUsers.sort((a, b) => {
-        if (a.powerUsage < b.powerUsage) {
+        if (a.consumption < b.consumption) {
           return this.currentSortOrder === 'asc' ? -1 : 1;
-        } else if (a.powerUsage > b.powerUsage) {
+        } else if (a.consumption > b.consumption) {
+          return this.currentSortOrder === 'asc' ? 1 : -1;
+        } else {
+          return 0;
+        }
+      });
+    }
+    else if(sortBy === 'production'){
+      this.allUsers.sort((a, b) => {
+        if (a.production < b.production) {
+          return this.currentSortOrder === 'asc' ? -1 : 1;
+        } else if (a.production > b.production) {
           return this.currentSortOrder === 'asc' ? 1 : -1;
         } else {
           return 0;
@@ -166,15 +178,20 @@ export class TableComponent implements OnInit, AfterViewInit {
       (response : any)=> {
         this.allUsers = response;
         for(let user of this.allUsers){
-          console.log(user)
-          this.auth.getUserPowerUsageByID(user.id).subscribe(
-            (response: any) => {
-              user.powerUsage = (response).toFixed(2);
-              user.selected = false;
-            }
-          )
-        }
+          
+          this.auth.UserConsumptionSummary(user.id).subscribe(
+            (response:any) => {
+              user.consumption = response.toFixed(2);
+            
+            });
+      
+
+        this.auth.UserProductionSummary(user.id).subscribe(
+          (response : any)=>{
+            user.production = response.toFixed(2);
+          });
       }
+    }
     );
   }
   
@@ -240,15 +257,17 @@ export class TableComponent implements OnInit, AfterViewInit {
      // poziv funkcije za svih uredjaja
      this.showMeDevices(id);
     // // poziv informacija o user-u za pop-up
-     this.popUp(id);
+     setTimeout(() =>{
+      this.popUp(id);
+     },1000);
 
       this.auth.getUserPowerUsageByID(id).subscribe(
       (response: any) => {
         for (let user of this.allUsers) {
           if (user.id === id) {
             this.activeItem = user.id;
-            user.powerUsage = (response).toFixed(2);
-            console.log("POWER USAGE : ", user.powerUsage);
+            user.summary = (response).toFixed(2);
+            console.log("POWER USAGE : ", user.summary);
           }
         }
       }
@@ -259,13 +278,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   
   showMeDevices(id : string){
     this.showDevGraph = !this.showDevGraph;
-    // this.auth.getPrevious24DevicePerHour(id).subscribe(
-    //   (response:any) => {
-    //     this.prev24DeviceID = response;
-    //     this.createChartFor24Previ();
-    //     console.log("24Prev",response);
-    //   }
-    // )
+   
     this.getDeviceGroup();
     console.log(id);
     
@@ -273,12 +286,12 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.auth.getDeviceInfoUserByID(id).subscribe(
       (response : any) => {
         this.allUserDevices = response;
-        console.log("ALL USER DEVICES : " ,this.allUserDevices);
         for(let us of this.allUserDevices){
-          this.auth.getPowerUsageToday(us.deviceId).subscribe(
+          this.auth.currentPowerUsageDeviceID(us.deviceId).subscribe(
             (response : any)=>{
               this.todayPowerUsageDevice = (response);
               us.powerUsage = (response).toFixed(2);
+              console.log(response);
             }
           )
           for(let p of this.producers){

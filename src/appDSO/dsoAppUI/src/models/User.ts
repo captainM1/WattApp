@@ -5,7 +5,9 @@ export interface User{
     address: string,
     city: string,
     country: string,
-    powerUsage:string,
+    consumption:number,
+    production:number,
+    summary:number,
     selected: boolean
    
 }

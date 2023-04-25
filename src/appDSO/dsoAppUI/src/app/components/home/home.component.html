@@ -5,9 +5,9 @@
             <div class="row" >
                 <h2 class="text-center">Weather Details</h2>
                 <small class="date">{{dateForWeater}}</small>
-                <div class="col-sm-4" id = "weather_div">
+                <div class="col-sm-4" id = "weather_div" *ngIf="weather">
                     <p class="text-left">
-                        <img src="../../../assets/icons/weather-icons/compass.png" ><small>Your Time Zone:</small> {{ this.weather.timezone }}
+                        <img src="../../../assets/icons/weather-icons/compass.png" ><small>Your Time Zone:</small> {{ this.weather.timezone}}
                     </p>
                     <p class="text-left">
                       <img src="../../../assets/icons/weather-icons/temperature(2).png"><small>Temperature:</small> {{ this.weather.current_weather.temperature }} °C
@@ -17,7 +17,7 @@
                       </p>
                 </div>
                 <div class="col-sm-4" style="padding-top: 20px;margin-right: -20px; padding-top: 20px; padding-right: 60px; padding-left: 60px;">
-                    <p class="text-left">
+                    <p class="text-left" *ngIf="weather">
                         <img src="../../../assets/icons/weather-icons/cold.png"><small>Minimal Temperature:</small> {{ this.weather.daily.temperature_2m_min[0]}} °C
                       </p>
                       <p class="text-left">
@@ -100,12 +100,13 @@
                         </div>
                         <div class="card">
                             <h3 class="card-title">Each Device in System: </h3>
-                            <select>
-                                <option>Previous month</option>
-                                <option>Next month</option>
+                            <select [(ngModel)] = "selectedOption" (change) = "onOptionChange()">
+                                <option value="option1">Previous month</option>
+                                <option value="option2">Next month</option>
                             </select>
                         </div>
-                        
+                        <!-- <canvas *ngIf="selectedOption === 'option1'" [data]="data1" #currentConsumptionSYS></canvas>
+                        <canvas *ngIf="selectedOption === 'option2'" [data]="data2" #prevMonthConsumptionSYS></canvas> -->
                     </div>
                     
          
