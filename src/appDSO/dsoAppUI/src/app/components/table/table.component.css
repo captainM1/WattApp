@@ -10,26 +10,16 @@
   color: white;
 }
 .card table thead th{
-  padding: 20px;
+  padding: 10px;
+  width: 10%;
   text-align: center;
+  font-size: 13px;
   border-bottom: 1px solid #026670;
 
 }
-.card table tr:hover {
-  background-color: #026670; 
-  color:white;
-  font-weight: 800;
-  cursor: pointer;
-}
-.card table tr:active{
-  background-color: #026670; 
-  color:white;
-  font-weight: 800;
-  cursor: pointer;
-}
 
 .card table tr td{
-  padding: 15px;
+  padding: 10px;
   text-align: center;
   border-bottom: 1px solid #026670;
 
@@ -62,19 +52,28 @@ input{
 }
 button{
   margin-left: 10px;
-  width: 150px;
+  margin-top: 25px;
+  width: 120px;
+  height: 40px;
   padding-top: 5px;
   padding-bottom: 5px;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-left: 8px;
+  padding-right: 8px;
   background-color: #026670;
   color: white;
   border-radius: 8px;
-  font-size: medium;
+  font-size: 11px;
   font-weight: 500;
   letter-spacing: 1px;
+}
 
-
+button:hover{
+  color: #026670;
+  background-color: white;
+  border: 2px solid #026670;
+}
+.btn{
+  margin-top: 0;
 }
 label{
   display: ruby;
@@ -82,6 +81,67 @@ label{
   padding-right: 10px;
   padding-top: 5px;
 }
-.active {
+
+.p-paginator{
+  display: block ruby;
+}
+app-profile{
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  z-index: 10000;
+
+}
+.text_below{
+  position: absolute;
+  left: 80px;
+  top: 370px;
+
+}
+.chart{
+  display: flex;
+  text-align: center;
+  justify-content: center;
+}
+.btn-close{
+  padding: 0;
+  background-color: red;
+  margin: 0;
+  color: white;
+  width: 5%;
+  height: 24px;
+  opacity: 100%;
+}
+.btn-close:hover{
+  background-color: white;
+  color: red;
+  border-radius: 2px solid red;
+}
+.modal-title{
+  font-size: 20px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  color: #026670;
+  font-weight: 500;
+ 
+}
+
+table thead{
   background-color: #026670;
+  color: white;
+}
+table thead th{
+  padding: 10px;
+  width: 10%;
+  text-align: center;
+  font-size: 13px;
+  border-bottom: 1px solid #026670;
+
+}
+
+table tr td{
+  padding: 10px;
+  text-align: center;
+  border-bottom: 1px solid #026670;
+
 }

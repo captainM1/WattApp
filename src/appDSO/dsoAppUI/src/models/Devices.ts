@@ -22,3 +22,13 @@ export interface labProducers{
     name: string,
     count: number
 }
+
+export interface eachDevice{
+    id:string,
+    mongodID: string,
+    timestampPowerPairs: TimestampPowerPairs[]
+}
+export interface TimestampPowerPairs{
+    timestamp: string,
+    powerUsage: number
+}
