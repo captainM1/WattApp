@@ -17,6 +17,22 @@ export class AuthService {
     return this.http.get<any>(environment.apiUrl + "/api/User/coordinatesForEveryUser");
   }
 
+  login(email : string, password : string) : Observable<string>{
+    return this.http.post<string>(environment.apiUrl + "/api/Dispatcher/signin", {
+      email : email,
+      password : password
+    })
+  }
+
+  register(username: string, role:string,email: string,password : string) : Observable<string>{
+    return this.http.post<string>(environment.apiUrl + "/api/Dispatcher/signup", {
+      UserName: username,
+      Role: role,
+      Email : email,
+      password: password
+    })
+  }
+
   getPagination(pageNumber : number, pageSize : number) : Observable<any>{
     return this.http.get<any>(environment.apiUrl + "/api/User/users", {
       params: {

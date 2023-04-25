@@ -27,6 +27,7 @@ import { RequirementsComponent } from './components/requirements/requirements.co
 import { PaginatorModule } from 'primeng/paginator';
 import { FilterPipe } from './components/table/filer.pipe';
 import { WelcomeComponent } from './components/welcome/welcome.component';
+import { MessageService } from 'primeng/api';
 
 
 
@@ -64,7 +65,7 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     MatTableModule,
     PaginatorModule
   ],
-  providers: [],
+  providers: [MessageService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

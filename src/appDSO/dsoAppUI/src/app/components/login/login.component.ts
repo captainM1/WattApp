@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from 'service/auth.service';
+import { MessageService } from 'primeng/api';
+import { CookieService } from "ngx-cookie-service";
 
 @Component({
   selector: 'app-login',
@@ -14,7 +17,8 @@ export class LoginComponent implements OnInit{
   isText: boolean = false;
   loginForm!: FormGroup;
   
-  constructor(private fb: FormBuilder, private router : Router){}
+  constructor(private fb: FormBuilder, private router : Router,private auth: AuthService,private cookie: CookieService,
+    private messageService: MessageService){}
   
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -36,12 +40,27 @@ export class LoginComponent implements OnInit{
   
   onSubmit(){
     this.submitted = true;
-    if(this.loginForm.invalid){
-      return;
+    if(this.loginForm.valid){
+      this.auth.login(this.loginForm.get('email')?.value, this.loginForm.get('password')?.value)
+      .subscribe(
+        (response) => {
+          this.cookie.set('jwtToken', response);
+          this.messageService.add({ severity: 'success', summary: 'Logged in', detail: 'Welcome back' });
+          setTimeout(() => {
+            this.router.navigate(['dashboard'])
+          }, 1000);
+        },
+        (error) => {
+          if (error.status === 400) {
+            this.messageService.add({ severity: 'error', summary: 'Invalid credentials', detail: error.error });  
+            this.router.navigate(['signin'])
+          }
+        }
+      );
     }else{
-      this.router.navigate(['dashboard'])
+      this.messageService.add({ severity: 'error', summary: 'Invalid credentials', detail: 'Invalid data format' });  
+      this.router.navigate(['signin'])
     }
-    
   }
 
   private validateAllFormFields(formGroup : FormGroup){
