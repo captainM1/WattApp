@@ -177,6 +177,42 @@ public class PowerUsageService:IPowerUsageService
         }
         return powerUsages;
     }
+    public List<PowerUsage> GetPowerUsageForDevicesConsumptionFor7Days(Guid userID, int direction)
+    {
+        var powerUsages = _repository.GetPowerUsageForDevicesConsumptionFor7Days(userID, direction);
+        if (!powerUsages.Any())
+        {
+            throw new NotFoundException();
+        }
+        return powerUsages;
+    }
+    public List<PowerUsage> GetPowerUsageForDevicesProductionFor7Days(Guid userID, int direction)
+    {
+        var powerUsages = _repository.GetPowerUsageForDevicesProductionFor7Days(userID, direction);
+        if (!powerUsages.Any())
+        {
+            throw new NotFoundException();
+        }
+        return powerUsages;
+    }
+    public List<PowerUsage> GetPowerUsageForDevicesConsumptionFor24Hours(Guid userID, int direction)
+    {
+        var powerUsages = _repository.GetPowerUsageForDevicesConsumptionFor24Hours(userID, direction);
+        if (!powerUsages.Any())
+        {
+            throw new NotFoundException();
+        }
+        return powerUsages;
+    }
+    public List<PowerUsage> GetPowerUsageForDevicesProductionFor24Hours(Guid userID, int direction)
+    {
+        var powerUsages = _repository.GetPowerUsageForDevicesProductionFor24Hours(userID, direction);
+        if (!powerUsages.Any())
+        {
+            throw new NotFoundException();
+        }
+        return powerUsages;
+    }
 
     public IEnumerable<TimestampPowerPair> GetForDeviceByHour(Guid deviceID)
     {

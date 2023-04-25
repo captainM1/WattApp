@@ -327,6 +327,62 @@ public class PowerUsageController : ControllerBase
         return Ok(powerUsages);
     }
 
+    [HttpGet("power-usage/previous7Days/consumption/user-every-day-device-usage/{userID}")]
+    public ActionResult<List<PowerUsage>> GetPowerUsageForDevicesConsumptionForPrevious7Days(Guid userID)
+    {
+        var powerUsages = _powerUsageService.GetPowerUsageForDevicesConsumptionFor7Days(userID, -1);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/next7Days/consumption/user-every-day-device-usage/{userID}")]
+    public ActionResult<List<PowerUsage>> GetPowerUsageForDevicesConsumptionForNext7Days(Guid userID)
+    {
+        var powerUsages = _powerUsageService.GetPowerUsageForDevicesConsumptionFor7Days(userID, 1);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/previous7Days/production/user-every-day-device-usage/{userID}")]
+    public ActionResult<List<PowerUsage>> GetPowerUsageForDevicesProductionForPrevious7Days(Guid userID)
+    {
+        var powerUsages = _powerUsageService.GetPowerUsageForDevicesProductionFor7Days(userID, -1);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/next7Days/production/user-every-day-device-usage/{userID}")]
+    public ActionResult<List<PowerUsage>> GetPowerUsageForDevicesProductionForNext7Days(Guid userID)
+    {
+        var powerUsages = _powerUsageService.GetPowerUsageForDevicesProductionFor7Days(userID, 1);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/previous24Hours/consumption/user-every-day-device-usage/{userID}")]
+    public ActionResult<List<PowerUsage>> GetPowerUsageForDevicesConsumptionForPrevious24Hours(Guid userID)
+    {
+        var powerUsages = _powerUsageService.GetPowerUsageForDevicesConsumptionFor24Hours(userID, -1);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/next24Hours/consumption/user-every-day-device-usage/{userID}")]
+    public ActionResult<List<PowerUsage>> GetPowerUsageForDevicesConsumptionForNext24Hours(Guid userID)
+    {
+        var powerUsages = _powerUsageService.GetPowerUsageForDevicesConsumptionFor24Hours(userID, 1);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/previous24Hours/production/user-every-day-device-usage/{userID}")]
+    public ActionResult<List<PowerUsage>> GetPowerUsageForDevicesProductionForPrevious24Hours(Guid userID)
+    {
+        var powerUsages = _powerUsageService.GetPowerUsageForDevicesProductionFor24Hours(userID, -1);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/next24Hours/production/user-every-day-device-usage/{userID}")]
+    public ActionResult<List<PowerUsage>> GetPowerUsageForDevicesProductionForNext24Hours(Guid userID)
+    {
+        var powerUsages = _powerUsageService.GetPowerUsageForDevicesProductionFor24Hours(userID, 1);
+        return Ok(powerUsages);
+    }
+
     [HttpGet("power-usage/currentDay/consumption/system")]
     public ActionResult<PowerUsage> GetPowerUsageForAHourSystemConsumed()
     {
