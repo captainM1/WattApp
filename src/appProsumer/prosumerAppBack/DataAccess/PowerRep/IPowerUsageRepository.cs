@@ -33,6 +33,10 @@ namespace prosumerAppBack.BusinessLogic
         public double GetCurrentPowerProduction();        
         public double CurrentSumPowerUsageSystemConsumer();
         public double CurrentSumPowerUsageSystemProducer();
+        List<PowerUsage> GetPowerUsageForDevicesConsumptionFor7Days(Guid userID, int direction);
+        List<PowerUsage> GetPowerUsageForDevicesProductionFor7Days(Guid userID, int direction);
+        List<PowerUsage> GetPowerUsageForDevicesConsumptionFor24Hours(Guid userID, int direction);
+        List<PowerUsage> GetPowerUsageForDevicesProductionFor24Hours(Guid userID, int direction);
 
         public IEnumerable<TimestampPowerPair> GetForDeviceByHour(Guid deviceID);//provereno i promenjeno da vraca do trenutnog_sata -1 a ne za ceo dan
 

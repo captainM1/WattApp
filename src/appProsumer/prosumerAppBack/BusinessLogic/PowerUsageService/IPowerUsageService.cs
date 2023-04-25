@@ -29,8 +29,12 @@ public interface IPowerUsageService
     public IEnumerable<TimestampPowerPair> GetForDeviceByHour(Guid deviceID);
     public List<PowerUsage> GetPowerUsageForDevicesConsumption(Guid userID, int direction);
     public List<PowerUsage> GetPowerUsageForDevicesProduction(Guid userID, int direction);
+    List<PowerUsage> GetPowerUsageForDevicesConsumptionFor7Days(Guid userID, int direction);
+    List<PowerUsage> GetPowerUsageForDevicesProductionFor7Days(Guid userID, int direction);
     public PowerUsage GetPowerUsageFor12HoursUpDown(Guid deviceID);
-    Dictionary<DateTime, double> GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction);    
+    Dictionary<DateTime, double> GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction);
+    List<PowerUsage> GetPowerUsageForDevicesProductionFor24Hours(Guid userID, int direction);
+    List<PowerUsage> GetPowerUsageForDevicesConsumptionFor24Hours(Guid userID, int direction);
 
     public (Guid maxDeviceID, double maxDeviceUsage) GetMaxUsagePast24Hours(Guid userID);
     public (Guid maxDeviceID, double maxDeviceUsage) GetMaxUsagePreviousWeek(Guid userID);
