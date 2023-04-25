@@ -15,6 +15,10 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { Chart, ChartOptions } from 'chart.js';
 
+
+import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
+import provider from 'leaflet-geosearch/dist/providers/provider';
+import Geocoder from 'leaflet-control-geocoder';
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
@@ -209,7 +213,11 @@ export class TableComponent implements OnInit, AfterViewInit {
       maxZoom: 20,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(this.map);
+  
   }
+ 
+
+
 
   public showCoordsForEveryUser(){
     this.showAllUsersOnMap = true;
@@ -230,7 +238,14 @@ export class TableComponent implements OnInit, AfterViewInit {
           }
         });
       });
+      
+      
+      // const GeocoderControl = new Geocoder();
+      // GeocoderControl.addTo(this.map);
+      
+      
   }
+
 
   public showMeOnMap(id: string) {
     // remove all markers from the map
