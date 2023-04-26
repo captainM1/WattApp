@@ -39,4 +39,13 @@ export class AuthUserService {
   getAverageUserUsage(userID:any) :Observable<any>{
     return this.http.get<any>(environment.apiUrl + "/api/PowerUsage/power-usage/PreviousMonth/average-user-usage/"+userID,{ headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
   }
+
+  getCurrentMostConsumes(userID:any) : Observable<any>{
+    return this.http.get<any>(environment.apiUrl + "/api/PowerUsage/power-usage/most-consumes/current/"+userID,{ headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
+  }
+
+  getCurrentMostProduces(userID:any) : Observable<any>{
+    return this.http.get<any>(environment.apiUrl + "/api/PowerUsage/power-usage/most-produces/current/"+userID,{ headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
+  }
+
 }

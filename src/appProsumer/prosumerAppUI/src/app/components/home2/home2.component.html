@@ -72,7 +72,8 @@
             <div class="card">
                 <div class="card-body">
                 <h5 class="card-title"> The biggest consumer of electricity:</h5>
-                <p class="card-text"  style="text-align: center;">  {{currentUsage}} kWh </p>
+                <canvas #currentMostConsumesGraph></canvas>
+                <p class="card-text" style="text-align: center; margin-top: -50px;"> {{currentConsumes}} kWh </p>
 
                 </div>
             </div>
@@ -81,7 +82,8 @@
             <div class="card">
                 <div class="card-body">
                 <h5 class="card-title"> The largest producer of electricity:</h5>
-                <p class="card-text" style="text-align: center;"> kWh</p>
+                <canvas #currentMostProducesGraph></canvas>
+                <p class="card-text" style="text-align: center; margin-top: -50px;"> {{currentProduces}} kWh</p>
 
                 </div>
             </div>
