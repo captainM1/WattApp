@@ -8,13 +8,13 @@ With EnergySolvix's solutions, households and DSOs can monitor their energy usag
 
 ## Instructions on how to get the project on a local machine.
 
-- git clone http://gitlab.pmf.kg.ac.rs/wattapp/energysolvix.git
+- Open cmd and run command: git clone http://gitlab.pmf.kg.ac.rs/wattapp/energysolvix.git
 - Navigate to folder /src/appProsumer/prosumerAppUI and run npm install
-   Navigate to folder /src/appDSO/dsoAppUI and run npm install
-   Navigate to folder /src/appProsumer/prosumerAppBack and run:
-     dotnet tool install --global dotnet-ef
-     dotnet ef database update
-     dotnet restore
+   - Navigate to folder /src/appDSO/dsoAppUI and run npm install
+   - Navigate to folder /src/appProsumer/prosumerAppBack and run:
+     - dotnet tool install --global dotnet-ef
+     - dotnet ef database update
+     - dotnet restore
 - Download MongoDB from https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-windows-unattended/
 - Install MongoDB and also install MongoDBCompass
 - Open Compass and connect to mongodb://localhost:27017
