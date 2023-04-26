@@ -22,7 +22,7 @@ export class TokenInterceptor implements HttpInterceptor {
   ) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    if (request.url.endsWith('/signin') || request.url.endsWith('/signup')) {
+    if (request.url.endsWith('/signin') || request.url.endsWith('/signup') || request.url.startsWith('https://api.open-meteo')) {
       return next.handle(request);
     }
 
