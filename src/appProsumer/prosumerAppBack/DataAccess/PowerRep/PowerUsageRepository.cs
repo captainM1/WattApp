@@ -168,6 +168,34 @@ public class PowerUsageRepository : IPowerUsageRepository
         return powerUsage;
     }
 
+    public PowerUsage GetPowerUsageForAMonth(Guid deviceId, int direction)
+    {
+        Guid deviceTypeID = _dataContext.Devices
+            .Where(d => d.ID == deviceId)
+            .Select(d => d.DeviceTypeID)
+            .FirstOrDefault();
+
+        var powerUsage = new PowerUsage();
+        powerUsage.TimestampPowerPairs = new List<TimestampPowerPair>();
+        var today = DateTime.Today;
+
+        for (int i = 1; i <= 31; i++)
+        {
+            var day = today.AddDays(i * direction);
+            var powerUsageD = GetPowerUsageForDay(deviceId, day);
+            var ts = new TimestampPowerPair();
+            ts.PowerUsage = powerUsageD;
+            ts.Timestamp = day;
+            powerUsage.TimestampPowerPairs.Add(ts);
+
+        }
+
+        if (direction == -1)
+            powerUsage.TimestampPowerPairs.Reverse();
+
+        return powerUsage;
+    }
+
     public double CurrentSumPowerUsageConsumption(Guid userID)
     {
         double sum = 0;
