@@ -87,7 +87,6 @@ export class AuthService {
         }
       }
     });
-    console.log("Usao");
   }
 
   getWeather():Observable<any>{
