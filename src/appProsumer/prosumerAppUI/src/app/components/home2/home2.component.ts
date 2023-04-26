@@ -28,15 +28,16 @@ export class Home2Component implements OnInit, AfterViewInit {
   @ViewChild('currentProductionGraph') currentProductionGraph!:ElementRef;
 
   ngAfterViewInit(): void {
-
+    this.showWeatherDetails();
+    this.giveMeWeather();
   }
 
 
 
   ngOnInit(): void {
     this.getToken();
-    this.giveMeWeather();
-    this.showWeatherDetails();
+   
+  
   }
 
   currentUsageUser(id:any){
@@ -77,6 +78,7 @@ export class Home2Component implements OnInit, AfterViewInit {
     this.auth.getWeather().subscribe(
       (response: any) => {
         this.weather = response;
+        console.log(response);
         const timeSlice = this.weather.hourly.time.slice(0, 24);
         const time = timeSlice.map((time) => {
           const date = new Date(time);

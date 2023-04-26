@@ -14,11 +14,10 @@ import { PaginatorModule } from 'primeng/paginator';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { Chart, ChartOptions } from 'chart.js';
+import { Subscription } from 'rxjs';
 
 
-import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
-import provider from 'leaflet-geosearch/dist/providers/provider';
-import Geocoder from 'leaflet-control-geocoder';
+
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
@@ -29,6 +28,22 @@ export class TableComponent implements OnInit, AfterViewInit {
 
 
   @ViewChild('powerUsageGraph') powerUsageGraph!:ElementRef;
+  @ViewChild('prev24DeviceID') prev24DeviceID!:ElementRef;
+  @ViewChild('myTable') myTable!: ElementRef;
+  @ViewChild('perHourDevice') perHourDevice!:ElementRef;
+
+  
+  chartInstance!: Chart;
+  subscription!: Subscription;
+  
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+    if (this.chartInstance) {
+      this.chartInstance.destroy();
+    }
+  }
 // filtriranje
   _searchByName: string = '';
   _searchByCity: string = '';
@@ -50,12 +65,13 @@ export class TableComponent implements OnInit, AfterViewInit {
   showAllUsersOnMap : boolean = true;
   lengthOfUsers!: number;
   allUsers!: User[];
- 
+
+  // buttons - popUP
+  showDevicePage = true;
+  showSystemPage = false;
+  showMeGeneral = false;
+
   private userCoords!: any[];
-  private id: any;
-  private firstName?: string;
-  private lastName?: string;
-  private address?: string;
 
   public toggleTable: boolean = false;
   public showDevGraph:boolean = false;
@@ -77,20 +93,14 @@ export class TableComponent implements OnInit, AfterViewInit {
   storage!: any[];
 
   todayPowerUsageDevice!:any;
-  prev24DeviceID!:any;
-
   userPopUp!:any;
 
-
-  @ViewChild('myTable') myTable!: ElementRef;
-  @ViewChild('perHourDevice') perHourDevice!:ElementRef;
 
   constructor(
     private auth: AuthService,
     private table: MatTableModule,
-
-
   ){}
+
   ngAfterViewInit(): void {
     this.showMeUsers(this.page,this.pageSize);
   }
@@ -101,7 +111,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     
     this.showCoordsForEveryUser();
     this.getDeviceGroup();
-    
+    this.type();
   }
 
   onPageChange(event: any) {
@@ -139,7 +149,7 @@ export class TableComponent implements OnInit, AfterViewInit {
 
     toggleExportSelected(): void {
       this.exportSelected = !this.exportSelected;
-      console.log(this.exportSelected);
+      // console.log(this.exportSelected);
     }
     activeColIndex: number = -1;
 
@@ -161,7 +171,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     const fileBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     const blob = new Blob([fileBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     saveAs(blob, 'table-data.xlsx');
-    console.log(worksheet)
+    // console.log(worksheet)
   }
 
   exportSelectedData():void{
@@ -183,17 +193,24 @@ export class TableComponent implements OnInit, AfterViewInit {
         this.allUsers = response;
         for(let user of this.allUsers){
           
-          this.auth.UserConsumptionSummary(user.id).subscribe(
-            (response:any) => {
+          this.auth.UserConsumptionSummary(user.id).subscribe({
+            next : (response:any) => {
               user.consumption = response.toFixed(2);
             
-            });
-      
-
-        this.auth.UserProductionSummary(user.id).subscribe(
-          (response : any)=>{
-            user.production = response.toFixed(2);
+            },
+            error: (err:any)=>{
+              user.consumption = 0;
+            }
           });
+      
+      this.auth.UserProductionSummary(user.id).subscribe({
+          next : (response : any)=>{
+            user.production = response.toFixed(2);
+          },
+          error : (err : any)=>{
+            user.production = 0;
+          }
+        });
       }
     }
     );
@@ -216,9 +233,6 @@ export class TableComponent implements OnInit, AfterViewInit {
   
   }
  
-
-
-
   public showCoordsForEveryUser(){
     this.showAllUsersOnMap = true;
     this.auth.getCoords().subscribe(
@@ -238,12 +252,8 @@ export class TableComponent implements OnInit, AfterViewInit {
           }
         });
       });
-      
-      
       // const GeocoderControl = new Geocoder();
       // GeocoderControl.addTo(this.map);
-      
-      
   }
 
 
@@ -275,122 +285,41 @@ export class TableComponent implements OnInit, AfterViewInit {
      setTimeout(() =>{
       this.popUp(id);
      },1000);
-
-      this.auth.getUserPowerUsageByID(id).subscribe(
-      (response: any) => {
-        for (let user of this.allUsers) {
-          if (user.id === id) {
-            this.activeItem = user.id;
-            user.summary = (response).toFixed(2);
-            console.log("POWER USAGE : ", user.summary);
-          }
-        }
-      }
-    );
+    
   }  
 
   
   
   showMeDevices(id : string){
     this.showDevGraph = !this.showDevGraph;
-   
     this.getDeviceGroup();
-    console.log(id);
-    
     this.toggleTable = true;
+
     this.auth.getDeviceInfoUserByID(id).subscribe(
       (response : any) => {
         this.allUserDevices = response;
+        console.log(this.allUserDevices);
         for(let us of this.allUserDevices){
           this.auth.currentPowerUsageDeviceID(us.deviceId).subscribe(
             (response : any)=>{
               this.todayPowerUsageDevice = (response);
               us.powerUsage = (response).toFixed(2);
-              console.log(response);
             }
           )
-          for(let p of this.producers){
-            for(let c of this.consumers){
-              for(let s of this.storage){
-                if(us.deviceTypeName === p['name'])
-                {
-                  us.typeOfDevice = 'Producer';
-                }
-                if(us.deviceTypeName === c['name']){
-                  us.typeOfDevice = "Consumer";
-                }
-                if(us.deviceTypeName === s['name']){
-                  us.typeOfDevice = 'Storage';
-                  console.log("TYPE", us.typeOfDevice);
-                }
-              }
+        this.auth.getDevicesInfoByID(us.deviceId).subscribe({
+          next: (response:any)=>{
+            us.typeOfDevice = response.groupName;
+          },
+          error : (err : any)=>{
+            console.log("err");
           }
-          }
-        }
-      
+        }); }
       }
     )
   }
 
-  createChartFor24Previ(){
-    const list =  Object.keys(this.prev24DeviceID).map((key) =>
-				key.split('T')[1].split('.')[0]
-			);
-			const valuesList = [];
-	
-			for (const key in this.prev24DeviceID) {
-				if (this.prev24DeviceID.hasOwnProperty(key)) {
-					valuesList.push(this.prev24DeviceID[key]);
-				}
-			}
-      console.log(valuesList);
-	
-		   const data = {
-		   labels: list,
-		   datasets: [{
-			   label: 'Device power Usage',
-			   data: valuesList,
-			   fill: true,
-			   borderColor: 'rgb(75, 192, 192)',
-			   backgroundColor:'rgba(75, 192, 192, 0.5)',
-			   tension: 0.1,
-			   borderWidth: 1,
-		   }]
-	   }
-		   const options: ChartOptions = {
-			   scales: {
-			   x: {
-          
-				   title: {
-				   display: true,
-				   text: 'Hours',
-				   },
-				   ticks: {
-				   font: {
-					   size: 14,
-				   },
-				   },
-			   },
-			   y: {
-          suggestedMin: 0,
-				   title: {
-				   display: true,
-				   text: 'Current power usage in (kw/h)',
-				   },
-				   ticks: {
-				   font: {
-					   size: 14,
-				   },
-				   },
-			   },
-			   },
-		   };
-		   const stackedLine = new Chart(this.perHourDevice.nativeElement, {
-			   type: 'line',
-			   data: data,
-			   options: options,
-		   });
-  }
+  
+
   
     getDeviceGroup(){
       this.auth.getDeviceGroup().subscribe(
@@ -423,15 +352,19 @@ export class TableComponent implements OnInit, AfterViewInit {
 // pop-up
   openModel(){
     const modelDiv = document.getElementById('myModal');
+    const background = document.getElementById('myBack');
     if(modelDiv!=null){
       modelDiv.style.display = 'block';
+      background!.style.opacity = '40%';
     }
   }
 
   closeModel(){
     const modelDiv = document.getElementById('myModal');
+    const background = document.getElementById('myBack');
     if(modelDiv!=null){
       modelDiv.style.display = 'none';
+      background!.style.opacity = '100%';
     }
   }
   
@@ -444,14 +377,28 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.auth.getUserInformation(id).subscribe(
       (response : any) => {
         this.userPopUp = response;
+        console.log(this.userPopUp.id);
+        
+        this.auth.UserConsumptionSummary(this.userPopUp.id).subscribe(
+          (response:any) => {
+            this.userPopUp.consumption = response.toFixed(2);
+          
+          });
+    
+
+      this.auth.UserProductionSummary(this.userPopUp.id).subscribe({
+        next : (response : any) =>{
+          this.userPopUp.production = response.toFixed(2);
+          console.log("PRODUC",response);
+        },
+        error : (err:any)=>{
+         this.userPopUp.production = 0;
+        }
+        
+      });
       }
     )
-    this.auth.getUserPowerUsageByID(id).subscribe(
-      (response : any) => {
-        this.powerUsagePopUp = (response).toFixed(2);
-        console.log(this.powerUsagePopUp);
-      }
-    )
+   
     this.halfDought();
   }
 
@@ -479,10 +426,104 @@ export class TableComponent implements OnInit, AfterViewInit {
       options: options,
     });
   }
+  isActiveUser = false; 
+  isActiveDevice = true;
+  isActiveSystem = false;
+  toggleActive(button: string) {
+    this.isActiveUser = button === 'user';
+    this.isActiveDevice = button === 'device';
+    this.isActiveSystem = button === 'system';
+  }
+
+  graph24prev!:any;
+  selectedDevice: any;
+  displayGraph(device: any) {
+    this.selectedDevice = device;
+    console.log("DEVICE ID",device);
+    if (this.chartInstance) {
+      this.chartInstance.destroy();
+    }
+    this.subscription = this.auth.devicePrevious24h(this.selectedDevice.deviceId).subscribe(
+      (response : any) => {
+        this.graph24prev = response;
+        console.log(response);
+        // this.deviceGraphPrev24(this.graph24prev);
+        this.makeData(this.graph24prev);
+      }
+    )
+  }
+
+  makeData(dataGraph:any){
+    console.log("PODACI GRAOPH",dataGraph)
+    const list =  Object.keys(dataGraph).map((key) => key.split('T')[1].split('Z')[0]);
+    const valuesList = [];
+
+    for (const key in dataGraph) {
+      if (dataGraph.hasOwnProperty(key)) {
+        valuesList.push(dataGraph[key]);
+      }
+    }
+    this.deviceGraphPrev24(list,valuesList);
+  }
+
+  deviceGraphPrev24(list:any, valueList:any){
+    const data = {
+      labels: list,
+      datasets: [{
+        label: 'Previous 24h',
+        data: valueList,
+        fill: true,
+        borderColor: 'rgb(255, 200, 0)',
+        backgroundColor:'rgba(255, 200, 0,0.4)',
+        pointBackgroundColor: 'rgba(255, 200, 0,0.7)',
+        borderWidth: 1,
+        pointBorderColor:'rgb(255, 200, 0)'
+      }]
+    }
+    const options: ChartOptions = {
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Date and Time',
+          },
+          ticks: {
+            font: {
+              size: 14,
+            },
+          },
+        },
+        y: {
+          title: {
+            display: true,
+            text: 'Power Consuming in (kw/day)',
+          },
+          ticks: {
+            font: {
+              size: 14,
+            },
+          },
+        },
+      },
+    };
+    this.chartInstance = new Chart(this.prev24DeviceID.nativeElement, {
+      type: 'line',
+      data: data,
+      options: options,
+    });
+  }
+
+  type(){
+    this.auth.groupDevice().subscribe(
+      (repsonse : any) => {
+        console.log(repsonse);
+      }
+    )
+  }
+
+}
   
 
-
-  }
 
 
   

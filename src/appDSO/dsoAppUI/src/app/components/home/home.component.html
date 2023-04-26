@@ -5,11 +5,11 @@
             <div class="row" >
                 <h2 class="text-center">Weather Details</h2>
                 <small class="date">{{dateForWeater}}</small>
-                <div class="col-sm-4" id = "weather_div" *ngIf="weather">
-                    <p class="text-left">
+                <div class="col-sm-4" id = "weather_div">
+                    <p class="text-left"  *ngIf="weather">
                         <img src="../../../assets/icons/weather-icons/compass.png" ><small>Your Time Zone:</small> {{ this.weather.timezone}}
                     </p>
-                    <p class="text-left">
+                    <p class="text-left" *ngIf="weather.current_weather">
                       <img src="../../../assets/icons/weather-icons/temperature(2).png"><small>Temperature:</small> {{ this.weather.current_weather.temperature }} °C
                     </p>
                     <p class="text-left">
@@ -20,7 +20,7 @@
                     <p class="text-left" *ngIf="weather">
                         <img src="../../../assets/icons/weather-icons/cold.png"><small>Minimal Temperature:</small> {{ this.weather.daily.temperature_2m_min[0]}} °C
                       </p>
-                      <p class="text-left">
+                      <p class="text-left" *ngIf="weather.current_weather">
                         <img src="../../../assets/icons/weather-icons/storm.png"><small>Wind Speed:</small> {{ this.weather.current_weather.windspeed}} km/h
                       </p>
                       <p class="text-left">
@@ -41,7 +41,7 @@
                     </div>
                     <div class="card">
                         <h3 class="card-title" >Prosumers:</h3>
-                        <p class="card-text">{{producers.length}}</p>
+                        <p class="card-text" *ngIf="producers.length">{{producers.length}}</p>
                     </div>
                     <div class="card">
                         <h3 class="card-title" >Consumers:</h3>
