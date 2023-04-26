@@ -48,4 +48,8 @@ export class AuthUserService {
     return this.http.get<any>(environment.apiUrl + "/api/PowerUsage/power-usage/most-produces/current/"+userID,{ headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
   }
 
+  getConsumptionPrevious24Hours(userID:any) :Observable<any>{
+    return this.http.get<any>(environment.apiUrl + "/api/PowerUsage/power-usage/previous24Hours/consumption/user-every-day-device-usage/"+userID,{ headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
+  }
+
 }

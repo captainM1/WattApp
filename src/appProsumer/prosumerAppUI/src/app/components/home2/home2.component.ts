@@ -19,7 +19,12 @@ export class Home2Component implements OnInit, AfterViewInit {
   isViewInitialized = false;
   currentConsumes!: any;
   currentProduces!: any;
+  number!: any;
+  devices!: any;
   id!:any;
+  graph24prev!:any;
+  powerUsageList: any = [];
+  timestampList: any = [];
 
   constructor(
 		private auth : AuthService,
@@ -32,6 +37,7 @@ export class Home2Component implements OnInit, AfterViewInit {
   @ViewChild('currentProductionGraph') currentProductionGraph!:ElementRef;
   @ViewChild('currentMostConsumesGraph') currentMostConsumesGraph!:ElementRef;
   @ViewChild('currentMostProducesGraph') currentMostProducesGraph!:ElementRef;
+  @ViewChild('previous24ConsumptionGraph') previous24ConsumptionGraph!:ElementRef;
 
   ngAfterViewInit(): void {
     this.isViewInitialized = true;
@@ -43,8 +49,17 @@ export class Home2Component implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.getToken();
+    this.numberOfDevices();
 
+  }
 
+  numberOfDevices(){
+    this.auth.getDeviceData().subscribe(
+    (response:any)=>{
+      this.number = response.length;
+      console.log(this.number);
+    }
+    );
   }
 
   currentMostProduces(id:any)
@@ -68,6 +83,7 @@ export class Home2Component implements OnInit, AfterViewInit {
         this.currentConsumes = response.timestampPowerPairs[0].powerUsage.toFixed(2);
         console.log(this.currentConsumes);
         this.id = response.id;
+        console.log(response.id + "id");
         this.halfDoughnutMostConsumes(this.currentConsumes);
 
       }
@@ -106,6 +122,13 @@ export class Home2Component implements OnInit, AfterViewInit {
        this.currentProductionUser(this.userID);
        this.currentMostConsumes(this.userID);
        this.currentMostProduces(this.userID);
+       this.auth1.getConsumptionPrevious24Hours(this.userID).subscribe(
+        (response : any) => {
+          this.graph24prev = response;
+          console.log(response);
+          this.makeData(this.graph24prev);
+        }
+       )
       }
     )
   }
@@ -305,6 +328,70 @@ showWeatherDetails()
 
 
 }
+
+
+
+makeData(dataGraph:any){
+  dataGraph.forEach((obj:any) => {
+    obj.timestampPowerPairs.forEach((pair:any) => {
+      const time = pair.timestamp.split('T')[1].split('.')[0];
+      this.timestampList.push(time);
+      this.powerUsageList.push(pair.powerUsage);
+    });
+  });
+
+  console.log(this.powerUsageList);
+  console.log(this.timestampList);
+  this.previous24Graph(this.timestampList, this.powerUsageList);
+}
+
+previous24Graph(list:any, valueList:any){
+  const data = {
+    labels: list,
+    datasets: [{
+      label: 'Previous 24h',
+      data: valueList,
+      fill: true,
+      borderColor: 'rgb(255, 200, 0)',
+      backgroundColor:'rgba(255, 200, 0,0.4)',
+      pointBackgroundColor: 'rgba(255, 200, 0,0.7)',
+      borderWidth: 1,
+      pointBorderColor:'rgb(255, 200, 0)'
+    }]
+  }
+  const options: ChartOptions = {
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: 'Time',
+        },
+        ticks: {
+          font: {
+            size: 14,
+          },
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: 'Power consumption (kW)',
+        },
+        ticks: {
+          font: {
+            size: 14,
+          },
+        },
+      },
+    },
+  };
+  const graph = new Chart(this.previous24ConsumptionGraph.nativeElement, {
+    type: 'line',
+    data: data,
+    options: options,
+  });
+}
+
 }
 
 

@@ -49,6 +49,7 @@ export class AuthService {
     return this.http.get<any>(`${environment.apiUrl}/api/Device/devices/info`, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
   }
 
+
   getToken() {
 
     const jwtToken = this.cookie.get('jwtToken');

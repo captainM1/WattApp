@@ -3,6 +3,11 @@
   src: url(../../../assets/fonts/Inter-Regular.ttf);
 }
 
+#kolona
+{
+  width:35% !important;
+  height: 20% !important;
+}
 
 #buttonWeather
 {
@@ -135,6 +140,12 @@ img
   .container
   {
     margin-top: 50px;
+  }
+
+  #kolona
+  {
+    width: 350px !important;
+    height: 200px !important;
   }
 
   .order-sm-1 {

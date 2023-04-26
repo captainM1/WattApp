@@ -32,18 +32,29 @@
                 <img src="../../../assets/weather-icons/humidity.png">Humidity:<span style="color:#026670; font-weight:bold; padding-left:5px;"> {{ weather.hourly.relativehumidity_2m[0]}} </span>
               </p>
         </div>
-        <div class="col-sm">
-          <canvas #hourlyTemp style="width: 150px; height: 60px; "></canvas>
+        <div class="col-sm" id="kolona">
+          <canvas #hourlyTemp ></canvas>
         </div>
     </div>
 
     <div class="row" >
       <div class="col-sm">
-        <canvas #myChart></canvas>
-      </div>
-      <div class="col-sm">
 
         <div class="card">
+          <div class="card-body">
+          <h5 class="card-title"> Number Of Devices:</h5>
+            <p class="card-text"  style="text-align: center;">  {{number}} </p>
+          </div>
+       </div>
+       <div class="card " >
+        <div class="card-body">
+        <h5 class="card-title"> Energy Storage:</h5>
+          <p class="card-text"  style="text-align: center; ">  {{currentUsage}} kWh </p>
+        </div>
+     </div>
+      </div>
+      <div class="col-sm">
+        <div class="card " >
           <div class="card-body">
           <h5 class="card-title"> Current Consumption:</h5>
             <canvas #currentPowerUsageGraph></canvas>
@@ -52,14 +63,15 @@
        </div>
 
 
-      <div class="card">
+      <div class="card ">
           <div class="card-body">
           <h5 class="card-title"> Current Production:</h5>
           <p class="card-text" style="text-align: center;"> {{currentProduction}} kWh </p>
 
           </div>
       </div>
-      </div>
+
+    </div>
     </div>
 
     <div class="row" >
@@ -68,8 +80,12 @@
       </div>
 
         <div class="col-sm order-sm-2" style="margin-bottom: 50px;">
+          <div class="card" style="width:550px; padding: 10px;">
+            <canvas #previous24ConsumptionGraph></canvas>
+          </div>
 
-            <div class="card">
+
+            <div class="card" style="margin-top: 50px;">
                 <div class="card-body">
                 <h5 class="card-title"> The biggest consumer of electricity:</h5>
                 <canvas #currentMostConsumesGraph></canvas>
@@ -79,7 +95,7 @@
             </div>
 
 
-            <div class="card">
+            <div class="card" style="margin-top: 50px;">
                 <div class="card-body">
                 <h5 class="card-title"> The largest producer of electricity:</h5>
                 <canvas #currentMostProducesGraph></canvas>
@@ -87,7 +103,6 @@
 
                 </div>
             </div>
-
 
        </div>
 
