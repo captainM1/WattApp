@@ -47,6 +47,7 @@ import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { FilterPipe } from './filter.pipe';
 import { WelcomeComponent } from './components/welcome/welcome.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -92,7 +93,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     CommonModule,
     ConfirmDialogModule,
     Ng2SearchPipeModule,
-    [MatProgressSpinnerModule]
+    [MatProgressSpinnerModule],
+    MatSnackBarModule
   ],
   providers: [MessageService,ConfirmationService,{provide:HTTP_INTERCEPTORS,useClass:TokenInterceptor,multi:true}],
   bootstrap: [AppComponent]
