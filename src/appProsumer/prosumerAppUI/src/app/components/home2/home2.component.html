@@ -40,10 +40,13 @@
     <div class="row" >
       <div class="col-sm">
 
-        <div class="card">
+        <div class="card" id="numberOfDevices">
           <div class="card-body">
-          <h5 class="card-title"> Number Of Devices:</h5>
-            <p class="card-text"  style="text-align: center;">  {{number}} </p>
+          <h5 class="card-title" > Devices details  </h5>
+          <p class="card-text" > <span style="font-weight: 600;"> Number Of Devices: </span> {{number}} </p>
+          <p class="card-text"> <span style="font-weight: 600;"> Producers: </span> {{numberOfProducers}} </p>
+          <p class="card-text"> <span style="font-weight: 600;"> Consumers: </span> {{numberOfConsumers}} </p>
+          <p class="card-text"> <span style="font-weight: 600;"> Storage: </span> {{numberOfStorage}} </p>
           </div>
        </div>
        <div class="card " >
@@ -53,7 +56,7 @@
         </div>
      </div>
       </div>
-      <div class="col-sm">
+      <div class="col-sm" id="kolona2">
         <div class="card " >
           <div class="card-body">
           <h5 class="card-title"> Current Consumption:</h5>
@@ -66,7 +69,8 @@
       <div class="card ">
           <div class="card-body">
           <h5 class="card-title"> Current Production:</h5>
-          <p class="card-text" style="text-align: center;"> {{currentProduction}} kWh </p>
+          <canvas #currentProductionGraph></canvas>
+          <p class="card-text" style="text-align: center; margin-top: -50px;"> {{currentConsumes}} kWh </p>
 
           </div>
       </div>
@@ -80,7 +84,7 @@
       </div>
 
         <div class="col-sm order-sm-2" style="margin-bottom: 50px;">
-          <div class="card" style="width:550px; padding: 10px;">
+          <div class="card" id="grafik">
             <canvas #previous24ConsumptionGraph></canvas>
           </div>
 

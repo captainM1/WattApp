@@ -52,4 +52,7 @@ export class AuthUserService {
     return this.http.get<any>(environment.apiUrl + "/api/PowerUsage/power-usage/previous24Hours/consumption/user-every-day-device-usage/"+userID,{ headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
   }
 
+  getDeviceInfoUserByID(userID : any){
+    return this.http.get(environment.apiUrl + '/api/Device/devices/info/user/'+userID,{ headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
+  }
 }

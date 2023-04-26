@@ -127,6 +127,11 @@ img
   width:150px;
 }
 
+#kolona2
+{
+  margin-top: 20px;
+}
+
 
 }
 
@@ -140,6 +145,12 @@ img
   .container
   {
     margin-top: 50px;
+  }
+
+  #grafik
+  {
+    width:95%;
+    padding: 10px;
   }
 
   #kolona
@@ -207,6 +218,20 @@ img
     font-size: 15px;
   }
 
+  #kolona2
+  {
+    margin-top: 20px;
+  }
+
+  #numberOfDevices .card-text
+  {
+    font-weight: 400 !important;
+    padding-top: 5px;
+    font-size: 11px;
+    text-align: left;
+  }
+
+
 }
 
 @media(min-width: 1024px){
@@ -220,6 +245,7 @@ img
   {
     margin-top: 120px;
   }
+
 
   label
   {
@@ -260,6 +286,35 @@ img
     font-size: 20px;
   }
 
+  #grafik
+  {
+    width:550px;
+    padding: 10px;
+  }
+
+  #numberOfDevices
+  {
+    padding: 10px;
+  }
+
+  #numberOfDevices .card-text
+  {
+    text-align: left !important;
+    font-weight: 400 !important;
+    font-size: 16px;
+    padding-top: 15px;
+  }
+
+  #numberOfDevices .card-title
+  {
+    font-size: 18px;
+  }
+
+  #numberOfDevices .card-body
+  {
+    padding-bottom: 50px;
+  }
+
 }
 
 
@@ -274,6 +329,7 @@ img
   {
     margin-top: 90px;
   }
+
 
   label
   {
@@ -313,9 +369,43 @@ img
   {
     font-weight: bold;
     padding-top: 20px;
-    font-size: 20px;
+    font-size: 10px;
   }
 
+  #grafik
+  {
+    width:550px;
+    padding: 10px;
+  }
+
+  #grafik
+  {
+    width:550px;
+    padding: 10px;
+  }
+
+  #numberOfDevices
+  {
+    padding: 10px;
+  }
+
+  #numberOfDevices .card-text
+  {
+    text-align: left !important;
+    font-weight: 400 !important;
+    font-size: 10px;
+    padding-top: 15px;
+  }
+
+  #numberOfDevices .card-title
+  {
+    font-size: 14px;
+  }
+
+  #numberOfDevices .card-body
+  {
+    padding-bottom: 50px;
+  }
 
 }
 

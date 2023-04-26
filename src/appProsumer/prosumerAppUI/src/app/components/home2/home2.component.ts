@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Chart, ChartOptions } from 'chart.js';
-import { User } from 'src/app/models/user';
+import { Info, User } from 'src/app/models/user';
 import { Root } from 'src/app/models/weather';
 import { AuthUserService } from 'src/app/services/auth-user.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -25,6 +25,10 @@ export class Home2Component implements OnInit, AfterViewInit {
   graph24prev!:any;
   powerUsageList: any = [];
   timestampList: any = [];
+  numberOfProducers:number = 0;
+  numberOfConsumers:number = 0;
+  numberOfStorage:number = 0;
+  allUserDevices!: Info[];
 
   constructor(
 		private auth : AuthService,
@@ -85,6 +89,7 @@ export class Home2Component implements OnInit, AfterViewInit {
         this.id = response.id;
         console.log(response.id + "id");
         this.halfDoughnutMostConsumes(this.currentConsumes);
+        this.halfDoughnutProduction(this.currentConsumes); //ovo je samo za prikaz jer nemamo production
 
       }
     )
@@ -105,7 +110,7 @@ export class Home2Component implements OnInit, AfterViewInit {
     this.auth1.getCurrentProductionSummary(id).subscribe(
       (response : any) => {
         this.currentProduction = response.toFixed(2);
-        this.halfDoughnutProduction(response);
+        //this.halfDoughnutProduction(response);
       }
     )
   }
@@ -128,7 +133,8 @@ export class Home2Component implements OnInit, AfterViewInit {
           console.log(response);
           this.makeData(this.graph24prev);
         }
-       )
+       );
+       this.showMeDevices(this.userID);
       }
     )
   }
@@ -203,7 +209,7 @@ halfDoughnutMostConsumes(usage: any){
       {
         label: 'Energy consumption',
         data: [d, 1000-d],
-        backgroundColor: ['#026670', '#ECEFF1'],
+        backgroundColor: ['#FF8811', '#ECEFF1'],
       },
     ],
   };
@@ -281,7 +287,7 @@ showWeatherDetails()
             data: this.weather.hourly.temperature_2m,
             fill: true,
             borderColor: "#026670",
-            backgroundColor: "#7ed1da",
+            backgroundColor: "#31a0ac",
             tension: 0.1,
           },
         ],
@@ -334,14 +340,15 @@ showWeatherDetails()
 makeData(dataGraph:any){
   dataGraph.forEach((obj:any) => {
     obj.timestampPowerPairs.forEach((pair:any) => {
-      const time = pair.timestamp.split('T')[1].split('.')[0];
+      const time = pair.timestamp.split('T')[1].split(':')[0];
       this.timestampList.push(time);
       this.powerUsageList.push(pair.powerUsage);
     });
   });
 
-  console.log(this.powerUsageList);
-  console.log(this.timestampList);
+  this.timestampList.sort((a: string, b: string) => {
+    return parseInt(a) - parseInt(b);
+  });
   this.previous24Graph(this.timestampList, this.powerUsageList);
 }
 
@@ -349,7 +356,7 @@ previous24Graph(list:any, valueList:any){
   const data = {
     labels: list,
     datasets: [{
-      label: 'Previous 24h',
+      label: 'Consumption For The Previous 24h',
       data: valueList,
       fill: true,
       borderColor: 'rgb(255, 200, 0)',
@@ -364,7 +371,7 @@ previous24Graph(list:any, valueList:any){
       x: {
         title: {
           display: true,
-          text: 'Time',
+          text: 'Time (hour)',
         },
         ticks: {
           font: {
@@ -376,6 +383,9 @@ previous24Graph(list:any, valueList:any){
         title: {
           display: true,
           text: 'Power consumption (kW)',
+          font:{
+            size: 10
+          }
         },
         ticks: {
           font: {
@@ -391,6 +401,38 @@ previous24Graph(list:any, valueList:any){
     options: options,
   });
 }
+
+
+showMeDevices(id : string){
+  this.auth1.getDeviceInfoUserByID(id).subscribe(
+    (response : any) => {
+      this.allUserDevices = response;
+      console.log(this.allUserDevices + "all devices");
+      for(let us of this.allUserDevices){
+
+      this.auth.getDevicesInfoByID(us.deviceId).subscribe({
+        next: (response:any)=>{
+          us.typeOfDevice = response.groupName;
+          if(response.groupName === "Consumer"){
+            this.numberOfConsumers++;
+          }else if(response.groupName === "Prosumer"){
+            this.numberOfProducers++;
+          }else if(response.groupName === "Storage"){
+            this.numberOfStorage++;
+          }
+        },
+        error : (err : any)=>{
+          console.log("err");
+        }
+      }); }
+    }
+
+  )
+}
+
+
+
+
 
 }
 
