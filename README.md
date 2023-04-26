@@ -8,23 +8,38 @@ With EnergySolvix's solutions, households and DSOs can monitor their energy usag
 
 ## Instructions on how to get the project on a local machine.
 
-1. git clone http://gitlab.pmf.kg.ac.rs/wattapp/energysolvix.git
-2. Navigate to folder /src/appProsumer/prosumerAppUI and run npm install
+- git clone http://gitlab.pmf.kg.ac.rs/wattapp/energysolvix.git
+- Navigate to folder /src/appProsumer/prosumerAppUI and run npm install
    Navigate to folder /src/appDSO/dsoAppUI and run npm install
    Navigate to folder /src/appProsumer/prosumerAppBack and run:
      dotnet tool install --global dotnet-ef
      dotnet ef database update
      dotnet restore
-3. Download MongoDB from https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-windows-unattended/
-4. Install it and also install MongoDBCompass
-5. Open Compass and connect to mongodb://localhost:27017
-6. Add new database named 'data'
-7. Add new collection inside database called 'powerusage'
-8. Select ADD DATA and from root of project insert both power_usage_data and power_production_data
+- Download MongoDB from https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-windows-unattended/
+- Install MongoDB and also install MongoDBCompass
+- Open Compass and connect to mongodb://localhost:27017
+- Add new database named 'data'
+- Add new collection inside database called 'powerusage'
+- Select ADD DATA and from root of project insert both power_usage_data and power_production_data
 
 ## Deployment
-1. To run DSO app navigate to /src/appDSO/dsoAppUI and run ng server --o (this will open new page in browser with app)
-2. To run Prosumer app navigate to /src/appProsumer/prosumerAppUI and run ng server --o (this will open new page in browser with app, if you have one or other already running it will ask you if you want to change port select yes by typin y and enter)
+
+To deploy app, follow these steps:
+Angular
+
+    Run ng build --prod to build the production version of the Angular app.
+    The output files will be located in the dist/ directory.
+    Copy the contents of the dist/ directory to your web server.
+
+.NET
+
+    Compile the .NET app into a publishable format.
+    You can publish the app to a folder or directly to a web server using Visual Studio or the .NET CLI.
+    If publishing to a folder, copy the contents of the published directory to your web server.
+
+Deployment Configuration
+
+Make sure to update the configuration settings in the appsettings.json file with the appropriate values for your deployment environment. Specifically, ensure that the ConnectionStrings section points to your database, and that the AllowedOrigins section contains the appropriate URLs for your Angular app.
 
 
 ## Built With
