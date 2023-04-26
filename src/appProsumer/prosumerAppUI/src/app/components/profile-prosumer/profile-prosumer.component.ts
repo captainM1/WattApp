@@ -14,11 +14,18 @@ import { User } from 'src/app/models/user';
   styleUrls: ['./profile-prosumer.component.css']
 })
 export class ProfileProsumerComponent implements OnInit{
-  
+
   allUsers!: any[];
   userID!: User;
   token!:any;
- 
+  firstName!:string;
+  lastName!:string;
+  phoneNumber!: string;
+  address!: string;
+  city!: string;
+  country!: string;
+  email!: string;
+
 
 
   constructor(
@@ -29,7 +36,6 @@ export class ProfileProsumerComponent implements OnInit{
   ngOnInit(): void {
     this.getUser();
     this.getToken();
-    
   }
 
   getUser(){
@@ -47,9 +53,18 @@ export class ProfileProsumerComponent implements OnInit{
       (response :any)=>{
        this.userID = response;
        console.log(this.userID);
+       this.firstName = response.firstName;
+       this.firstName = response.firstName;
+       this.lastName = response.lastName;
+       this.phoneNumber = response.phoneNumber;
+       this.address = response.address;
+       this.city = response.city;
+       this.country = response.country;
+       this.email = response.email;
+
       }
     )
-  } 
+  }
 }
 
 

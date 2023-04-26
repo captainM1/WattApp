@@ -9,8 +9,8 @@ import { CookieService } from 'ngx-cookie-service';
   providedIn: 'root'
 })
 export class AuthUserService {
-  
-  
+
+
   constructor(
     private http : HttpClient,
     private auth : AuthService,
@@ -28,5 +28,15 @@ export class AuthUserService {
     return this.http.get<any>(`${environment.apiUrl}/api/User/users/${userID}`, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
   }
 
-  
+  getCurrentConsumptionSummary(userID:any) :Observable<any>{
+    return this.http.get<any>(environment.apiUrl + "/api/PowerUsage/power-usage/currentUsageUser/consumption-summary/"+userID,{ headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
+  }
+
+  getCurrentProductionSummary(userID:any) :Observable<any>{
+    return this.http.get<any>(environment.apiUrl + "/api/PowerUsage/power-usage/currentUsageUser/production-summary/"+userID,{ headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
+  }
+
+  getAverageUserUsage(userID:any) :Observable<any>{
+    return this.http.get<any>(environment.apiUrl + "/api/PowerUsage/power-usage/PreviousMonth/average-user-usage/"+userID,{ headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
+  }
 }

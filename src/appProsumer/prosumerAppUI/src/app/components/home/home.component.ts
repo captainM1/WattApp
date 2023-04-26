@@ -23,10 +23,10 @@ export class HomeComponent implements OnInit{
     private serv : AuthUserService
     ){}
   
-    ngOnInit(): void {
+    ngOnInit(): void {/*
     this.auth.getData().subscribe((data) => {
       this.data = "Welcome, " + data;
-    });
+    });*/
     
     this.numberOfDevices();
     

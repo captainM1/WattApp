@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'app/environments/environment';
 import { Info } from 'models/User';
 import { Observable } from 'rxjs';
+import { CookieService } from "ngx-cookie-service"
 
 @Injectable({
   providedIn: 'root'
@@ -10,13 +11,34 @@ import { Observable } from 'rxjs';
 export class AuthService {
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private cookie:CookieService
   ) { }
 
   getCoords():Observable<any>{
     return this.http.get<any>(environment.apiUrl + "/api/User/coordinatesForEveryUser");
   }
 
+  login(email : string, password : string) : Observable<string>{
+    return this.http.post<string>(environment.apiUrl + "/api/Dispatcher/signin", {
+      email : email,
+      password : password
+    })
+  }
+
+  register(username: string, role:string,email: string,password : string) : Observable<string>{
+    return this.http.post<string>(environment.apiUrl + "/api/Dispatcher/signup", {
+      UserName: username,
+      Role: role,
+      Email : email,
+      password: password
+    })
+  }
+  
+  getFullToken() {
+    const jwtToken = this.cookie.get('jwtToken');
+    return jwtToken;
+  }
   getPagination(pageNumber : number, pageSize : number) : Observable<any>{
     return this.http.get<any>(environment.apiUrl + "/api/User/users", {
       params: {
@@ -66,7 +88,7 @@ export class AuthService {
 
 
   getWeather():Observable<any>{
-    return this.http.get<any>('https://api.openweathermap.org/data/2.5/weather?q=Kragujevac&APPID=5aa0bb66ef67e76c36269e8d98cbc320');
+    return this.http.get<any>('https://api.open-meteo.com/v1/forecast?latitude=44.02&longitude=20.91&hourly=temperature_2m,relativehumidity_2m&daily=temperature_2m_max,temperature_2m_min&current_weather=true&timezone=auto');
   }
 
   getUserNumber(){
@@ -81,7 +103,49 @@ export class AuthService {
     return this.http.get(environment.apiUrl + '/api/Device/devices/info/user/'+userID);
   }
 
-  getPowerUsageForDeviceByID(deviceID: any){
-    return this.http.get(environment.apiUrl + '/api/PowerUsage/power-usage/current/'+deviceID);
+  getPowerUsageToday(deviceID: any) :Observable<any>{
+    return this.http.get(environment.apiUrl + '/api/PowerUsage/power-usage/current/device/'+deviceID);
+  }
+
+  
+  currentProcustionSystem() : Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/current-production/system");
+  }
+
+  currentConsumptionSystem() : Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/current-consumption/system");
+  }
+
+  prevMonthConsumptionSystem() : Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/previousMonth/consumption/system");
+  }
+
+  nextMonthConsumtionSystem() : Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/nextMonth/consumption/system");
+  }
+
+  eachDevicePrevMonth():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/previousMonth/consumption/each-device");
+  }
+
+  prevMonthProductionSystem():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/previousMonth/production/system");
+  }
+
+  nextMonthProductionSystem():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/nextMonth/production/system");
+  }
+
+  AllDevices():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/Device/devices/info");
+  }
+
+  device(deviceID : any) : Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/Device/devices/info/"+ deviceID);
+  }
+
+  // popup
+  getUserInformation(id : string):Observable<any>{
+    return this.http.get(environment.apiUrl + '/api/User/users/' + id);
   }
 }

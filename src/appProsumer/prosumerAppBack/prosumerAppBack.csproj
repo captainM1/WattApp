@@ -26,6 +26,7 @@
     <PackageReference Include="SendGrid" Version="9.28.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.6" />
+    <PackageReference Include="MailKit" Version="3.6.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Migrations" />

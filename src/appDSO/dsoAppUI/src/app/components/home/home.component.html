@@ -1,34 +1,120 @@
 <app-nav></app-nav>
-<div class="outer" style="margin-top: 90px;">
+<div class="outer" style="margin-top: 90px; margin-left: 0; margin-right: 0;">
 <div class="container">
-    <div class="row">
-        <div>
-            
-            <app-weather></app-weather>
+    <!-- WEATHER -->
+            <div class="row" >
+                <h2 class="text-center">Weather Details</h2>
+                <small class="date">{{dateForWeater}}</small>
+                <div class="col-sm-4" id = "weather_div">
+                    <p class="text-left">
+                        <img src="../../../assets/icons/weather-icons/compass.png" ><small>Your Time Zone:</small> {{ this.weather.timezone }}
+                    </p>
+                    <p class="text-left">
+                      <img src="../../../assets/icons/weather-icons/temperature(2).png"><small>Temperature:</small> {{ this.weather.current_weather.temperature }} °C
+                    </p>
+                    <p class="text-left">
+                        <img src="../../../assets/icons/weather-icons/hot.png"><small>Maximal Temperature: </small> {{ this.weather.daily.temperature_2m_max[0]}} °C
+                      </p>
+                </div>
+                <div class="col-sm-4" style="padding-top: 20px;margin-right: -20px; padding-top: 20px; padding-right: 60px; padding-left: 60px;">
+                    <p class="text-left">
+                        <img src="../../../assets/icons/weather-icons/cold.png"><small>Minimal Temperature:</small> {{ this.weather.daily.temperature_2m_min[0]}} °C
+                      </p>
+                      <p class="text-left">
+                        <img src="../../../assets/icons/weather-icons/storm.png"><small>Wind Speed:</small> {{ this.weather.current_weather.windspeed}} km/h
+                      </p>
+                      <p class="text-left">
+                        <img src="../../../assets/icons/weather-icons/humidity.png"><small>Humidity:</small> {{ this.weather.hourly.relativehumidity_2m[0]}} %
+                      </p>
+                </div>
+                <div class="col-sm-4">
+                    <canvas #hourlyTemp style="width: 300px; height: 150px;"></canvas>
+                </div>
+            </div>
+    <!-- TOTAL DEVICES  -->
+            <div class="row">
+                <h2 class="text-center">Device Details</h2>
+                <div class="card-container">
+                    <div class="card">
+                        <h3 class="card-title" >Total devices:</h3>
+                        <p class="card-text" >{{total}}</p>
+                    </div>
+                    <div class="card">
+                        <h3 class="card-title" >Prosumers:</h3>
+                        <p class="card-text">{{producers.length}}</p>
+                    </div>
+                    <div class="card">
+                        <h3 class="card-title" >Consumers:</h3>
+                        <p class="card-text" >{{consumers.length}}
+                        </p>
+                        </div>
+                    <div class="card">
+                        <h3 class="card-title" >Storage:</h3>
+                        <p class="card-text" >{{storage.length}}</p>
+                    </div>
+                  </div>
+                
+                    <h2 class= "text-center"style="text-align: center; padding-top: 10px;">Production</h2>
+                    <div class="card-container">
+                        <div class="card">
+                            <h3 class="card-title">Current: </h3>
+                            <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{currentProcuctionSys}} kWh</p>
+                            <canvas #currentProductionSYS></canvas>
+                        </div>
+                        <div class="card">
+                            <h3 class="card-title">Previous Month System:</h3>
+                            <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{currentProcuctionSys}} kWh</p>
+                            <canvas #prevMonthProductionSYS></canvas>
+                        </div>
+                        <div class="card">
+                            <h3 class="card-title">Prediction for Next Month System: </h3>
+                            <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{currentProcuctionSys}} kWh</p>
+                            <canvas #nextMonthProductionSYS></canvas>
+                        </div>
+                        <div class="card">
+                            <h3 class="card-title">Each Device in System: </h3>
+                            <select>
+                                <option>Previous month</option>
+                                <option>Next month</option>
+                            </select>
+                        </div>
+
+                    
+                    </div>
+                    <h2 class= "text-center"style="text-align: center; padding-top: 10px;">Consumtion:</h2>
+                    <div class="card-container">
+                        <div class="card">
+                            <h3 class="card-title">Current: </h3>
+                            <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{currentConsumptionSys}} kWh</p>
+                            <canvas #currentConsumptionSYS></canvas>
+                        </div>
+                        <div class="card">
+                            <h3 class="card-title">Previous Month System: </h3>
+                            <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{prevMonthConsumptionSys}} kWh</p>
+                            <canvas #prevMonthConsumptionSYS></canvas>
+                        </div>
+                        <div class="card">
+                            <h3 class="card-title">Prediction for Next Month System: </h3>
+                            <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{nextMonthConsumptionSys}} kWh</p>
+                            <canvas #nextMonthConsumptionSYS></canvas>
+                        </div>
+                        <div class="card">
+                            <h3 class="card-title">Each Device in System: </h3>
+                            <select>
+                                <option>Previous month</option>
+                                <option>Next month</option>
+                            </select>
+                        </div>
+                        
+                    </div>
+                    
+         
         </div>
     </div>
-    <div class="row" style="margin-top: 30px;">
-        <div class="col">
-            <h1 class = "display-2" style="text-align: center;">Total devices: {{total}}</h1>
-            <div>
-                <canvas #myChart style="width: 200px; height: 200px;"></canvas>  
-            </div>
-        </div>
-        <div class="col">
-            <h1 class = "display-2" style="text-align: center;">Total users: {{totalUsers}}</h1>
-            <div>
-                <canvas #myChartUsers style="width: 200px; height: 200px;" ></canvas>  
-            </div>
-        </div>
-    </div>
+</div>
+        
+ 
+       
     
    
 
-    <div class="row" style="margin-top: 30px;">
-        <h1 class = "display-2" style="text-align: center;">Number of Appliances</h1>
-
-        <div style="margin-bottom: 20px;">
-            <canvas #myChartForEveryTypeOfDevice style="width: 80%;"></canvas>
-        </div>
-    
-</div>

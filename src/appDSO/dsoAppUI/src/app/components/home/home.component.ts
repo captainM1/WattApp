@@ -1,9 +1,12 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { deviceGroup, deviceGroupManifacturers, deviceManifacturers } from 'models/Devices';
+import { deviceGroup, deviceGroupManifacturers, deviceManifacturers, eachDevice } from 'models/Devices';
 import { AuthService } from 'service/auth.service';
 import { Chart, elements } from 'chart.js';
+import { ChartOptions } from 'chart.js';
 import { User } from 'models/User';
 import { animation } from '@angular/animations';
+import { Root } from 'models/weather';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
@@ -13,6 +16,12 @@ import { animation } from '@angular/animations';
 export class HomeComponent implements OnInit, AfterViewInit{
 	
 	
+	
+	// eachDevicePrev!: eachDevice[];
+	// eachDeviceNext!: eachDevice[]
+	selectedOption: any;
+	
+	
 
 	constructor(
 		private auth : AuthService
@@ -20,8 +29,36 @@ export class HomeComponent implements OnInit, AfterViewInit{
 	
 
 	totalUsers!: number;
-
+	
+	weather! : Root;
 	User! : User[];
+	
+	previousMonthLabels: string[] = [];
+	everyDayUsagePreviousMonth: any;
+	everyDayUsageNextMonth:any;
+
+	currentConsumptionSys!:any;
+	prevMonthConsumptionSys!:any;
+	nextMonthConsumptionSys!:any;
+	prevMonthEachDeviceConsumption!: eachDevice[];
+
+	currentProcuctionSys!:any;
+	prevMonthProductionSys!: any;
+	prevMonextMonthConsumptionSys!:any;
+	
+	currentSys!:any;
+	previousMonth! : any;
+	nextMonth!: any;
+	nextMonthLabels:string[] = [];
+	nextMonthData: any;
+	currentHour!:any;
+	hour!:Date;
+
+
+	today!:Date;
+	MonthPrev!:Date;
+	MonthNext!:Date;
+
 
 	selectOption!: string;
 
@@ -50,31 +87,137 @@ export class HomeComponent implements OnInit, AfterViewInit{
 	@ViewChild('myChart') myChart!: ElementRef;
 	@ViewChild('myChartUsers') myChartUsers!:ElementRef;
 	@ViewChild('myChartForEveryTypeOfDevice') myChartForEveryTypeOfDevice!: ElementRef;
-	// @ViewChild('myChartProsumers') myChartProsumers!: ElementRef;
-
+	@ViewChild('hourlyTemp') hourlyTemp!: ElementRef;
 	
+
+	@ViewChild('currentConsumptionSYS') currentConsumptionSYS!:ElementRef;
+	@ViewChild('prevMonthConsumptionSYS') prevMonthConsumptionSYS!:ElementRef;
+	@ViewChild('nextMonthConsumptionSYS') nextMonthConsumptionSYS!:ElementRef;
+
+
+	@ViewChild('currentProductionSYS') currentProductionSYS!:ElementRef;
+	@ViewChild('prevMonthProductionSYS') prevMonthProductionSYS!:ElementRef;
+	@ViewChild('nextMonthProductionSYS') nextMonthProductionSYS!:ElementRef;
 	
 	ngAfterViewInit(): void {
-		this.createMeChartForEveryDevice();
-		this.getNumberOfUsers();
-    	this.createMeChartForEveryDevice();
-    	setTimeout(() => {
-        	this.giveMeChartForUsers();
-    	}, 0);
-	}
-							
-							
-	
-	
+		setTimeout(()=>{
+			this.giveMeChartForTemperatureDaily()
+		},0);
+		setTimeout(() => {
+			this.getConsumptionCurrent();
+			this.getProductionCurrent();
+			this.getConsumtionPrevMonth();
+		}, 1000)
+
 		
-	ngOnInit(): void {
+		
+	}
+	
+	ngOnInit(): void {	
+	// consumption 
+		this.getConsumptionCurrent();
+		this.getConsumtionPrevMonth();
+		this.getConsumtionNextMonth();
+
+		this.getProductionCurrent();
+
+		this.allDevices();
+		this.getDate();
 		this.getDeviceGroup();
+		this.prevMonthEachDevice();
+
+	// temperature
+		this.giveMeWeather();
+		this.giveMeChartForTemperatureDaily();
+		
+
 		this.getNumberOfUsers();
-		this.createMeChartForEveryDevice();
+		
+		// this.createMeChartForEveryDevice();
+		
 		this.getAllUserInfo();
-		
-		
 	}
+
+	dateForWeater:any;
+	month:any;
+	next:any;
+	getDate(){
+		this.today = new Date();
+		this.dateForWeater = this.today.toLocaleString('en-US',{ hour: 'numeric', minute: 'numeric', day:'numeric', month:'numeric', year:'numeric' });
+
+		this.MonthPrev = new Date(this.today.getFullYear(), this.today.getMonth() - 1);
+		this.month = this.MonthPrev.toLocaleString('default', { month: 'long', year: 'numeric' });
+		
+		this.MonthNext = new Date(this.today.getFullYear(), this.today.getMonth() + 1);
+		this.next =  this.MonthNext.toLocaleString('default', { month: 'long', year: 'numeric' });
+	}
+//  --- weater ---	
+	giveMeWeather(){
+		this.auth.getWeather().subscribe(
+			(response :any)=>{
+				this.weather = response;
+				this.giveMeChartForTemperatureDaily();
+			}
+		)
+	}
+
+	giveMeChartForTemperatureDaily(){
+		const timeSlice = this.weather.hourly.time.slice(0,24);
+		const time = timeSlice.map((time)=>{
+			const date = new Date(time);
+			const hours = date.getHours().toString().padStart(2,"0");
+			const minutes = date.getMinutes().toString().padStart(2,"0");
+			return hours+":"+minutes;
+		})
+		
+		const labels = time;
+		const data = {
+		labels: labels,
+		datasets: [{
+			label: 'Hourly temperature change',
+			data: this.weather.hourly.temperature_2m,
+			fill: true,
+			borderColor: 'rgb(98, 183, 254)',
+			backgroundColor:'rgba(98, 183, 254,0.4)',
+			pointBackgroundColor: 'rgba(98, 183, 254,0.7)',
+			borderWidth: 1,
+			pointBorderColor:'rgb(98, 183, 254)'
+		}]
+	}
+	const options: ChartOptions = {
+		scales: {
+		  x: {
+			title: {
+			  display: true,
+			  text: 'Temperature hourly',
+			},
+			ticks: {
+			  font: {
+				size: 13,
+			  },
+			},
+		  },
+		  y: {
+			title: {
+			  display: true,
+			  text: 'Temperature (°C)',
+			},
+			ticks: {
+			  font: {
+				size: 15,
+			  },
+			},
+		  },
+		},
+	  };
+		const stackedLine = new Chart(this.hourlyTemp.nativeElement, {
+			type: 'line',
+			data: data,
+			options: options,
+		});
+		
+};
+	
 	
 	getNumberOfUsers(){
 		this.auth.getUserNumber().subscribe(
@@ -88,8 +231,6 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		this.auth.getAllUserInfo().subscribe(
 			(response : any)=>{
 				this.User = response;
-				console.log("RES",response);
-				console.log("USER",this.User);
 			}
 		)
 	}
@@ -123,7 +264,6 @@ export class HomeComponent implements OnInit, AfterViewInit{
 							this.labStorages = [...new Set(this.storage.map(element => element.name))];
 							
 							this.createMeChartForEveryDevice();
-
 							this.getNumberOfUsers();
 							this.giveMeChartForUsers();
 						}
@@ -142,12 +282,18 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			datasets: [{
 			data: [this.producers.length, this.consumers.length, this.storage.length],
 			backgroundColor: [
-				'rgb(250, 166, 77)',
-				'rgb(253, 211, 128)',
-				'rgb(78, 148, 155)',
+				'rgba(255, 159, 64, 0.5)',
+				'rgba(54, 162, 235, 0.5)',
+				'rgba(75, 192, 192, 0.5)'
 				
 			],
-			hoverOffset: 4
+			borderColor:[
+				'rgb(255, 159, 64)',
+				'rgb(54, 162, 235)',
+				'rgb(75, 192, 192)',
+			],
+			hoverOffset: 4,
+			borderWidth: 1,
 			}]
 		},
 		options: {
@@ -161,7 +307,6 @@ export class HomeComponent implements OnInit, AfterViewInit{
 
 	giveMeChartForUsers(){
 		const tot = this.totalUsers;
-		console.log(tot);
 		this.chart1 = new Chart(this.myChartUsers.nativeElement, {
 			type: 'doughnut',
 			data: {
@@ -211,29 +356,29 @@ export class HomeComponent implements OnInit, AfterViewInit{
 
 		
 	
-		console.log(label);
+	
 
 	const chartData = {
     labels: label,
     datasets: [
         {
             label: 'Producers',
-            backgroundColor: "rgb(241, 143, 1)",
-            borderColor: "rgb(241, 143, 1)",
+            backgroundColor: 'rgba(255, 159, 64, 0.5)',
+            borderColor: 'rgb(255, 159, 64)',
             borderWidth: 1,
             data: dataProducers
         },
         {
             label: 'Consumers',
-            backgroundColor: "rgb(54, 162, 235)",
-            borderColor: "rgb(54, 162, 235)",
+            backgroundColor: 'rgba(54, 162, 235, 0.5)',
+            borderColor:   'rgb(54, 162, 235)',
             borderWidth: 1,
             data: dataConsumers
         },
         {
             label: 'Storages',
-            backgroundColor: "rgb(255, 99, 132)",
-            borderColor: "rgb(255, 99, 132)",
+            backgroundColor: 'rgba(75, 192, 192, 0.5)',
+            borderColor: 'rgb(75, 192, 192)',
             borderWidth: 1,
             data: dataStorages
         }
@@ -244,6 +389,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			type: 'bar',
 			data: chartData,
 			options: {
+				indexAxis: 'y',
 				scales: {
 					y: {
 						beginAtZero: true
@@ -253,6 +399,268 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		});
 		}
 
+	
+		
+	
+	
+	
+// CONSUMPTION 
+		getConsumptionCurrent(){
+			this.auth.currentConsumptionSystem().subscribe(
+				(response:any)=>{
+					this.currentConsumptionSys = response.toFixed(2);
+					this.halfDoughnutConsumtionSys(this.currentConsumptionSys);
+				}
+			)
+		}
+
+		
+		halfDoughnutConsumtionSys(usage: any){
+		  const d = usage;
+		  const data = {
+			labels: ['Energy consumption'],
+			datasets: [
+			  {
+				label: 'Energy consumption',
+				data: [d, 1000-d],
+				backgroundColor: ['#FF8811', '#ECEFF1'],
+			  },
+			],
+		  };
+		
+		  const options = {
+		   circumference:180,
+		   rotation:270,
+		   aspectRation: 2
+		  };
+		
+		  const chart = new Chart(this.currentConsumptionSYS.nativeElement, {
+			type: 'doughnut',
+			data: data,
+			options: options,
+		  });
+		}
+
+
+		getConsumtionPrevMonth(){
+			this.auth.prevMonthConsumptionSystem().subscribe(
+				(response : any) => {
+					this.prevMonthConsumptionSys = response.toFixed(2);
+					this.halfDoughnutPrevMonthConsumtionSys(this.prevMonthConsumptionSys);
+				}
+			)
+		}
+// prevMonthConsumptionSYS
+		halfDoughnutPrevMonthConsumtionSys(usage: any){
+			const d = usage;
+			const data = {
+			labels: ['Energy consumption'],
+			datasets: [
+				{
+				label: 'Energy consumption',
+				data: [d, 1000-d],
+				backgroundColor: ['#FF8811', '#ECEFF1'],
+				},
+			],
+			};
+		
+			const options = {
+			circumference:180,
+			rotation:270,
+			aspectRation: 2
+			};
+		
+			const chart = new Chart(this.prevMonthConsumptionSYS.nativeElement, {
+			type: 'doughnut',
+			data: data,
+			options: options,
+			});
+		}
+
+		getConsumtionNextMonth(){
+			this.auth.nextMonthConsumtionSystem().subscribe(
+				(response : any) => {
+					this.nextMonthConsumptionSys = response.toFixed(2);
+					this.halfDoughnutNextMonthConsumtionSys(this.nextMonthConsumptionSys);
+				}
+			)
+		}
+// prevMonthConsumptionSYS
+		halfDoughnutNextMonthConsumtionSys(usage: any){
+			const d = usage;
+			const data = {
+			labels: ['Energy consumption'],
+			datasets: [
+				{
+				label: 'Energy consumption',
+				data: [d, 1000-d],
+				backgroundColor: ['#FF8811', '#ECEFF1'],
+				},
+			],
+			};
+		
+			const options = {
+			circumference:180,
+			rotation:270,
+			aspectRation: 2
+			};
+		
+			const chart = new Chart(this.nextMonthConsumptionSYS.nativeElement, {
+			type: 'doughnut',
+			data: data,
+			options: options,
+			});
+		}
+// prevMonthEachDevice
+
+		prevMonthEachDevice(){
+			this.auth.eachDevicePrevMonth().subscribe(
+				(response : any) => {
+					this.prevMonthEachDeviceConsumption = response;
+					console.log("PREV EACH DEVICE::: ",this.prevMonthEachDeviceConsumption);
+				}
+			)
+		}
+// PRODUCTION 
+// currentProductionSYS
+		prevMonthProductionSystem(){
+			this.auth.currentProcustionSystem().subscribe(
+				(response : any) => {
+					this.prevMonthConsumptionSys = response.toFixed(2);
+					this.halfDoughnutPrevMonthProductionSys(this.prevMonthConsumptionSys);
+				}
+			)
+		}
+		halfDoughnutPrevMonthProductionSys(usage: any){
+			const d = usage;
+			const data = {
+			labels: ['Energy consumption'],
+			datasets: [
+				{
+				label: 'Energy consumption',
+				data: [d, 1000-d],
+				backgroundColor: ['#FF8811', '#ECEFF1'],
+				},
+			],
+			};
+		
+			const options = {
+			circumference:180,
+			rotation:270,
+			aspectRation: 2
+			};
+		
+			const chart = new Chart(this.prevMonthProductionSYS.nativeElement, {
+			type: 'doughnut',
+			data: data,
+			options: options,
+			});
+		}
+		
+		getProductionCurrent(){
+			this.auth.currentProcustionSystem().subscribe(
+				(response : any) => {
+					this.currentConsumptionSys = response.toFixed(2);
+					this.halfDoughnutProductionSys(this.currentProcuctionSys);
+				}
+			)
+		}
+		halfDoughnutProductionSys(usage: any){
+			const d = usage;
+			const data = {
+			labels: ['Energy consumption'],
+			datasets: [
+				{
+				label: 'Energy consumption',
+				data: [d, 1000-d],
+				backgroundColor: ['#FF8811', '#ECEFF1'],
+				},
+			],
+			};
+		
+			const options = {
+			circumference:180,
+			rotation:270,
+			aspectRation: 2
+			};
+		
+			const chart = new Chart(this.currentProductionSYS.nativeElement, {
+			type: 'doughnut',
+			data: data,
+			options: options,
+			});
+		}	
+
+		nextMonthProductionSystem(){
+			this.auth.nextMonthProductionSystem().subscribe(
+				(response : any) => {
+					this.nextMonthConsumptionSys = response.toFixed(2);
+					this.halfDoughnutNextMonthProductionSys(this.prevMonextMonthConsumptionSys);
+				}
+			)
+		}
+		halfDoughnutNextMonthProductionSys(usage: any){
+			const d = usage;
+			const data = {
+			labels: ['Energy consumption'],
+			datasets: [
+				{
+				label: 'Energy consumption',
+				data: [d, 1000-d],
+				
+				},
+			],
+			};
+		
+			const options = {
+				circumference:180,
+				rotation:270,
+				aspectRation: 2,
+				borderColor: 'rgb(59, 193, 74)', // ZELENA
+				backgroundColor:'rgba(59, 193, 74,0.4)',
+				pointBackgroundColor: 'rgba(59, 193, 74,0.7)',
+				borderWidth: 1,
+				pointBorderColor:'rgb(59, 193, 74)',
+			};
+		
+			const chart = new Chart(this.nextMonthProductionSYS.nativeElement, {
+			type: 'doughnut',
+			data: data,
+			options: options,
+			});
+		}
+
+
+
+	allDevices(){
+		this.auth.AllDevices().subscribe(
+			(response : any)=>{
+				console.log("all devices: ",response);
+			}
+		)
+	}
+
+	giveMeDeviceByID(id : any){
+		this.auth.device(id).subscribe(
+			(response : any) => {
+				console.log("dev : ",response);
+			}
+		)
+	}
+		
+		Previousbool : boolean = true;
+		Nextbool : boolean = false;
+		selectedOptionChart:string = 'Previous';
+		onOptionSelect(){
+			if(this.selectedOptionChart === 'Previous'){
+				this.Previousbool = true;
+				this.Nextbool = false;
+			}else if(this.selectedOptionChart === 'Next'){
+				this.Previousbool = false;
+				this.Nextbool = true;
+			}
+		}
+			
 		
 }
 

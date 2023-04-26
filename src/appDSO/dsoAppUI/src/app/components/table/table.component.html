@@ -2,87 +2,132 @@
 <div class="row" style="margin-top: 100px;">
   <div class="col-lg-7">
     <div class="input-div">
-        <label>Search by first name:</label>
-        <input type="text" [(ngModel)]="_searchByName" placeholder="John Cena">
-        <label>Search by address:</label>
-        <input type="text" [(ngModel)]="_searchByAddress" placeholder="Addres NN">
-        <button tableExport >Export data</button>
-        
+      <div>
+        <p>Search user by name:</p>
+        <input type="text" [(ngModel)]="_searchByName" placeholder="John Cena" (input)="applyFilters()">
+      </div>
+      <div>
+        <p>Search user by address:</p>
+        <input type="text" [(ngModel)]="_searchByAddress" placeholder="Addres NN" (input)="applyFilters()">
+      </div>
+      <button (click)="exportToExcel()">Export all</button>
+      <button (click)="exportSelectedData()">Export selected</button>
     </div>
       <div class="card">
-          <table tableexporter >
+          <table tableexporter class="table-hover" #myTable id = "myTable">
               <thead>
                 <tr>
-                  <th>
-                      First Name
-                  </th>
-                  <th>
-                      Last Name
-                  </th>
-                  <th>
-                      Address
-                  </th>
-                  <th>
-                        Power Usage
-                  </th>
-                  </tr>
+                  <th style="width: 5%;"></th>
+                  <th >First Name</th>
+                  <th >Last Name</th>
+                  <th style="width: 23%;">Address</th>
+                  <th style="width: 15%;"(click)="sortData('powerUsage')"><i class="fa fa-arrow-up" aria-hidden="true" style = "color:white" *ngIf="currentSortOrder ==='asc'"></i><i class="fa fa-arrow-down"  style ="color:white" *ngIf="currentSortOrder === 'desc'"></i>Power Usage</th>
+                  <th style="width: 20%;"></th>
+                  
+                </tr>
               </thead>
-              <tr *ngFor="let user of filtered" (click) = "showMeOnMap(user.id)">
-               
-                
-                  <td> <i class="fa fa-angle-right fa-lg" (click) = "showMeDevices(user.id)" ></i>{{user.firstName}}</td>
+              <tr *ngFor="let user of allUsers | filterName : _searchByName: _searchByAddress" (click) = "showMeOnMap(user.id)">
+                  <td><input [(ngModel)]="user.selected"  type = "checkbox" style="width: 20px;" (click) = "toggleExportSelected()"></td>  
+                  <!-- (click) = "showMeDevices(user.id)" -->
+                  <td >{{user.firstName}}</td> 
                   <td>{{user.lastName}}</td>
                   <td>{{user.address}}, {{user.city}}, {{user.country}}</td>
                   <td>{{user.powerUsage}}kw/h</td>
-                  <!-- <td><input (click)="exportSelectedData();" type="checkbox"></td> -->
+                  <td><button class="btn" (click)="openModel()">Show me profile</button></td>
               </tr>
               <tr>
                 
               </tr>
-              <!-- <tfoot style="text-align: center;">
-                <div class="row">
-                  <div class="col-sm">
-                    <select class="form-select" [(ngModel)]="selected">
-                      <option *ngFor="let size of pageSizeOption">{{size}}</option>
-                    </select>
-                  </div>
-                  <div class="col-sm">
-                    <a (click)="prevPage()"><i class="fa fa-angle-left"></i> Previous page</a>
-                  </div>
-                  <div class="col-sm">
-                    <a (click)="nextPage()">Next page <i class="fa fa-angle-right"></i></a>
-                  </div>
-                </div>
-                
-            </tfoot> -->
           </table>
+          <div class="col">
+            <tr style="width: 100%; display: flex; justify-content: center; text-align: center;">
+              <p-paginator class="w-100" [rows]="pageSize" [totalRecords]="lengthOfUsers" [rowsPerPageOptions]="pageSizeOptions" (onPageChange)="onPageChange($event)"></p-paginator>
+            </tr>
+          </div>
          
-          <table>
-            <thead>
-              <tr>
-                <th>Device name</th>
-                <th>Type of Device</th>
-                <th>Device manifacture</th>
-                <th>Mac Address</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let device of allUserDevices">
-                
-                <td>{{device.deviceTypeName}}</td>
-                <td>{{device.typeOfDevice}}</td>
-                <td>{{device.manufacturerName}}</td>
-                <td>{{device.macAdress}}</td>
-              </tr>
-            </tbody>
-          </table>
-          
-          
+         
+      
         </div> 
     </div>
     <div class="col">
-        <div id = "map" style="width: 450px; height: 300px;" >
-            
-        </div>
+        <div id = "map" style="width: 550px; height: 400px;" >
+      </div>
+      
     </div>
  </div>
+ 
+ <div class="modal" id="myModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">User Profile</h4>
+        <button type="button" class="btn-close" (click)="closeModel()" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <h1 class="text-center">{{userPopUp.firstName}} {{userPopUp.lastName}}</h1>
+          <div class="col-sm">
+            <h2 class="text-left">General information</h2>
+            <p>E-mail: {{userPopUp.email}}</p>
+            <p>Phone number: {{userPopUp.email}}</p>
+            <p>City: {{userPopUp.country}}, {{userPopUp.city}}/p>
+            <p>Address: {{userPopUp.address}}</p>
+          </div>
+          <div class="col-sm">
+            <h2 class="text-right">Device Details</h2>  
+            <p>Total numer of devices: {{allUserDevices.length}} </p>
+            <p>Prosumers: {{producers.length}}</p>
+            <p>Consumers: {{consumers.length}}</p>
+            <p>Storage: {{storage.length}}</p>
+          </div>
+        </div>
+        <!-- <div class="row">
+          <div class="col-sm-4" style="width: 200px; height: 200px;" >
+            <div  class="chart">
+              <p class = "text_below">{{powerUsagePopUp}}</p>
+              <canvas #powerUsageGraph ></canvas>
+            </div>
+          </div>
+          
+        </div> -->
+        <div class="row">
+          <div class="col">
+            <div>
+              <button id = "devices">Devices</button>
+              <button id = "system">System</button>
+            </div>
+            <div id = "showDevicePage">
+              <table >
+                <thead>
+                  <tr>
+                    <th>Device name</th>
+                    <th>Device manifacture</th>
+                    <th>Mac Address</th>
+                    <th>Type of Device</th>
+                    <th>Current</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let device of allUserDevices" >
+                    <td >{{device.deviceTypeName}}</td>
+                    <td>{{device.manufacturerName}}</td>
+                    <td>{{device.macAdress}}</td>
+                    <td>{{device.typeOfDevice}}</td>
+                    <td>{{device.powerUsage}} kw/h</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div id="showSystemPage">
+              
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-danger"  (click)="closeModel()" data-bs-dismiss="modal">Close</button>
+      </div> -->
+    </div>
+  </div>
+</div> 

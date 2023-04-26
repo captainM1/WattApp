@@ -10,8 +10,14 @@
   border-radius: 15px;
   font-family: font1;
   filter:drop-shadow(0px 8px 4px rgba(0,0,0,0.25));
+  text-align: center;
 }
 
+.card-body
+{
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
 
 .row
 {
@@ -23,8 +29,8 @@
 .device-col
 {
 
-  box-shadow:0px 4px 4px rgba(0,0,0,0.25);
-  border-radius: 20px;
+  box-shadow:0px 0px 4px rgba(0,0,0,0.25);
+  border-radius: 15px;
   text-align: center;
   font-size: 12px;
   cursor: pointer;
@@ -79,9 +85,29 @@ button:focus{
 
 @media (max-width: 280px) /*Fold*/
 {
+  .manufacturer,
+  .mac-address {
+    display: none;
+  }
+
+  h1
+  {
+    font-size: 20px;
+  }
+
+  input
+  {
+    width: 100%;
+  }
+
+  input::placeholder
+  {
+    font-size: 10px;
+  }
+
   .container
   {
-    width: 90%;
+    padding-right: 10px;
     margin-bottom: 60px;
   }
 
@@ -91,7 +117,7 @@ button:focus{
   }
 
   .card-title{
-     font-size: 30%;
+     font-size: 8px;
      font-weight: bold;
      color: #026670;
     padding-top: 5px;
@@ -101,13 +127,12 @@ button:focus{
   {
     width:70%;
     margin-left: 17%;
-    padding-top: 10px;
+    padding-top: 15px;
   }
 
   .device-col
   {
     width: 35%;
-
   }
 
   .card
@@ -118,15 +143,25 @@ button:focus{
 
   .card-text
   {
-    font-size:28%;
+    font-size:6px;
   }
 }
 
 @media(min-width: 281px) and  (max-width: 480px){
   .container
   {
-    width: 90%;
+    width: 100%;
     margin-bottom: 60px;
+  }
+
+  .manufacturer,
+  .mac-address {
+    display: none;
+  }
+
+  input
+  {
+    width: 90%;
   }
 
   button{
@@ -135,22 +170,25 @@ button:focus{
   }
 
   .card-title{
-     font-size: 85%;
+     font-size: 10px;
      font-weight: bold;
      color: #026670;
-    padding-top: 5px;
+     padding-top: 5px;
   }
-
+  h1
+  {
+    font-size: 25px;
+  }
   .device-col img
   {
     width:70%;
     margin-left: 17%;
-    padding-top: 10px;
+    padding-top: 15px;
   }
 
   .device-col
   {
-    width: 39%;
+    width: 38%;
 
   }
 
@@ -162,14 +200,14 @@ button:focus{
 
   .card-text
   {
-    font-size:70%;
+    font-size:7px;
   }
 
 }
 @media(min-width: 1024px){
   .container
   {
-      width: 50%;
+      width: 100%;
       margin-left: 5px;
   }
 
@@ -180,7 +218,7 @@ button:focus{
   }
 
   .card-title{
-    font-size: 90%;
+    font-size: 14px;
     padding-top: 5px;
     font-weight: bold;
     color: #026670;
@@ -190,7 +228,7 @@ button:focus{
   {
     width:50%;
     margin-left: 25%;
-    padding-top: 10px;
+    padding-top: 15px;
   }
 
   .card
@@ -207,17 +245,26 @@ button:focus{
 
   .card-text
   {
-    font-size: 85%;
+    font-size: 12px;
   }
 
+  input
+  {
+    width:50%;
+  }
 
   }
   @media (min-width: 481px) and (max-width: 720px)
 {
   .container
   {
-      width: 55%;
+      width:95%;
       margin-left: 5px;
+      margin-bottom: 20px;
+  }
+  input
+  {
+    width: 80%;
   }
 
   button{
@@ -227,7 +274,7 @@ button:focus{
   }
 
   .card-title{
-    font-size: 55%;
+    font-size: 10px;
     padding-top: 5px;
     font-weight: bold;
     color: #026670;
@@ -237,12 +284,12 @@ button:focus{
   {
     width:50%;
     margin-left: 25%;
-    padding-top: 10px;
+    padding-top: 15px;
   }
 
   .device-col
   {
-    width: 35%;
+    width: 20%;
 
   }
 
@@ -254,7 +301,7 @@ button:focus{
 
   .card-text
   {
-    font-size: 50%;
+    font-size: 8px;
   }
 }
 
@@ -262,8 +309,7 @@ button:focus{
 {
   .container
   {
-      width: 65%;
-      margin-left: -35px;
+      width: 100%;
   }
 
   button{
@@ -271,6 +317,12 @@ button:focus{
     margin-bottom: 20px;
     font-size: 13px;
   }
+
+  input
+  {
+    width:60%;
+  }
+
 
   .card-title{
     font-size: 14px;
@@ -283,12 +335,12 @@ button:focus{
   {
     width:60%;
     margin-left: 22%;
-    padding-top: 10px;
+    padding-top: 15px;
   }
 
   .device-col
   {
-    width: 40%;
+    width: 38%;
 
   }
 
@@ -302,5 +354,19 @@ button:focus{
   {
     font-size: 13px;
   }
+}
+
+input{
+  margin-top: 10px;
+  border:2px solid #026670;
+  border-radius: 5px;
+  font-style: italic;
+  font-size: 12px;
+  height: 30px;
+}
+
+
+input::placeholder{
+  color:rgba(2, 102, 112, 0.5);
 }
 
