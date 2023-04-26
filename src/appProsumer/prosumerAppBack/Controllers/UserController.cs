@@ -15,7 +15,7 @@ namespace prosumerAppBack.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
+//[Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
 public class UserController : ControllerBase
 {
     private readonly IUserRepository _userRepository;
@@ -33,22 +33,6 @@ public class UserController : ControllerBase
         _deviceService = deviceService;
     }
 
-    [HttpGet("username")]
-    [Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
-    public async Task<ActionResult<string>> Username()
-    {
-        Guid? nullableGuid = _userService.GetID();
-
-        if (nullableGuid == null)
-        {
-            return BadRequest("Guid is null.");
-        }
-
-        Guid nonNullableGuid = nullableGuid.Value;
-        Console.WriteLine(nonNullableGuid);
-        var username = await _userService.GetUsernameByIdAsync(nonNullableGuid);
-        return Ok(JsonSerializer.Serialize(username));
-    }
     [HttpPost("signup")]
     [AllowAnonymous]
     public async Task<IActionResult> Register([FromBody] UserRegisterDto userRegisterDto)
@@ -198,7 +182,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("send-request-to-dso/{id}")]
-    [Authorize(Roles = "UnapprovedUser")]
+    //[Authorize(Roles = "UnapprovedUser")]
     public async Task<IActionResult> CreateRequestForDso(Guid id)
     {
         try
@@ -216,7 +200,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("update-user")]
-    [Authorize(Roles = "UnapprovedUser,RegularUser")]
+    //[Authorize(Roles = "UnapprovedUser,RegularUser")]
     public async Task<IActionResult> UpdateUserInformation([FromBody] UserUpdateDto userUpdateDto)
     {        
         try
@@ -236,7 +220,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("update-user/update-password")]
-    [Authorize(Roles = "UnapprovedUser,RegularUser")]
+    //[Authorize(Roles = "UnapprovedUser,RegularUser")]
     public async Task<IActionResult> UpdateUserPassword([FromBody] UserUpdateDto userUpdateDto)
     {       
         try
@@ -303,7 +287,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("approve-request-to-dso/{id}")]
-    [Authorize(Roles = "Dispatcher,Admin")]
+   // [Authorize(Roles = "Dispatcher,Admin")]
     public async Task<IActionResult> ApproveRequestForDso(Guid id)
     {
         try
@@ -319,7 +303,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("decline-request-to-dso/{id}")]
-    [Authorize(Roles = "Dispatcher,Admin")]
+   // [Authorize(Roles = "Dispatcher,Admin")]
     public async Task<IActionResult> DeclineRequestForDso(Guid id)
     {
         try
