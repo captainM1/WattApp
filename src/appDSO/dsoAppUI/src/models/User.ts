@@ -52,3 +52,15 @@ export interface DeviceManifacturers{
     name: string,
     deviceTypes: DeviceType[];
 }
+export type Root = Root2[]
+
+export interface Root2 {
+  mongoId: any
+  id: string
+  timestampPowerPairs: TimestampPowerPair[]
+}
+
+export interface TimestampPowerPair {
+  timestamp: string
+  powerUsage: number
+}

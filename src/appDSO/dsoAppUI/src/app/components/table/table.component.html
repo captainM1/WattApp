@@ -21,8 +21,8 @@
                   <th >First Name</th>
                   <th >Last Name</th>
                   <th style="width: 23%;">Address</th>
-                  <th style="width: 15%;"(click)="sortData('consumption')"><i class="fa fa-arrow-up" aria-hidden="true" style = "color:white" *ngIf="currentSortOrder ==='asc'"></i><i class="fa fa-arrow-down"  style ="color:white" *ngIf="currentSortOrder === 'desc'"></i>Consumption</th>
-                  <th style="width: 15%;"(click)="sortData('production')"><i class="fa fa-arrow-up" aria-hidden="true" style = "color:white" *ngIf="currentSortOrder ==='asc'"></i><i class="fa fa-arrow-down"  style ="color:white" *ngIf="currentSortOrder === 'desc'"></i>Production</th>
+                  <th style="width: 15%;"(click)="sortData1('consumption')"><i class="fa fa-arrow-up" aria-hidden="true" style = "color:white" *ngIf="currentSortOrder1 ==='asc'"></i><i class="fa fa-arrow-down"  style ="color:white" *ngIf="currentSortOrder1 === 'desc'"></i>Consumption</th>
+                  <th style="width: 15%;"(click)="sortData2('production')"><i class="fa fa-arrow-up" aria-hidden="true" style = "color:white" *ngIf="currentSortOrder2 ==='asc'"></i><i class="fa fa-arrow-down"  style ="color:white" *ngIf="currentSortOrder2 === 'desc'"></i>Production</th>
                   <th style="width: 20%;"></th>
                   
                 </tr>
@@ -96,18 +96,18 @@
             </div>
             <div class="row" *ngIf="showMeGeneral">
               <div class="col-sm" >
-                <h2 class="text-left">information</h2>
-                <p>E-mail: {{userPopUp.email}}</p>
-                <p>Phone number: {{userPopUp.email}}</p>
-                <p>City: {{userPopUp.country}}, {{userPopUp.city}}</p>
-                <p>Address: {{userPopUp.address}}</p>
+                <h2 class="text-left">General information</h2>
+                <p><span>E-mail: </span>{{userPopUp.email}}</p>
+                <p><span>Phone number:</span> {{userPopUp.phoneNumber}}</p>
+                <p><span>City: </span>{{userPopUp.country}}, {{userPopUp.city}}</p>
+                <p><span>Address: </span>{{userPopUp.address}}</p>
               </div>
               <div class="col-sm">
                 <h2 class="text-right">Device Details</h2>  
-                <p>Total numer of devices: {{allUserDevices.length}} </p>
-                <p>Prosumers: {{producers.length}}</p>
-                <p>Consumers: {{consumers.length}}</p>
-                <p>Storage: {{storage.length}}</p>
+                <p><span>Total numer of devices:</span> {{allUserDevices.length}} </p>
+                <p><span>Prosumers:</span> {{numberOfProsumers}}</p>
+                <p><span>Consumers: </span>{{numberOfConsumers}}</p>
+                <p><span>Storage:</span> {{numberOfStorage}}</p>
               </div>
             </div>
             </div>
@@ -145,7 +145,19 @@
               
             </div>
             <div *ngIf="showSystemPage">
-              
+             <div class="row">
+                <h3>History</h3>
+              <div class="col" >
+                <canvas  #consumptionPrevMonthUSER></canvas>
+              </div>
+             </div>
+             
+             <div class="row">
+               <h3>Prediction</h3>
+                <div class="col">
+                  <canvas  #consumptionNextMonthUSER></canvas>
+                </div>
+             </div>
             </div>
           </div>
         </div>
@@ -156,3 +168,4 @@
     </div>
   </div>
 </div> 
+

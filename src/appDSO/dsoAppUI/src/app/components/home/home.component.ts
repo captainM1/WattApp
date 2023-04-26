@@ -86,6 +86,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		this.getNumberOfUsers();
 		this.getDeviceGroup();
 		this.prevMonthEachDevice();
+		this.eachDeviceConsumptingPrevMonth();
 	
 		
 	}
@@ -99,7 +100,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 
 		this.getProductionCurrent();
 		this.nextMonthProductionSystem();
-		this.prevMonthProductionSystem()
+		this.prevMonthProductionSystem();
 	}
 	
 	
@@ -483,6 +484,18 @@ export class HomeComponent implements OnInit, AfterViewInit{
 	}
 	
 	
+	eachDeviceConsumptingPrevMonth(){
+		this.auth.eachDevicePrevMonthConsumption().subscribe({
+			next: (response : any) => {
+				console.log("EEEEEEEE",response);
+			},
+			error: (err : any) => {
+
+			}
+		}
+			
+		)
+	}
 	selectedOption!:string;
 		onOptionChange(){
 			switch(this.selectedOption){

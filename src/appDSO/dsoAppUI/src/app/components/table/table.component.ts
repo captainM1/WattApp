@@ -3,7 +3,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import * as L from 'leaflet';
-import { Device, Info, User } from 'models/User';
+import { Device, Info, Root, Root2, User } from 'models/User';
 import { AuthService } from 'service/auth.service';
 import {PageEvent} from '@angular/material/paginator';
 import { FormsModule } from '@angular/forms';
@@ -31,7 +31,8 @@ export class TableComponent implements OnInit, AfterViewInit {
   @ViewChild('prev24DeviceID') prev24DeviceID!:ElementRef;
   @ViewChild('myTable') myTable!: ElementRef;
   @ViewChild('perHourDevice') perHourDevice!:ElementRef;
-
+  @ViewChild('consumptionPrevMonthUSER') consumptionPrevMonthUSER!:ElementRef;
+  @ViewChild('consumptionNextMonthUSER') consumptionNextMonthUSER!:ElementRef;
   
   chartInstance!: Chart;
   subscription!: Subscription;
@@ -95,6 +96,11 @@ export class TableComponent implements OnInit, AfterViewInit {
   todayPowerUsageDevice!:any;
   userPopUp!:any;
 
+  // graph-sys
+  consumptionPrevMonthUser!:[];
+  consumptionNextMonthUser!:[];
+  cPrevMonthUser!:string[];
+
 
   constructor(
     private auth: AuthService,
@@ -103,6 +109,8 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.showMeUsers(this.page,this.pageSize);
+    
+    
   }
 
   ngOnInit(): void {
@@ -112,6 +120,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.showCoordsForEveryUser();
     this.getDeviceGroup();
     this.type();
+
   }
 
   onPageChange(event: any) {
@@ -120,26 +129,32 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.showMeUsers(this.page, this.pageSize);
   }
 
-  currentSortOrder: string = 'asc';
-  sortData(sortBy: string): void {
-    this.currentSortOrder = this.currentSortOrder === 'asc' ? 'desc' : 'asc';
+  currentSortOrder1: string = 'asc';
+  currentSortOrder2: string = 'asc';
+  sortData1(sortBy: string): void {
+    this.currentSortOrder1 = this.currentSortOrder1 === 'asc' ? 'desc' : 'asc';
+   
     if (sortBy === 'consumption') {
       this.allUsers.sort((a, b) => {
         if (a.consumption < b.consumption) {
-          return this.currentSortOrder === 'asc' ? -1 : 1;
+          return this.currentSortOrder1 === 'asc' ? -1 : 1;
         } else if (a.consumption > b.consumption) {
-          return this.currentSortOrder === 'asc' ? 1 : -1;
+          return this.currentSortOrder1 === 'asc' ? 1 : -1;
         } else {
           return 0;
         }
       });
     }
-    else if(sortBy === 'production'){
+   
+  }
+  sortData2(sortBy:string){
+    this.currentSortOrder2 = this.currentSortOrder2 === 'asc' ? 'desc' : 'asc';
+   if(sortBy === 'production'){
       this.allUsers.sort((a, b) => {
         if (a.production < b.production) {
-          return this.currentSortOrder === 'asc' ? -1 : 1;
+          return this.currentSortOrder2 === 'asc' ? -1 : 1;
         } else if (a.production > b.production) {
-          return this.currentSortOrder === 'asc' ? 1 : -1;
+          return this.currentSortOrder2 === 'asc' ? 1 : -1;
         } else {
           return 0;
         }
@@ -284,12 +299,15 @@ export class TableComponent implements OnInit, AfterViewInit {
     // // poziv informacija o user-u za pop-up
      setTimeout(() =>{
       this.popUp(id);
+      console.log(id);
      },1000);
     
   }  
 
   
-  
+  numberOfProsumers:number = 0;
+  numberOfConsumers:number = 0;
+  numberOfStorage:number = 0;
   showMeDevices(id : string){
     this.showDevGraph = !this.showDevGraph;
     this.getDeviceGroup();
@@ -309,6 +327,13 @@ export class TableComponent implements OnInit, AfterViewInit {
         this.auth.getDevicesInfoByID(us.deviceId).subscribe({
           next: (response:any)=>{
             us.typeOfDevice = response.groupName;
+            if(response.groupName === "Consumer"){
+              this.numberOfConsumers++;
+            }else if(response.groupName === "Prosumer"){
+              this.numberOfProsumers++;
+            }else if(response.groupName === "Storage"){
+              this.numberOfStorage++;
+            }
           },
           error : (err : any)=>{
             console.log("err");
@@ -371,7 +396,11 @@ export class TableComponent implements OnInit, AfterViewInit {
   showDevices:boolean = false;
   showSystem:boolean = false;
   powerUsagePopUp!: number;
+  timeStampConsumption =[];
+  powerUsageConsumption = [];
  
+  timeStrampConsumptionNextmonth = [];
+  powerUsageConsumptionNextMonth = [];
 
   popUp(id: string){
     this.auth.getUserInformation(id).subscribe(
@@ -385,22 +414,62 @@ export class TableComponent implements OnInit, AfterViewInit {
           
           });
     
+    
 
       this.auth.UserProductionSummary(this.userPopUp.id).subscribe({
         next : (response : any) =>{
           this.userPopUp.production = response.toFixed(2);
-          console.log("PRODUC",response);
+         
         },
         error : (err:any)=>{
          this.userPopUp.production = 0;
         }
         
       });
+      
+
+      this.auth.consumptionPrevMonth(this.userPopUp.id).subscribe(
+        {
+          next: (response : any) => {
+            this.consumptionPrevMonthUser = response[0]['timestampPowerPairs'];
+           
+           
+            for(let i = 0; i < this.consumptionPrevMonthUser.length; i++){
+              this.timeStampConsumption.push(this.consumptionPrevMonthUser[i]['timestamp']);
+              this.powerUsageConsumption.push(this.consumptionPrevMonthUser[i]['powerUsage']);
+            }
+           
+              this.chartConsumptionPrevMonth();
+            
+            },
+          error: () => {
+            console.log("GRESKA.");
+          }
+        }
+      );
+      this.auth.consumptionNextMonth(this.userPopUp.id).subscribe(
+        {
+          next: (response:any) => {
+            console.log(response);
+            this.consumptionNextMonthUser = response[0]['timestampPowerPairs'];
+            console.log(this.consumptionNextMonthUser);
+            for(let i = 0; i < this.consumptionNextMonthUser.length; i++){
+              this.timeStrampConsumptionNextmonth.push(this.consumptionPrevMonthUser[i]['timestamp']);
+              this.powerUsageConsumptionNextMonth.push(this.consumptionPrevMonthUser[i]['powerUsage']);
+            }
+              this.chartConsumptionNextMonthChart();
+          },
+          error : (err : any) => {
+            console.log(err);
+          }
+        })
+     
       }
-    )
-   
+    );
     this.halfDought();
-  }
+    
+    //this.chartConsumptionPrevMonth();
+   }
 
   halfDought(){
     const d = this.powerUsagePopUp;
@@ -454,7 +523,6 @@ export class TableComponent implements OnInit, AfterViewInit {
   }
 
   makeData(dataGraph:any){
-    console.log("PODACI GRAOPH",dataGraph)
     const list =  Object.keys(dataGraph).map((key) => key.split('T')[1].split('Z')[0]);
     const valuesList = [];
 
@@ -520,8 +588,122 @@ export class TableComponent implements OnInit, AfterViewInit {
       }
     )
   }
+  extractedDatesPrevMonth!:string[]
+  chartConsumptionPrevMonth(){
+    for(let i = 0; i < this.timeStampConsumption.length; i++){
+      const dateStringList = this.timeStampConsumption.toString();
+      const substrings = dateStringList.split(',');
+     this.extractedDatesPrevMonth = substrings.map(date => date.substring(0, date.indexOf('T')));
+      
+    }
+  
+    const data = {
+      labels: this.extractedDatesPrevMonth,
+      datasets: [{
+        label: 'Previous Month',
+        data: this.powerUsageConsumption,
+        fill: true,
+        borderColor: 'rgb(255, 200, 0)',
+        backgroundColor:'rgba(255, 200, 0,0.4)',
+        pointBackgroundColor: 'rgba(255, 200, 0,0.7)',
+        borderWidth: 1,
+        pointBorderColor:'rgb(255, 200, 0)'
+      }]
+    }
+    const options: ChartOptions = {
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Date ',
+          },
+          ticks: {
+            font: {
+              size: 14,
+            },
+          },
+        },
+        y: {
+          title: {
+            display: true,
+            text: 'Power Consuming in (kw/day)',
+          },
+          ticks: {
+            font: {
+              size: 14,
+            },
+          },
+        },
+      },
+    };
+    const chart = new Chart(this.consumptionPrevMonthUSER.nativeElement, {
+      type: 'line',
+      data: data,
+      options: options,
+    });
+  }
 
-}
+  extractedDatesNextMonth!:string[]
+  chartConsumptionNextMonthChart(){
+    for(let i = 0; i < this.timeStampConsumption.length; i++){
+      const dateStringList = this.timeStampConsumption.toString();
+      const substrings = dateStringList.split(',');
+     this.extractedDatesNextMonth = substrings.map(date => date.substring(0, date.indexOf('T')));
+      
+    }
+  
+  
+    const data = {
+      labels: this.extractedDatesNextMonth,
+      datasets: [{
+        label: 'Next Month',
+        data: this.powerUsageConsumptionNextMonth,
+        fill: true,
+					borderColor: 'rgb(59, 193, 74)',
+					backgroundColor:'rgba(59, 193, 74,0.4)',
+					pointBackgroundColor: 'rgba(59, 193, 74,0.7)',
+					borderWidth: 1,
+					pointBorderColor:'rgb(59, 193, 74)'
+      }]
+    }
+    const options: ChartOptions = {
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Date ',
+          },
+          ticks: {
+            font: {
+              size: 14,
+            },
+          },
+        },
+        y: {
+          title: {
+            display: true,
+            text: 'Power Consuming in (kw/day)',
+          },
+          ticks: {
+            font: {
+              size: 14,
+            },
+          },
+        },
+      },
+    };
+    const chart = new Chart(this.consumptionNextMonthUSER.nativeElement, {
+      type: 'line',
+      data: data,
+      options: options,
+    });
+  }
+
+
+
+  }
+
+
   
 
 

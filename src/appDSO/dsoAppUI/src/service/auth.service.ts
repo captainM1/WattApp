@@ -142,6 +142,14 @@ export class AuthService {
     return this.http.get(environment.apiUrl + "/api/Device/devices/info/"+ deviceID);
   }
 
+  devicePrevious24h(deviceID : any) : Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/Previous24h/device-usage_per_hour/"+deviceID);
+  }
+
+  groupDevice():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/Device/groups");
+  }
+
   // table
   UserConsumptionSummary(id : any):Observable<any>{
     return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/currentUsageUser/consumption-summary/"+id);
@@ -152,5 +160,11 @@ export class AuthService {
   // popup
   getUserInformation(id : string):Observable<any>{
     return this.http.get(environment.apiUrl + '/api/User/users/' + id);
+  }
+  consumptionPrevMonth(userID : string) : Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/previousMonth/consumption/user-every-day-device-usage/"+userID);
+  }
+  consumptionNextMonth(userID: string):Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/nextMonth/consumption/user-every-day-device-usage/" + userID);
   }
 }

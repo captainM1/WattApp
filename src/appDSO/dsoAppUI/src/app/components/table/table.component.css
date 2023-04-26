@@ -191,3 +191,18 @@ table tr td{
 .tableDevices td{
   font-size: 12px;
 }
+h2{
+  color: #026670;
+  font-weight: 500;
+}
+p{
+  text-align: justify;
+  
+}
+p span{
+  color: #026670;
+  font-weight: 500;
+}
+input{
+  padding: 10px;
+}
