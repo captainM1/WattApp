@@ -9,7 +9,8 @@ public interface IPowerUsageService
 {
     public double GetForDevice(Guid deviceID);
     double GetPowerUsageForDay(Guid deviceID, DateTime today);
-    PowerUsage GetPowerUsageFor7Days(Guid deviceId, int direction);
+    public PowerUsage GetPowerUsageFor7Days(Guid deviceId, int direction);
+    public PowerUsage GetPowerUsageForAMonth(Guid deviceId, int direction);
     public double AverageSumPowerUsageProduction(Guid userID);
     public double AverageSumPowerUsageConsumtion(Guid userID);
     public double CurrentSumPowerUsageProduction(Guid userID);
@@ -44,4 +45,5 @@ public interface IPowerUsageService
     public PowerUsage GetMaxUsagePreviousWeekProductoin(Guid userID);
     public PowerUsage GetMaxUsagePreviousMonthProduction(Guid userID);
     public PowerUsage GetMaxUsagePreviousCurrentProduction(Guid userID);
+    object? GetPowerUsageForDevicePast24Hoursv2(Guid deviceId, int i);
 }

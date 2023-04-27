@@ -18,13 +18,14 @@ export class TokenInterceptor implements HttpInterceptor {
     private auth : AuthService,
     private router : Router,
     private msg : MessageService
-    
+
   ) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     if (request.url.endsWith('/signin') || request.url.endsWith('/signup') || request.url.startsWith('https://api.open-meteo.com') ) {
       return next.handle(request);
     }
+
 
     const myToken = this.auth.getFullToken();
 
@@ -37,7 +38,7 @@ export class TokenInterceptor implements HttpInterceptor {
       catchError((err : any) =>{
         if(err instanceof HttpErrorResponse){
           if(err.status === 401){
-            this.msg.add({severity: 'Error', summary: "Error", detail: "Your token has expired"});
+            this.msg.add({severity: 'error', summary: "Error", detail: "Your token has expired", styleClass:'expired-token'});
             this.router.navigate(['signin']);
           }
         }

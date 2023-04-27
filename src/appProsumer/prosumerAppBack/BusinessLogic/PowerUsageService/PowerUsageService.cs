@@ -37,6 +37,16 @@ public class PowerUsageService:IPowerUsageService
         return powerUsages;
     }
 
+    public PowerUsage GetPowerUsageForAMonth(Guid deviceId, int direction)
+    {
+        var powerUsages = _repository.GetPowerUsageForAMonth(deviceId, direction);
+        if (powerUsages == null)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsages;
+    }
+
     public double AverageSumPowerUsageProduction(Guid userID)
     {
         var powerUsages = _repository.AveragePowerUsageProduction(userID);
@@ -328,6 +338,16 @@ public class PowerUsageService:IPowerUsageService
     {
         PowerUsage result = _repository.GetDeviceWithMaxPowerUsageCurrentProduction(userID);
         return result;
+    }
+
+    public object? GetPowerUsageForDevicePast24Hoursv2(Guid deviceId, int i)
+    {
+        var powerUsage = _repository.GetPowerUsageForDevicePast24Hoursv2(deviceId, i);
+        if (powerUsage == null)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsage;
     }
 
     public Dictionary<DateTime, double> GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction)

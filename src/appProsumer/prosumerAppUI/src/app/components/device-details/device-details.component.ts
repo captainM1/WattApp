@@ -14,6 +14,7 @@ import { ConfirmationService, MessageService, ConfirmEventType } from 'primeng/a
 })
 export class DeviceDetailsComponent implements OnInit {
   device: any;
+  groupName: string = '';
   deviceId: any;
   deviceHistoryWeekPower: any = [];
   deviceFutureWeekPower: any = [];
@@ -23,6 +24,10 @@ export class DeviceDetailsComponent implements OnInit {
   deviceFutureMonthDate: any = [];
   deviceHistoryMonthPower: any = [];
   deviceHistoryMonthDate: any = [];
+  last24HoursPower: any = [];
+  last24HoursDate: any = [];
+  next24HoursPower: any = [];
+  next24HoursDate: any = [];
   hours: any = [];
   hourly: any = [];
   data: any = [];
@@ -46,6 +51,7 @@ export class DeviceDetailsComponent implements OnInit {
     this.http.get<any[]>(`${environment.apiUrl}/api/Device/devices/info/${this.deviceId}`)
       .subscribe(data => {
         this.device = data;
+        this.groupName = this.device.groupName;
       },
       error => {
         console.error('Error fetching device information:', error);
@@ -62,8 +68,8 @@ export class DeviceDetailsComponent implements OnInit {
 
       this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/current/device/${this.deviceId}`)
         .subscribe(data => {
-          this.deviceToday = data;
           console.log(data);
+          this.deviceToday = data;
         },
         error => {
           console.error('Error fetching device today:', error);
@@ -79,17 +85,26 @@ export class DeviceDetailsComponent implements OnInit {
           console.error('Error fetching device future:', error);
         })
       
-      this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/Next24h/device-usage_per_hour/${this.deviceId}`)
+      this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/Next24h/device-usage_per_hour_v2/${this.deviceId}`)
       .subscribe((data:any) =>{
-        this.hours = data.timestampPowerPairs.map((item: any) => item.timestamp);
-        this.hourly = data.timestampPowerPairs.map((item: any) => item.powerUsage);
-        console.log(data);
+        this.next24HoursDate = data.timestampPowerPairs.map((item: any) => item.timestamp);
+        this.next24HoursPower = data.timestampPowerPairs.map((item: any) => item.powerUsage);
       },
       error => {
          console.error('Error fetching todays info:', error);
       })
 
-      this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/PreviousMonth/device-usage/${this.deviceId}`)
+      this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/Previous24h/device-usage_per_hour_v2/${this.deviceId}`)
+      .subscribe((data:any) =>{
+        console.log(data);
+        this.last24HoursDate = data.timestampPowerPairs.map((item: any) => item.timestamp);
+        this.last24HoursPower = data.timestampPowerPairs.map((item: any) => item.powerUsage);
+      },
+      error => {
+         console.error('Error fetching todays info:', error);
+      })
+
+      this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/MonthPast/device/${this.deviceId}`)
       .subscribe((data:any) =>{
         this.deviceHistoryMonthDate = data.timestampPowerPairs.map((item: any) => item.timestamp);
         this.deviceHistoryMonthPower = data.timestampPowerPairs.map((item: any) => item.powerUsage);
@@ -98,7 +113,7 @@ export class DeviceDetailsComponent implements OnInit {
          console.error('Error fetching months history info:', error);
       })
 
-      this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/NextMonth/device-usage/${this.deviceId}`)
+      this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/MonthFuture/device/${this.deviceId}`)
       .subscribe((data:any) =>{
         this.deviceFutureMonthDate = data.timestampPowerPairs.map((item: any) => item.timestamp);
         this.deviceFutureMonthPower = data.timestampPowerPairs.map((item: any) => item.powerUsage);
@@ -161,15 +176,25 @@ export class DeviceDetailsComponent implements OnInit {
   selectedOption: string = 'Week';
 
   onOptionSelect() {
-if (this.selectedOption === 'Today') {
-    this.data = this.hourly;
-    this.formattedLabels = this.hours.map((date:any) => {
+  if (this.selectedOption === 'Yesterday') {
+    this.data = this.last24HoursPower;
+    this.formattedLabels = this.last24HoursDate.map((date:any) => {
       const parsedDate = new Date(date);
       const hours = parsedDate.getHours() + 1;
       const minutes = parsedDate.getMinutes();
       return `${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}`;
     });
-  } else if (this.selectedOption === 'Week') { 
+  }
+  else if (this.selectedOption === 'Tomorrow'){
+    this.data = this.next24HoursPower;
+    this.formattedLabels = this.next24HoursDate.map((date:any) => {
+      const parsedDate = new Date(date);
+      const hours = parsedDate.getHours() + 1;
+      const minutes = parsedDate.getMinutes();
+      return `${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}`;
+    });
+  } 
+  else if (this.selectedOption === 'Week') { 
     this.formattedLabels = [...this.deviceHistoryWeekDate, new Date(), ...this.deviceFutureWeekDate];
     this.formattedLabels = this.formattedLabels.map((date:any) => {
       const parsedDate = new Date(date);
@@ -225,6 +250,8 @@ if (this.selectedOption === 'Today') {
         },
         options: {
           responsive: true,
+          maintainAspectRatio: false,
+          aspectRatio: 2,
           scales: {
             y: {
               title: {
