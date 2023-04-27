@@ -13,7 +13,7 @@ namespace prosumerAppBack.Controllers
 {
 	[ApiController]
 	[Route("api/[controller]")]
-    [Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
+    //[Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
     public class DeviceController : ControllerBase
 	{
         private readonly IDeviceService _deviceService;
@@ -85,6 +85,21 @@ namespace prosumerAppBack.Controllers
             }
         }
         
+        [HttpGet("devices/deviceType-info")]
+        // [Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
+        public IActionResult GetDeviceInfoForAllDevice()
+        {
+            try
+            {
+                var devices = _deviceService.GetDeviceInfoForAllDevice();
+                return Ok(devices);
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
+        }
+
         [HttpGet("devices/info/user/{userID}")]
        // [Authorize(Roles = "Dispatcher,Admin")]
         public IActionResult GetDevicesInfoForUser(Guid userID)

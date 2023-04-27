@@ -65,6 +65,7 @@ public class DeviceService:IDeviceService
         return check;
     }
 
+
     public IEnumerable<DeviceGroup> GetDeviceGroups()
     {
         var check = _repository.GetDeviceGroups();
@@ -144,6 +145,17 @@ public class DeviceService:IDeviceService
         }
         return check;
     }
+
+    public IEnumerable<DeviceInfoWithType> GetDeviceInfoForAllDevice()
+    {
+        var check = _repository.GetDeviceInfoForAllDevice();
+        if (check == null)
+        {
+            throw new NotFoundException("No devices found");
+        }
+        return check;
+    }
+
 
     public Task<DeviceRule> AddDeviceRule(Guid id, [FromBody] DeviceRuleDto deviceRuleDto)
     {
