@@ -125,6 +125,9 @@ export class AuthService {
   eachDevicePrevMonthConsumption():Observable<any>{
     return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/previousMonth/consumption/each-device");
   }
+  eachDeviceNextMonthConsumption():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/nextMonth/consumption/each-device");
+  }
 
   prevMonthProductionSystem():Observable<any>{
     return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/previousMonth/production/system");

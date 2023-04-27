@@ -7,6 +7,7 @@ import { User } from 'models/User';
 import { animation } from '@angular/animations';
 import { Root } from 'models/weather';
 import { FormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -15,6 +16,17 @@ import { FormsModule } from '@angular/forms';
 })
 export class HomeComponent implements OnInit, AfterViewInit{
 	
+	chartInstance!: Chart;
+  	subscription!: Subscription;
+  
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+    if (this.chartInstance) {
+      this.chartInstance.destroy();
+    }
+  }
 
 	constructor(
 		private auth : AuthService
@@ -101,6 +113,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		this.getProductionCurrent();
 		this.nextMonthProductionSystem();
 		this.prevMonthProductionSystem();
+		 
 	}
 	
 	
@@ -491,10 +504,17 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			},
 			error: (err : any) => {
 
+			}})
+	}
+	eachDeviceConsumptionNextmonth(){
+		this.auth.eachDeviceNextMonthConsumption().subscribe({
+			next: (response : any) => {
+				console.log(response);
+			},
+			error : (err : any) => {
+				
 			}
-		}
-			
-		)
+		})
 	}
 	selectedOption!:string;
 		onOptionChange(){
@@ -509,9 +529,39 @@ export class HomeComponent implements OnInit, AfterViewInit{
 					
 			}
 		}
-			
 		
+			
+		selectedGraph = 'current'; // set default graph
+		displayGraphConsumption(graph: string) {
+ 
+		this.selectedGraph = graph;
+		switch (graph) {
+			case 'current':
+				this.getConsumptionCurrent();
+			
+			break;
+			case 'prevMonth':
+				this.getConsumtionPrevMonth();
+			break;
+			case 'nextMonth':
+				this.getConsumtionNextMonth();
+			break;
+		}
+	}
+		selectedGraphEachDevice = 'prev';
+		displayGraphConsumptionEachDevice(graph: string){
+			this.selectedGraphEachDevice = graph;
+			switch(graph){
+				case 'prev':
+					this.eachDeviceConsumptingPrevMonth();
+					break;
+				case 'next':
+					this.eachDeviceConsumptingPrevMonth();
+					break;
+			}
+		}
 }
+
 
                
 

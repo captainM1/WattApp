@@ -101,7 +101,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   consumptionNextMonthUser!:[];
   cPrevMonthUser!:string[];
 
-
+  id!:any;
   constructor(
     private auth: AuthService,
     private table: MatTableModule,
@@ -109,6 +109,7 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.showMeUsers(this.page,this.pageSize);
+    this.popUp(this.id);
     
     
   }
@@ -297,11 +298,8 @@ export class TableComponent implements OnInit, AfterViewInit {
      // poziv funkcije za svih uredjaja
      this.showMeDevices(id);
     // // poziv informacija o user-u za pop-up
-     setTimeout(() =>{
-      this.popUp(id);
-      console.log(id);
-     },1000);
-    
+    this.id = id;
+    this.popUp(id);
   }  
 
   
@@ -399,7 +397,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   timeStampConsumption =[];
   powerUsageConsumption = [];
  
-  timeStrampConsumptionNextmonth = [];
+  timeStrampConsumptionNextMonth = [];
   powerUsageConsumptionNextMonth = [];
 
   popUp(id: string){
@@ -413,8 +411,6 @@ export class TableComponent implements OnInit, AfterViewInit {
             this.userPopUp.consumption = response.toFixed(2);
           
           });
-    
-    
 
       this.auth.UserProductionSummary(this.userPopUp.id).subscribe({
         next : (response : any) =>{
@@ -426,7 +422,6 @@ export class TableComponent implements OnInit, AfterViewInit {
         }
         
       });
-      
 
       this.auth.consumptionPrevMonth(this.userPopUp.id).subscribe(
         {
@@ -450,14 +445,13 @@ export class TableComponent implements OnInit, AfterViewInit {
       this.auth.consumptionNextMonth(this.userPopUp.id).subscribe(
         {
           next: (response:any) => {
-            console.log(response);
             this.consumptionNextMonthUser = response[0]['timestampPowerPairs'];
-            console.log(this.consumptionNextMonthUser);
-            for(let i = 0; i < this.consumptionNextMonthUser.length; i++){
-              this.timeStrampConsumptionNextmonth.push(this.consumptionPrevMonthUser[i]['timestamp']);
-              this.powerUsageConsumptionNextMonth.push(this.consumptionPrevMonthUser[i]['powerUsage']);
-            }
-              this.chartConsumptionNextMonthChart();
+            this.makeDataGraphMonth(this.consumptionNextMonthUser);
+            setTimeout(
+              ()=>{
+                this.chartConsumptionNextMonthChart();
+              },1000);
+           
           },
           error : (err : any) => {
             console.log(err);
@@ -495,6 +489,8 @@ export class TableComponent implements OnInit, AfterViewInit {
       options: options,
     });
   }
+  
+  
   isActiveUser = false; 
   isActiveDevice = true;
   isActiveSystem = false;
@@ -508,7 +504,6 @@ export class TableComponent implements OnInit, AfterViewInit {
   selectedDevice: any;
   displayGraph(device: any) {
     this.selectedDevice = device;
-    console.log("DEVICE ID",device);
     if (this.chartInstance) {
       this.chartInstance.destroy();
     }
@@ -517,12 +512,13 @@ export class TableComponent implements OnInit, AfterViewInit {
         this.graph24prev = response;
         console.log(response);
         // this.deviceGraphPrev24(this.graph24prev);
-        this.makeData(this.graph24prev);
+        this.makeDataGraph24(this.graph24prev);
       }
     )
   }
 
-  makeData(dataGraph:any){
+  makeDataGraph24(dataGraph:any){
+    
     const list =  Object.keys(dataGraph).map((key) => key.split('T')[1].split('Z')[0]);
     const valuesList = [];
 
@@ -532,6 +528,13 @@ export class TableComponent implements OnInit, AfterViewInit {
       }
     }
     this.deviceGraphPrev24(list,valuesList);
+  }
+
+  makeDataGraphMonth(dataGraph : any){
+    for(let i = 0; i < this.consumptionNextMonthUser.length; i++){
+      this.timeStrampConsumptionNextMonth.push(this.consumptionNextMonthUser[i]['timestamp']);
+      this.powerUsageConsumptionNextMonth.push(this.consumptionNextMonthUser[i]['powerUsage']);
+    }
   }
 
   deviceGraphPrev24(list:any, valueList:any){
@@ -701,7 +704,7 @@ export class TableComponent implements OnInit, AfterViewInit {
 
 
 
-  }
+}
 
 
   
