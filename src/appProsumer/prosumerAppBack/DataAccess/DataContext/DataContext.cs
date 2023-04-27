@@ -97,6 +97,14 @@ namespace prosumerAppBack.DataAccess
             new DeviceType{ID=new Guid("32EA7105-F582-4441-AE81-B738C4284F7E"), Name="Dishwasher", GroupID=new Guid("77CBC929-1CF2-4750-900A-164DE4ABE28B"), ManufacturerID=new Guid("4D4D4D4D-4D4D-4D4D-4D4D-4D4D4D4D4D54"), Wattage=1800},
                 new DeviceType{ID=new Guid("F2F9BE26-5C5F-43E1-AA2F-8E64960D03DD"), Name="Dryer", GroupID=new Guid("77CBC929-1CF2-4750-900A-164DE4ABE28B"), ManufacturerID=new Guid("4D4D4D4D-4D4D-4D4D-4D4D-4D4D4D4D4D4D"), Wattage=3400}
             );
+            /*modelBuilder.Entity<User>().HasData(
+                
+            );
+            modelBuilder.Entity<Device>().HasData(
+                new Device{ID=new Guid("32EA7105-F582-4441-AE81-B738C4284F7E"), MacAdress="00-1B-63-84-45-E6", DeviceTypeID=new Guid("32EA7105-F582-4441-AE81-B738C4284F7E"), OwnerID = new Guid()}
+            );*/
+            }
+            
         }
     }
 }
