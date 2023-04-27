@@ -18,23 +18,28 @@ export class TokenInterceptor implements HttpInterceptor {
     private auth : AuthService,
     private router : Router,
     private msg : MessageService
-    
+
   ) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    const myToken = this.auth.getToken();
+    if (request.url.endsWith('/signin') || request.url.endsWith('/signup') || request.url.startsWith('https://api.open-meteo.com') ) {
+      return next.handle(request);
+    }
+
+
+    const myToken = this.auth.getFullToken();
 
     if(myToken){
       request = request.clone({
-        setHeaders: {Authorization:`Bearer ${myToken}`} 
+        setHeaders: {Authorization:`Bearer ${myToken}`}
       })
     }
     return next.handle(request).pipe(
       catchError((err : any) =>{
         if(err instanceof HttpErrorResponse){
           if(err.status === 401){
-            this.msg.add({severity: 'Error', summary: "Error", detail: "Your token has expired"});
-            this.router.navigate(['login']);
+            this.msg.add({severity: 'error', summary: "Error", detail: "Your token has expired", styleClass:'expired-token'});
+            this.router.navigate(['signin']);
           }
         }
         return throwError(() => new Error("Some other error occour."));
@@ -42,4 +47,3 @@ export class TokenInterceptor implements HttpInterceptor {
     );
   }
 }
-

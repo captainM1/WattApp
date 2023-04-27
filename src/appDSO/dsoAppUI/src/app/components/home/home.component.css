@@ -1,57 +1,93 @@
-
+.text-center{
+    margin-top: 15px;
+    margin-bottom: 10px;
+    color: #026670;
+    font-size: 26px;
+}
+#weather_div{
+    padding-top: 20px; 
+    padding-right: 60px; 
+    padding-left: 60px;
+}
+.text-left{
+    font-size: 14px;
+    padding-bottom: 5px;
+}
+small{
+    font-size: 14px;
+    font-weight: 500;
+    padding-left: 5px;
+}
+img{
+    width: 30px; 
+}
+ 
 .row{
     background-color: #F6F5F3;
     padding: 20px;
     border-radius: 8px;
 }
-.col-sm{
-    background-color: rgba(255, 255, 255, 0.64) ;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 10px;
-    margin: 10px;
-}
-.col-md{
-    background-color: rgba(255, 255, 255, 0.64) ;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 10px;
-    margin: 10px;
-}
-.display-5{
-    color: #026670;
-    font-weight: 500;
+.date{
+    font-style: italic;
+    font-weight: 400;
     text-align: center;
 }
-h1{
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+  
+.card {
+    width: 25%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+.card-title{
+    font-weight: 500; 
+    color:black;
+    text-align: center;
+    letter-spacing: 0.5px;
+}
+.card-text{
+    text-align: center; 
+    font-weight: 500; 
+    font-size: 20px; 
+    
+    color: #026670; 
+}
+select{
+    
+    background-color:  white;
     color: #026670;
-    font-weight: 500;
-    margin-top: 10px;
-}
-.p{
-    color:#6f42c1 ;
-    font-weight: 400;
-}
-.g{
-    color:#20c997;
-    font-weight: 400;
-}
-.col{
-    background-color: rgba(255, 255, 255, 0.64) ;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 10px;
-    padding-bottom:15px;
-    margin-right: 20px;
-    margin-left: 20px;
-}
-h2{
-    color: #026670;
-    font-weight: 500;
+    padding-left: 20px;
+    padding-right: 20px;
+    text-align: center;
+    position: relative;
+    justify-content: center;
     padding-top: 10px;
-    font-size: 24px;
-}
-p .text-center{
-    text-align: start;
-}
-.prev p{
-    color: #026670;
+    padding-bottom: 10px;
+    text-align: center;
+    border-radius: 10px;
+    border:none;
+    width: 100%;
+    margin-bottom: 10PX;
+    font-weight: 600px;
     font-size: 20px;
+}
+#graphInline{
+    display: inline-flex;
+    margin-top: 20px;
+}
+
+select{
+    color: #026670;
+    border-radius: 10px;
+    border: 2px solid #026670;
+    font-size:16px;
+    font-weight: 500;
+}
+label{
+    color: #026670;
+    font-style: italic;
+    text-align: center;
 }

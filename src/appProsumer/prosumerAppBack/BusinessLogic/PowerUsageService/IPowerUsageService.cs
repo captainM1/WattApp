@@ -9,7 +9,8 @@ public interface IPowerUsageService
 {
     public double GetForDevice(Guid deviceID);
     double GetPowerUsageForDay(Guid deviceID, DateTime today);
-    PowerUsage GetPowerUsageFor7Days(Guid deviceId, int direction);
+    public PowerUsage GetPowerUsageFor7Days(Guid deviceId, int direction);
+    public PowerUsage GetPowerUsageForAMonth(Guid deviceId, int direction);
     public double AverageSumPowerUsageProduction(Guid userID);
     public double AverageSumPowerUsageConsumtion(Guid userID);
     public double CurrentSumPowerUsageProduction(Guid userID);
@@ -29,11 +30,20 @@ public interface IPowerUsageService
     public IEnumerable<TimestampPowerPair> GetForDeviceByHour(Guid deviceID);
     public List<PowerUsage> GetPowerUsageForDevicesConsumption(Guid userID, int direction);
     public List<PowerUsage> GetPowerUsageForDevicesProduction(Guid userID, int direction);
+    List<PowerUsage> GetPowerUsageForDevicesConsumptionFor7Days(Guid userID, int direction);
+    List<PowerUsage> GetPowerUsageForDevicesProductionFor7Days(Guid userID, int direction);
     public PowerUsage GetPowerUsageFor12HoursUpDown(Guid deviceID);
-    Dictionary<DateTime, double> GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction);    
+    Dictionary<DateTime, double> GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction);
+    List<PowerUsage> GetPowerUsageForDevicesProductionFor24Hours(Guid userID, int direction);
+    List<PowerUsage> GetPowerUsageForDevicesConsumptionFor24Hours(Guid userID, int direction);
 
-    public (Guid maxDeviceID, double maxDeviceUsage) GetMaxUsagePast24Hours(Guid userID);
-    public (Guid maxDeviceID, double maxDeviceUsage) GetMaxUsagePreviousWeek(Guid userID);
-    public (Guid maxDeviceID, double maxDeviceUsage) GetMaxUsagePreviousMonth(Guid userID);
-    public (Guid maxDeviceID, double maxDeviceUsage) GetMaxUsagePreviousCurrent(Guid userID);
+    public PowerUsage GetMaxUsagePast24HoursConsumption(Guid userID);
+    public PowerUsage GetMaxUsagePast24HoursProduction(Guid userID);
+    public PowerUsage GetMaxUsagePreviousWeekConsumption(Guid userID);
+    public PowerUsage GetMaxUsagePreviousMonthConsumption(Guid userID);
+    public PowerUsage GetMaxUsagePreviousCurrentConsumption(Guid userID);
+    public PowerUsage GetMaxUsagePreviousWeekProductoin(Guid userID);
+    public PowerUsage GetMaxUsagePreviousMonthProduction(Guid userID);
+    public PowerUsage GetMaxUsagePreviousCurrentProduction(Guid userID);
+    object? GetPowerUsageForDevicePast24Hoursv2(Guid deviceId, int i);
 }

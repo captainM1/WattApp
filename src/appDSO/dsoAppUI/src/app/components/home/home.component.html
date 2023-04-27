@@ -1,174 +1,155 @@
 <app-nav></app-nav>
-<div class="outer" style="margin-top: 90px;">
+<div class="outer" style="margin-top: 90px; margin-left: 0; margin-right: 0;">
 <div class="container">
     <!-- WEATHER -->
             <div class="row" >
-                <h2 class="text-center" style="margin-top: 15px;margin-bottom: 10px;">Weather Details:</h2>
-                <div class="col-sm-4" style="padding-top: 20px; padding-right: 60px; padding-left: 60px;">
-                    <p class="text-left">
-                        <img src="../../../assets/icons/weather-icons/compass.png" width="20px"> Your Time Zone : {{ this.weather.timezone }}
+                <h2 class="text-center">Weather Details</h2>
+                <small class="date">{{dateForWeater}}</small>
+                <div class="col-sm-4" id = "weather_div">
+                    <p class="text-left"  *ngIf="weather">
+                        <img src="../../../assets/icons/weather-icons/compass.png" ><small>Your Time Zone:</small> {{ this.weather.timezone}}
+                    </p>
+                    <p class="text-left" *ngIf="weather.current_weather">
+                      <img src="../../../assets/icons/weather-icons/temperature(2).png"><small>Temperature:</small> {{ this.weather.current_weather.temperature }} °C
                     </p>
                     <p class="text-left">
-                      <img src="../../../assets/icons/weather-icons/temperature(2).png" width="20px"> Temperature: {{ this.weather.current_weather.temperature }}
-                    </p>
-                    <p class="text-left">
-                        <img src="../../../assets/icons/weather-icons/hot.png" width="20px"> Maximal Temperature: {{ this.weather.daily.temperature_2m_max[0]}}
+                        <img src="../../../assets/icons/weather-icons/hot.png"><small>Maximal Temperature: </small> {{ this.weather.daily.temperature_2m_max[0]}} °C
                       </p>
                 </div>
                 <div class="col-sm-4" style="padding-top: 20px;margin-right: -20px; padding-top: 20px; padding-right: 60px; padding-left: 60px;">
-                    <p class="text-left">
-                        <img src="../../../assets/icons/weather-icons/cold.png" width="20px">Minimal Temperature: {{ this.weather.daily.temperature_2m_min[0]}}
+                    <p class="text-left" *ngIf="weather">
+                        <img src="../../../assets/icons/weather-icons/cold.png"><small>Minimal Temperature:</small> {{ this.weather.daily.temperature_2m_min[0]}} °C
+                      </p>
+                      <p class="text-left" *ngIf="weather.current_weather">
+                        <img src="../../../assets/icons/weather-icons/storm.png"><small>Wind Speed:</small> {{ this.weather.current_weather.windspeed}} km/h
                       </p>
                       <p class="text-left">
-                        <img src="../../../assets/icons/weather-icons/storm.png" width="20px">Wind Speed: {{ this.weather.current_weather.windspeed}}
-                      </p>
-                      <p class="text-left">
-                        <img src="../../../assets/icons/weather-icons/humidity.png" width="20px">Humidity: {{ this.weather.hourly.relativehumidity_2m[0]}}
+                        <img src="../../../assets/icons/weather-icons/humidity.png"><small>Humidity:</small> {{ this.weather.hourly.relativehumidity_2m[0]}} %
                       </p>
                 </div>
                 <div class="col-sm-4">
-                    <canvas #hourlyTemp style="width: 200px; height: 100px;"></canvas>
+                    <canvas #hourlyTemp style="width: 300px; height: 150px;"></canvas>
                 </div>
             </div>
     <!-- TOTAL DEVICES  -->
             <div class="row">
-                    <div class="col-sm-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title"> Total devices: {{total}}</h5>
-                                <p class="card-text"> Prosumer: {{producers.length}} </p>
-                                <p class="card-text"> Consumer: {{consumers.length}} </p>
-                                <p class="card-text"> Storage: {{storage.length}} </p>
+                <h2 class="text-center">Device Details</h2>
+                <div class="card-container">
+                    <div class="card">
+                        <h3 class="card-title" >Total devices:</h3>
+                        <p class="card-text" >{{total}}</p>
+                    </div>
+                    <div class="card">
+                        <h3 class="card-title" >Prosumers:</h3>
+                        <p class="card-text" *ngIf="producers.length">{{producers.length}}</p>
+                    </div>
+                    <div class="card">
+                        <h3 class="card-title" >Consumers:</h3>
+                        <p class="card-text" >{{consumers.length}}
+                        </p>
+                        </div>
+                    <div class="card">
+                        <h3 class="card-title" >Storage:</h3>
+                        <p class="card-text" >{{storage.length}}</p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <h2 class="text-center" style="text-align: center; padding-top: 10px;">Production</h2>
+                        <div class="col">
+                            <div class="card-container">
+                                <div class="card" style="width:60%">
+                                    <label for="graphSelect">Select Graph:</label>
+                                    <select [(ngModel)]="selectedGraphProduction" (click)="displayGraphProduction(selectedGraphProduction)">
+                                        <option value="current">Current Production System</option>
+                                        <option value="prevMonth">Previous Month Production System</option>
+                                        <option value="nextMonth">Next Month Production System</option>
+                                    </select>
+                                    <div class="card-body" *ngIf="selectedGraphProduction === 'current'" >
+                                        <canvas #currentProductionSYS></canvas>
+                                        <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{currentProductionSys}} kWh</p>
+                                    </div>
+                                    <div class="card-body" *ngIf="selectedGraphProduction === 'prevMonth'">
+                                        <canvas #prevMonthProductionSYS></canvas>
+                                        <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{prevMonthProductionSys}} kWh</p>
+                                    </div>
+                                    <div class="card-body" *ngIf="selectedGraphProduction === 'nextMonth'">
+                                        <canvas #nextMonthProductionSYS></canvas>
+                                        <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{nextMonthConsumptionSys}} kWh</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="card">
-                            <div class="card-body">
-                            <h5 class="card-title"> Summary of power production for the previous month:</h5>
-                            <p class="card-text"  style="text-align: center;">  {{previousMonth}}kw </p>
-                            
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <div class="card">
-                            <div class="card-body">
-                            <h5 class="card-title"> Prediction of total electricity production for the next month</h5>
-                            <p class="card-text" style="text-align: center;">  {{nextMonthSummary}}kw </p>
-                            
-                            </div>
-                        </div>
-                    </div>
-                    <!-- <div class="col-sm-5">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Serbia electricity prices</th>
-                                    <th scope="col">Household, kWh</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td scope="row">Serbian Dinar</td>
-                                <td >
-                                    11.330
-                                </td>
-                            </tr>
-                            <tr>
-                                <td scope="row">EUR</td>
-                                <td>
-                                    95.92
-                                </td>
-                            </tr>
-                        </tbody>
-                        </table>
-                    </div> -->
-                    <!-- <div class="col-sm-4" style="padding: 0;">
-                        <div style="width:400px; height:400px;">
-                            <h1 class = "display-2" style="text-align: center;">Number of Devices</h1>
-                            <canvas #myChartForEveryTypeOfDevice style="height: 400px; width: 384px;"></canvas>
-                        </div>
-                    </div> -->
-            </div>
-    
-    
-    <!-- POWER USAGE -->
-    <div class="container" style="margin-top:90px">
-        <div class="row">
-               
-        </div>
-       
-        <div class="row">
-            <h2 style="text-align: center; font-size: 24px; font-weight: 500;  color: #026670;">Power Usage</h2>
-            
-            <div class="col-sm-6">
-                    <h4 style="text-align: center; font-size: 20px; font-weight: 400;  color: #026670;">Previous Month</h4>
-                    <canvas #prevMonth></canvas>
-            </div>
-            
-            <div class="col-sm-6">
-                <h4 style="text-align: center; font-size: 20px; font-weight: 400;  color: #026670;">Next Month</h4>
                     
-                    <canvas #nextMonthChart></canvas>
-            </div>
-           </div>
-           
-           <!-- POWER USAGE FOR EACH DEVICES -->
-           <div class="row">
-            <h2 style="text-align: center;">Devices energy graph</h2>
-            <div class="col-sm-6">
-                <div>
-                    <h4 style="text-align: center; font-size: 24px; font-weight: 400;  color: #026670;">Previous Month for Each Device</h4>
-                <canvas #prevEachDevice></canvas>
-                </div>
-            </div>
-            <div class="col-sm-6">
-                <div>
-                    <h4 style="text-align: center; font-size: 24px; font-weight: 400;  color: #026670;">Next Month for Each Device</h4>
-                <canvas #nextEachDevice></canvas>
-                </div>
-            </div>
-        </div>
+                        <div class="col">
+                            <div class="card-container">
+                                <div class="card" style="width:100%">
+                                    <label for="graphSelect">Select Graph:</label>
+                                    <select [(ngModel)]="selectedGraphEachDeviceProduction" (click)="displayGraphProductionEachDevice(selectedGraphEachDevice)">
+                                        <option value="prev">Previous Month Production Each Device</option>
+                                        <option value="next">Next Month Production Each Device</option>
+                                    </select>
+                                    <div class="card-body" *ngIf="selectedGraphEachDeviceProduction === 'prev'" >
+                                        <!-- <canvas #currentConsumptionSYS></canvas> -->
+                                    </div>
+                                    <div class="card-body" *ngIf="selectedGraphEachDeviceProduction === 'next'">
+                                        <!-- <canvas #prevMonthConsumptionSYS></canvas> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                <div class="row">
+                    <h2 class="text-center" style="text-align: center; padding-top: 10px;">Consumption</h2>
+                        <div class="col">
+                            <div class="card-container">
+                                <div class="card" style="width:70%">
+                                    <label for="graphSelect">Select Graph:</label>
+                                    <select [(ngModel)]="selectedGraph" (click)="displayGraphConsumption(selectedGraph)">
+                                        <option value="current">Current Consumption System</option>
+                                        <option value="prevMonth">Previous Month Consumption System</option>
+                                        <option value="nextMonth">Next Month Consumption System</option>
+                                    </select>
+                                    <div class="card-body" *ngIf="selectedGraph === 'current'" >
+                                        <canvas #currentConsumptionSYS></canvas>
+                                        <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{currentConsumptionSys}} kWh</p>
+                                    </div>
+                                    <div class="card-body" *ngIf="selectedGraph === 'prevMonth'">
+                                        <canvas #prevMonthConsumptionSYS></canvas>
+                                        <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{prevMonthConsumptionSys}} kWh</p>
+                                    </div>
+                                    <div class="card-body" *ngIf="selectedGraph === 'nextMonth'">
+                                        <canvas #nextMonthConsumptionSYS></canvas>
+                                        <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{nextMonthConsumptionSys}} kWh</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <div class="col">
+                            <div class="card-container">
+                                <div class="card" style="width:100%">
+                                    <label for="graphSelect">Select Graph:</label>
+                                    <select [(ngModel)]="selectedGraphEachDevice" (click)="displayGraphConsumptionEachDevice(selectedGraphEachDevice)">
+                                        <option value="prev">Previous Month Consumption Each Device</option>
+                                        <option value="next">Next Month Consumption Each Device</option>
+                                    </select>
+                                    <div class="card-body" *ngIf="selectedGraph === 'prev'" >
+                                        <canvas #currentConsumptionSYS></canvas>
+                                    </div>
+                                    <div class="card-body" *ngIf="selectedGraph === 'next'">
+                                        <canvas #prevMonthConsumptionSYS></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+       </div>
     </div>
-    <!-- TABLE FOR CURRENT STATUS OF PRODUCERS?CONSUMERS?BATTERY?SOLAR -->
-    <div class="row">
-        <div class="col-sm-5">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>
-                            Solar Production
-                        </th>
-                        <th>
-                            Battery Production
-                        </th>
-                        <th>
-                            Energy Consumption
-                        </th>
-                        <th>
-                            Energy Production
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        
-    </div>
-    
-</div>
+
         
  
        
     
    
 
-    

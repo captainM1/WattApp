@@ -7,9 +7,9 @@
 
     <div class="container">
         <div class="row" id = "edit-profile">
-               
+
             <div class="col">
-               
+
                 <h1>User Profile</h1>
             </div>
         </div>
@@ -24,44 +24,40 @@
                 <form class="p-4 border" id = "form-user-enter" style="align-items: center;">
                     <div class="form-group" >
                         <label for="username">First Name:</label>
-                        <input style = "width: 100%" type="text" class="form-control" id="first-name" aria-describedby="First Namse" placeholder="{{userID.firstName}}" readonly>
+                        <input style = "width: 100%" type="text" class="form-control"  id="first-name" aria-describedby="First Namse" name="firstName" [(ngModel)]="firstName" [disabled]="true">
                     </div>
-                     
+
                     <div class="form-group" style="align-self: center;">
                         <label for="First Name">Last Name:</label>
-                        <input style = "width: 100%" type="text" class="form-control" id="last-name" placeholder="{{userID.lastName}}" readonly>
+                        <input style = "width: 100%" type="text" class="form-control" id="last-name" name="lastName" [(ngModel)]="lastName"  [disabled]="true">
                     </div>
                 </form>
-                
+
             </div>
             <div class="col-sm-7" id = "bottom">
                 <form  class="p-3"id = "form-user-enter">
-                   
-                    <div class="form-group">
+
+                    <div class="form-group p-2">
                         <label for="Email Address">Email Address:</label>
-                        <input style = "width: 100%" type="text" class="form-control" id="email-address" placeholder="{{userID.email}}">
+                        <input style = "width: 100%" type="text" class="form-control" name="email"  [(ngModel)]="email" [disabled]="true">
                     </div>
-                    <div class="form-group">
-                      <label for="Password">Password:</label>
-                      <input style = "width: 100%" type="text" class="form-control" id="email-address" placeholder="*******">
-                  </div>
-                    <div class="form-group">
+                    <div class="form-group p-2">
                         <label for="Contact Number">Contact Number</label>
-                        <input style = "width: 100%" type="text" class="form-control" id="contact-numer" placeholder="{{userID.phoneNumber}}">
+                        <input style = "width: 100%" type="text" class="form-control" id="contact-number" name="phoneNumber"  [(ngModel)]="phoneNumber" [disabled]="true">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group p-2">
                         <label for="Address">Address:</label>
-                        <input style = "width: 100%" type="text" class="form-control" id="address" placeholder="{{userID.address}}">
+                        <input style = "width: 100%" type="text" class="form-control" id="address" name="address"  [(ngModel)]="address"  [disabled]="true">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group p-2">
+                      <label for="City">City:</label>
+                      <input style = "width: 100%" type="text" class="form-control" id="city" name="city"  [(ngModel)]="city" [disabled]="true">
+                  </div>
+                    <div class="form-group p-2">
                         <label for="Country">Country:</label>
-                        <input style = "width: 100%" type="text" class="form-control" id="country" placeholder="{{userID.country}}">
+                        <input style = "width: 100%" type="text" class="form-control" id="country" name="country"  [(ngModel)]="country" [disabled]="true">
                     </div>
-                    <div class="form-group">
-                        <label for="Time-zone">Time zone:</label>
-                        <input style = "width: 100%" type="text" class="form-control" id="time-zone" placeholder="Europe/{{userID.city}}">
-                    </div>
-                    
+
                 </form>
             </div>
             <div class="row-2"id = "btn-save">
@@ -71,7 +67,6 @@
             </div>
         </div>
 
-        
 
 
-    
+

@@ -5,25 +5,30 @@ export interface User{
     address: string,
     city: string,
     country: string,
-    powerUsage:string,
+    consumption:number,
+    production:number,
+    summary:number,
     selected: boolean
    
 }
 export interface Device{
-    id: string,
-    macAddress: string,
-    deviceTypeID: string,
-    deviceType : DeviceType;
-    ownerID: string,
-    owner: User
-   
-}
-export interface Info{
     deviceId: string;
     deviceTypeName: string;
     macAdress: string;
     manufacturerName: string;
     typeOfDevice: string;
+    powerusage:number;
+   
+}
+export interface Info{
+    powerusage: any;
+    deviceId: string;
+    deviceTypeName: string;
+    macAdress: string;
+    manufacturerName: string;
+    typeOfDevice: string;
+    powerUsage:string;
+
 }
 
 export interface DeviceType{
@@ -46,4 +51,16 @@ export interface DeviceManifacturers{
     id: string,
     name: string,
     deviceTypes: DeviceType[];
+}
+export type Root = Root2[]
+
+export interface Root2 {
+  mongoId: any
+  id: string
+  timestampPowerPairs: TimestampPowerPair[]
+}
+
+export interface TimestampPowerPair {
+  timestamp: string
+  powerUsage: number
 }

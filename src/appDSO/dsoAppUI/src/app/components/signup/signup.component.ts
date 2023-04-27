@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from 'service/auth.service';
+import { MessageService } from 'primeng/api';
+import { CookieService } from "ngx-cookie-service";
 
 @Component({
   selector: 'app-signup',
@@ -16,7 +19,9 @@ export class SignupComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private router : Router
+    private router : Router,
+    private auth: AuthService,private cookie: CookieService,
+    private messageService: MessageService
     ){}
 
     ngOnInit(): void {
@@ -40,12 +45,22 @@ export class SignupComponent implements OnInit {
       this.isText ? this.type = "text" : this.type = "password";
     }
 
-    onSubmit()
-    {
+    onSubmit(){
       this.submitted = true;
       if(this.signupForm.invalid){
-          this.router.navigate(['signup']);
+  
+        this.messageService.add({ severity: 'error', summary: 'Invalid data', detail: 'Invalid data format' });
+        this.router.navigate(['signup']);
         return;
+      }else if(this.signupForm.valid){
+        this.auth.register(this.signupForm.get('firstName')?.value,"Dispatcher",this.signupForm.get('email')?.value,this.signupForm.get('password')?.value)
+        .subscribe((message) =>
+          {
+              this.signupForm.reset();
+              this.messageService.add({ severity: 'success', summary: 'Register success', detail: message });
+              this.router.navigate(['signin'])
+          }
+        );
       }
     }
 }

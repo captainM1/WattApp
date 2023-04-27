@@ -12,7 +12,7 @@
                 <h3>{{ device?.deviceTypeName }}</h3>
             </div>
             <div class="col align-center">
-                <p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>
+                <p-confirmDialog></p-confirmDialog>
                 <button mat-icon-button (click)="del()">
                     <mat-icon>delete</mat-icon>
                 </button>
@@ -39,18 +39,23 @@
         </div>
         <div class="part">
             <div class="row">
-                <div class="col"></div>
-                <div class="col"><h3>Daily Usage</h3></div>
+                <div class="col hide-on-mobile"></div>
+                <div class="col">
+                  <h5 *ngIf="groupName === 'Consumer'">Daily Usage</h5>
+                  <h5 *ngIf="groupName === 'Producer'">Daily Production</h5>
+                  <h5 *ngIf="groupName === 'Storage'">Daily Storage</h5>
+                </div>
                 <div class="col centriranje">
                     <select [(ngModel)]="selectedOption" (ngModelChange)="onOptionSelect()">
-                        <option value="Today">Today</option>
+                        <option value="Today">Yesterday</option>
+                        <option value="Today">Tomorrow</option>
                         <option value="Week">Week</option>
                         <option value="Last Month">Last Month</option>
                         <option value="Next Month">Next Month</option>
                     </select>
                 </div>
             </div>
-            <div class="align-center">
+            <div class="align-center chart">
                 <canvas #chart></canvas>
             </div>
         </div>
