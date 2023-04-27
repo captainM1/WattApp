@@ -102,6 +102,19 @@ public class PowerUsageController : ControllerBase
         var powerUsages = _powerUsageService.GetPowerUsageForDevicePast24Hours(deviceID, - 1);
         return Ok(powerUsages);
     }
+    
+    [HttpGet("power-usage/Previous24h/device-usage_per_hour_v2/{deviceID}")]
+    public ActionResult<Dictionary<DateTime, double>> GetDeviceUsageForPrev24v2(Guid deviceID)
+    {
+        var powerUsages = _powerUsageService.GetPowerUsageForDevicePast24Hoursv2(deviceID, - 1);
+        return Ok(powerUsages);
+    }
+    [HttpGet("power-usage/Next24h/device-usage_per_hour_v2/{deviceID}")]
+    public ActionResult<Dictionary<DateTime, double>> GetDeviceUsageForNext24v2(Guid deviceID)
+    {
+        var powerUsages = _powerUsageService.GetPowerUsageForDevicePast24Hoursv2(deviceID, 1);
+        return Ok(powerUsages);
+    }
 
     [HttpGet("power-usage/Next24h/device-usage_per_hour/{deviceID}")]
     public ActionResult<Dictionary<DateTime, double>> GetDeviceUsageForNext24(Guid deviceID)
