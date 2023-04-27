@@ -18,13 +18,14 @@ export class TokenInterceptor implements HttpInterceptor {
     private auth : AuthService,
     private router : Router,
     private msg : MessageService
-    
+
   ) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    if (request.url.endsWith('/signin') || request.url.endsWith('/signup') || request.url.startsWith('https://api.open-meteo')) {
+    if (request.url.endsWith('/signin') || request.url.endsWith('/signup') || request.url.startsWith('https://api.open-meteo.com') ) {
       return next.handle(request);
     }
+
 
     const myToken = this.auth.getFullToken();
 

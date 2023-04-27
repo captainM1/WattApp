@@ -15,21 +15,21 @@ export class HomeComponent implements OnInit{
   data:any;
   devices!:[];
   num!: number;
-  
+
 
 
   constructor(
     private auth: AuthService,
     private serv : AuthUserService
     ){}
-  
+
     ngOnInit(): void {/*
     this.auth.getData().subscribe((data) => {
       this.data = "Welcome, " + data;
     });*/
-    this.isLoading = true;
+
     this.numberOfDevices();
-    this.isLoading = false;
+
   }
 
 
