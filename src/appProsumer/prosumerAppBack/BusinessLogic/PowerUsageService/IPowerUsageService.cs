@@ -44,4 +44,6 @@ public interface IPowerUsageService
     public PowerUsage GetMaxUsagePreviousWeekProductoin(Guid userID);
     public PowerUsage GetMaxUsagePreviousMonthProduction(Guid userID);
     public PowerUsage GetMaxUsagePreviousCurrentProduction(Guid userID);
+    public double SavedEnergySystemProducer();
+    public double SavedEnergySystemConsumer();
 }

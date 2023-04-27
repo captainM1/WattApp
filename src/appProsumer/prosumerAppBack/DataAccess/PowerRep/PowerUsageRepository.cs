@@ -1493,4 +1493,28 @@ public class PowerUsageRepository : IPowerUsageRepository
 
     }
 
+    public double SavedEnergySystemProducer()
+    {
+        var lastMonth = this.GetPowerUsageForAMonthSystemProducer(-2);
+        var thisMonth = this.GetPowerUsageForAMonthSystemProducer(-1);
+
+        var savedEnergy = ((lastMonth - thisMonth) / lastMonth) * 100;
+
+        return savedEnergy;
+    }
+
+    public double SavedEnergySystemConsumer()
+    {
+        var lastMonth = this.GetPowerUsageForAMonthSystemConsumer(-2);
+        var thisMonth = this.GetPowerUsageForAMonthSystemConsumer(-1);
+
+        Console.WriteLine("ukupna konzumacija struje proslog meseca: " + lastMonth);
+        Console.WriteLine("ukupna konzumacija struje ovog meseca: " + thisMonth);
+
+        var savedEnergy = ((lastMonth - thisMonth) / lastMonth) * 100;
+
+        Console.WriteLine("saved energy in % : " + savedEnergy + "%");
+
+        return savedEnergy;
+    }
 }

@@ -49,5 +49,7 @@ namespace prosumerAppBack.BusinessLogic
         public PowerUsage GetDeviceWithMaxPowerUsagePreviousMonthConsumption(Guid userID);
         public PowerUsage GetDeviceWithMaxPowerUsageCurrentConsumption(Guid userID);
         public PowerUsage Get12hoursBefore12hoursAfter(Guid deviceID);
+        public double SavedEnergySystemConsumer();
+        public double SavedEnergySystemProducer();
     }
 }

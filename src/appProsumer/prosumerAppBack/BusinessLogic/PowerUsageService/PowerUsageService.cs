@@ -339,4 +339,16 @@ public class PowerUsageService:IPowerUsageService
         }
         return powerUsage;
     }
+
+    public double SavedEnergySystemConsumer()
+    {
+        var powerUsage = _repository.SavedEnergySystemConsumer();
+        return powerUsage;
+    }
+
+    public double SavedEnergySystemProducer()
+    {
+        var powerUsage = _repository.SavedEnergySystemProducer();
+        return powerUsage;
+    }
 }
