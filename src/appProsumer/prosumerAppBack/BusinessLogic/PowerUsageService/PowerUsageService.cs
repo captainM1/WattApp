@@ -330,7 +330,7 @@ public class PowerUsageService:IPowerUsageService
         return result;
     }
 
-    public Dictionary<DateTime, double> GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction)
+    public PowerUsage GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction)
     {
         var powerUsage = _repository.GetPowerUsageForDevicePast24Hours(deviceID, direction);
         if (powerUsage == null)

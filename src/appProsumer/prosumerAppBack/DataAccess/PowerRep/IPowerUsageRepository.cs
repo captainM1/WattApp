@@ -26,7 +26,7 @@ namespace prosumerAppBack.BusinessLogic
         //    public Dictionary<Guid, List<double>> GetPowerUsageForDevices(Guid userId, int direction);
         public List<PowerUsage> GetPowerUsageForDevicesProduction(Guid userID, int direction);
         public List<PowerUsage> GetPowerUsageForDevicesConsumption(Guid userID, int direction);        
-        public Dictionary<DateTime, double> GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction);//radi ali vraca dictionary        
+        public PowerUsage GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction);       
         public PowerUsage GetPowerConsumedForADaySystem();
         public PowerUsage GetPowerProducedForADaySystem();
         public double GetCurrentPowerConsumption();

@@ -875,9 +875,14 @@ public class PowerUsageRepository : IPowerUsageRepository
         return puList;
     }
 
-    public Dictionary<DateTime, double> GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction)
+    public PowerUsage GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction)
     {
         var utcNow = DateTime.Now;
+
+        PowerUsage pu = new PowerUsage();
+        pu.ID = deviceID;
+        pu.TimestampPowerPairs = new List<TimestampPowerPair>();
+        TimestampPowerPair tsp = new TimestampPowerPair();
 
         var startOf24Period = direction > 0
             ? utcNow
@@ -900,9 +905,17 @@ public class PowerUsageRepository : IPowerUsageRepository
             .Where(t => t.Timestamp >= startOf24Period && t.Timestamp <= endOf24Period)
             .ToList();
 
-        var powerUsageData = powerUsages.ToDictionary(p => p.Timestamp, p => p.PowerUsage);
+        foreach(var powerUsage in powerUsages)
+        {
+            tsp.Timestamp = powerUsage.Timestamp;
+            tsp.PowerUsage = powerUsage.PowerUsage;
+            pu.TimestampPowerPairs.Add(tsp);
+        }
 
-        return powerUsageData;
+        //var powerUsageData = powerUsages.ToDictionary(p => p.Timestamp, p => p.PowerUsage);
+
+        //pu.TimestampPowerPairs.Add(tsp);
+        return pu;
     }
 
     public PowerUsage Get12hoursBefore12hoursAfter(Guid deviceID)
@@ -1508,13 +1521,9 @@ public class PowerUsageRepository : IPowerUsageRepository
         var lastMonth = this.GetPowerUsageForAMonthSystemConsumer(-2);
         var thisMonth = this.GetPowerUsageForAMonthSystemConsumer(-1);
 
-        Console.WriteLine("ukupna konzumacija struje proslog meseca: " + lastMonth);
-        Console.WriteLine("ukupna konzumacija struje ovog meseca: " + thisMonth);
-
         var savedEnergy = ((lastMonth - thisMonth) / lastMonth) * 100;
-
-        Console.WriteLine("saved energy in % : " + savedEnergy + "%");
 
         return savedEnergy;
     }
+
 }

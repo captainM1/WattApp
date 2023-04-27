@@ -97,14 +97,14 @@ public class PowerUsageController : ControllerBase
     }
 
     [HttpGet("power-usage/Previous24h/device-usage_per_hour/{deviceID}")]
-    public ActionResult<Dictionary<DateTime, double>> GetDeviceUsageForPrev24(Guid deviceID)
+    public ActionResult<PowerUsage> GetDeviceUsageForPrev24(Guid deviceID)
     {
         var powerUsages = _powerUsageService.GetPowerUsageForDevicePast24Hours(deviceID, - 1);
         return Ok(powerUsages);
     }
 
     [HttpGet("power-usage/Next24h/device-usage_per_hour/{deviceID}")]
-    public ActionResult<Dictionary<DateTime, double>> GetDeviceUsageForNext24(Guid deviceID)
+    public ActionResult<PowerUsage> GetDeviceUsageForNext24(Guid deviceID)
     {
         var powerUsages = _powerUsageService.GetPowerUsageForDevicePast24Hours(deviceID, 1);
         return Ok(powerUsages);
