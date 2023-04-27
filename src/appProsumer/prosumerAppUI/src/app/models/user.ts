@@ -10,3 +10,14 @@ export interface User
   role: string;
   email: string;
 }
+
+export interface Info{
+  powerusage: any;
+  deviceId: string;
+  deviceTypeName: string;
+  macAdress: string;
+  manufacturerName: string;
+  typeOfDevice: string;
+  powerUsage:string;
+
+}
