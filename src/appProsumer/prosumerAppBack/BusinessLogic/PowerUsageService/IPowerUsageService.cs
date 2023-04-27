@@ -46,4 +46,5 @@ public interface IPowerUsageService
     public PowerUsage GetMaxUsagePreviousCurrentProduction(Guid userID);
     public double SavedEnergySystemProducer();
     public double SavedEnergySystemConsumer();
+    public double DeviceSystemPowerUsage(Guid deviceID);
 }

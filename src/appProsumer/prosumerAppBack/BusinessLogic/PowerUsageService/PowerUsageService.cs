@@ -351,4 +351,10 @@ public class PowerUsageService:IPowerUsageService
         var powerUsage = _repository.SavedEnergySystemProducer();
         return powerUsage;
     }
+
+    public double DeviceSystemPowerUsage(Guid deviceID)
+    {
+        var powerUsage = _repository.percentPowerUsageForPreviousHour(deviceID);
+        return powerUsage;
+    }
 }

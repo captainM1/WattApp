@@ -51,5 +51,6 @@ namespace prosumerAppBack.BusinessLogic
         public PowerUsage Get12hoursBefore12hoursAfter(Guid deviceID);
         public double SavedEnergySystemConsumer();
         public double SavedEnergySystemProducer();
+        public double percentPowerUsageForPreviousHour(Guid deviceID);
     }
 }

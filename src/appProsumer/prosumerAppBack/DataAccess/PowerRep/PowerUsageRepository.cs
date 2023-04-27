@@ -230,7 +230,7 @@ public class PowerUsageRepository : IPowerUsageRepository
 
     public double CurrentSumPowerUsageSystemProducer()
     {
-        DateTime currentHourTimestamp = DateTime.Now;
+        DateTime currentHourTimestamp = DateTime.Now.AddHours(-1);
         double sum = 0;
 
         var powerUsageData = mongoCollection.AsQueryable()
@@ -259,7 +259,7 @@ public class PowerUsageRepository : IPowerUsageRepository
 
     public double CurrentSumPowerUsageSystemConsumer()
     {
-        DateTime currentHourTimestamp = DateTime.Now;
+        DateTime currentHourTimestamp = DateTime.Now.AddHours(-1);
         double sum = 0;
 
         var powerUsageData = mongoCollection.AsQueryable()
@@ -912,9 +912,6 @@ public class PowerUsageRepository : IPowerUsageRepository
             pu.TimestampPowerPairs.Add(tsp);
         }
 
-        //var powerUsageData = powerUsages.ToDictionary(p => p.Timestamp, p => p.PowerUsage);
-
-        //pu.TimestampPowerPairs.Add(tsp);
         return pu;
     }
 
@@ -1524,6 +1521,34 @@ public class PowerUsageRepository : IPowerUsageRepository
         var savedEnergy = ((lastMonth - thisMonth) / lastMonth) * 100;
 
         return savedEnergy;
+    }
+
+    public double percentPowerUsageForPreviousHour(Guid deviceID)
+    {
+        DateTime date = DateTime.Now.AddHours(-1);
+
+        Guid deviceTypeID = _dataContext.Devices
+                .Where(d => d.ID == deviceID)
+                .Select(d => d.DeviceTypeID)
+                .FirstOrDefault();
+
+        double previousHourSystemUsage = 0;
+        double previopusHourDeviceUsage = this.GetCurrentPowerUsage(date, deviceTypeID);
+
+        string deviceGroupName = _dataContext.DeviceGroups
+                .Where(g => g.ID == _dataContext.DeviceTypes
+                    .Where(dt => dt.ID == deviceTypeID)
+                    .Select(dt => dt.GroupID)
+                    .FirstOrDefault())
+                .Select(g => g.Name)
+                .FirstOrDefault();
+
+        if(deviceGroupName == "Producer")
+            previousHourSystemUsage = this.CurrentSumPowerUsageSystemProducer();
+        if (deviceGroupName == "Consumer")
+            previousHourSystemUsage = this.CurrentSumPowerUsageSystemConsumer();
+
+        return (previopusHourDeviceUsage / previousHourSystemUsage) * 100;
     }
 
 }

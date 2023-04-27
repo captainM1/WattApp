@@ -475,4 +475,11 @@ public class PowerUsageController : ControllerBase
         var powerUsage = _powerUsageService.SavedEnergySystemConsumer();
         return Ok(powerUsage);
     }
+
+    [HttpGet("power-usage/device-system-usage-percent/{deviceID}")]
+    public ActionResult<double> DeviceSystemUsagePercent(Guid deviceID)
+    {
+        var powerUsage = _powerUsageService.DeviceSystemPowerUsage(deviceID);
+        return Ok(powerUsage);
+    }
 }
