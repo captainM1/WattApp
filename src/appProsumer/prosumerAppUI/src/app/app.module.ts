@@ -46,6 +46,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { FilterPipe } from './filter.pipe';
 import { WelcomeComponent } from './components/welcome/welcome.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 @NgModule({
   declarations: [
@@ -72,7 +73,8 @@ import { WelcomeComponent } from './components/welcome/welcome.component';
     DeviceDetailsComponent,
     PermissionsComponent,
     FilterPipe,
-    WelcomeComponent
+    WelcomeComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,

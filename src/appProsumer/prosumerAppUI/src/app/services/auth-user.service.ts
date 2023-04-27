@@ -55,4 +55,11 @@ export class AuthUserService {
   getDeviceInfoUserByID(userID : any){
     return this.http.get(environment.apiUrl + '/api/Device/devices/info/user/'+userID,{ headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
   }
+
+  getConsumptionPrevMonth(userID : any) : Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/previousMonth/consumption/user-every-day-device-usage/"+userID,{ headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
+  }
+  getConsumptionNextMonth(userID: any):Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/nextMonth/consumption/user-every-day-device-usage/" + userID,{ headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
+  }
 }
