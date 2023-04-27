@@ -53,57 +53,72 @@
                         <p class="card-text" >{{storage.length}}</p>
                     </div>
                   </div>
-                <div class="row">
-                    <h2 class= "text-center"style="text-align: center; padding-top: 10px;">Production</h2>
-                    <div class="card-container">
-                        <div class="card">
-                            <h3 class="card-title">Current: </h3>
-                            <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{currentProcuctionSys}} kWh</p>
-                            <canvas #currentProductionSYS></canvas>
-                        </div>
-                        <div class="card">
-                            <h3 class="card-title">Previous Month System:</h3>
-                            <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{currentProcuctionSys}} kWh</p>
-                            <canvas #prevMonthProductionSYS></canvas>
-                        </div>
-                        <div class="card">
-                            <h3 class="card-title">Prediction for Next Month System: </h3>
-                            <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{currentProcuctionSys}} kWh</p>
-                            <canvas #nextMonthProductionSYS></canvas>
-                        </div>
-                        <div class="card">
-                            <h3 class="card-title">Each Device in System: </h3>
-                            <select>
-                                <option>Previous month</option>
-                                <option>Next month</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                    
-                <div class="row">
-                    <h2 class="text-center" style="text-align: center; padding-top: 10px;">Consumption:</h2>
+                  <div class="row">
+                    <h2 class="text-center" style="text-align: center; padding-top: 10px;">Production</h2>
                         <div class="col">
                             <div class="card-container">
                                 <div class="card" style="width:60%">
                                     <label for="graphSelect">Select Graph:</label>
+                                    <select [(ngModel)]="selectedGraphProduction" (click)="displayGraphProduction(selectedGraphProduction)">
+                                        <option value="current">Current Production System</option>
+                                        <option value="prevMonth">Previous Month Production System</option>
+                                        <option value="nextMonth">Next Month Production System</option>
+                                    </select>
+                                    <div class="card-body" *ngIf="selectedGraphProduction === 'current'" >
+                                        <canvas #currentProductionSYS></canvas>
+                                        <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{currentProductionSys}} kWh</p>
+                                    </div>
+                                    <div class="card-body" *ngIf="selectedGraphProduction === 'prevMonth'">
+                                        <canvas #prevMonthProductionSYS></canvas>
+                                        <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{prevMonthProductionSys}} kWh</p>
+                                    </div>
+                                    <div class="card-body" *ngIf="selectedGraphProduction === 'nextMonth'">
+                                        <canvas #nextMonthProductionSYS></canvas>
+                                        <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{nextMonthConsumptionSys}} kWh</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <div class="col">
+                            <div class="card-container">
+                                <div class="card" style="width:100%">
+                                    <label for="graphSelect">Select Graph:</label>
+                                    <select [(ngModel)]="selectedGraphEachDeviceProduction" (click)="displayGraphProductionEachDevice(selectedGraphEachDevice)">
+                                        <option value="prev">Previous Month Production Each Device</option>
+                                        <option value="next">Next Month Production Each Device</option>
+                                    </select>
+                                    <div class="card-body" *ngIf="selectedGraphEachDeviceProduction === 'prev'" >
+                                        <!-- <canvas #currentConsumptionSYS></canvas> -->
+                                    </div>
+                                    <div class="card-body" *ngIf="selectedGraphEachDeviceProduction === 'next'">
+                                        <!-- <canvas #prevMonthConsumptionSYS></canvas> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                <div class="row">
+                    <h2 class="text-center" style="text-align: center; padding-top: 10px;">Consumption</h2>
+                        <div class="col">
+                            <div class="card-container">
+                                <div class="card" style="width:70%">
+                                    <label for="graphSelect">Select Graph:</label>
                                     <select [(ngModel)]="selectedGraph" (click)="displayGraphConsumption(selectedGraph)">
-                                        <option value="current">Current Consumption</option>
-                                        <option value="prevMonth">Previous Month Consumption</option>
-                                        <option value="nextMonth">Next Month Consumption</option>
+                                        <option value="current">Current Consumption System</option>
+                                        <option value="prevMonth">Previous Month Consumption System</option>
+                                        <option value="nextMonth">Next Month Consumption System</option>
                                     </select>
                                     <div class="card-body" *ngIf="selectedGraph === 'current'" >
-                                        <h3 class="card-title">Current: </h3>
                                         <canvas #currentConsumptionSYS></canvas>
                                         <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{currentConsumptionSys}} kWh</p>
                                     </div>
                                     <div class="card-body" *ngIf="selectedGraph === 'prevMonth'">
-                                        <h3 class="card-title">Previous Month System: </h3>
                                         <canvas #prevMonthConsumptionSYS></canvas>
                                         <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{prevMonthConsumptionSys}} kWh</p>
                                     </div>
                                     <div class="card-body" *ngIf="selectedGraph === 'nextMonth'">
-                                        <h3 class="card-title">Prediction for Next Month System: </h3>
                                         <canvas #nextMonthConsumptionSYS></canvas>
                                         <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{nextMonthConsumptionSys}} kWh</p>
                                     </div>
@@ -113,30 +128,21 @@
                     
                         <div class="col">
                             <div class="card-container">
-                                <div class="card" style="width:60%">
+                                <div class="card" style="width:100%">
                                     <label for="graphSelect">Select Graph:</label>
                                     <select [(ngModel)]="selectedGraphEachDevice" (click)="displayGraphConsumptionEachDevice(selectedGraphEachDevice)">
-                                        <option value="current">Current Consumption</option>
-                                        <option value="prevMonth">Previous Month Consumption</option>
-                                        <option value="nextMonth">Next Month Consumption</option>
+                                        <option value="prev">Previous Month Consumption Each Device</option>
+                                        <option value="next">Next Month Consumption Each Device</option>
                                     </select>
-                                    <div class="card-body" *ngIf="selectedGraph === 'current'" >
-                                        <h3 class="card-title">Current: </h3>
+                                    <div class="card-body" *ngIf="selectedGraph === 'prev'" >
                                         <canvas #currentConsumptionSYS></canvas>
-                                        <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{currentConsumptionSys}} kWh</p>
                                     </div>
-                                    <div class="card-body" *ngIf="selectedGraph === 'prevMonth'">
-                                        <h3 class="card-title">Previous Month System: </h3>
+                                    <div class="card-body" *ngIf="selectedGraph === 'next'">
                                         <canvas #prevMonthConsumptionSYS></canvas>
-                                        <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{prevMonthConsumptionSys}} kWh</p>
                                     </div>
-                                    
                                 </div>
                             </div>
                         </div>
-                            
-                        
-                   
                     </div>
        </div>
     </div>

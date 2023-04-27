@@ -16,9 +16,39 @@ import { Subscription } from 'rxjs';
 })
 export class HomeComponent implements OnInit, AfterViewInit{
 	
+	
+	constructor(
+		private auth : AuthService
+	){}
+
+	ngOnInit(): void {	
+	
+		// temperature
+		this.giveMeWeather();
+		this.getAllUserInfo();
+		this.allDevices();
+		this.getDate();
+		this.getNumberOfUsers();
+		this.getDeviceGroup();
+		this.prevMonthEachDevice();
+		this.eachDeviceConsumptingPrevMonth();
+	}
+
+	ngAfterViewInit(): void {
+		this.giveMeChartForTemperatureDaily();
+		
+		this.getConsumptionCurrent();
+		this.getConsumtionPrevMonth();
+		this.getConsumtionNextMonth();
+
+		this.getProductionCurrent();
+		this.nextMonthProductionSystem();
+		this.prevMonthProductionSystem();
+		 
+	}
+	
 	chartInstance!: Chart;
   	subscription!: Subscription;
-  
   ngOnDestroy(): void {
     if (this.subscription) {
       this.subscription.unsubscribe();
@@ -28,9 +58,18 @@ export class HomeComponent implements OnInit, AfterViewInit{
     }
   }
 
-	constructor(
-		private auth : AuthService
-	){}
+  @ViewChild('myChart') myChart!: ElementRef;
+  @ViewChild('myChartUsers') myChartUsers!:ElementRef;
+  @ViewChild('myChartForEveryTypeOfDevice') myChartForEveryTypeOfDevice!: ElementRef;
+  @ViewChild('hourlyTemp') hourlyTemp!: ElementRef;
+
+  @ViewChild('currentConsumptionSYS') currentConsumptionSYS!:ElementRef;
+  @ViewChild('prevMonthConsumptionSYS') prevMonthConsumptionSYS!:ElementRef;
+  @ViewChild('nextMonthConsumptionSYS') nextMonthConsumptionSYS!:ElementRef;
+
+  @ViewChild('currentProductionSYS') currentProductionSYS!:ElementRef;
+  @ViewChild('prevMonthProductionSYS') prevMonthProductionSYS!:ElementRef;
+  @ViewChild('nextMonthProductionSYS') nextMonthProductionSYS!:ElementRef;
 	
 // users
 	totalUsers!: number;
@@ -59,8 +98,9 @@ export class HomeComponent implements OnInit, AfterViewInit{
 	prevMonthEachDeviceConsumption!: eachDevice[];
 
 // production
-	currentProcuctionSys!:any;
+	currentProductionSys!:any;
 	prevMonthProductionSys!: any;
+	nextMonthProductionSys!:any;
 	prevMonextMonthConsumptionSys!:any;
 
 // weather
@@ -72,49 +112,10 @@ export class HomeComponent implements OnInit, AfterViewInit{
 	next!:any;
 	month!:any;
 	
-	@ViewChild('myChart') myChart!: ElementRef;
-	@ViewChild('myChartUsers') myChartUsers!:ElementRef;
-	@ViewChild('myChartForEveryTypeOfDevice') myChartForEveryTypeOfDevice!: ElementRef;
-	@ViewChild('hourlyTemp') hourlyTemp!: ElementRef;
-
-	@ViewChild('currentConsumptionSYS') currentConsumptionSYS!:ElementRef;
-	@ViewChild('prevMonthConsumptionSYS') prevMonthConsumptionSYS!:ElementRef;
-	@ViewChild('nextMonthConsumptionSYS') nextMonthConsumptionSYS!:ElementRef;
-
-	@ViewChild('currentProductionSYS') currentProductionSYS!:ElementRef;
-	@ViewChild('prevMonthProductionSYS') prevMonthProductionSYS!:ElementRef;
-	@ViewChild('nextMonthProductionSYS') nextMonthProductionSYS!:ElementRef;
+	
 	
 
 	
-	ngOnInit(): void {	
-	
-		// temperature
-		this.giveMeWeather();
-
-		this.getAllUserInfo();
-		this.allDevices();
-		this.getDate();
-		this.getNumberOfUsers();
-		this.getDeviceGroup();
-		this.prevMonthEachDevice();
-		this.eachDeviceConsumptingPrevMonth();
-	
-		
-	}
-
-	ngAfterViewInit(): void {
-		this.giveMeChartForTemperatureDaily();
-		
-		this.getConsumptionCurrent();
-		this.getConsumtionPrevMonth();
-		this.getConsumtionNextMonth();
-
-		this.getProductionCurrent();
-		this.nextMonthProductionSystem();
-		this.prevMonthProductionSystem();
-		 
-	}
 	
 	
 	getDate(){
@@ -375,6 +376,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			this.auth.currentProcustionSystem().subscribe(
 				(response : any) => {
 					this.prevMonthConsumptionSys = response.toFixed(2);
+					
 					this.halfDoughnutPrevMonthProductionSys(this.prevMonthConsumptionSys);
 				}
 			)
@@ -382,10 +384,10 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		halfDoughnutPrevMonthProductionSys(usage: any){
 			const d = usage;
 			const data = {
-			labels: ['Energy consumption'],
+			labels: ['Energy production'],
 			datasets: [
 				{
-				label: 'Energy consumption',
+				label: 'Energy production',
 				data: [d, 1000-d],
 				backgroundColor: ['#FF8811', '#ECEFF1'],
 				},
@@ -408,18 +410,19 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		getProductionCurrent(){
 			this.auth.currentProcustionSystem().subscribe(
 				(response : any) => {
-					this.currentConsumptionSys = response.toFixed(2);
-					this.halfDoughnutProductionSys(this.currentProcuctionSys);
+					this.currentProductionSys = response.toFixed(2);
+					console.log(this.currentProductionSys);
+					this.halfDoughnutProductionSys(this.currentProductionSys);
 				}
 			)
 		}
 		halfDoughnutProductionSys(usage: any){
 			const d = usage;
 			const data = {
-			labels: ['Energy consumption'],
+			labels: ['Energy production'],
 			datasets: [
 				{
-				label: 'Energy consumption',
+				label: 'Energy production',
 				data: [d, 1000-d],
 				backgroundColor: ['#FF8811', '#ECEFF1'],
 				},
@@ -442,18 +445,18 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		nextMonthProductionSystem(){
 			this.auth.nextMonthProductionSystem().subscribe(
 				(response : any) => {
-					this.nextMonthConsumptionSys = response.toFixed(2);
-					this.halfDoughnutNextMonthProductionSys(this.prevMonextMonthConsumptionSys);
+					this.nextMonthProductionSys = response.toFixed(2);
+					this.halfDoughnutNextMonthProductionSys(this.nextMonthProductionSys);
 				}
 			)
 		}
 		halfDoughnutNextMonthProductionSys(usage: any){
 			const d = usage;
 			const data = {
-			labels: ['Energy consumption'],
+			labels: ['Energy production'],
 			datasets: [
 				{
-				label: 'Energy consumption',
+				label: 'Energy production',
 				data: [d, 1000-d],
 				
 				},
@@ -530,7 +533,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			}
 		}
 		
-			
+//CONSUMPTION		
 		selectedGraph = 'current'; // set default graph
 		displayGraphConsumption(graph: string) {
  
@@ -550,6 +553,36 @@ export class HomeComponent implements OnInit, AfterViewInit{
 	}
 		selectedGraphEachDevice = 'prev';
 		displayGraphConsumptionEachDevice(graph: string){
+			this.selectedGraphEachDevice = graph;
+			switch(graph){
+				case 'prev':
+					this.eachDeviceConsumptingPrevMonth();
+					break;
+				case 'next':
+					this.eachDeviceConsumptingPrevMonth();
+					break;
+			}
+		}
+
+// PRODUCTION
+		selectedGraphProduction = 'current'; // set default graph
+		displayGraphProduction(graph: string) {
+		this.selectedGraphProduction = graph;
+		switch (graph) {
+			case 'current':
+				this.getProductionCurrent();
+			
+			break;
+			case 'prevMonth':
+				this.prevMonthProductionSystem();
+			break;
+			case 'nextMonth':
+				this.nextMonthProductionSystem();
+			break;
+		}
+	}
+		selectedGraphEachDeviceProduction = 'prev';
+		displayGraphProductionEachDevice(graph: string){
 			this.selectedGraphEachDevice = graph;
 			switch(graph){
 				case 'prev':

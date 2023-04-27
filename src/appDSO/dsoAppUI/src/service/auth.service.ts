@@ -170,4 +170,13 @@ export class AuthService {
   consumptionNextMonth(userID: string):Observable<any>{
     return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/nextMonth/consumption/user-every-day-device-usage/" + userID);
   }
+  productionPrevMonthUser(userID : string):Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/previousMonth/production/user-every-day-device-usage/" + userID);
+  }
+  productionNextMonthUser(userID : string):Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/nextMonth/production/user-every-day-device-usage/"+ userID);
+  }
+  consumptionPrev7days(userID : string):Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/previous7Days/consumption/user-every-day-device-usage/" + userID);
+  }
 }
