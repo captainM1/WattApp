@@ -461,4 +461,18 @@ public class PowerUsageController : ControllerBase
         var powerUsages = _powerUsageService.GetMaxUsagePreviousCurrentProduction(userID);
         return Ok(powerUsages);
     }
+
+    [HttpGet("power-usage/saved-energy/producer/system/")]
+    public ActionResult<double> SavedEnergySystemProducer()
+    {
+        var powerUsage = _powerUsageService.SavedEnergySystemProducer();
+        return Ok(powerUsage);
+    }
+
+    [HttpGet("power-usage/saved-energy/consumer/system/")]
+    public ActionResult<double> SavedEnergySystemConsumer()
+    {
+        var powerUsage = _powerUsageService.SavedEnergySystemConsumer();
+        return Ok(powerUsage);
+    }
 }
