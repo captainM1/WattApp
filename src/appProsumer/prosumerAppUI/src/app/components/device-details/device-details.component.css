@@ -10,6 +10,9 @@
     .desktop{
         display: none;
     }
+    .hide-on-mobile{
+        display: none;
+    }
   }
   
   @media(min-width: 481px){
@@ -32,13 +35,20 @@
 
     .outer{
         margin-bottom: 10%;
-        margin-top:70px;
+        margin-top:15px;
     }
     
     h3{
         color: #026670;
         text-transform: none;
         margin-top: 25px;
+        font-size: 18px;
+    }
+
+    h5{
+        color: #026670;
+        text-transform: none;
+        margin-top: 15px;
     }
 
     .simple{
@@ -57,25 +67,34 @@
         color:#026670;
     }
     
+    .chart{
+        height: 300px;
+    }
     
 }
 
 @media (min-width: 281px) and (max-width: 480px) /*Phones*/
 {
     .container{
-        width: 85%;
+        width: 95%;
         background-color: white;
     }
 
     .outer{
         margin-bottom: 10%;
-        margin-top:70px;
+        margin-top:30px;
     }
 
     h3{
         color: #026670;
         text-transform: none;
         margin-top: 25px;
+    }
+
+    h5{
+        color: #026670;
+        text-transform: none;
+        margin-top: 15px;
     }
 
     .simple{
@@ -90,11 +109,13 @@
         font-size: 18px;
     }
 
-
     mat-icon{
         color:#026670;
     }
 
+    .chart{
+        height: 300px;
+    }
 
 }
  
@@ -108,12 +129,13 @@
         margin-top: 80px;
     }
 
-    h3{
+    h3, h5{
         color:#026670;
         text-transform: uppercase;
         margin: 25px 0;
         padding-top:15px;
     }
+    
 
     .simple{
         margin-top: 10px;
@@ -145,7 +167,7 @@
         margin-top: 40px;
     }
 
-    h3{
+    h3, h5{
         color:#026670;
         text-transform: uppercase;
         margin: 25px 0;
@@ -188,9 +210,13 @@ mat-toolbar {
 }
 
 h3{
-    font-size: 24px;
     font-weight: bold;
 }
+
+h5{
+    font-weight: bold;
+}
+
 
 .centriranje{
     display:flex;

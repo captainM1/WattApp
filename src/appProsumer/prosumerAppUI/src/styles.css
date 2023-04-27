@@ -5,3 +5,7 @@
 body {
     background-color: #EDEAE5;
 }
+
+.expired-token{
+    background-color: darkred;
+}
