@@ -5,6 +5,27 @@ namespace prosumerAppBack.Models
 {
     public class User
     {
+        public User(User user)
+        {
+            ID = user.ID;
+            FirstName = user.FirstName;
+            LastName = user.LastName;
+            PasswordHash = user.PasswordHash;
+            Salt = user.Salt;
+            PhoneNumber = user.PhoneNumber;
+            Address = user.Address;
+            City = user.City;
+            Country = user.Country;
+            Role = user.Role;
+            Email = user.Email;
+            Devices = user.Devices;
+        }
+
+        public User()
+        {
+            
+        }
+
         [Key]
         public Guid ID { get; set; }
         public string? FirstName { get; set; }
@@ -20,37 +41,6 @@ namespace prosumerAppBack.Models
         public string? Email { get; set; }
 
         public ICollection<Device.Device> Devices { get; set; }
-
-        /*private readonly PasswordHasher hasher;
-
-        public User(PasswordHasher hasher)
-        {
-            this.hasher = hasher;
-        }
-
-        public User AddDefaultUser()
-        {
-            var user = new User
-            {
-                ID = Guid.NewGuid(),
-                FirstName = "Petar",
-                LastName = "Simic",
-                PhoneNumber = "064-316-15-81",
-                Address = "Radoja Domanovica 6",
-                City = "Kragujevac",
-                Country = "Serbia",
-                Role = "RegularUser",
-                Email = "petarsimic@gmail.com"
-            };
-            
-            var password = "petar123";
-            var salt, hash = hasher.HashPassword(password);
-            
-            user.PasswordHash = hash;
-            user.Salt = salt;
-            
-            return user;
-        }
-    }*/
+        
     }
 }
