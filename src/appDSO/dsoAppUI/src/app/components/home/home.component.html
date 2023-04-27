@@ -6,10 +6,10 @@
                 <h2 class="text-center">Weather Details</h2>
                 <small class="date">{{dateForWeater}}</small>
                 <div class="col-sm-4" id = "weather_div">
-                    <p class="text-left">
-                        <img src="../../../assets/icons/weather-icons/compass.png" ><small>Your Time Zone:</small> {{ this.weather.timezone }}
+                    <p class="text-left"  *ngIf="weather">
+                        <img src="../../../assets/icons/weather-icons/compass.png" ><small>Your Time Zone:</small> {{ this.weather.timezone}}
                     </p>
-                    <p class="text-left">
+                    <p class="text-left" *ngIf="weather.current_weather">
                       <img src="../../../assets/icons/weather-icons/temperature(2).png"><small>Temperature:</small> {{ this.weather.current_weather.temperature }} °C
                     </p>
                     <p class="text-left">
@@ -17,10 +17,10 @@
                       </p>
                 </div>
                 <div class="col-sm-4" style="padding-top: 20px;margin-right: -20px; padding-top: 20px; padding-right: 60px; padding-left: 60px;">
-                    <p class="text-left">
+                    <p class="text-left" *ngIf="weather">
                         <img src="../../../assets/icons/weather-icons/cold.png"><small>Minimal Temperature:</small> {{ this.weather.daily.temperature_2m_min[0]}} °C
                       </p>
-                      <p class="text-left">
+                      <p class="text-left" *ngIf="weather.current_weather">
                         <img src="../../../assets/icons/weather-icons/storm.png"><small>Wind Speed:</small> {{ this.weather.current_weather.windspeed}} km/h
                       </p>
                       <p class="text-left">
@@ -41,7 +41,7 @@
                     </div>
                     <div class="card">
                         <h3 class="card-title" >Prosumers:</h3>
-                        <p class="card-text">{{producers.length}}</p>
+                        <p class="card-text" *ngIf="producers.length">{{producers.length}}</p>
                     </div>
                     <div class="card">
                         <h3 class="card-title" >Consumers:</h3>
@@ -53,65 +53,100 @@
                         <p class="card-text" >{{storage.length}}</p>
                     </div>
                   </div>
-                
-                    <h2 class= "text-center"style="text-align: center; padding-top: 10px;">Production</h2>
-                    <div class="card-container">
-                        <div class="card">
-                            <h3 class="card-title">Current: </h3>
-                            <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{currentProcuctionSys}} kWh</p>
-                            <canvas #currentProductionSYS></canvas>
+                  <div class="row">
+                    <h2 class="text-center" style="text-align: center; padding-top: 10px;">Production</h2>
+                        <div class="col">
+                            <div class="card-container">
+                                <div class="card" style="width:60%">
+                                    <label for="graphSelect">Select Graph:</label>
+                                    <select [(ngModel)]="selectedGraphProduction" (click)="displayGraphProduction(selectedGraphProduction)">
+                                        <option value="current">Current Production System</option>
+                                        <option value="prevMonth">Previous Month Production System</option>
+                                        <option value="nextMonth">Next Month Production System</option>
+                                    </select>
+                                    <div class="card-body" *ngIf="selectedGraphProduction === 'current'" >
+                                        <canvas #currentProductionSYS></canvas>
+                                        <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{currentProductionSys}} kWh</p>
+                                    </div>
+                                    <div class="card-body" *ngIf="selectedGraphProduction === 'prevMonth'">
+                                        <canvas #prevMonthProductionSYS></canvas>
+                                        <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{prevMonthProductionSys}} kWh</p>
+                                    </div>
+                                    <div class="card-body" *ngIf="selectedGraphProduction === 'nextMonth'">
+                                        <canvas #nextMonthProductionSYS></canvas>
+                                        <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{nextMonthConsumptionSys}} kWh</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="card">
-                            <h3 class="card-title">Previous Month System:</h3>
-                            <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{currentProcuctionSys}} kWh</p>
-                            <canvas #prevMonthProductionSYS></canvas>
-                        </div>
-                        <div class="card">
-                            <h3 class="card-title">Prediction for Next Month System: </h3>
-                            <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{currentProcuctionSys}} kWh</p>
-                            <canvas #nextMonthProductionSYS></canvas>
-                        </div>
-                        <div class="card">
-                            <h3 class="card-title">Each Device in System: </h3>
-                            <select>
-                                <option>Previous month</option>
-                                <option>Next month</option>
-                            </select>
-                        </div>
-
                     
-                    </div>
-                    <h2 class= "text-center"style="text-align: center; padding-top: 10px;">Consumtion:</h2>
-                    <div class="card-container">
-                        <div class="card">
-                            <h3 class="card-title">Current: </h3>
-                            <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{currentConsumptionSys}} kWh</p>
-                            <canvas #currentConsumptionSYS></canvas>
+                        <div class="col">
+                            <div class="card-container">
+                                <div class="card" style="width:100%">
+                                    <label for="graphSelect">Select Graph:</label>
+                                    <select [(ngModel)]="selectedGraphEachDeviceProduction" (click)="displayGraphProductionEachDevice(selectedGraphEachDevice)">
+                                        <option value="prev">Previous Month Production Each Device</option>
+                                        <option value="next">Next Month Production Each Device</option>
+                                    </select>
+                                    <div class="card-body" *ngIf="selectedGraphEachDeviceProduction === 'prev'" >
+                                        <!-- <canvas #currentConsumptionSYS></canvas> -->
+                                    </div>
+                                    <div class="card-body" *ngIf="selectedGraphEachDeviceProduction === 'next'">
+                                        <!-- <canvas #prevMonthConsumptionSYS></canvas> -->
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="card">
-                            <h3 class="card-title">Previous Month System: </h3>
-                            <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{prevMonthConsumptionSys}} kWh</p>
-                            <canvas #prevMonthConsumptionSYS></canvas>
-                        </div>
-                        <div class="card">
-                            <h3 class="card-title">Prediction for Next Month System: </h3>
-                            <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{nextMonthConsumptionSys}} kWh</p>
-                            <canvas #nextMonthConsumptionSYS></canvas>
-                        </div>
-                        <div class="card">
-                            <h3 class="card-title">Each Device in System: </h3>
-                            <select>
-                                <option>Previous month</option>
-                                <option>Next month</option>
-                            </select>
-                        </div>
-                        
                     </div>
                     
-         
-        </div>
+                <div class="row">
+                    <h2 class="text-center" style="text-align: center; padding-top: 10px;">Consumption</h2>
+                        <div class="col">
+                            <div class="card-container">
+                                <div class="card" style="width:70%">
+                                    <label for="graphSelect">Select Graph:</label>
+                                    <select [(ngModel)]="selectedGraph" (click)="displayGraphConsumption(selectedGraph)">
+                                        <option value="current">Current Consumption System</option>
+                                        <option value="prevMonth">Previous Month Consumption System</option>
+                                        <option value="nextMonth">Next Month Consumption System</option>
+                                    </select>
+                                    <div class="card-body" *ngIf="selectedGraph === 'current'" >
+                                        <canvas #currentConsumptionSYS></canvas>
+                                        <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{currentConsumptionSys}} kWh</p>
+                                    </div>
+                                    <div class="card-body" *ngIf="selectedGraph === 'prevMonth'">
+                                        <canvas #prevMonthConsumptionSYS></canvas>
+                                        <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{prevMonthConsumptionSys}} kWh</p>
+                                    </div>
+                                    <div class="card-body" *ngIf="selectedGraph === 'nextMonth'">
+                                        <canvas #nextMonthConsumptionSYS></canvas>
+                                        <p class="card-text" style="text-align: center; font-weight: 500; font-size: 20px; color:#026670">{{nextMonthConsumptionSys}} kWh</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <div class="col">
+                            <div class="card-container">
+                                <div class="card" style="width:100%">
+                                    <label for="graphSelect">Select Graph:</label>
+                                    <select [(ngModel)]="selectedGraphEachDevice" (click)="displayGraphConsumptionEachDevice(selectedGraphEachDevice)">
+                                        <option value="prev">Previous Month Consumption Each Device</option>
+                                        <option value="next">Next Month Consumption Each Device</option>
+                                    </select>
+                                    <div class="card-body" *ngIf="selectedGraph === 'prev'" >
+                                        <canvas #currentConsumptionSYS></canvas>
+                                    </div>
+                                    <div class="card-body" *ngIf="selectedGraph === 'next'">
+                                        <canvas #prevMonthConsumptionSYS></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+       </div>
     </div>
-</div>
+
         
  
        
