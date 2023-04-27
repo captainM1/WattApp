@@ -37,6 +37,16 @@ public class PowerUsageService:IPowerUsageService
         return powerUsages;
     }
 
+    public PowerUsage GetPowerUsageForAMonth(Guid deviceId, int direction)
+    {
+        var powerUsages = _repository.GetPowerUsageForAMonth(deviceId, direction);
+        if (powerUsages == null)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsages;
+    }
+
     public double AverageSumPowerUsageProduction(Guid userID)
     {
         var powerUsages = _repository.AveragePowerUsageProduction(userID);

@@ -7,7 +7,7 @@ import { AuthUserService } from 'src/app/services/auth-user.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { CookieService } from "ngx-cookie-service";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -29,7 +29,8 @@ export class LoginComponent implements OnInit{
     //private toast : NgToastService,
     private auth: AuthService,
     private cookie: CookieService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private snackBar: MatSnackBar
     ){}
   
   ngOnInit(): void {

@@ -145,7 +145,7 @@ public class UserService:IUserService
         var user = await _repository.GetUserByEmailAndPasswordAsync(email, password);
         if (user == null)
         {
-            throw new NullReferenceException("Invalid email or password");
+            return null;
         }
 
         return user;

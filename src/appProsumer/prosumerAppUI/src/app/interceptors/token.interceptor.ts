@@ -38,7 +38,7 @@ export class TokenInterceptor implements HttpInterceptor {
       catchError((err : any) =>{
         if(err instanceof HttpErrorResponse){
           if(err.status === 401){
-            this.msg.add({severity: 'Error', summary: "Error", detail: "Your token has expired"});
+            this.msg.add({severity: 'error', summary: "Error", detail: "Your token has expired", styleClass:'expired-token'});
             this.router.navigate(['signin']);
           }
         }

@@ -71,17 +71,15 @@ public class UserController : ControllerBase
     [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] UserLoginDto userLoginDto)
     {        
-        try
+        var user = await _userService.GetUserByEmailAndPasswordAsync(userLoginDto.Email, userLoginDto.Password);
+
+        if(user == null)
         {
-            var user = await _userService.GetUserByEmailAndPasswordAsync(userLoginDto.Email, userLoginDto.Password);
-            
+            return BadRequest("Invalid email or password");
+        }
+
             var token = _tokenMaker.GenerateToken(user);
             return Ok(JsonSerializer.Serialize(token));
-        }
-        catch (ArgumentNullException ex)
-        {
-            throw new ArgumentException(ex.Message);
-        }
     }
 
     [HttpPost("validate-token")]

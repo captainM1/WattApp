@@ -96,6 +96,22 @@ public class PowerUsageController : ControllerBase
         }
     }
 
+    [HttpGet("power-usage/MonthFuture/device/{deviceID}")]
+    public ActionResult<IEnumerable<PowerUsage>> GetPowerUsageForAMonthFuture(Guid deviceID)
+    {
+            var powerUsages = _powerUsageService.GetPowerUsageForAMonth(deviceID, 1);
+
+            return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/MonthPast/device/{deviceID}")]
+    public ActionResult<IEnumerable<PowerUsage>> GetPowerUsageForAMonthPast(Guid deviceID)
+    {
+        var powerUsages = _powerUsageService.GetPowerUsageForAMonth(deviceID, -1);
+
+        return Ok(powerUsages);
+    }
+
     [HttpGet("power-usage/Previous24h/device-usage_per_hour/{deviceID}")]
     public ActionResult<Dictionary<DateTime, double>> GetDeviceUsageForPrev24(Guid deviceID)
     {

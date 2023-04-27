@@ -8,14 +8,21 @@ import { newDeviceDTO } from 'src/app/models/newDeviceDTO'
 import jwt_decode from 'jwt-decode';
 import { decode } from 'jsonwebtoken';
 import { Token } from '@angular/compiler';
-
+import { ConfirmationService, MessageService, ConfirmEventType } from 'primeng/api';
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
   decoded! : Token;
-  constructor(private http: HttpClient, private router:Router, private cookie: CookieService) { }
+  constructor(
+    private http: HttpClient,
+    private router:Router,
+    private cookie: CookieService,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService) { }
 
   login(email : string, password : string) : Observable<string>{
     return this.http.post<string>(environment.apiUrl + "/api/User/signin", {
@@ -24,7 +31,7 @@ export class AuthService {
     })
   }
 
-  register(firstName: string, lastName: string, email : string,  address: string, phoneNumber : string, password : string) : Observable<string>{
+  register(firstName: string, lastName: string, email: string, address: string, phoneNumber: string, password: string): Observable<string> {
     return this.http.post<string>(environment.apiUrl + "/api/User/signup", {
       firstName: firstName,
       lastName: lastName,
@@ -32,7 +39,15 @@ export class AuthService {
       address: address,
       email: email,
       password: password
-    })
+    }).pipe(
+      catchError((error) => {
+        if (error.status === 500) {
+          return of('Email already exists');
+        } else {
+          throw error;
+        }
+      })
+    );
   }
 
   validateJwt(token : string) : Observable<boolean>{
@@ -62,8 +77,26 @@ export class AuthService {
     return jwtToken;
   }
 
-  signOut(){
-    this.cookie.delete('jwtToken');
+  signOut() {
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to log out?',
+      header: 'Confirmation',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.cookie.delete('jwtToken');
+        this.router.navigate(['/signin']);
+      },
+      reject: (type: any) => {
+        switch (type) {
+          case ConfirmEventType.REJECT:
+            this.messageService.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected' });
+            break;
+          case ConfirmEventType.CANCEL:
+            this.messageService.add({ severity: 'warn', summary: 'Cancelled', detail: 'You have cancelled' });
+            break;
+        }
+      }
+    });
   }
 
   getWeather():Observable<any>{
