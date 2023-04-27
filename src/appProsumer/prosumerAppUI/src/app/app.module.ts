@@ -49,7 +49,7 @@ import { WelcomeComponent } from './components/welcome/welcome.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { SpinnerComponent } from './components/spinner/spinner.component';
+
 
 @NgModule({
   declarations: [
@@ -77,8 +77,7 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
     PermissionsComponent,
     FilterPipe,
     WelcomeComponent,
-    DashboardComponent,
-    SpinnerComponent
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
@@ -100,7 +99,7 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
     [MatProgressSpinnerModule],
     MatSnackBarModule
   ],
-  providers: [MessageService,ConfirmationService,{provide:HTTP_INTERCEPTORS,useClass:TokenInterceptor,multi:true}],
+  providers: [MessageService,ConfirmationService, {provide:HTTP_INTERCEPTORS,useClass:TokenInterceptor,multi:true}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

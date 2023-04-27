@@ -77,6 +77,8 @@ export class DeviceDetailsComponent implements OnInit {
       
       this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/7daysFuture/device/${this.deviceId}`)
         .subscribe((data:any) => {
+          console.log(data);
+          console.log('week');
           this.deviceFutureWeekDate = data.timestampPowerPairs.map((time:any) => time.timestamp);
           this.deviceFutureWeekPower = data.timestampPowerPairs.map((time:any) => time.powerUsage);
           this.onOptionSelect();
@@ -88,6 +90,7 @@ export class DeviceDetailsComponent implements OnInit {
       this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/Next24h/device-usage_per_hour_v2/${this.deviceId}`)
       .subscribe((data:any) =>{
         console.log(data);
+        console.log("danas");
         this.next24HoursDate = data.timestampPowerPairs.map((item: any) => item.timestamp);
         this.next24HoursPower = data.timestampPowerPairs.map((item: any) => item.powerUsage);
       },
