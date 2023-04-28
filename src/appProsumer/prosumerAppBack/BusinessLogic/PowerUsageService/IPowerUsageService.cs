@@ -45,4 +45,5 @@ public interface IPowerUsageService
     public PowerUsage GetMaxUsagePreviousMonthProduction(Guid userID);
     public PowerUsage GetMaxUsagePreviousCurrentProduction(Guid userID);
     object? GetPowerUsageForDevicePast24Hoursv2(Guid deviceId, int i);
+    double GetHowMuchUserIsConsuming(Guid userId);
 }

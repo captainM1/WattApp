@@ -13,7 +13,7 @@ namespace prosumerAppBack.Controllers
 {
 	[ApiController]
 	[Route("api/[controller]")]
-    //[Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
+    [Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
     public class DeviceController : ControllerBase
 	{
         private readonly IDeviceService _deviceService;

@@ -474,4 +474,11 @@ public class PowerUsageController : ControllerBase
         var powerUsages = _powerUsageService.GetMaxUsagePreviousCurrentProduction(userID);
         return Ok(powerUsages);
     }
+
+    [HttpGet("power-usage/current/user-unused-consumption/{userId}")]
+    public ActionResult<double> GetHowMuchUserIsConsuming(Guid userId)
+    {
+        var powerUsages = _powerUsageService.GetHowMuchUserIsConsuming(userId);
+        return Ok(powerUsages);
+    }
 }
