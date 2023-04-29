@@ -113,7 +113,7 @@ public class PowerUsageController : ControllerBase
     }
 
     [HttpGet("power-usage/Previous24h/device-usage_per_hour/{deviceID}")]
-    public ActionResult<Dictionary<DateTime, double>> GetDeviceUsageForPrev24(Guid deviceID)
+    public ActionResult<PowerUsage> GetDeviceUsageForPrev24(Guid deviceID)
     {
         var powerUsages = _powerUsageService.GetPowerUsageForDevicePast24Hours(deviceID, - 1);
         return Ok(powerUsages);
@@ -133,7 +133,7 @@ public class PowerUsageController : ControllerBase
     }
 
     [HttpGet("power-usage/Next24h/device-usage_per_hour/{deviceID}")]
-    public ActionResult<Dictionary<DateTime, double>> GetDeviceUsageForNext24(Guid deviceID)
+    public ActionResult<PowerUsage> GetDeviceUsageForNext24(Guid deviceID)
     {
         var powerUsages = _powerUsageService.GetPowerUsageForDevicePast24Hours(deviceID, 1);
         return Ok(powerUsages);
@@ -489,5 +489,26 @@ public class PowerUsageController : ControllerBase
     {
         var powerUsages = _powerUsageService.GetMaxUsagePreviousCurrentProduction(userID);
         return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/saved-energy/producer/system/")]
+    public ActionResult<double> SavedEnergySystemProducer()
+    {
+        var powerUsage = _powerUsageService.SavedEnergySystemProducer();
+        return Ok(powerUsage);
+    }
+
+    [HttpGet("power-usage/saved-energy/consumer/system/")]
+    public ActionResult<double> SavedEnergySystemConsumer()
+    {
+        var powerUsage = _powerUsageService.SavedEnergySystemConsumer();
+        return Ok(powerUsage);
+    }
+
+    [HttpGet("power-usage/device-system-usage-percent/{deviceID}")]
+    public ActionResult<double> DeviceSystemUsagePercent(Guid deviceID)
+    {
+        var powerUsage = _powerUsageService.DeviceSystemPowerUsage(deviceID);
+        return Ok(powerUsage);
     }
 }

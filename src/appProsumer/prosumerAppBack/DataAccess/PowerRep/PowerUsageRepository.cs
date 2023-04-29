@@ -258,7 +258,7 @@ public class PowerUsageRepository : IPowerUsageRepository
 
     public double CurrentSumPowerUsageSystemProducer()
     {
-        DateTime currentHourTimestamp = DateTime.Now;
+        DateTime currentHourTimestamp = DateTime.Now.AddHours(-1);
         double sum = 0;
 
         var powerUsageData = mongoCollection.AsQueryable()
@@ -287,7 +287,7 @@ public class PowerUsageRepository : IPowerUsageRepository
 
     public double CurrentSumPowerUsageSystemConsumer()
     {
-        DateTime currentHourTimestamp = DateTime.Now;
+        DateTime currentHourTimestamp = DateTime.Now.AddHours(-1);
         double sum = 0;
 
         var powerUsageData = mongoCollection.AsQueryable()
@@ -903,9 +903,14 @@ public class PowerUsageRepository : IPowerUsageRepository
         return puList;
     }
 
-    public Dictionary<DateTime, double> GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction)
+    public PowerUsage GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction)
     {
         var utcNow = DateTime.Now;
+
+        PowerUsage pu = new PowerUsage();
+        pu.ID = deviceID;
+        pu.TimestampPowerPairs = new List<TimestampPowerPair>();
+        TimestampPowerPair tsp = new TimestampPowerPair();
 
         var startOf24Period = direction > 0
             ? utcNow
@@ -928,9 +933,14 @@ public class PowerUsageRepository : IPowerUsageRepository
             .Where(t => t.Timestamp >= startOf24Period && t.Timestamp <= endOf24Period)
             .ToList();
 
-        var powerUsageData = powerUsages.ToDictionary(p => p.Timestamp, p => p.PowerUsage);
+        foreach(var powerUsage in powerUsages)
+        {
+            tsp.Timestamp = powerUsage.Timestamp;
+            tsp.PowerUsage = powerUsage.PowerUsage;
+            pu.TimestampPowerPairs.Add(tsp);
+        }
 
-        return powerUsageData;
+        return pu;
     }
 
     public PowerUsage Get12hoursBefore12hoursAfter(Guid deviceID)
@@ -1553,6 +1563,54 @@ public class PowerUsageRepository : IPowerUsageRepository
 
         return pu;
 
+    }
+
+    public double SavedEnergySystemProducer()
+    {
+        var lastMonth = this.GetPowerUsageForAMonthSystemProducer(-2);
+        var thisMonth = this.GetPowerUsageForAMonthSystemProducer(-1);
+
+        var savedEnergy = ((lastMonth - thisMonth) / lastMonth) * 100;
+
+        return savedEnergy;
+    }
+
+    public double SavedEnergySystemConsumer()
+    {
+        var lastMonth = this.GetPowerUsageForAMonthSystemConsumer(-2);
+        var thisMonth = this.GetPowerUsageForAMonthSystemConsumer(-1);
+
+        var savedEnergy = ((lastMonth - thisMonth) / lastMonth) * 100;
+
+        return savedEnergy;
+    }
+
+    public double percentPowerUsageForPreviousHour(Guid deviceID)
+    {
+        DateTime date = DateTime.Now.AddHours(-1);
+
+        Guid deviceTypeID = _dataContext.Devices
+                .Where(d => d.ID == deviceID)
+                .Select(d => d.DeviceTypeID)
+                .FirstOrDefault();
+
+        double previousHourSystemUsage = 0;
+        double previopusHourDeviceUsage = this.GetCurrentPowerUsage(date, deviceTypeID);
+
+        string deviceGroupName = _dataContext.DeviceGroups
+                .Where(g => g.ID == _dataContext.DeviceTypes
+                    .Where(dt => dt.ID == deviceTypeID)
+                    .Select(dt => dt.GroupID)
+                    .FirstOrDefault())
+                .Select(g => g.Name)
+                .FirstOrDefault();
+
+        if(deviceGroupName == "Producer")
+            previousHourSystemUsage = this.CurrentSumPowerUsageSystemProducer();
+        if (deviceGroupName == "Consumer")
+            previousHourSystemUsage = this.CurrentSumPowerUsageSystemConsumer();
+
+        return (previopusHourDeviceUsage / previousHourSystemUsage) * 100;
     }
 
 }
