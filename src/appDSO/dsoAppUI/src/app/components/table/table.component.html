@@ -1,5 +1,5 @@
 <app-nav></app-nav>
-<div class="row" style="margin-top: 100px;">
+<div class="row" style="margin-top: 100px;" id = "myBack">
   <div class="col-lg-7">
     <div class="input-div">
       <div>
@@ -17,22 +17,23 @@
           <table tableexporter class="table-hover" #myTable id = "myTable">
               <thead>
                 <tr>
-                  <th style="width: 5%;"></th>
+                  <th style="width: 3%;"></th>
                   <th >First Name</th>
                   <th >Last Name</th>
                   <th style="width: 23%;">Address</th>
-                  <th style="width: 15%;"(click)="sortData('powerUsage')"><i class="fa fa-arrow-up" aria-hidden="true" style = "color:white" *ngIf="currentSortOrder ==='asc'"></i><i class="fa fa-arrow-down"  style ="color:white" *ngIf="currentSortOrder === 'desc'"></i>Power Usage</th>
+                  <th style="width: 15%;"(click)="sortData1('consumption')"><i class="fa fa-arrow-up" aria-hidden="true" style = "color:white" *ngIf="currentSortOrder1 ==='asc'"></i><i class="fa fa-arrow-down"  style ="color:white" *ngIf="currentSortOrder1 === 'desc'"></i>Consumption</th>
+                  <th style="width: 15%;"(click)="sortData2('production')"><i class="fa fa-arrow-up" aria-hidden="true" style = "color:white" *ngIf="currentSortOrder2 ==='asc'"></i><i class="fa fa-arrow-down"  style ="color:white" *ngIf="currentSortOrder2 === 'desc'"></i>Production</th>
                   <th style="width: 20%;"></th>
                   
                 </tr>
               </thead>
               <tr *ngFor="let user of allUsers | filterName : _searchByName: _searchByAddress" (click) = "showMeOnMap(user.id)">
-                  <td><input [(ngModel)]="user.selected"  type = "checkbox" style="width: 20px;" (click) = "toggleExportSelected()"></td>  
-                  <!-- (click) = "showMeDevices(user.id)" -->
+                  <td *ngIf="user"><input [(ngModel)]="user.selected"  type = "checkbox" style="width: 20px;" (click) = "toggleExportSelected()"></td>  
                   <td >{{user.firstName}}</td> 
                   <td>{{user.lastName}}</td>
                   <td>{{user.address}}, {{user.city}}, {{user.country}}</td>
-                  <td>{{user.powerUsage}}kw/h</td>
+                  <td>{{user.production}} kWh</td>
+                  <td>{{user.consumption}} kWh</td>
                   <td><button class="btn" (click)="openModel()">Show me profile</button></td>
               </tr>
               <tr>
@@ -63,64 +64,132 @@
         <h4 class="modal-title">User Profile</h4>
         <button type="button" class="btn-close" (click)="closeModel()" data-bs-dismiss="modal"></button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" *ngIf="userPopUp">
         <div class="row">
           <h1 class="text-center">{{userPopUp.firstName}} {{userPopUp.lastName}}</h1>
-          <div class="col-sm">
-            <h2 class="text-left">General information</h2>
-            <p>E-mail: {{userPopUp.email}}</p>
-            <p>Phone number: {{userPopUp.email}}</p>
-            <p>City: {{userPopUp.country}}, {{userPopUp.city}}/p>
-            <p>Address: {{userPopUp.address}}</p>
+          
+        <div class="row">
+          <div class="col" id = "col-popUp">
+            <div class="card" id = "card-popUp">
+              <h3 class="card-title" id = "card-title-popUp">Current production:</h3>
+              <div class="card-body" id = "card-body-popUp">
+                {{userPopUp.production}} kWh
+              </div>
+            </div>
           </div>
-          <div class="col-sm">
-            <h2 class="text-right">Device Details</h2>  
-            <p>Total numer of devices: {{allUserDevices.length}} </p>
-            <p>Prosumers: {{producers.length}}</p>
-            <p>Consumers: {{consumers.length}}</p>
-            <p>Storage: {{storage.length}}</p>
+        <div class="col" id = "col-popUp">
+          <div class="card" id = "card-popUp">
+            <h3 class="card-title" id = "card-title-popUp">Current consumption:</h3>
+            <div class="card-body" id = "card-body-popUp">
+              {{userPopUp.consumption}} kWh
+            </div>
           </div>
         </div>
-        <!-- <div class="row">
-          <div class="col-sm-4" style="width: 200px; height: 200px;" >
-            <div  class="chart">
-              <p class = "text_below">{{powerUsagePopUp}}</p>
-              <canvas #powerUsageGraph ></canvas>
-            </div>
-          </div>
-          
-        </div> -->
+        
+      </div>
         <div class="row">
           <div class="col">
-            <div>
-              <button id = "devices">Devices</button>
-              <button id = "system">System</button>
+            <div class="id-button-popUp" >
+              <button class = "my-button active"[class.active]="isActiveUser" (click)="toggleActive('user'); showMeGeneral = true; showDevicePage = false; showSystemPage = false;">About User</button>
+              <button  class = "my-button active" [class.active]="isActiveDevice" (click)="toggleActive('device'); showDevicePage = true; showSystemPage = false; showMeGeneral = false;">Devices</button>
+              <button  class = "my-button active" [class.active]="isActiveSystem" (click)="toggleActive('system'); showDevicePage = false; showSystemPage = true; showMeGeneral = false;">System</button>
             </div>
-            <div id = "showDevicePage">
-              <table >
-                <thead>
-                  <tr>
-                    <th>Device name</th>
-                    <th>Device manifacture</th>
-                    <th>Mac Address</th>
-                    <th>Type of Device</th>
-                    <th>Current</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let device of allUserDevices" >
-                    <td >{{device.deviceTypeName}}</td>
-                    <td>{{device.manufacturerName}}</td>
-                    <td>{{device.macAdress}}</td>
-                    <td>{{device.typeOfDevice}}</td>
-                    <td>{{device.powerUsage}} kw/h</td>
-                  </tr>
-                </tbody>
-              </table>
+            <div class="row" *ngIf="showMeGeneral">
+              <div class="col-sm" >
+                <h2 class="text-left">General information</h2>
+                <p><span>E-mail: </span>{{userPopUp.email}}</p>
+                <p><span>Phone number:</span> {{userPopUp.phoneNumber}}</p>
+                <p><span>City: </span>{{userPopUp.country}}, {{userPopUp.city}}</p>
+                <p><span>Address: </span>{{userPopUp.address}}</p>
+              </div>
+              <div class="col-sm">
+                <h2 class="text-right">Device Details</h2>  
+                <p><span>Total numer of devices:</span> {{allUserDevices.length}} </p>
+                <p><span>Prosumers:</span> {{numberOfProsumers}}</p>
+                <p><span>Consumers: </span>{{numberOfConsumers}}</p>
+                <p><span>Storage:</span> {{numberOfStorage}}</p>
+              </div>
             </div>
-            <div id="showSystemPage">
+            </div>
+            
+            <div *ngIf="showDevicePage">
+              <div class="row">
+                <div class="col">
+                  <table class="tableDevices">
+                    <thead>
+                      <tr >
+                        <th>Device name</th>
+                        <th>Device manifacture</th>
+                        <th>Mac Address</th>
+                        <th>Type of Device</th>
+                        <th>Current</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let device of allUserDevices" [(ngModel)]="selectedDevice" (click)="displayGraph(device)">
+                        <td  >{{device.deviceTypeName}}</td>
+                        <td>{{device.manufacturerName}}</td>
+                        <td>{{device.macAdress}}</td>
+                        <td>{{device.typeOfDevice}}</td>
+                        <td>{{device.powerUsage}} kw/h</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="col">
+                  <div *ngIf="selectedDevice">
+                   <canvas #prev24DeviceID></canvas>
+                  </div>
+                </div>
+              </div>
               
+            </div>
+            <div *ngIf="showSystemPage">
+             <div class="row">
+                <h3>Consumption</h3>
+                <div class="col">
+                  <label for="graphSelect">Select Graph:</label>
+                <select [(ngModel)]="selectedGraphHistoryConsumption" (click)="HistoryConsumption(selectedGraphHistoryConsumption)">
+                    <option value="month">Previous Month</option>
+                    <option value="7days">Previous 7 days</option>
+                    <option value="24h">Previous 24 hours</option>
+                </select>
+
+                <div class="col" *ngIf="selectedGraphHistoryConsumption === 'month'">
+                  <canvas  #consumptionPrevMonthUSER></canvas>
+                </div>
+                <div  *ngIf="selectedGraphHistoryConsumption === '7days'">
+                  <canvas #consumptionPrev7DAYS></canvas>
+                </div>
+                </div>
+                <div class="col">
+                  <label for="graphSelect">Select Graph:</label>
+                <select [(ngModel)]="selectedGraphFutureConsumption" (click)="FutureConsumption(selectedGraphFutureConsumption)">
+                    <option value="month">Next Month</option>
+                    <option value="7days">Next 7 days</option>
+                    <option value="24h">Next 24 hours</option>
+                </select>
+              <div class="col">
+                <div *ngIf="selectedGraphFutureConsumption === 'month'">
+                  <canvas  #consumptionNextMonthUSER></canvas>
+                </div>
+                <div  *ngIf="selectedGraphFutureConsumption === '7days'">
+                  
+                </div>
+              </div>
+                
+                </div>
+             </div>
+             
+             <!-- <div class="row">
+               <h3>Production</h3>
+                <div class="col">
+                  <canvas  #consumptionNextMonthUSER></canvas>
+                </div>
+                <div class="col">
+                  <canvas #productionNextMonthUSER></canvas>
+                </div>
+             </div> -->
             </div>
           </div>
         </div>
@@ -131,3 +200,4 @@
     </div>
   </div>
 </div> 
+

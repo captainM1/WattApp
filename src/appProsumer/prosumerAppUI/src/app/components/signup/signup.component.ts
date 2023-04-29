@@ -60,12 +60,17 @@ export class SignupComponent  implements OnInit{
     }else if(this.loginForm.valid){
       this.auth.register(this.loginForm.get('firstName')?.value, this.loginForm.get('lastName')?.value, this.loginForm.get('email')?.value,this.loginForm.get('address')?.value, this.loginForm.get('phonenumber')?.value, this.loginForm.get('password')?.value,)
       .subscribe((message) =>
-        {
-            this.loginForm.reset();
-            this.messageService.add({ severity: 'success', summary: 'Register success', detail: message });
-            this.router.navigate(['signin'])
-        }
-      );
+    {
+      if (message === 'Email already exists') {
+        this.messageService.add({ severity: 'error', summary: 'Registration failed', detail: 'Email already exists' });
+      } else {
+        const fullName = this.loginForm.get('firstName')?.value + ' ' + this.loginForm.get('lastName')?.value;
+        this.loginForm.reset();
+        this.messageService.add({ severity: 'success', summary: 'Registration success', detail: 'Welcome ' + fullName });
+        this.router.navigate(['signin'])
+      }
+    }
+  );
     }
   }
 

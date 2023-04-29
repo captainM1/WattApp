@@ -52,18 +52,15 @@ public class PowerUsageController : ControllerBase
     
     
     [HttpGet("power-usage/current/device/{deviceID}")]
-    public ActionResult<IEnumerable<PowerUsage>> GetForDevice(Guid deviceID)
+    public ActionResult<double> GetForDevice(Guid deviceID)
     {        
-        try
-        {
-            var powerUsages = _powerUsageService.GetForDevice(deviceID);
+        var powerUsages = _powerUsageService.GetForDevice(deviceID);
 
-            return Ok(powerUsages);
-        }
-        catch (ArgumentNullException ex)
-        {
-            throw new ArgumentException(ex.Message);
-        }
+        if (powerUsages == -1)
+            return BadRequest("Device does not exists");
+        else if (powerUsages == 0)
+            return BadRequest("Device is turned off");
+        return Ok(powerUsages);
     }
 
     [HttpGet("power-usage/7daysHistory/device/{deviceID}")]
@@ -96,8 +93,24 @@ public class PowerUsageController : ControllerBase
         }
     }
 
+    [HttpGet("power-usage/MonthFuture/device/{deviceID}")]
+    public ActionResult<IEnumerable<PowerUsage>> GetPowerUsageForAMonthFuture(Guid deviceID)
+    {
+            var powerUsages = _powerUsageService.GetPowerUsageForAMonth(deviceID, 1);
+
+            return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/MonthPast/device/{deviceID}")]
+    public ActionResult<IEnumerable<PowerUsage>> GetPowerUsageForAMonthPast(Guid deviceID)
+    {
+        var powerUsages = _powerUsageService.GetPowerUsageForAMonth(deviceID, -1);
+
+        return Ok(powerUsages);
+    }
+
     [HttpGet("power-usage/Previous24h/device-usage_per_hour/{deviceID}")]
-    public ActionResult<Dictionary<DateTime, double>> GetDeviceUsageForPrev24(Guid deviceID)
+    public ActionResult<PowerUsage> GetDeviceUsageForPrev24(Guid deviceID)
     {
         var powerUsages = _powerUsageService.GetPowerUsageForDevicePast24Hours(deviceID, - 1);
         return Ok(powerUsages);
@@ -117,7 +130,7 @@ public class PowerUsageController : ControllerBase
     }
 
     [HttpGet("power-usage/Next24h/device-usage_per_hour/{deviceID}")]
-    public ActionResult<Dictionary<DateTime, double>> GetDeviceUsageForNext24(Guid deviceID)
+    public ActionResult<PowerUsage> GetDeviceUsageForNext24(Guid deviceID)
     {
         var powerUsages = _powerUsageService.GetPowerUsageForDevicePast24Hours(deviceID, 1);
         return Ok(powerUsages);
@@ -133,34 +146,20 @@ public class PowerUsageController : ControllerBase
 
     [HttpGet("power-usage/current-consumption/system")]
     [Authorize(Roles = "Dispatcher,Admin")]
-    public ActionResult<IEnumerable<PowerUsage>> GetForSystemConsumer()
+    public ActionResult<double> GetForSystemConsumer()
     {        
-        try
-        {
             var powerUsages = _powerUsageService.CurrentSumPowerUsageSystemConsumer();
 
             return Ok(powerUsages);
-        }
-        catch (ArgumentNullException ex)
-        {
-            throw new ArgumentException(ex.Message);
-        }
     }
 
     [HttpGet("power-usage/current-production/system")]
     [Authorize(Roles = "Dispatcher,Admin")]
-    public ActionResult<IEnumerable<PowerUsage>> CurrentSumPowerUsageSystemProducer()
+    public ActionResult<double> CurrentSumPowerUsageSystemProducer()
     {
-        try
-        {
             var powerUsages = _powerUsageService.CurrentSumPowerUsageSystemProducer();
 
             return Ok(powerUsages);
-        }
-        catch (ArgumentNullException ex)
-        {
-            throw new ArgumentException(ex.Message);
-        }
     }
 
     [HttpGet("power-usage/currentUsageUser/average-production/{userID}")]
@@ -480,5 +479,33 @@ public class PowerUsageController : ControllerBase
     {
         var powerUsages = _powerUsageService.GetHowMuchUserIsConsuming(userId);
         return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/saved-energy/previous-hour/{deviceID}")]
+    public ActionResult<PowerUsage> deviceEnergySavedP(Guid deviceID)
+    {
+        var powerUsages = _powerUsageService.deviceEnergySaved(deviceID);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/saved-energy/producer/system/")]
+    public ActionResult<double> SavedEnergySystemProducer()
+    {
+        var powerUsage = _powerUsageService.SavedEnergySystemProducer();
+        return Ok(powerUsage);
+    }
+
+    [HttpGet("power-usage/saved-energy/consumer/system/")]
+    public ActionResult<double> SavedEnergySystemConsumer()
+    {
+        var powerUsage = _powerUsageService.SavedEnergySystemConsumer();
+        return Ok(powerUsage);
+    }
+
+    [HttpGet("power-usage/device-system-usage-percent/{deviceID}")]
+    public ActionResult<double> DeviceSystemUsagePercent(Guid deviceID)
+    {
+        var powerUsage = _powerUsageService.DeviceSystemPowerUsage(deviceID);
+        return Ok(powerUsage);
     }
 }

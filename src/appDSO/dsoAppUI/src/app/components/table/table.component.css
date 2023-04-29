@@ -13,7 +13,7 @@
   padding: 10px;
   width: 10%;
   text-align: center;
-  font-size: 13px;
+  font-size: 11px;
   border-bottom: 1px solid #026670;
 
 }
@@ -22,6 +22,7 @@
   padding: 10px;
   text-align: center;
   border-bottom: 1px solid #026670;
+  font-size: 12px;
 
 }
 
@@ -144,4 +145,64 @@ table tr td{
   text-align: center;
   border-bottom: 1px solid #026670;
 
+}
+#col-popUp{
+  width: 40px;
+  margin-top: 5px;
+  margin-left: 5px;
+  padding: 0;
+}
+#card-popUp{
+  width: 90%;
+  margin-top: 5px;
+  margin-left: 5px;
+  padding: 0;
+  text-align: center;
+}
+#card-title-popUp{
+  font-size: medium;
+  text-align: center;
+  font-weight: 500;
+  margin: 0;
+  
+}
+#card-body-popUp{
+  padding: 0px;
+  padding-bottom:5px ;
+  
+}
+.modal-dialog{
+  max-width: 1000px;
+  text-align: center;
+  margin-top: 40px;
+}
+.id-button-popUp{
+  margin: 5px;
+}
+.active{
+  background-color: white;
+  color: #026670;
+  border: 2px solid #026670;
+}
+.tableDevices th tr{
+  font-size: 12px;
+  font-weight: normal;
+}
+.tableDevices td{
+  font-size: 12px;
+}
+h2{
+  color: #026670;
+  font-weight: 500;
+}
+p{
+  text-align: justify;
+  
+}
+p span{
+  color: #026670;
+  font-weight: 500;
+}
+input{
+  padding: 10px;
 }

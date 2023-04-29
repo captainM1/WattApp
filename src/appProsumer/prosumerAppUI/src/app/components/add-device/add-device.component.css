@@ -312,3 +312,7 @@ button:disabled{
     background-color: grey;
     color: white;
 }
+
+input:disabled{
+    background-color:white;
+}

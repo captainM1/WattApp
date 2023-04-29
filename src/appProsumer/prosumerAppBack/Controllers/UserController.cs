@@ -33,22 +33,6 @@ public class UserController : ControllerBase
         _deviceService = deviceService;
     }
 
-    [HttpGet("username")]
-    [Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
-    public async Task<ActionResult<string>> Username()
-    {
-        Guid? nullableGuid = _userService.GetID();
-
-        if (nullableGuid == null)
-        {
-            return BadRequest("Guid is null.");
-        }
-
-        Guid nonNullableGuid = nullableGuid.Value;
-        Console.WriteLine(nonNullableGuid);
-        var username = await _userService.GetUsernameByIdAsync(nonNullableGuid);
-        return Ok(JsonSerializer.Serialize(username));
-    }
     [HttpPost("signup")]
     [AllowAnonymous]
     public async Task<IActionResult> Register([FromBody] UserRegisterDto userRegisterDto)
@@ -71,17 +55,15 @@ public class UserController : ControllerBase
     [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] UserLoginDto userLoginDto)
     {        
-        try
+        var user = await _userService.GetUserByEmailAndPasswordAsync(userLoginDto.Email, userLoginDto.Password);
+
+        if(user == null)
         {
-            var user = await _userService.GetUserByEmailAndPasswordAsync(userLoginDto.Email, userLoginDto.Password);
-            
+            return BadRequest("Invalid email or password");
+        }
+
             var token = _tokenMaker.GenerateToken(user);
             return Ok(JsonSerializer.Serialize(token));
-        }
-        catch (ArgumentNullException ex)
-        {
-            throw new ArgumentException(ex.Message);
-        }
     }
 
     [HttpPost("validate-token")]
@@ -216,7 +198,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("update-user")]
-    [Authorize(Roles = "UnapprovedUser,RegularUser")]
+    //[Authorize(Roles = "UnapprovedUser,RegularUser")]
     public async Task<IActionResult> UpdateUserInformation([FromBody] UserUpdateDto userUpdateDto)
     {        
         try
@@ -236,7 +218,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("update-user/update-password")]
-    [Authorize(Roles = "UnapprovedUser,RegularUser")]
+    //[Authorize(Roles = "UnapprovedUser,RegularUser")]
     public async Task<IActionResult> UpdateUserPassword([FromBody] UserUpdateDto userUpdateDto)
     {       
         try

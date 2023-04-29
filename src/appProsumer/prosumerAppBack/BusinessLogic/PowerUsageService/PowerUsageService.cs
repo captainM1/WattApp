@@ -37,6 +37,16 @@ public class PowerUsageService:IPowerUsageService
         return powerUsages;
     }
 
+    public PowerUsage GetPowerUsageForAMonth(Guid deviceId, int direction)
+    {
+        var powerUsages = _repository.GetPowerUsageForAMonth(deviceId, direction);
+        if (powerUsages == null)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsages;
+    }
+
     public double AverageSumPowerUsageProduction(Guid userID)
     {
         var powerUsages = _repository.AveragePowerUsageProduction(userID);
@@ -61,9 +71,7 @@ public class PowerUsageService:IPowerUsageService
     {
         var powerUsages = _repository.CurrentSumPowerUsageProduction(userID);
         if (powerUsages == 0)
-        {
-            throw new NotFoundException();
-        }
+            return 0;
         return powerUsages;
     }
 
@@ -71,9 +79,7 @@ public class PowerUsageService:IPowerUsageService
     {
         var powerUsages = _repository.CurrentSumPowerUsageConsumption(userID);
         if (powerUsages == 0)
-        {
-            throw new NotFoundException();
-        }
+            return 0;
         return powerUsages;
     }
 
@@ -82,7 +88,7 @@ public class PowerUsageService:IPowerUsageService
         var powerUsage = _repository.CurrentSumPowerUsageSystemConsumer();
         if (powerUsage == 0)
         {
-            throw new NotFoundException();
+            return 0;
         }
         return powerUsage;
     }
@@ -92,7 +98,7 @@ public class PowerUsageService:IPowerUsageService
         var powerUsage = _repository.CurrentSumPowerUsageSystemProducer();
         if (powerUsage == 0)
         {
-            throw new NotFoundException();
+            return 0;
         }
         return powerUsage;
     }
@@ -227,10 +233,10 @@ public class PowerUsageService:IPowerUsageService
     public double GetForDevice(Guid deviceID)
     {
         var powerUsages = _repository.GetForDevice(deviceID);
-        if (powerUsages == null)
-        {
-            throw new NotFoundException();
-        }
+        if (powerUsages == -1)
+            return -1;
+        if (powerUsages == 0)
+            return 0;
         return powerUsages;
     }
 
@@ -340,7 +346,17 @@ public class PowerUsageService:IPowerUsageService
         return powerUsage;
     }
 
-    public Dictionary<DateTime, double> GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction)
+    public object? GetPowerUsageForDevicePast24Hoursv2(Guid deviceId, int i)
+    {
+        var powerUsage = _repository.GetPowerUsageForDevicePast24Hoursv2(deviceId, i);
+        if (powerUsage == null)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsage;
+    }
+
+    public PowerUsage GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction)
     {
         var powerUsage = _repository.GetPowerUsageForDevicePast24Hours(deviceID, direction);
         if (powerUsage == null)
@@ -358,5 +374,29 @@ public class PowerUsageService:IPowerUsageService
             throw new NotFoundException();
         }
         return powerUsages;
+    }
+
+    public double deviceEnergySaved(Guid deviceID)
+    {
+        var powerUsage = _repository.deviceEnergySaved(deviceID);
+        return powerUsage;
+    }
+
+    public double SavedEnergySystemConsumer()
+    {
+        var powerUsage = _repository.SavedEnergySystemConsumer();
+        return powerUsage;
+    }
+
+    public double SavedEnergySystemProducer()
+    {
+        var powerUsage = _repository.SavedEnergySystemProducer();
+        return powerUsage;
+    }
+
+    public double DeviceSystemPowerUsage(Guid deviceID)
+    {
+        var powerUsage = _repository.percentPowerUsageForPreviousHour(deviceID);
+        return powerUsage;
     }
 }

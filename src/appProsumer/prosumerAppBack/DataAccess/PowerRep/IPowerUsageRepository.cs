@@ -15,7 +15,7 @@ namespace prosumerAppBack.BusinessLogic
         public double GetPowerUsageForDay(Guid deviceId, DateTime today);// provereno
 
         public PowerUsage GetPowerUsageFor7Days(Guid deviceId, int direction);// provereno
-
+        public PowerUsage GetPowerUsageForAMonth(Guid deviceId, int direction);
         public double GetPowerUsageForAMonthSystemConsumer(int direction);
         public double GetPowerUsageForAMonthSystemProducer(int direction);
         public List<PowerUsage> GetPowerUsageSumByDeviceProducer(int direction); // za svaki uredjaj u sitemu vraca njegovu ukupnu potrosnju za prethodnih/sledecih mesec dana
@@ -26,7 +26,7 @@ namespace prosumerAppBack.BusinessLogic
         //    public Dictionary<Guid, List<double>> GetPowerUsageForDevices(Guid userId, int direction);
         public List<PowerUsage> GetPowerUsageForDevicesProduction(Guid userID, int direction);
         public List<PowerUsage> GetPowerUsageForDevicesConsumption(Guid userID, int direction);        
-        public Dictionary<DateTime, double> GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction);//radi ali vraca dictionary        
+        public PowerUsage GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction);       
         public PowerUsage GetPowerConsumedForADaySystem();
         public PowerUsage GetPowerProducedForADaySystem();
         public double GetCurrentPowerConsumption();
@@ -49,7 +49,11 @@ namespace prosumerAppBack.BusinessLogic
         public PowerUsage GetDeviceWithMaxPowerUsagePreviousMonthConsumption(Guid userID);
         public PowerUsage GetDeviceWithMaxPowerUsageCurrentConsumption(Guid userID);
         public PowerUsage Get12hoursBefore12hoursAfter(Guid deviceID);
+        public double SavedEnergySystemConsumer();
+        public double SavedEnergySystemProducer();
+        public double percentPowerUsageForPreviousHour(Guid deviceID);
         List<PowerUsage> GetPowerUsageForDevicePast24Hoursv2(Guid deviceId, int i);
         double GetHowMuchUserIsConsuming(Guid userId);
+        public double deviceEnergySaved(Guid deviceID);
     }
 }

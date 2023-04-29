@@ -37,7 +37,7 @@ import { MyDevicesComponent } from './components/my-devices/my-devices.component
 
 import { MobNavComponent } from './components/mob-nav/mob-nav.component';
 import { Home2Component } from './components/home2/home2.component';
-import {TokenInterceptor} from 'src/app/interceptors/token.interceptor'
+import { TokenInterceptor } from './interceptors/token.interceptor';
 import { DeviceDetailsComponent } from './components/device-details/device-details.component';
 import { CommonModule } from '@angular/common';
 import { PermissionsComponent } from './components/permissions/permissions.component';
@@ -46,7 +46,10 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { FilterPipe } from './filter.pipe';
 import { WelcomeComponent } from './components/welcome/welcome.component';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+
 
 @NgModule({
   declarations: [
@@ -92,9 +95,11 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
     MatToolbarModule,
     CommonModule,
     ConfirmDialogModule,
-    Ng2SearchPipeModule
+    Ng2SearchPipeModule,
+    [MatProgressSpinnerModule],
+    MatSnackBarModule
   ],
-  providers: [MessageService,ConfirmationService,{provide:HTTP_INTERCEPTORS,useClass:TokenInterceptor,multi:true}],
+  providers: [MessageService,ConfirmationService, {provide:HTTP_INTERCEPTORS,useClass:TokenInterceptor,multi:true}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
