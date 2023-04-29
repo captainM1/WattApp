@@ -19,6 +19,10 @@ namespace prosumerAppBack.Models.Device
         public Boolean sharesDataWithDso { get; set; }
         public Boolean dsoHasControl { get; set; }
 
+        public Boolean IsOn { get; set; }
+        public Boolean sharesDataWithDso { get; set; }
+        public Boolean dsoHasControl { get; set; }
+
     }
 }
 
