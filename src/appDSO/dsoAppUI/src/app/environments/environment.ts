@@ -4,5 +4,5 @@
 
 export const environment = {
   production: false,
-  apiUrl : "http://softeng.pmf.kg.ac.rs:10041/"
+  apiUrl : "http://softeng.pmf.kg.ac.rs:10041"
 };

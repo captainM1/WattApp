@@ -29,9 +29,12 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(
         builder =>
         {
-            builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+            builder.WithOrigins("http://softeng.pmf.kg.ac.rs:10043", "http://softeng.pmf.kg.ac.rs:10042")
+                .AllowAnyHeader()
+                .AllowAnyMethod();
         });
 });
+
 builder.Services.AddSwaggerGen(option =>
 {
     option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
@@ -99,7 +102,7 @@ builder.Services.AddScoped<IDispatcherService, DispatcherService>();
 builder.Services.AddHttpClient<UserService>();
 builder.Services.AddSingleton<IMongoDatabase>(provider =>
 {
-    var client = new MongoClient("mongodb://localhost:27017");
+    var client = new MongoClient("mongodb://localhost:10047");
     return client.GetDatabase("data");
 });
 builder.Services.AddSingleton<MongoDataContext>();
