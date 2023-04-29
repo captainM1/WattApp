@@ -52,18 +52,15 @@ public class PowerUsageController : ControllerBase
     
     
     [HttpGet("power-usage/current/device/{deviceID}")]
-    public ActionResult<IEnumerable<PowerUsage>> GetForDevice(Guid deviceID)
+    public ActionResult<double> GetForDevice(Guid deviceID)
     {        
-        try
-        {
-            var powerUsages = _powerUsageService.GetForDevice(deviceID);
+        var powerUsages = _powerUsageService.GetForDevice(deviceID);
 
-            return Ok(powerUsages);
-        }
-        catch (ArgumentNullException ex)
-        {
-            throw new ArgumentException(ex.Message);
-        }
+        if (powerUsages == -1)
+            return BadRequest("Device does not exists");
+        else if (powerUsages == 0)
+            return BadRequest("Device is turned off");
+        return Ok(powerUsages);
     }
 
     [HttpGet("power-usage/7daysHistory/device/{deviceID}")]
@@ -149,34 +146,20 @@ public class PowerUsageController : ControllerBase
 
     [HttpGet("power-usage/current-consumption/system")]
     [Authorize(Roles = "Dispatcher,Admin")]
-    public ActionResult<IEnumerable<PowerUsage>> GetForSystemConsumer()
+    public ActionResult<double> GetForSystemConsumer()
     {        
-        try
-        {
             var powerUsages = _powerUsageService.CurrentSumPowerUsageSystemConsumer();
 
             return Ok(powerUsages);
-        }
-        catch (ArgumentNullException ex)
-        {
-            throw new ArgumentException(ex.Message);
-        }
     }
 
     [HttpGet("power-usage/current-production/system")]
     [Authorize(Roles = "Dispatcher,Admin")]
-    public ActionResult<IEnumerable<PowerUsage>> CurrentSumPowerUsageSystemProducer()
+    public ActionResult<double> CurrentSumPowerUsageSystemProducer()
     {
-        try
-        {
             var powerUsages = _powerUsageService.CurrentSumPowerUsageSystemProducer();
 
             return Ok(powerUsages);
-        }
-        catch (ArgumentNullException ex)
-        {
-            throw new ArgumentException(ex.Message);
-        }
     }
 
     [HttpGet("power-usage/currentUsageUser/average-production/{userID}")]

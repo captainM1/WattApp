@@ -71,9 +71,7 @@ public class PowerUsageService:IPowerUsageService
     {
         var powerUsages = _repository.CurrentSumPowerUsageProduction(userID);
         if (powerUsages == 0)
-        {
-            throw new NotFoundException();
-        }
+            return 0;
         return powerUsages;
     }
 
@@ -81,9 +79,7 @@ public class PowerUsageService:IPowerUsageService
     {
         var powerUsages = _repository.CurrentSumPowerUsageConsumption(userID);
         if (powerUsages == 0)
-        {
-            throw new NotFoundException();
-        }
+            return 0;
         return powerUsages;
     }
 
@@ -92,7 +88,7 @@ public class PowerUsageService:IPowerUsageService
         var powerUsage = _repository.CurrentSumPowerUsageSystemConsumer();
         if (powerUsage == 0)
         {
-            throw new NotFoundException();
+            return 0;
         }
         return powerUsage;
     }
@@ -102,7 +98,7 @@ public class PowerUsageService:IPowerUsageService
         var powerUsage = _repository.CurrentSumPowerUsageSystemProducer();
         if (powerUsage == 0)
         {
-            throw new NotFoundException();
+            return 0;
         }
         return powerUsage;
     }
@@ -237,10 +233,10 @@ public class PowerUsageService:IPowerUsageService
     public double GetForDevice(Guid deviceID)
     {
         var powerUsages = _repository.GetForDevice(deviceID);
-        if (powerUsages == null)
-        {
-            throw new NotFoundException();
-        }
+        if (powerUsages == -1)
+            return -1;
+        if (powerUsages == 0)
+            return 0;
         return powerUsages;
     }
 
