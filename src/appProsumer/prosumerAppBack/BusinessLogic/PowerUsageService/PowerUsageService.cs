@@ -355,4 +355,10 @@ public class PowerUsageService:IPowerUsageService
         }
         return powerUsage;
     }
+
+    public double deviceEnergySaved(Guid deviceID)
+    {
+        var powerUsage = _repository.deviceEnergySaved(deviceID);
+        return powerUsage;
+    }
 }

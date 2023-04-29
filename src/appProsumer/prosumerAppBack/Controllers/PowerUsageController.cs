@@ -473,4 +473,11 @@ public class PowerUsageController : ControllerBase
         var powerUsages = _powerUsageService.GetMaxUsagePreviousCurrentProduction(userID);
         return Ok(powerUsages);
     }
+
+    [HttpGet("power-usage/saved-energy/previous-hour/{deviceID}")]
+    public ActionResult<PowerUsage> deviceEnergySavedP(Guid deviceID)
+    {
+        var powerUsages = _powerUsageService.deviceEnergySaved(deviceID);
+        return Ok(powerUsages);
+    }
 }

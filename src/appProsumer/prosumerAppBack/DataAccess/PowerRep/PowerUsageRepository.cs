@@ -1592,4 +1592,22 @@ public class PowerUsageRepository : IPowerUsageRepository
 
     }
 
+    public double deviceEnergySaved(Guid deviceID)
+    {
+        DateTime previousHour = DateTime.Now.AddHours(-2);
+        DateTime thisHour = DateTime.Now.AddHours(-1);
+
+        Guid deviceTypeID = _dataContext.Devices
+               .Where(d => d.ID == deviceID)
+               .Select(d => d.DeviceTypeID)
+               .FirstOrDefault();
+
+        double previousHourPowerUsage = GetCurrentPowerUsage(previousHour, deviceTypeID);
+        Console.WriteLine("PROSLI SAT " + previousHourPowerUsage);
+        double thisHourPowerUsage = GetCurrentPowerUsage(thisHour, deviceTypeID);
+        Console.WriteLine("TRENUTNI SAT " + thisHourPowerUsage);
+
+        return (previousHourPowerUsage - thisHourPowerUsage) / 100;
+    }
+
 }
