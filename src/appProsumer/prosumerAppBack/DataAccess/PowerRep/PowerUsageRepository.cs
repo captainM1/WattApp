@@ -1601,7 +1601,33 @@ public class PowerUsageRepository : IPowerUsageRepository
         return pu;
 
     }
+    public double GetHowMuchUserIsConsuming(Guid userId)
+    {
+        var userDevices = _deviceRepository.GetDevicesForUser(userId).Select(d => d.DeviceTypeID);
+        double maximumConsumption = 0;
+        foreach (var userdevice in userDevices)
+        {
+            string deviceGroupName = _dataContext.DeviceGroups
+                        .Where(g => g.ID == _dataContext.DeviceTypes
+                            .Where(dt => dt.ID == userdevice)
+                            .Select(dt => dt.GroupID)
+                            .FirstOrDefault())
+                        .Select(g => g.Name)
+                        .FirstOrDefault();
 
+            if (deviceGroupName == "Consumer")
+            {
+                maximumConsumption += _dataContext.DeviceTypes.Where(d => d.ID == userdevice).Sum(d => d.Wattage);
+            }
+        }
+
+        var currentUserConsumption = this.CurrentSumPowerUsageConsumption(userId);
+
+
+        var savedEnergy = ((maximumConsumption - currentUserConsumption) / maximumConsumption) * 100;
+
+        return savedEnergy;
+    }
     public double deviceEnergySaved(Guid deviceID)
     {
         DateTime previousHour = DateTime.Now.AddHours(-2);

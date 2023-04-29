@@ -156,6 +156,20 @@ namespace prosumerAppBack.DataAccess
                 .FirstOrDefaultAsync();   
         }
 
+        public IEnumerable<DeviceInfoWithType> GetDeviceInfoForAllDevice()
+        {
+            return _dbContext.Devices
+                .Include(d => d.DeviceType)
+                .ThenInclude(dt => dt.Group)
+                .Select(d => new DeviceInfoWithType()
+                {
+                    deviceTypeId = d.ID,
+                    deviceTypeName = d.DeviceType.Name,
+                    groupName = d.DeviceType.Group.Name
+                })
+                .ToList();
+        }
+
         public async Task<DeviceRule> AddDeviceRule(Guid id, [FromBody] DeviceRuleDto deviceRuleDto)
         {
             var newRule = new DeviceRule
@@ -257,6 +271,13 @@ namespace prosumerAppBack.DataAccess
         public string deviceTypeName { get; set; }
         public string macAdress { get; set; }
         public string manufacturerName { get; set; }       
+        public string groupName { get; set; }
+    }
+
+    public class DeviceInfoWithType
+    {
+        public Guid deviceTypeId { get; set; }
+        public string deviceTypeName { get; set; }
         public string groupName { get; set; }
     }
 

@@ -85,6 +85,21 @@ namespace prosumerAppBack.Controllers
             }
         }
         
+        [HttpGet("devices/deviceType-info")]
+        // [Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
+        public IActionResult GetDeviceInfoForAllDevice()
+        {
+            try
+            {
+                var devices = _deviceService.GetDeviceInfoForAllDevice();
+                return Ok(devices);
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
+        }
+
         [HttpGet("devices/info/user/{userID}")]
        // [Authorize(Roles = "Dispatcher,Admin")]
         public IActionResult GetDevicesInfoForUser(Guid userID)

@@ -474,6 +474,13 @@ public class PowerUsageController : ControllerBase
         return Ok(powerUsages);
     }
 
+    [HttpGet("power-usage/current/user-unused-consumption/{userId}")]
+    public ActionResult<double> GetHowMuchUserIsConsuming(Guid userId)
+    {
+        var powerUsages = _powerUsageService.GetHowMuchUserIsConsuming(userId);
+        return Ok(powerUsages);
+    }
+
     [HttpGet("power-usage/saved-energy/previous-hour/{deviceID}")]
     public ActionResult<PowerUsage> deviceEnergySavedP(Guid deviceID)
     {

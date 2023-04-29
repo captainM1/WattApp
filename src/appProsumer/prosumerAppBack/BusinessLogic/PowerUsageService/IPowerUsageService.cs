@@ -49,5 +49,6 @@ public interface IPowerUsageService
     public double SavedEnergySystemConsumer();
     public double DeviceSystemPowerUsage(Guid deviceID);
     object? GetPowerUsageForDevicePast24Hoursv2(Guid deviceId, int i);
+    double GetHowMuchUserIsConsuming(Guid userId);
     public double deviceEnergySaved(Guid deviceID);
 }

@@ -366,6 +366,16 @@ public class PowerUsageService:IPowerUsageService
         return powerUsage;
     }
 
+    public double GetHowMuchUserIsConsuming(Guid userID)
+    {
+        var powerUsages = _repository.GetHowMuchUserIsConsuming(userID);
+        if (powerUsages == 0)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsages;
+    }
+
     public double deviceEnergySaved(Guid deviceID)
     {
         var powerUsage = _repository.deviceEnergySaved(deviceID);
