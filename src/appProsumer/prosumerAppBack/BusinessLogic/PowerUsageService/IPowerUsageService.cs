@@ -33,7 +33,7 @@ public interface IPowerUsageService
     List<PowerUsage> GetPowerUsageForDevicesConsumptionFor7Days(Guid userID, int direction);
     List<PowerUsage> GetPowerUsageForDevicesProductionFor7Days(Guid userID, int direction);
     public PowerUsage GetPowerUsageFor12HoursUpDown(Guid deviceID);
-    Dictionary<DateTime, double> GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction);
+    PowerUsage GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction);
     List<PowerUsage> GetPowerUsageForDevicesProductionFor24Hours(Guid userID, int direction);
     List<PowerUsage> GetPowerUsageForDevicesConsumptionFor24Hours(Guid userID, int direction);
 
@@ -45,6 +45,9 @@ public interface IPowerUsageService
     public PowerUsage GetMaxUsagePreviousWeekProductoin(Guid userID);
     public PowerUsage GetMaxUsagePreviousMonthProduction(Guid userID);
     public PowerUsage GetMaxUsagePreviousCurrentProduction(Guid userID);
+    public double SavedEnergySystemProducer();
+    public double SavedEnergySystemConsumer();
+    public double DeviceSystemPowerUsage(Guid deviceID);
     object? GetPowerUsageForDevicePast24Hoursv2(Guid deviceId, int i);
     public double deviceEnergySaved(Guid deviceID);
 }

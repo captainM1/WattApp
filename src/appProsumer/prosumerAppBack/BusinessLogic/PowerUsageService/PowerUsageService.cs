@@ -346,7 +346,17 @@ public class PowerUsageService:IPowerUsageService
         return powerUsage;
     }
 
-    public Dictionary<DateTime, double> GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction)
+    public object? GetPowerUsageForDevicePast24Hoursv2(Guid deviceId, int i)
+    {
+        var powerUsage = _repository.GetPowerUsageForDevicePast24Hoursv2(deviceId, i);
+        if (powerUsage == null)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsage;
+    }
+
+    public PowerUsage GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction)
     {
         var powerUsage = _repository.GetPowerUsageForDevicePast24Hours(deviceID, direction);
         if (powerUsage == null)
@@ -359,6 +369,24 @@ public class PowerUsageService:IPowerUsageService
     public double deviceEnergySaved(Guid deviceID)
     {
         var powerUsage = _repository.deviceEnergySaved(deviceID);
+        return powerUsage;
+    }
+
+    public double SavedEnergySystemConsumer()
+    {
+        var powerUsage = _repository.SavedEnergySystemConsumer();
+        return powerUsage;
+    }
+
+    public double SavedEnergySystemProducer()
+    {
+        var powerUsage = _repository.SavedEnergySystemProducer();
+        return powerUsage;
+    }
+
+    public double DeviceSystemPowerUsage(Guid deviceID)
+    {
+        var powerUsage = _repository.percentPowerUsageForPreviousHour(deviceID);
         return powerUsage;
     }
 }
