@@ -6,8 +6,7 @@ public interface IUserService
 {
     Guid? GetID();
     string GetRole();
-    Task<IEnumerable<object>> GetCoordinatesForAllUsers();
-    Task<string> GetUsernameByIdAsync(Guid id);
+    Task<IEnumerable<object>> GetCoordinatesForAllUsers();   
     Task<User> GetUserByEmailAsync(string email);
     Task<User> CreateUser(UserRegisterDto userRegisterDto);
     Task<User> GetUserByEmailAndPasswordAsync(string email, string password);

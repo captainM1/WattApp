@@ -6,9 +6,6 @@ namespace prosumerAppBack.Models
 	public class UserUpdateDto
 	{
         [Required]
-        public string Username { get; set; }
-
-        [Required]
         public string PhoneNumber { get; set; }
 
         [Required]

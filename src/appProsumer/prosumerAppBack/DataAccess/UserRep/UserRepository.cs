@@ -84,7 +84,6 @@ public class UserRepository : IUserRepository
                 ID = u.ID,
                 FirstName = u.FirstName,
                 LastName = u.LastName,
-                UserName = u.UserName,
                 PhoneNumber = u.PhoneNumber,
                 Address = u.Address,
                 City = u.City,
@@ -94,12 +93,6 @@ public class UserRepository : IUserRepository
             })
             .ToListAsync();
         return pagedData;
-    }
-
-    public async Task<string> GetUsernameByIdAsync(Guid id)
-    { 
-        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.ID == id);
-        return user.UserName;
     }
 
     public async Task<IEnumerable<User>> GetUsersAsync()
@@ -114,17 +107,6 @@ public class UserRepository : IUserRepository
         return users;
     }
 
-    public async Task<User> GetUserByUsername(string username)
-    {
-        var user = await _dbContext.Users.FirstOrDefaultAsync(un => un.UserName == username);
-
-        if (user == null)
-        {
-            return null;
-        }
-
-        return user;
-    }
     public async Task<int> UpdateUser(Guid id, UserUpdateDto userUpdateDto)
     {
         User user = await this.GetUserByIdAsync(id);
@@ -134,12 +116,6 @@ public class UserRepository : IUserRepository
             return 0;
         }
 
-        var usernameCheck = await this.GetUserByUsername(userUpdateDto.Username);
-        if (usernameCheck != null)
-        {
-            return 1; // zauzeto username
-        }
-        user.UserName = userUpdateDto.Username;
         user.FirstName = userUpdateDto.FirstName;
         user.LastName = userUpdateDto.LastName;
         user.Address = userUpdateDto.Address;
@@ -189,7 +165,6 @@ public class UserRepository : IUserRepository
         {
             FirstName = user.FirstName,
             LastName = user.LastName,
-            UserName = user.UserName,
             PhoneNumber = user.PhoneNumber,
             Email = user.Email,
             Address = user.Address,
@@ -211,8 +186,7 @@ public class UserRepository : IUserRepository
         {
             ID = newUser.ID,
             FirstName = newUser.FirstName,
-            LastName = newUser.LastName,
-            UserName = newUser.UserName,
+            LastName = newUser.LastName,           
             PhoneNumber = newUser.PhoneNumber,
             Email = newUser.Email,
             Address = newUser.Address,
@@ -254,7 +228,6 @@ public class UserRepository : IUserRepository
                 ID = u.ID,
                 FirstName = u.FirstName,
                 LastName = u.LastName,
-                UserName = u.UserName,
                 PhoneNumber = u.PhoneNumber,
                 Address = u.Address,
                 City = u.City,
