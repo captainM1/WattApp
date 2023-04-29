@@ -76,8 +76,12 @@ builder.Services.AddAuthentication(x =>
         ValidateIssuer = false
     };
 });
-builder.Services.AddDbContext<DataContext>(option =>
-    option.UseSqlite(builder.Configuration.GetConnectionString("WebApiDatabase")));
+
+builder.Services.AddDbContext<DataContext>((options)=>
+{
+    options.UseSqlite(builder.Configuration.GetConnectionString("WebApiDatabase")); ;
+});
+
 
 builder.Services.AddScoped<IUserRepository,UserRepository>();
 builder.Services.AddScoped<IPasswordHasher,PasswordHasher>();

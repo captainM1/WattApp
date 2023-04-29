@@ -168,6 +168,34 @@ public class PowerUsageRepository : IPowerUsageRepository
         return powerUsage;
     }
 
+    public PowerUsage GetPowerUsageForAMonth(Guid deviceId, int direction)
+    {
+        Guid deviceTypeID = _dataContext.Devices
+            .Where(d => d.ID == deviceId)
+            .Select(d => d.DeviceTypeID)
+            .FirstOrDefault();
+
+        var powerUsage = new PowerUsage();
+        powerUsage.TimestampPowerPairs = new List<TimestampPowerPair>();
+        var today = DateTime.Today;
+
+        for (int i = 1; i <= 31; i++)
+        {
+            var day = today.AddDays(i * direction);
+            var powerUsageD = GetPowerUsageForDay(deviceId, day);
+            var ts = new TimestampPowerPair();
+            ts.PowerUsage = powerUsageD;
+            ts.Timestamp = day;
+            powerUsage.TimestampPowerPairs.Add(ts);
+
+        }
+
+        if (direction == -1)
+            powerUsage.TimestampPowerPairs.Reverse();
+
+        return powerUsage;
+    }
+
     public double CurrentSumPowerUsageConsumption(Guid userID)
     {
         double sum = 0;
@@ -955,6 +983,40 @@ public class PowerUsageRepository : IPowerUsageRepository
 
         return powerUsage;
     }
+
+    public List<PowerUsage> GetPowerUsageForDevicePast24Hoursv2(Guid deviceId, int direction)
+    {
+        var utcNow = DateTime.UtcNow;
+
+        var startOf24Period = direction > 0
+            ? utcNow
+            : utcNow.AddHours(-24);
+
+        var endOf24Period = direction > 0 
+            ? utcNow.AddHours(24) 
+            : utcNow.AddHours(-1);
+
+        Guid deviceTypeID = _dataContext.Devices
+            .Where(d => d.ID == deviceId)
+            .Select(d => d.DeviceTypeID)
+            .FirstOrDefault();
+
+        var powerUsages = mongoCollection.AsQueryable()
+            .Where(p => p.ID.ToString().ToUpper() == deviceTypeID.ToString().ToUpper())
+            .SelectMany(p => p.TimestampPowerPairs)
+            .ToList()
+            .Where(t => t.Timestamp >= startOf24Period && t.Timestamp <= endOf24Period)
+            .GroupBy(t => t.Timestamp.Date)
+            .Select(g => new PowerUsage
+            {
+                ID = deviceId,
+                TimestampPowerPairs = g.ToList()
+            })
+            .ToList();
+
+        return powerUsages;
+    }
+    
 
     public PowerUsage GetPowerProducedForADaySystem()
     {

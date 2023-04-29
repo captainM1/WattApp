@@ -1,15 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Security.Cryptography;
+using Microsoft.EntityFrameworkCore;
 using prosumerAppBack.Models;
 using prosumerAppBack.Models.Device;
 using prosumerAppBack.Models.Dispatcher;
+using prosumerAppBack.Helper;
 
 namespace prosumerAppBack.DataAccess
 {
     public class DataContext : DbContext
     {
+        private readonly PasswordHasher _helper;
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
-
+            
         }
 
         public DbSet<User> Users { get; set; }
@@ -22,7 +25,69 @@ namespace prosumerAppBack.DataAccess
         public DbSet<DeviceRule> DeviceRules { get; set; }
         public DbSet<DeviceRequirement> DeviceRequirements { get; set; }
         public DbSet<Dispatcher> Dispatchers { get; set; }
+        private const int SaltSize = 16;
+        private const int HashSize = 32;
+        private const int Iterations = 10000;
+    
+        public (byte[] salt, byte[] hash) HashPassword(string password)
+        {
+            byte[] salt = new byte[SaltSize];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(salt);
+            }
+        
+            byte[] hash = new byte[HashSize];
+            using (var pbkdf2 = new Rfc2898DeriveBytes(password, salt, Iterations, HashAlgorithmName.SHA256))
+            {
+                hash = pbkdf2.GetBytes(HashSize);
+            }
+        
+            return (salt, hash);
+        }
+        
+        public User AddDefaultUser()
+        {
+            var user = new User
+            {
+                ID = new Guid("6BCE51EA-9824-4393-B9A5-732B5A9B7F52"),
+                FirstName = "Petar",
+                LastName = "Simic",
+                PhoneNumber = "064-316-15-81",
+                Address = "Radoja Domanovica 6",
+                City = "Kragujevac",
+                Country = "Serbia",
+                Role = "RegularUser",
+                Email = "petarsimic@gmail.com"
+            };
+            
+            var password = "petar123";
+            (byte[] salt, byte[] hash) hash = HashPassword(password);
+            
+            user.PasswordHash = hash.hash;
+            user.Salt = hash.salt;
+            
+            return user;
+        }
 
+        public Dispatcher AddDefaultDisp()
+        {
+            var user = new Dispatcher
+            {
+                ID = new Guid("6BCE51EA-9824-4393-B9A5-732B5A9B7F53"),
+                UserName = "Admin",
+                Role = "Admin",
+                Email = "admin@gmail.com"
+            };
+            
+            var password = "admin123";
+            (byte[] salt, byte[] hash) hash = HashPassword(password);
+            
+            user.PasswordHash = hash.hash;
+            user.Salt = hash.salt;
+            
+            return user;
+        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -96,6 +161,15 @@ namespace prosumerAppBack.DataAccess
 
             new DeviceType{ID=new Guid("32EA7105-F582-4441-AE81-B738C4284F7E"), Name="Dishwasher", GroupID=new Guid("77CBC929-1CF2-4750-900A-164DE4ABE28B"), ManufacturerID=new Guid("4D4D4D4D-4D4D-4D4D-4D4D-4D4D4D4D4D54"), Wattage=1800},
                 new DeviceType{ID=new Guid("F2F9BE26-5C5F-43E1-AA2F-8E64960D03DD"), Name="Dryer", GroupID=new Guid("77CBC929-1CF2-4750-900A-164DE4ABE28B"), ManufacturerID=new Guid("4D4D4D4D-4D4D-4D4D-4D4D-4D4D4D4D4D4D"), Wattage=3400}
+            );
+            modelBuilder.Entity<User>().HasData(
+                new User(AddDefaultUser())
+            );
+            modelBuilder.Entity<Dispatcher>().HasData(
+                AddDefaultDisp()
+            );
+            modelBuilder.Entity<Device>().HasData(
+                new Device{ID=new Guid("32EA7105-F582-4441-AE81-B738C4284F7E"), MacAdress="00-1B-63-84-45-E6", DeviceTypeID=new Guid("32EA7105-F582-4441-AE81-B738C4284F7E"), OwnerID = new Guid("6BCE51EA-9824-4393-B9A5-732B5A9B7F52")}
             );
         }
     }

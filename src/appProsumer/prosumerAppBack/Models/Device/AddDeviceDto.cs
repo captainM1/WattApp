@@ -9,6 +9,8 @@ namespace prosumerAppBack.Models.Device
 		public Guid DeviceTypeID { get; set; }
 		[Required]
         public string? MacAdress { get; set; }
-	}
+        public Boolean sharesDataWithDso { get; set; }
+        public Boolean dsoHasControl { get; set; }
+    }
 }
 

@@ -1,0 +1,141 @@
+@font-face {
+  font-family: regular;
+  src: url(../../../assets/fonts/Inter-Regular.ttf);
+}
+
+@media (max-width: 280px)
+{
+  .mobile{
+    display: contents;
+}
+.desktop{
+    display: none;
+}
+.container
+  {
+    margin-top: 50px;
+  }
+
+  .container
+  {
+    margin-top: 60px;
+  }
+
+  h2
+  {
+    font-size: 20px;
+
+  }
+
+  .col-sm
+  {
+    width: 90%;
+  }
+
+
+}
+
+@media(min-width: 281px) and (max-width: 480px) {
+  .mobile{
+      display: contents;
+  }
+  .desktop{
+      display: none;
+  }
+
+  .container
+  {
+    margin-top: 60px;
+  }
+
+  h2
+  {
+    font-size: 20px;
+  }
+
+  .col-sm
+  {
+    width: 90%;
+  }
+
+
+}
+
+
+@media(min-width: 481px) and (max-width: 1023px){
+  .mobile{
+      display: none;
+  }
+  .desktop{
+      display: contents;
+  }
+
+  .container
+  {
+    margin-top: 100px;
+  }
+
+  h2
+  {
+    font-size: 30px;
+
+  }
+
+  .col-sm
+  {
+    margin-right: 20px;
+  }
+}
+
+
+@media(min-width: 1024px){
+  .mobile{
+      display: none;
+  }
+  .desktop{
+      display: contents;
+  }
+
+  .container
+  {
+    margin-top: 120px;
+  }
+
+  h2
+  {
+    font-size: 30px;
+
+  }
+
+  .col-sm
+  {
+    margin-right: 20px;
+  }
+
+}
+
+
+
+.outer{
+  height:100vh;
+}
+.centriranje{
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.col-sm
+{
+  background-color: white;
+  border-radius: 10px;
+  filter:drop-shadow(0px 8px 4px rgba(0,0,0,0.25));
+}
+
+h2
+{
+  color:#026670;
+  text-align: center;
+}
+
+

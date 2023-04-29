@@ -15,6 +15,9 @@ namespace prosumerAppBack.Models.Device
 		
 		public Guid OwnerID { get; set; }
 		public User Owner { get; set; }
+		public Boolean IsOn { get; set; }
+        public Boolean sharesDataWithDso { get; set; }
+        public Boolean dsoHasControl { get; set; }
 
     }
 }

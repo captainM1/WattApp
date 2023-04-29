@@ -97,17 +97,6 @@ public class UserService:IUserService
         return results;
     }
 
-    public async Task<string> GetUsernameByIdAsync(Guid id)
-    {
-        var username = await _repository.GetUsernameByIdAsync(id);
-        if (username == null)
-        {
-            throw new NullReferenceException("No username found");
-        }
-
-        return username;
-    }
-
     public async Task<User> GetUserByEmailAsync(string email)
     {
         var user = await _repository.GetUserByEmailAsync(email);
@@ -145,7 +134,7 @@ public class UserService:IUserService
         var user = await _repository.GetUserByEmailAndPasswordAsync(email, password);
         if (user == null)
         {
-            throw new NullReferenceException("Invalid email or password");
+            return null;
         }
 
         return user;
@@ -178,11 +167,6 @@ public class UserService:IUserService
         if (user == 0)
         {
             throw new NotFoundException("user cannot be updated");
-        }
-
-        if (user == 1)
-        {
-            throw new NotFoundException("username already exists");
         }
 
         return user;

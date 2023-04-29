@@ -5,7 +5,9 @@ export interface User{
     address: string,
     city: string,
     country: string,
-    powerUsage:string,
+    consumption:number,
+    production:number,
+    summary:number,
     selected: boolean
    
 }
@@ -49,4 +51,16 @@ export interface DeviceManifacturers{
     id: string,
     name: string,
     deviceTypes: DeviceType[];
+}
+export type Root = Root2[]
+
+export interface Root2 {
+  mongoId: any
+  id: string
+  timestampPowerPairs: TimestampPowerPair[]
+}
+
+export interface TimestampPowerPair {
+  timestamp: string
+  powerUsage: number
 }
