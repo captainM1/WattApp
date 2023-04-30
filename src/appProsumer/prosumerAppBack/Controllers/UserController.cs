@@ -152,7 +152,7 @@ public class UserController : ControllerBase
         {
             return BadRequest("Action failed");
         }
-
+        await _userService.ResetPasswordToken(passwordResetToken);
         return Ok(new { message = "Password changed" }); 
     }
 

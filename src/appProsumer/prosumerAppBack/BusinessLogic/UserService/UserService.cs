@@ -281,4 +281,9 @@ public class UserService:IUserService
     {
         await _repository.CreatePasswordResetToken(email);        
     }
+
+    public async Task ResetPasswordToken(string token)
+    {
+        await _repository.ResetPasswordToken(token);
+    }
 }
