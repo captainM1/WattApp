@@ -346,16 +346,6 @@ public class PowerUsageService:IPowerUsageService
         return powerUsage;
     }
 
-    public object? GetPowerUsageForDevicePast24Hoursv2(Guid deviceId, int i)
-    {
-        var powerUsage = _repository.GetPowerUsageForDevicePast24Hoursv2(deviceId, i);
-        if (powerUsage == null)
-        {
-            throw new NotFoundException();
-        }
-        return powerUsage;
-    }
-
     public PowerUsage GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction)
     {
         var powerUsage = _repository.GetPowerUsageForDevicePast24Hours(deviceID, direction);
