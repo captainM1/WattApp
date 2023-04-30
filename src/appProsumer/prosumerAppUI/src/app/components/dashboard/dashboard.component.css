@@ -139,3 +139,21 @@ h2
 }
 
 
+select {
+  color: white;
+  background-color: #026670;
+  width:30%;
+  font-weight: bold;
+  font-size: 13px;
+  text-transform: uppercase;
+  border-radius: 10px;
+  text-align: center;
+  height: 40px;
+}
+
+select option:not(:checked) {
+  color: #026670;
+  background-color: white;
+}
+
+

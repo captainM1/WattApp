@@ -331,7 +331,6 @@ showWeatherDetails()
 }
 
 
-
 makeData(dataGraph:any){
   dataGraph.forEach((obj:any) => {
     obj.timestampPowerPairs.forEach((pair:any) => {

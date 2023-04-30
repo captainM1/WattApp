@@ -13,16 +13,20 @@ export class DashboardComponent implements OnInit, AfterViewInit{
   userID!: any;
   timeStampConsumption =[];
   powerUsageConsumption = [];
-  timeStrampConsumptionNextmonth = [];
+  timeStampConsumptionNextMonth = [];
   powerUsageConsumptionNextMonth = [];
-  extractedDatesPrevMonth!:string[];
-  extractedDatesNextMonth!:string[];
+  extractedDatesPrevMonth:string[] = [];
+  extractedDatesNextMonth:string[] = [];
   consumptionPrevMonthUser!:[];
   consumptionNextMonthUser!:[];
   consPrev7Days = [];
   timeStrampConsumptionPrev7days = [];
   powerUsageConsumptionPrev7days = [];
+  timestampListPrev24h!:any[];
+  powerUsageListPrev24h!:any[];
+  graph24prev!:any;
   extractedDatesPrev7Days!:string[];
+  id!:any;
 
   constructor(
 		private auth : AuthService,
@@ -32,6 +36,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
   @ViewChild('consumptionPrevMonthGraph') consumptionPrevMonthGraph!:ElementRef;
   @ViewChild('consumptionNextMonthGraph') consumptionNextMonthGraph!:ElementRef;
   @ViewChild('consumptionPrev7daysGraph') consumptionPrev7daysGraph!:ElementRef;
+  @ViewChild('previous24ConsumptionGraph') previous24ConsumptionGraph!:ElementRef;
 
   ngAfterViewInit(): void {
   }
@@ -49,14 +54,130 @@ export class DashboardComponent implements OnInit, AfterViewInit{
        this.userID = response.id;
        console.log(this.userID);
        this.consumptionNextMonth(this.userID);
-       this.consumptionPrevMonth(this.userID);
-       this.consumptionPrev7Days(this.userID);
+       this.HistoryConsumption(this.selectedGraphHistoryConsumption, this.userID);
+       this.FutureConsumption(this.selectedGraphFutureConsumption, this.userID);
       }
     )
   }
 
+
+
+  selectedGraphHistoryConsumption = '24h';
+  HistoryConsumption(graph: string, userID: any) {
+  this.selectedGraphHistoryConsumption = graph;
+  switch (graph) {
+    case 'month':
+      this.consumptionPrevMonth(userID);
+
+    break;
+    case '7days':
+      this.consumptionPrev7Days(userID);
+    break;
+    case '24h':
+      this.consumptionPrevious24h(userID);
+    break;
+  }
+  }
+
+  selectedGraphFutureConsumption = '24h';
+  FutureConsumption(graph: string, userID: any) {
+  this.selectedGraphFutureConsumption = graph;
+  switch (graph) {
+    case 'month':
+      this.consumptionNextMonth(userID);
+    break;
+    case '7days':
+     // this.consumptionNext7days;
+    break;
+    case '24h':
+      //this.consumptionNext24h;
+    break;
+  }
+}
+
+  consumptionPrevious24h(id:any)
+  {
+    this.timestampListPrev24h=[];
+    this.powerUsageListPrev24h=[];
+    this.auth1.getConsumptionPrevious24Hours(id).subscribe(
+      (response : any) => {
+        this.graph24prev = response;
+        console.log(response);
+        this.makeData(this.graph24prev);
+      }
+     );
+  }
+
+  makeData(dataGraph:any){
+    dataGraph.forEach((obj:any) => {
+      obj.timestampPowerPairs.forEach((pair:any) => {
+        const time = pair.timestamp.split('T')[1].split(':')[0];
+        this.timestampListPrev24h.push(time);
+        this.powerUsageListPrev24h.push(pair.powerUsage);
+      });
+    });
+
+    this.timestampListPrev24h.sort((a: string, b: string) => {
+      return parseInt(a) - parseInt(b);
+    });
+    this.previous24Graph(this.timestampListPrev24h, this.powerUsageListPrev24h);
+  }
+
+  previous24Graph(list:any, valueList:any){
+    const data = {
+      labels: list,
+      datasets: [{
+        label: 'Consumption For The Previous 24h',
+        data: valueList,
+        fill: true,
+        borderColor: 'rgb(255, 200, 0)',
+        backgroundColor:'rgba(255, 200, 0,0.4)',
+        pointBackgroundColor: 'rgba(255, 200, 0,0.7)',
+        borderWidth: 1,
+        pointBorderColor:'rgb(255, 200, 0)'
+      }]
+    }
+    const options: ChartOptions = {
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Time (hour)',
+          },
+          ticks: {
+            font: {
+              size: 14,
+            },
+          },
+        },
+        y: {
+          title: {
+            display: true,
+            text: 'Power consumption (kW)',
+            font:{
+              size: 10
+            }
+          },
+          ticks: {
+            font: {
+              size: 14,
+            },
+          },
+        },
+      },
+    };
+    const graph = new Chart(this.previous24ConsumptionGraph.nativeElement, {
+      type: 'line',
+      data: data,
+      options: options,
+    });
+  }
+
+
   consumptionPrevMonth(id:any)
   {
+    this.timeStampConsumption = [];
+    this.powerUsageConsumption = [];
     this.auth1.getConsumptionPrevMonth(id).subscribe(
       {
         next: (response : any) => {
@@ -80,6 +201,9 @@ export class DashboardComponent implements OnInit, AfterViewInit{
 
   consumptionNextMonth(id:any)
   {
+    this.timeStampConsumptionNextMonth = [];
+    this.powerUsageConsumptionNextMonth = [];
+
         this.auth1.getConsumptionNextMonth(id).subscribe(
           {
             next: (response:any) => {
@@ -87,7 +211,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
               this.consumptionNextMonthUser = response[0]['timestampPowerPairs'];
               console.log(this.consumptionNextMonthUser);
               for(let i = 0; i < this.consumptionNextMonthUser.length; i++){
-                this.timeStrampConsumptionNextmonth.push(this.consumptionNextMonthUser[i]['timestamp']);
+                this.timeStampConsumptionNextMonth.push(this.consumptionNextMonthUser[i]['timestamp']);
                 this.powerUsageConsumptionNextMonth.push(this.consumptionNextMonthUser[i]['powerUsage']);
 
               }
@@ -156,7 +280,6 @@ export class DashboardComponent implements OnInit, AfterViewInit{
     });
   }
 
-
   chartConsumptionNextMonthChart(){
     for(let i = 0; i < this.timeStampConsumption.length; i++){
       const dateStringList = this.timeStampConsumption.toString();
@@ -189,18 +312,18 @@ export class DashboardComponent implements OnInit, AfterViewInit{
           },
           ticks: {
             font: {
-              size: 10,
+              size: 14,
             },
           },
         },
         y: {
           title: {
             display: true,
-            text: 'Power Consumption (kW)'
+            text: 'Power Consumption (kW)',
           },
           ticks: {
             font: {
-              size: 8,
+              size: 14,
             },
           },
         },
@@ -213,10 +336,14 @@ export class DashboardComponent implements OnInit, AfterViewInit{
     });
   }
 
+
+
   consumptionPrev7Days(id : any){
     this.auth1.getConsumptionPrev7days(id).subscribe({
       next:(response : any) => {
         this.consPrev7Days = response[0]['timestampPowerPairs'];
+        this.timeStrampConsumptionPrev7days = [];
+        this.powerUsageConsumptionPrev7days = [];
         this.makeDataGraphPrev7DaysConsumption(this.consPrev7Days);
         console.log(this.consPrev7Days);
         this.chartConsumptionPrev7Days();
