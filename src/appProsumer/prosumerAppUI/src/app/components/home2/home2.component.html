@@ -10,7 +10,7 @@
 
     </div>
     <div class="row" *ngIf="showDetails">
-        <div class="col-sm">
+        <div class="col-sm" *ngIf="weather">
             <p class="text-left" >
                 <img src="../../../assets/weather-icons/compass.png"> Your Time Zone :<span style="color:#026670; font-weight:bold; padding-left:5px;"> {{ weather.timezone }} </span>
             </p>

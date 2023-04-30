@@ -132,7 +132,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
         y: {
           title: {
             display: true,
-            text: 'Power Consuming in (kw/day)'
+            text: 'Power Consumption (kW)'
           },
           ticks: {
             font: {
@@ -188,7 +188,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
         y: {
           title: {
             display: true,
-            text: 'Power Consuming in (kw/day)'
+            text: 'Power Consumption (kW)'
           },
           ticks: {
             font: {

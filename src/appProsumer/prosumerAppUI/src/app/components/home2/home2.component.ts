@@ -16,7 +16,6 @@ export class Home2Component implements OnInit, AfterViewInit {
   userID!: any;
   token!:any;
   weather! : Root;
-  isViewInitialized = false;
   currentConsumes!: any;
   currentProduces!: any;
   number!: any;
@@ -45,7 +44,7 @@ export class Home2Component implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.showWeatherDetails();
-    this.giveMeWeather();
+
   }
 
 
@@ -136,72 +135,6 @@ export class Home2Component implements OnInit, AfterViewInit {
        this.showMeDevices(this.userID);
       }
     )
-  }
-
-  giveMeWeather() {
-    this.auth.getWeather().subscribe(
-      (response: any) => {
-        this.weather = response;
-        console.log(response);
-        const timeSlice = this.weather.hourly.time.slice(0, 24);
-        const time = timeSlice.map((time) => {
-          const date = new Date(time);
-          const hours = date.getHours().toString().padStart(2, "0");
-          const minutes = date.getMinutes().toString().padStart(2, "0");
-          return hours + ":" + minutes;
-        });
-
-        const labels = time;
-        const data = {
-          labels: labels,
-          datasets: [
-            {
-              label: "Temperature hourly",
-              data: this.weather.hourly.temperature_2m,
-              fill: true,
-              borderColor: "#026670",
-              backgroundColor: "#7ed1da",
-              tension: 0.1,
-            },
-          ],
-        };
-        const options: ChartOptions = {
-          scales: {
-            x: {
-              title: {
-                display: true,
-                text: "Temperature in celsius and x hourly",
-              },
-              ticks: {
-                font: {
-                  size: 14,
-                },
-              },
-            },
-            y: {
-              title: {
-                display: true,
-                text: "Temperature (°C)",
-              },
-              ticks: {
-                font: {
-                  size: 14,
-                },
-              },
-            },
-          },
-        };
-
-        const stackedLine = new Chart(
-          this.hourlyTemp.nativeElement,
-          {
-            type: "line",
-            data: data,
-            options: options,
-          }
-        );
-      }
-    );
   }
 
 
@@ -326,9 +259,7 @@ halfDoughnutMostProduces(usage: any){
 showDetails: boolean = false;
 showWeatherDetails()
 {
-  if (!this.isViewInitialized) {
-    return;
-  }
+
   this.showDetails = !this.showDetails;
 
   this.auth.getWeather().subscribe(
