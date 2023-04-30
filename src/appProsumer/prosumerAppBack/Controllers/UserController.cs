@@ -15,7 +15,7 @@ namespace prosumerAppBack.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
+//[Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
 public class UserController : ControllerBase
 {
     private readonly IUserRepository _userRepository;
@@ -124,9 +124,9 @@ public class UserController : ControllerBase
         {
             return BadRequest("Email does not exists");
         }
-
-        var token = _tokenMaker.GenerateToken(user);
-        var resetPasswordUrl = $"https://localhost:4200/reset-password?token={token}";
+        await _userService.CreatePasswordResetToken(resetPasswordEmailDto.Email);
+        var passwordReset = user.PasswordResetToken;
+        var resetPasswordUrl = $"https://localhost:4200/reset-password?token={passwordReset}";
         var message = $"Please click the following link to reset your password: {resetPasswordUrl}";
         await _emailService.SendEmailAsync(user.Email,message);
 
@@ -135,24 +135,17 @@ public class UserController : ControllerBase
 
     [HttpPost("reset-password")]
     [AllowAnonymous]
-    public async Task<IActionResult> ResetPassword([FromQuery] string token,[FromBody] ResetPasswordDto resetPasswordDto)
+    public async Task<IActionResult> ResetPassword([FromQuery] string passwordResetToken,[FromBody] ResetPasswordDto resetPasswordDto)
     {
-        bool result = _tokenMaker.ValidateJwtToken(token);
+        Task<User> user = _userService.GetUserByPasswordResetTokenAsync(passwordResetToken);
 
-        if (result == false)
-        {
-            return BadRequest("Invalid token");
-        }
-
-        Task<User> user = _userService.GetUserByEmailAsync(resetPasswordDto.Email);
-
-        var userCheck = _userService.GetUserByEmailAsync(resetPasswordDto.Email);
+       /* var userCheck = _userService.GetUserByEmailAsync(resetPasswordDto.Email);
 
         if (userCheck == null || resetPasswordDto.Email != user.Result.Email)
         {
             return BadRequest("Invalid email address");
-        }
-
+        }*/
+       
         var action = _userRepository.UpdatePassword(user.Result.ID, resetPasswordDto.Password).GetAwaiter().GetResult();
 
         if (!action)

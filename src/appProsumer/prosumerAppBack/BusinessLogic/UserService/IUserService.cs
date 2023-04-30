@@ -21,4 +21,6 @@ public interface IUserService
     Task<List<UserDto>> GetAllUsersAsync();
     Task<Boolean> ApproveUserRequestToDso(Guid id);
     Task<Boolean> DeclineUserRequestToDso(Guid id);
+    Task CreatePasswordResetToken(string email);
+    Task<User> GetUserByPasswordResetTokenAsync(string passwordResetToken);
 }

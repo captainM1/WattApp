@@ -51,6 +51,31 @@ public class UserRepository : IUserRepository
         return user;
     }
 
+    public async Task CreatePasswordResetToken(string email)
+    {
+        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
+
+        user.PasswordResetTokenExpires = DateTime.Now.AddDays(1);
+        user.PasswordResetToken = CreateTokenForPassword();
+        await _dbContext.SaveChangesAsync();
+    }
+    public async Task<User> GetUserByPasswordResetTokenAsync(string passwordResetToken)
+    {
+        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.PasswordResetToken == passwordResetToken);
+
+        if (user == null)
+        {
+            return null;
+        }
+
+        return user;
+    }
+
+    private string CreateTokenForPassword()
+    {
+        return Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
+    }
+
     public async Task<User> CreateUser(UserRegisterDto userRegisterDto)
     {
         byte[] salt;
