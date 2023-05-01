@@ -36,7 +36,6 @@ public interface IPowerUsageService
     PowerUsage GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction);
     List<PowerUsage> GetPowerUsageForDevicesProductionFor24Hours(Guid userID, int direction);
     List<PowerUsage> GetPowerUsageForDevicesConsumptionFor24Hours(Guid userID, int direction);
-
     public PowerUsage GetMaxUsagePast24HoursConsumption(Guid userID);
     public PowerUsage GetMaxUsagePast24HoursProduction(Guid userID);
     public PowerUsage GetMaxUsagePreviousWeekConsumption(Guid userID);

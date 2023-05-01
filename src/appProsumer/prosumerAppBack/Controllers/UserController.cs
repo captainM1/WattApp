@@ -105,7 +105,7 @@ public class UserController : ControllerBase
         return users;
     }
 
-    [HttpPost("users/{id}")]
+    [HttpPost("update-user/{id}")]
    // [Authorize(Roles = "UnapprovedUser,RegularUser")]
     public async Task<IActionResult> UpdateUser(Guid id, [FromBody] UserUpdateDto userUpdateDto)
     {
@@ -190,26 +190,6 @@ public class UserController : ControllerBase
             var result = await _userService.CreateUserRequestToDso(user);
 
             return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.Message);
-        }
-    }
-
-    [HttpPost("update-user")]
-    //[Authorize(Roles = "UnapprovedUser,RegularUser")]
-    public async Task<IActionResult> UpdateUserInformation([FromBody] UserUpdateDto userUpdateDto)
-    {        
-        try
-        {
-            Guid userId = _userService.GetID().Value;
-
-            User user = await _userService.GetUserByIdAsync(userId);
-
-            int check = await _userService.UpdateUser(userId, userUpdateDto);
-
-            return Ok(new { message = "user updated successfully" });
         }
         catch (Exception ex)
         {

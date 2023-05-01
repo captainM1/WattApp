@@ -45,7 +45,6 @@ public class UserService:IUserService
         }
         catch (Exception ex)
         {
-            // Log the exception
             return null;
         }
     }

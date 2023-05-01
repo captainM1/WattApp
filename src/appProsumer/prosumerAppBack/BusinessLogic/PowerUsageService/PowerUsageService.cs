@@ -62,7 +62,7 @@ public class PowerUsageService:IPowerUsageService
         var powerUsages = _repository.AveragePowerUsageConsumption(userID);
         if (powerUsages == 0)
         {
-            throw new NotFoundException();
+            return 0;
         }
         return powerUsages;
     }
