@@ -115,7 +115,7 @@ export class AddDeviceComponent {
       const headers = new HttpHeaders()
         .set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`); 
   
-      this.http.post(environment.apiUrl + '/api/Device/devices/add-new', new newDeviceDTO(formData.macAddress, this.selectedDevice), { headers })
+      this.http.post(environment.apiUrl + '/api/Device/devices/add-new', new newDeviceDTO(formData.macAddress, this.selectedDevice, formData.sharesDataWithDso, formData.dsoHasControl), { headers })
         .subscribe(response => {
           console.log(response);
           this.router.navigate(['home2']);

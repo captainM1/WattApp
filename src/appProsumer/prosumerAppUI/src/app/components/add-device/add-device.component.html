@@ -39,17 +39,17 @@
                                         <input disabled  class = "form-control" type="text" [value]="selectedWattage?.wattage">
                                     </div>
                             </div>
-                            <div class="text-center form-group mt-4 pt-3 pb-3 bg-white permissions mx-auto">
+                            <div class="text-center mt-4 pt-3 pb-3 bg-white permissions mx-auto">
                                 <label class="text-center font-weight-bold pb-2" for="toggle-buttons">Permissions</label>
                                 <hr>
                                 <div id="toggle-buttons" >    
                                     <div class="form-group form-switch pt-3 d-flex justify-content-center">                            
                                         <label class="form-check-label me-4" for="toggle-button-1">Allow DSO To Collect Data</label>
-                                        <input class="form-check-input" formControlName = "toggleButton1" type="checkbox" id="toggle-button-1">
+                                        <input class="form-check-input" formControlName = "sharesDataWithDso" type="checkbox" id="toggle-button-1">
                                     </div>
                                     <div class="form-group form-switch d-flex justify-content-center">
                                         <label class="form-check-label me-4" for="toggle-button-2">Allow DSO To Control Consumption Time</label>
-                                        <input class="form-check-input" formControlName = "toggleButton2" type="checkbox" id="toggle-button-2" (change)="onToggle2Change($event)">
+                                        <input class="form-check-input" formControlName = "dsoHasControl" type="checkbox" id="toggle-button-2" (change)="onToggle2Change($event)">
                                     </div>
                                 </div> 
                             </div>
