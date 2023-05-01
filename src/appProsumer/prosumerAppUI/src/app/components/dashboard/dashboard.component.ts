@@ -513,7 +513,25 @@ export class DashboardComponent implements OnInit, AfterViewInit{
       this.chartPrev7days= new Chart(this.consumptionPrev7daysGraph.nativeElement, {
         type: 'bar',
         data: data,
-
+        options: {
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: 'Date'
+              }
+            },
+            y: {
+              title: {
+                display: true,
+                text: 'Power Consumption (kW)',
+                font: {
+                  size: 9,
+                },
+              }
+            }
+          }
+        }
       });
   }
   }
@@ -572,10 +590,29 @@ export class DashboardComponent implements OnInit, AfterViewInit{
       }]
     }
 
+
       this.chartNext7days = new Chart(this.consumptionNext7daysGraph.nativeElement, {
         type: 'bar',
         data: data,
-
+        options: {
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: 'Date'
+              }
+            },
+            y: {
+              title: {
+                display: true,
+                text: 'Power Consumption (kW)',
+                font: {
+                  size: 9,
+                },
+              }
+            }
+          }
+        }
       });
   }
 
