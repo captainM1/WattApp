@@ -175,12 +175,12 @@ export class DashboardComponent implements OnInit, AfterViewInit{
             display: true,
             text: 'Power consumption (kW)',
             font:{
-              size: 10
+              size: 10,
             }
           },
           ticks: {
             font: {
-              size: 14,
+              size: 9,
             },
           },
         },
@@ -265,7 +265,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
           },
           ticks: {
             font: {
-              size: 14,
+              size: 9,
             },
           },
         },
