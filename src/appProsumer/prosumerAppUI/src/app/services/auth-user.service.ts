@@ -67,4 +67,13 @@ export class AuthUserService {
   getConsumptionPrev7days(userID : string):Observable<any>{
     return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/previous7Days/consumption/user-every-day-device-usage/" + userID, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
   }
+
+  getConsumptionNext24Hours(userID : string):Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/next24Hours/consumption/user-every-day-device-usage/" + userID, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
+  }
+
+  getConsumptionNext7days(userID : string):Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/next7Days/consumption/user-every-day-device-usage/" + userID, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
+  }
+
 }

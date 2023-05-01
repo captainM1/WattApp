@@ -32,7 +32,6 @@
     width: 90%;
   }
 
-
 }
 
 @media(min-width: 281px) and (max-width: 480px) {
@@ -110,6 +109,14 @@
   .col-sm
   {
     margin-right: 20px;
+    height: 370px;
+  }
+
+  select
+  {
+    width:30%;
+    height: 40px;
+    font-size: 13px;
   }
 
 }
@@ -130,6 +137,7 @@
   background-color: white;
   border-radius: 10px;
   filter:drop-shadow(0px 8px 4px rgba(0,0,0,0.25));
+  padding: 20px;
 }
 
 h2
@@ -142,18 +150,15 @@ h2
 select {
   color: white;
   background-color: #026670;
-  width:30%;
   font-weight: bold;
-  font-size: 13px;
   text-transform: uppercase;
   border-radius: 10px;
   text-align: center;
-  height: 40px;
+  margin-bottom: 10px;
 }
 
 select option:not(:checked) {
   color: #026670;
   background-color: white;
 }
-
 

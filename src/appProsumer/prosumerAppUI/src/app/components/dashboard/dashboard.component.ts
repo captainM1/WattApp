@@ -20,13 +20,26 @@ export class DashboardComponent implements OnInit, AfterViewInit{
   consumptionPrevMonthUser!:[];
   consumptionNextMonthUser!:[];
   consPrev7Days = [];
+  consNext7Days = [];
   timeStrampConsumptionPrev7days = [];
   powerUsageConsumptionPrev7days = [];
+  timeStrampConsumptionNext7days = [];
+  powerUsageConsumptionNext7days = [];
   timestampListPrev24h!:any[];
   powerUsageListPrev24h!:any[];
+  timestampListNext24h!:any[];
+  powerUsageListNext24h!:any[];
   graph24prev!:any;
+  graph24next!:any;
   extractedDatesPrev7Days!:string[];
+  extractedDatesNext7Days!:string[];
   id!:any;
+  chartPrevMonth!:any;
+  chartNextMonth!:any;
+  chartPrev7days!:any;
+  chartNext7days!:any;
+  chartPrev24h!:any;
+  chartNext24h!:any;
 
   constructor(
 		private auth : AuthService,
@@ -37,6 +50,8 @@ export class DashboardComponent implements OnInit, AfterViewInit{
   @ViewChild('consumptionNextMonthGraph') consumptionNextMonthGraph!:ElementRef;
   @ViewChild('consumptionPrev7daysGraph') consumptionPrev7daysGraph!:ElementRef;
   @ViewChild('previous24ConsumptionGraph') previous24ConsumptionGraph!:ElementRef;
+  @ViewChild('next24ConsumptionGraph') next24ConsumptionGraph!:ElementRef;
+  @ViewChild('consumptionNext7daysGraph') consumptionNext7daysGraph!:ElementRef;
 
   ngAfterViewInit(): void {
   }
@@ -53,7 +68,6 @@ export class DashboardComponent implements OnInit, AfterViewInit{
       (response :any)=>{
        this.userID = response.id;
        console.log(this.userID);
-       this.consumptionNextMonth(this.userID);
        this.HistoryConsumption(this.selectedGraphHistoryConsumption, this.userID);
        this.FutureConsumption(this.selectedGraphFutureConsumption, this.userID);
       }
@@ -87,10 +101,10 @@ export class DashboardComponent implements OnInit, AfterViewInit{
       this.consumptionNextMonth(userID);
     break;
     case '7days':
-     // this.consumptionNext7days;
+      this.consumptionNext7Days(userID);
     break;
     case '24h':
-      //this.consumptionNext24h;
+      this.consumptionNext24h(userID);
     break;
   }
 }
@@ -124,6 +138,12 @@ export class DashboardComponent implements OnInit, AfterViewInit{
   }
 
   previous24Graph(list:any, valueList:any){
+    if (this.previous24ConsumptionGraph){
+
+      if (this.chartPrev24h) {
+        this.chartPrev24h.destroy();
+      }
+
     const data = {
       labels: list,
       datasets: [{
@@ -166,13 +186,99 @@ export class DashboardComponent implements OnInit, AfterViewInit{
         },
       },
     };
-    const graph = new Chart(this.previous24ConsumptionGraph.nativeElement, {
+    this.chartPrev24h = new Chart(this.previous24ConsumptionGraph.nativeElement, {
+      type: 'line',
+      data: data,
+      options: options,
+    });
+  }
+}
+
+
+  consumptionNext24h(id:any)
+  {
+    this.auth1.getConsumptionNext24Hours(id).subscribe(
+      (response : any) => {
+        this.graph24next = response;
+        console.log(response);
+        this.makeDataNext24h(this.graph24next);
+      }
+     );
+  }
+
+  makeDataNext24h(dataGraph:any){
+    this.timestampListNext24h=[];
+    this.powerUsageListNext24h=[];
+    dataGraph.forEach((obj:any) => {
+      obj.timestampPowerPairs.forEach((pair:any) => {
+        const time = pair.timestamp.split('T')[1].split(':')[0];
+        this.timestampListNext24h.push(time);
+        this.powerUsageListNext24h.push(pair.powerUsage);
+      });
+    });
+
+    this.timestampListNext24h.sort((a: string, b: string) => {
+      return parseInt(a) - parseInt(b);
+    });
+    this.next24Graph(this.timestampListNext24h, this.powerUsageListNext24h);
+  }
+
+  next24Graph(list:any, valueList:any){
+    if (this.next24ConsumptionGraph){
+
+      if (this.chartNext24h) {
+        this.chartNext24h.destroy();
+      }
+    const data = {
+      labels: list,
+      datasets: [{
+        label: 'Consumption For The Next 24h',
+        data: valueList,
+        fill: true,
+        borderColor: 'rgb(59, 193, 74)',
+        backgroundColor:'rgba(59, 193, 74,0.4)',
+        pointBackgroundColor: 'rgba(59, 193, 74,0.7)',
+        borderWidth: 1,
+        pointBorderColor:'rgb(59, 193, 74)'
+      }]
+    }
+    const options: ChartOptions = {
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Time (hour)',
+          },
+          ticks: {
+            font: {
+              size: 14,
+            },
+          },
+        },
+        y: {
+          title: {
+            display: true,
+            text: 'Power consumption (kW)',
+            font:{
+              size: 10
+            }
+          },
+          ticks: {
+            font: {
+              size: 14,
+            },
+          },
+        },
+      },
+    };
+    this.chartNext24h= new Chart(this.next24ConsumptionGraph.nativeElement, {
       type: 'line',
       data: data,
       options: options,
     });
   }
 
+  }
 
   consumptionPrevMonth(id:any)
   {
@@ -199,30 +305,6 @@ export class DashboardComponent implements OnInit, AfterViewInit{
     );
   }
 
-  consumptionNextMonth(id:any)
-  {
-    this.timeStampConsumptionNextMonth = [];
-    this.powerUsageConsumptionNextMonth = [];
-
-        this.auth1.getConsumptionNextMonth(id).subscribe(
-          {
-            next: (response:any) => {
-              console.log(response);
-              this.consumptionNextMonthUser = response[0]['timestampPowerPairs'];
-              console.log(this.consumptionNextMonthUser);
-              for(let i = 0; i < this.consumptionNextMonthUser.length; i++){
-                this.timeStampConsumptionNextMonth.push(this.consumptionNextMonthUser[i]['timestamp']);
-                this.powerUsageConsumptionNextMonth.push(this.consumptionNextMonthUser[i]['powerUsage']);
-
-              }
-                this.chartConsumptionNextMonthChart();
-            },
-            error : (err : any) => {
-              console.log(err);
-            }
-          })
-  }
-
   chartConsumptionPrevMonth(){
     for(let i = 0; i < this.timeStampConsumption.length; i++){
       const dateStringList = this.timeStampConsumption.toString();
@@ -232,7 +314,11 @@ export class DashboardComponent implements OnInit, AfterViewInit{
     }
 
     this.extractedDatesPrevMonth.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+    if (this.consumptionPrevMonthGraph){
 
+      if (this.chartPrevMonth) {
+        this.chartPrevMonth.destroy();
+      }
 
     const data = {
       labels: this.extractedDatesPrevMonth,
@@ -273,11 +359,36 @@ export class DashboardComponent implements OnInit, AfterViewInit{
         },
       },
     };
-    const chart = new Chart(this.consumptionPrevMonthGraph.nativeElement, {
+    this.chartPrevMonth = new Chart(this.consumptionPrevMonthGraph.nativeElement, {
       type: 'line',
       data: data,
       options: options,
     });
+  }
+}
+
+  consumptionNextMonth(id:any)
+  {
+    this.timeStampConsumptionNextMonth = [];
+    this.powerUsageConsumptionNextMonth = [];
+
+        this.auth1.getConsumptionNextMonth(id).subscribe(
+          {
+            next: (response:any) => {
+              console.log(response);
+              this.consumptionNextMonthUser = response[0]['timestampPowerPairs'];
+              console.log(this.consumptionNextMonthUser);
+              for(let i = 0; i < this.consumptionNextMonthUser.length; i++){
+                this.timeStampConsumptionNextMonth.push(this.consumptionNextMonthUser[i]['timestamp']);
+                this.powerUsageConsumptionNextMonth.push(this.consumptionNextMonthUser[i]['powerUsage']);
+
+              }
+                this.chartConsumptionNextMonthChart();
+            },
+            error : (err : any) => {
+              console.log(err);
+            }
+          })
   }
 
   chartConsumptionNextMonthChart(){
@@ -289,7 +400,11 @@ export class DashboardComponent implements OnInit, AfterViewInit{
     }
 
     this.extractedDatesNextMonth.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+    if (this.consumptionNextMonthGraph){
 
+      if (this.chartNextMonth) {
+        this.chartNextMonth.destroy();
+      }
     const data = {
       labels: this.extractedDatesNextMonth,
       datasets: [{
@@ -312,7 +427,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
           },
           ticks: {
             font: {
-              size: 14,
+              size: 10,
             },
           },
         },
@@ -323,27 +438,25 @@ export class DashboardComponent implements OnInit, AfterViewInit{
           },
           ticks: {
             font: {
-              size: 14,
+              size: 9,
             },
           },
         },
       },
     };
-    const chart = new Chart(this.consumptionNextMonthGraph.nativeElement, {
+    this.chartNextMonth= new Chart(this.consumptionNextMonthGraph.nativeElement, {
       type: 'line',
       data: data,
       options: options,
     });
   }
-
+  }
 
 
   consumptionPrev7Days(id : any){
     this.auth1.getConsumptionPrev7days(id).subscribe({
       next:(response : any) => {
         this.consPrev7Days = response[0]['timestampPowerPairs'];
-        this.timeStrampConsumptionPrev7days = [];
-        this.powerUsageConsumptionPrev7days = [];
         this.makeDataGraphPrev7DaysConsumption(this.consPrev7Days);
         console.log(this.consPrev7Days);
         this.chartConsumptionPrev7Days();
@@ -356,6 +469,8 @@ export class DashboardComponent implements OnInit, AfterViewInit{
 
 
   makeDataGraphPrev7DaysConsumption(dataGraph : any){
+    this.timeStrampConsumptionPrev7days = [];
+    this.powerUsageConsumptionPrev7days = [];
     for(let i = 0; i < dataGraph.length; i++){
       this.timeStrampConsumptionPrev7days.push(this.consPrev7Days[i]['timestamp']);
       this.powerUsageConsumptionPrev7days.push(this.consPrev7Days[i]['powerUsage']);
@@ -373,11 +488,80 @@ export class DashboardComponent implements OnInit, AfterViewInit{
     console.log(this.powerUsageConsumptionPrev7days);
 
     this.extractedDatesPrev7Days.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+
+    if (this.consumptionPrev7daysGraph){
+
+      if (this.chartPrev7days) {
+        this.chartPrev7days.destroy();
+      }
+
     const data = {
       labels: this.extractedDatesPrev7Days,
       datasets: [{
         label: 'Previous 7 days Consumption',
         data: this.powerUsageConsumptionPrev7days,
+        fill: true,
+        borderColor: 'rgb(255, 200, 0)',
+        backgroundColor:'rgba(255, 200, 0,0.4)',
+        pointBackgroundColor: 'rgba(255, 200, 0,0.7)',
+        borderWidth: 1,
+        pointBorderColor:'rgb(255, 200, 0)'
+
+      }]
+    }
+
+      this.chartPrev7days= new Chart(this.consumptionPrev7daysGraph.nativeElement, {
+        type: 'bar',
+        data: data,
+
+      });
+  }
+  }
+
+  consumptionNext7Days(id : any){
+    this.auth1.getConsumptionNext7days(id).subscribe({
+      next:(response : any) => {
+        this.consNext7Days = response[0]['timestampPowerPairs'];
+        this.makeDataGraphNext7DaysConsumption(this.consNext7Days);
+        console.log(this.consNext7Days);
+        this.chartConsumptionNext7Days();
+      },
+      error : (err : any) => {
+        console.log("error consumption next 7 days");
+      }
+    })
+  }
+
+  makeDataGraphNext7DaysConsumption(dataGraph : any){
+    this.timeStrampConsumptionNext7days = [];
+    this.powerUsageConsumptionNext7days = [];
+    for(let i = 0; i < dataGraph.length; i++){
+      this.timeStrampConsumptionNext7days.push(this.consNext7Days[i]['timestamp']);
+      this.powerUsageConsumptionNext7days.push(this.consNext7Days[i]['powerUsage']);
+    }
+  }
+
+  chartConsumptionNext7Days(){
+    for(let i = 0; i < this.timeStrampConsumptionNext7days.length; i++){
+      const dateStringList = this.timeStrampConsumptionNext7days.toString();
+      const substrings = dateStringList.split(',');
+     this.extractedDatesNext7Days = substrings.map(date => date.substring(0, date.indexOf('T')));
+
+    }
+    console.log(this.extractedDatesNext7Days);
+    console.log(this.powerUsageConsumptionNext7days);
+
+    this.extractedDatesNext7Days.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+    if (this.consumptionNext7daysGraph){
+
+      if (this.chartNext7days) {
+        this.chartNext7days.destroy();
+      }
+    const data = {
+      labels: this.extractedDatesNext7Days,
+      datasets: [{
+        label: 'Next 7 days Consumption',
+        data: this.powerUsageConsumptionNext7days,
         fill: true,
         borderColor: 'rgb(59, 193, 74)',
 					backgroundColor:'rgba(59, 193, 74,0.4)',
@@ -388,15 +572,14 @@ export class DashboardComponent implements OnInit, AfterViewInit{
       }]
     }
 
-      const stackedLine = new Chart(this.consumptionPrev7daysGraph.nativeElement, {
+      this.chartNext7days = new Chart(this.consumptionNext7daysGraph.nativeElement, {
         type: 'bar',
         data: data,
 
       });
   }
 
-
 }
 
-
+}
 
