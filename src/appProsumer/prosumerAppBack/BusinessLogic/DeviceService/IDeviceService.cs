@@ -16,14 +16,12 @@ public interface IDeviceService
     IEnumerable<ManufacturerDto> GetManufacturersBasedOnGroup(Guid groupID);
     IEnumerable<DeviceType> GetDevicesBasedOnManufacturer(Guid maunfID);
     IEnumerable<DeviceType> GetDevicesBasedOnManufacturerAndGroup(Guid maunfID, Guid groupID);
-    Task<List<DeviceInfo>> GetDeviceInfoForUser(Guid userID);
-    
+    Task<List<DeviceInfo>> GetDeviceInfoForUser(Guid userID);    
     Task<DeviceInfo> GetDeviceInfoForDevice(Guid deviceID);
     IEnumerable<DeviceInfoWithType> GetDeviceInfoForAllDevice();
     Task<DeviceRule> UpdateDeviceRule(Guid id, [FromBody] DeviceRuleDto deviceRuleDto);
     Task<DeviceRule> AddDeviceRule(Guid id, [FromBody] DeviceRuleDto deviceRuleDto);
     Task<DeviceRequirement> UpdateDeviceRequirement(Guid id, [FromBody] DeviceRequirementDto deviceRequirementDto);
     Task<DeviceRequirement> AddDeviceRequirement(Guid id, [FromBody] DeviceRequirementDto deviceRequirementDto);
-
     Task<bool> DeleteDevice(Guid deviceID);
 }
