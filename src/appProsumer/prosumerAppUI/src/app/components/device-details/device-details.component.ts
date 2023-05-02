@@ -6,6 +6,9 @@ import { Router } from '@angular/router';
 import Chart from 'chart.js/auto';
 import { ViewChild, ElementRef } from '@angular/core';
 import { ConfirmationService, MessageService, ConfirmEventType } from 'primeng/api';
+import { DeviceEditPopupComponent } from '../device-edit-popup/device-edit-popup.component';
+import { MatDialog } from '@angular/material/dialog';
+
 
 @Component({
   selector: 'app-device-details',
@@ -40,7 +43,8 @@ export class DeviceDetailsComponent implements OnInit {
     private http: HttpClient,
     private router: Router,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private dialog: MatDialog
   )
   {}
 
@@ -162,8 +166,15 @@ export class DeviceDetailsComponent implements OnInit {
     );
   }
 
-  editDetails(){
-    
+  editDetails() {
+    const dialogRef = this.dialog.open(DeviceEditPopupComponent, {
+      width: '500px',
+      data: { /* device information to be edited */ }
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      // update information in the component
+    });
   }
 
   showPermissions(){
