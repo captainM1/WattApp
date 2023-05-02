@@ -80,5 +80,12 @@ export class AuthUserService {
     return this.http.get<any>(environment.apiUrl + "/api/PowerUsage/power-usage/previous24Hours/production/user-every-day-device-usage/"+userID, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
   }
 
+  getProductionPrev7days(userID : string):Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/previous7Days/production/user-every-day-device-usage/" + userID, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
+  }
+
+  getProductionPrevMonth(userID : any) : Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/previousMonth/production/user-every-day-device-usage/"+userID, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
+  }
 
 }

@@ -63,6 +63,16 @@
             <canvas #previous24ProductionGraph ></canvas>
           </div>
 
+          <div *ngIf="selectedGraphHistoryProduction === 'month'">
+            <canvas #productionPrevMonthGraph></canvas>
+          </div>
+
+          <div *ngIf="selectedGraphHistoryProduction === '7days'" >
+            <canvas #productionPrev7daysGraph></canvas>
+          </div>
+
+
+
         </div>
         <div class="col-sm mt-4 pt-2" >
             <select [(ngModel)]="selectedGraphFutureProduction" (click)="FutureProduction(selectedGraphFutureProduction, userID)">

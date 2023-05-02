@@ -44,6 +44,16 @@ export class DashboardComponent implements OnInit, AfterViewInit{
   powerUsageListProductionPrev24h!:any[];
   chartProductionPrev24!:any;
   graphProduction24prev!:any;
+  extractedDatesProductionPrevMonth:string[] = [];
+  productionPrevMonthUser!:[];
+  timeStampProductionPrevMonth = [];
+  powerUsageProductionPrevMonth = [];
+  chartProductionPrevMonth!:any;
+  timeStrampProductionPrev7days = [];
+  powerUsageProductionPrev7days = [];
+  chartPrev7daysProduction!:any;
+  extractedDatesProductionPrev7Days!:string[];
+  prodPrev7Days = [];
 
   constructor(
 		private auth : AuthService,
@@ -57,6 +67,10 @@ export class DashboardComponent implements OnInit, AfterViewInit{
   @ViewChild('next24ConsumptionGraph') next24ConsumptionGraph!:ElementRef;
   @ViewChild('consumptionNext7daysGraph') consumptionNext7daysGraph!:ElementRef;
   @ViewChild('previous24ProductionGraph') previous24ProductionGraph!:ElementRef;
+  @ViewChild('productionPrevMonthGraph') productionPrevMonthGraph!:ElementRef;
+  @ViewChild('productionPrev7daysGraph')  productionPrev7daysGraph!:ElementRef;
+
+
 
   ngAfterViewInit(): void {
   }
@@ -120,14 +134,14 @@ export class DashboardComponent implements OnInit, AfterViewInit{
   this.selectedGraphHistoryProduction = graph;
   switch (graph) {
     case 'month':
-      //this.productionPrevMonth(userID);
+      this.productionPrevMonth(userID);
 
     break;
     case '7days':
-      //this.productionPrev7Days(userID);
+      this.productionPrev7Days(userID);
     break;
     case '24h':
-      //this.productionPrevious24h(userID);
+      this.productionPrevious24h(userID);
     break;
   }
   }
@@ -506,7 +520,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
         this.chartConsumptionPrev7Days();
       },
       error : (err : any) => {
-        console.log("error consumptio previous 7 days");
+        console.log("error consumption previous 7 days");
       }
     })
   }
@@ -739,13 +753,185 @@ previousProduction24Graph(list:any, valueList:any){
       },
     },
   };
-  this.chartPrev24h = new Chart(this.previous24ProductionGraph.nativeElement, {
+  this.chartProductionPrev24 = new Chart(this.previous24ProductionGraph.nativeElement, {
     type: 'line',
     data: data,
     options: options,
   });
 }
 }
+
+
+productionPrevMonth(id:any)
+{
+  this.timeStampProductionPrevMonth = [];
+  this.powerUsageProductionPrevMonth = [];
+  this.auth1.getProductionPrevMonth(id).subscribe(
+    {
+      next: (response : any) => {
+        this.productionPrevMonthUser = response[0]['timestampPowerPairs'];
+
+
+        for(let i = 0; i < this.productionPrevMonthUser.length; i++){
+          this.timeStampProductionPrevMonth.push(this.productionPrevMonthUser[i]['timestamp']);
+          this.powerUsageProductionPrevMonth.push(this.productionPrevMonthUser[i]['powerUsage']);
+        }
+
+          this.chartProductionPreviousMonth();
+
+        },
+      error: () => {
+        console.log("GRESKA.");
+      }
+    }
+  );
+}
+
+chartProductionPreviousMonth(){
+  for(let i = 0; i < this.timeStampProductionPrevMonth.length; i++){
+    const dateStringList = this.timeStampProductionPrevMonth.toString();
+    const substrings = dateStringList.split(',');
+   this.extractedDatesProductionPrevMonth = substrings.map(date => date.substring(0, date.indexOf('T')));
+
+  }
+
+  this.extractedDatesPrevMonth.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+  if (this.productionPrevMonthGraph){
+
+    if (this.chartProductionPrevMonth) {
+      this.chartProductionPrevMonth.destroy();
+    }
+
+  const data = {
+    labels: this.extractedDatesProductionPrevMonth,
+    datasets: [{
+      label: 'Previous Month',
+      data: this.powerUsageProductionPrevMonth,
+      fill: true,
+      borderColor: 'rgb(255, 200, 0)',
+      backgroundColor:'rgba(255, 200, 0,0.4)',
+      pointBackgroundColor: 'rgba(255, 200, 0,0.7)',
+      borderWidth: 1,
+      pointBorderColor:'rgb(255, 200, 0)'
+    }]
+  }
+  const options: ChartOptions = {
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: 'Date ',
+        },
+        ticks: {
+          font: {
+            size: 10,
+          },
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: 'Power Production (kW)'
+        },
+        ticks: {
+          font: {
+            size: 9,
+          },
+        },
+      },
+    },
+  };
+  this.chartProductionPrevMonth = new Chart(this.productionPrevMonthGraph.nativeElement, {
+    type: 'line',
+    data: data,
+    options: options,
+  });
+}
+}
+
+productionPrev7Days(id : any){
+  this.auth1.getProductionPrev7days(id).subscribe({
+    next:(response : any) => {
+      this.prodPrev7Days = response[0]['timestampPowerPairs'];
+      this.makeDataGraphPrev7DaysProduction(this.prodPrev7Days);
+      console.log(this.prodPrev7Days);
+      this.chartProductionPrev7Days();
+    },
+    error : (err : any) => {
+      console.log("error production previous 7 days");
+    }
+  })
+}
+
+
+makeDataGraphPrev7DaysProduction(dataGraph : any){
+  this.timeStrampProductionPrev7days = [];
+  this.powerUsageProductionPrev7days = [];
+  for(let i = 0; i < dataGraph.length; i++){
+    this.timeStrampProductionPrev7days.push(this.prodPrev7Days[i]['timestamp']);
+    this.powerUsageProductionPrev7days.push(this.prodPrev7Days[i]['powerUsage']);
+  }
+}
+
+chartProductionPrev7Days(){
+  for(let i = 0; i < this.timeStrampProductionPrev7days.length; i++){
+    const dateStringList = this.timeStrampProductionPrev7days.toString();
+    const substrings = dateStringList.split(',');
+   this.extractedDatesProductionPrev7Days = substrings.map(date => date.substring(0, date.indexOf('T')));
+
+  }
+  console.log(this.extractedDatesProductionPrev7Days);
+  console.log(this.powerUsageProductionPrev7days);
+
+  this.extractedDatesProductionPrev7Days.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+
+  if (this.productionPrev7daysGraph){
+
+    if (this.chartPrev7daysProduction) {
+      this.chartPrev7daysProduction.destroy();
+    }
+
+  const data = {
+    labels: this.extractedDatesProductionPrev7Days,
+    datasets: [{
+      label: 'Previous 7 days Production',
+      data: this.powerUsageProductionPrev7days,
+      fill: true,
+      borderColor: 'rgb(255, 200, 0)',
+      backgroundColor:'rgba(255, 200, 0,0.4)',
+      pointBackgroundColor: 'rgba(255, 200, 0,0.7)',
+      borderWidth: 1,
+      pointBorderColor:'rgb(255, 200, 0)'
+
+    }]
+  }
+
+    this.chartPrev7daysProduction= new Chart(this.productionPrev7daysGraph.nativeElement, {
+      type: 'bar',
+      data: data,
+      options: {
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Date'
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Power Production (kW)',
+              font: {
+                size: 9,
+              },
+            }
+          }
+        }
+      }
+    });
+}
+}
+
 
 }
 
