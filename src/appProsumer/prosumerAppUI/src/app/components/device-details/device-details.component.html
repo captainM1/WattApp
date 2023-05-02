@@ -33,15 +33,22 @@
             </div>
         </div>
         <div class="row" *ngIf="showDetails">
+            <div class="col-8">
             <p><span>Manufacturer:</span> {{device?.manufacturerName}}</p>
             <p><span>Wattage:</span> {{device?.deviceTypeName}}</p>
             <p><span>Mac Address:</span> {{device?.macAdress}}</p>
+            </div>
+            <div class="col-4 centriranje" >
+            <button mat-icon-button class="simple edit align-center" (click)="editDetails()">
+                <mat-icon>edit</mat-icon>
+            </button>
+            </div>
         </div>
         <div class="part">
             <div class="row">
                 <div class="col hide-on-mobile"></div>
                 <div class="col">
-                  <h5 *ngIf="groupName === 'Consumer'">Daily Usage</h5>
+                  <h5 *ngIf="groupName === 'Consumer'">Daily Consumption</h5>
                   <h5 *ngIf="groupName === 'Producer'">Daily Production</h5>
                   <h5 *ngIf="groupName === 'Storage'">Daily Storage</h5>
                 </div>

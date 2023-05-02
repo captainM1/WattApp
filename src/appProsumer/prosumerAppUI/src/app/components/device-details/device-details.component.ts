@@ -125,7 +125,7 @@ export class DeviceDetailsComponent implements OnInit {
   }
 
   goBack(){
-    this.router.navigate(['/home2']);
+    this.router.navigate(['/home']);
   }
 
   del() {
@@ -153,13 +153,17 @@ export class DeviceDetailsComponent implements OnInit {
     this.http.delete(`${environment.apiUrl}/api/Device/delete-device/${this.deviceId}`)
     .subscribe(
       () => {
-        this.router.navigate(['/home2']);
+        this.router.navigate(['/home']);
       },
       error => {
         console.log(error)
         this.messageService.add({ severity: 'error', summary: 'Error', detail: error.message });
       }
     );
+  }
+
+  editDetails(){
+    
   }
 
   showPermissions(){
