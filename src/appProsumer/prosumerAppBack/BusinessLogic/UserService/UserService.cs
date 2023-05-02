@@ -107,6 +107,22 @@ public class UserService:IUserService
         return user;
     }
 
+    public async Task<User> GetUserByPasswordResetTokenAsync(string passwordResetToken)
+    {
+        var user = await _repository.GetUserByPasswordResetTokenAsync(passwordResetToken);
+        if (user == null)
+        {
+            throw new NotFoundException("user with that passwordResetToken doesnt exist");
+        }
+        if (!(user.PasswordResetTokenExpires > DateTime.Now))
+        {
+            throw new NotFoundException("user with that passwordResetToken doesnt exist");
+        }
+
+
+        return user;
+    }
+
     public async Task<User> CheckEmail(string email)
     {
         var user = await _repository.GetUserByEmailAsync(email);
@@ -258,5 +274,15 @@ public class UserService:IUserService
             throw new NullReferenceException("Action failed");
         }
         return true;
+    }
+
+    public async Task CreatePasswordResetToken(string email)
+    {
+        await _repository.CreatePasswordResetToken(email);        
+    }
+
+    public async Task ResetPasswordToken(string token)
+    {
+        await _repository.ResetPasswordToken(token);
     }
 }

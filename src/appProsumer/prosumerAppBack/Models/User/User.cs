@@ -38,6 +38,8 @@ namespace prosumerAppBack.Models
         public string? Country { get; set; }
         public string? Role { get; set; }
         public string? Email { get; set; }
+        public string? PasswordResetToken { get; set; }
+        public DateTime? PasswordResetTokenExpires { get; set; }
 
         public ICollection<Device.Device> Devices { get; set; }
         
