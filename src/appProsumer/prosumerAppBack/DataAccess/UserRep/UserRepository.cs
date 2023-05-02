@@ -122,6 +122,8 @@ public class UserRepository : IUserRepository
         user.Country = userUpdateDto.Country;
         user.Email = userUpdateDto.Email;
         user.PhoneNumber = userUpdateDto.PhoneNumber;
+
+        await this.UpdatePassword(id, userUpdateDto.Password);
         
 
         _dbContext.Users.Update(user);

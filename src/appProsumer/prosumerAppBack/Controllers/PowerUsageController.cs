@@ -236,7 +236,7 @@ public class PowerUsageController : ControllerBase
         return Ok(powerUsages);
     }
 
-/*    [HttpGet("power-usage/previousMonth/consumption/every-day-usage")]
+    [HttpGet("power-usage/previousMonth/consumption/every-day-usage")]
     public ActionResult<PowerUsage> GetPowerUsagesOfEachDayPrevMonthConsumption()
     {
         var powerUsages = _powerUsageService.GetPowerUsagesForEachDayConsumtion(-1);
@@ -263,7 +263,6 @@ public class PowerUsageController : ControllerBase
         var powerUsages = _powerUsageService.GetPowerUsagesForEachDayProduction(1);
         return Ok(powerUsages);
     }
-*/
 
     [HttpGet("power-usage/previousMonth/consumption/user-every-day-device-usage/{userID}")]
     public ActionResult<List<PowerUsage>> GetPowerUsageEachDayOfEachDevicePrevMonthConsumption(Guid userID)

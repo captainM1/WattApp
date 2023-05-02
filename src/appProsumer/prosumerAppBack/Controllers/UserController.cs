@@ -197,26 +197,6 @@ public class UserController : ControllerBase
         }
     }
 
-    [HttpPost("update-user/update-password")]
-    //[Authorize(Roles = "UnapprovedUser,RegularUser")]
-    public async Task<IActionResult> UpdateUserPassword([FromBody] UserUpdateDto userUpdateDto)
-    {       
-        try
-        {
-            Guid userId = _userService.GetID().Value;
-
-            User user = await _userService.GetUserByIdAsync(userId);
-
-            var action = _userService.UpdatePassword(userId, userUpdateDto.Password).GetAwaiter().GetResult();
-
-            return Ok(new { message = "Password changed" });
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.Message);
-        }
-    }
-    
     [HttpGet("coordinates/{id}")]
    // [Authorize(Roles = "Dispatcher,Admin")]
     public async Task<IActionResult> GetCoordinatesForUser(Guid id)

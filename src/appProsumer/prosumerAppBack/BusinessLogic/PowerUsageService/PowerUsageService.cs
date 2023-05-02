@@ -143,7 +143,7 @@ public class PowerUsageService:IPowerUsageService
         return powerUsage;
     }
 
-    /*    public PowerUsage GetPowerUsagesForEachDayProduction(int direction)
+        public PowerUsage GetPowerUsagesForEachDayProduction(int direction)
         {
             var powerUsage = _repository.GetPowerUsagesForEachDayProduction(direction);
             if (powerUsage == null)
@@ -152,8 +152,8 @@ public class PowerUsageService:IPowerUsageService
             }
             return powerUsage;
         }
-
-        public PowerUsage GetPowerUsagesForEachDayConsumtion(int direction)
+     
+    public PowerUsage GetPowerUsagesForEachDayConsumtion(int direction)
         {
             var powerUsage = _repository.GetPowerUsagesForEachDayConsumption(direction);
             if (powerUsage == null)
@@ -162,7 +162,7 @@ public class PowerUsageService:IPowerUsageService
             }
             return powerUsage;
         }
-    */
+   
 
     public List<PowerUsage> GetPowerUsageForDevicesProduction(Guid userID, int direction)
     {

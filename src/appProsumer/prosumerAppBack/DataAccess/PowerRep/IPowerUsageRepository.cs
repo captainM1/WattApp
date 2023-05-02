@@ -19,8 +19,8 @@ namespace prosumerAppBack.BusinessLogic
         public double GetPowerUsageForAMonthSystemProducer(int direction);
         public List<PowerUsage> GetPowerUsageSumByDeviceProducer(int direction); // za svaki uredjaj u sitemu vraca njegovu ukupnu potrosnju za prethodnih/sledecih mesec dana
         public List<PowerUsage> GetPowerUsageSumByDeviceConsumer(int direction);
-        //    public PowerUsage GetPowerUsagesForEachDayProduction(int direction); // za svaki dan prethodnih/sledecih mesec dana ukupna potrosnja svih uredjaja u danu
-        //    public PowerUsage GetPowerUsagesForEachDayConsumption(int direction);
+        public PowerUsage GetPowerUsagesForEachDayProduction(int direction); // za svaki dan prethodnih/sledecih mesec dana ukupna potrosnja svih uredjaja u danu
+        public PowerUsage GetPowerUsagesForEachDayConsumption(int direction);
         public List<PowerUsage> GetPowerUsageForDevicesProduction(Guid userID, int direction);
         public List<PowerUsage> GetPowerUsageForDevicesConsumption(Guid userID, int direction);        
         public PowerUsage GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction);       
