@@ -40,6 +40,10 @@ export class DashboardComponent implements OnInit, AfterViewInit{
   chartNext7days!:any;
   chartPrev24h!:any;
   chartNext24h!:any;
+  timestampListProductionPrev24h!:any[];
+  powerUsageListProductionPrev24h!:any[];
+  chartProductionPrev24!:any;
+  graphProduction24prev!:any;
 
   constructor(
 		private auth : AuthService,
@@ -52,6 +56,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
   @ViewChild('previous24ConsumptionGraph') previous24ConsumptionGraph!:ElementRef;
   @ViewChild('next24ConsumptionGraph') next24ConsumptionGraph!:ElementRef;
   @ViewChild('consumptionNext7daysGraph') consumptionNext7daysGraph!:ElementRef;
+  @ViewChild('previous24ProductionGraph') previous24ProductionGraph!:ElementRef;
 
   ngAfterViewInit(): void {
   }
@@ -70,6 +75,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
        console.log(this.userID);
        this.HistoryConsumption(this.selectedGraphHistoryConsumption, this.userID);
        this.FutureConsumption(this.selectedGraphFutureConsumption, this.userID);
+       this.HistoryProduction(this.selectedGraphHistoryProduction, this.userID);
       }
     )
   }
@@ -108,6 +114,44 @@ export class DashboardComponent implements OnInit, AfterViewInit{
     break;
   }
 }
+
+  selectedGraphHistoryProduction = '24h';
+  HistoryProduction(graph: string, userID: any) {
+  this.selectedGraphHistoryProduction = graph;
+  switch (graph) {
+    case 'month':
+      //this.productionPrevMonth(userID);
+
+    break;
+    case '7days':
+      //this.productionPrev7Days(userID);
+    break;
+    case '24h':
+      //this.productionPrevious24h(userID);
+    break;
+  }
+  }
+
+
+
+  selectedGraphFutureProduction = '24h';
+  FutureProduction(graph: string, userID: any) {
+  this.selectedGraphFutureProduction = graph;
+  switch (graph) {
+    case 'month':
+     // this.productionNextMonth(userID);
+    break;
+    case '7days':
+     // this.productionNext7Days(userID);
+    break;
+    case '24h':
+     // this.productionNext24h(userID);
+    break;
+  }
+  }
+
+
+
 
   consumptionPrevious24h(id:any)
   {
@@ -616,6 +660,91 @@ export class DashboardComponent implements OnInit, AfterViewInit{
       });
   }
 
+}
+
+productionPrevious24h(id:any)
+{
+  this.timestampListProductionPrev24h=[];
+  this.powerUsageListProductionPrev24h=[];
+  this.auth1.getProductionPrevious24Hours(id).subscribe(
+    (response : any) => {
+      this.graphProduction24prev = response;
+      console.log(response);
+      this.makeDataProduction24(this.graphProduction24prev);
+    }
+   );
+}
+
+makeDataProduction24(dataGraph:any){
+  dataGraph.forEach((obj:any) => {
+    obj.timestampPowerPairs.forEach((pair:any) => {
+      const time = pair.timestamp.split('T')[1].split(':')[0];
+      this.timestampListProductionPrev24h.push(time);
+      this.powerUsageListProductionPrev24h.push(pair.powerUsage);
+    });
+  });
+
+  this.timestampListProductionPrev24h.sort((a: string, b: string) => {
+    return parseInt(a) - parseInt(b);
+  });
+  this.previousProduction24Graph(this.timestampListProductionPrev24h, this.powerUsageListProductionPrev24h);
+}
+
+previousProduction24Graph(list:any, valueList:any){
+  if (this.previous24ProductionGraph){
+
+    if (this.chartProductionPrev24) {
+      this.chartProductionPrev24.destroy();
+    }
+
+  const data = {
+    labels: list,
+    datasets: [{
+      label: 'Production For The Previous 24h',
+      data: valueList,
+      fill: true,
+      borderColor: 'rgb(255, 200, 0)',
+      backgroundColor:'rgba(255, 200, 0,0.4)',
+      pointBackgroundColor: 'rgba(255, 200, 0,0.7)',
+      borderWidth: 1,
+      pointBorderColor:'rgb(255, 200, 0)'
+    }]
+  }
+  const options: ChartOptions = {
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: 'Time (hour)',
+        },
+        ticks: {
+          font: {
+            size: 14,
+          },
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: 'Power production (kW)',
+          font:{
+            size: 10,
+          }
+        },
+        ticks: {
+          font: {
+            size: 9,
+          },
+        },
+      },
+    },
+  };
+  this.chartPrev24h = new Chart(this.previous24ProductionGraph.nativeElement, {
+    type: 'line',
+    data: data,
+    options: options,
+  });
+}
 }
 
 }
