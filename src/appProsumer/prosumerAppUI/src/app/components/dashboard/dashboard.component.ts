@@ -54,6 +54,10 @@ export class DashboardComponent implements OnInit, AfterViewInit{
   chartPrev7daysProduction!:any;
   extractedDatesProductionPrev7Days!:string[];
   prodPrev7Days = [];
+  timestampListProductionNext24h!:any[];
+  powerUsageListProductionNext24h!:any[];
+  chartProductionNext24!:any;
+  graphProduction24next!:any;
 
   constructor(
 		private auth : AuthService,
@@ -69,6 +73,9 @@ export class DashboardComponent implements OnInit, AfterViewInit{
   @ViewChild('previous24ProductionGraph') previous24ProductionGraph!:ElementRef;
   @ViewChild('productionPrevMonthGraph') productionPrevMonthGraph!:ElementRef;
   @ViewChild('productionPrev7daysGraph')  productionPrev7daysGraph!:ElementRef;
+  @ViewChild('next24ProductionGraph') next24ProductionGraph!:ElementRef;
+  @ViewChild('productionNextMonthGraph') productionPNextMonthGraph!:ElementRef;
+  @ViewChild('productionNext7daysGraph')  productionNext7daysGraph!:ElementRef;
 
 
 
@@ -90,6 +97,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
        this.HistoryConsumption(this.selectedGraphHistoryConsumption, this.userID);
        this.FutureConsumption(this.selectedGraphFutureConsumption, this.userID);
        this.HistoryProduction(this.selectedGraphHistoryProduction, this.userID);
+       this.FutureProduction(this.selectedGraphFutureProduction, this.userID);
       }
     )
   }
@@ -159,7 +167,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
      // this.productionNext7Days(userID);
     break;
     case '24h':
-     // this.productionNext24h(userID);
+      this.productionNext24h(userID);
     break;
   }
   }
@@ -929,6 +937,91 @@ chartProductionPrev7Days(){
         }
       }
     });
+}
+}
+
+productionNext24h(id:any)
+{
+  this.timestampListProductionNext24h=[];
+  this.powerUsageListProductionNext24h=[];
+  this.auth1.getProductionNext24Hours(id).subscribe(
+    (response : any) => {
+      this.graphProduction24next = response;
+      console.log(response);
+      this.makeDataProductionNext24(this.graphProduction24next);
+    }
+   );
+}
+
+makeDataProductionNext24(dataGraph:any){
+  dataGraph.forEach((obj:any) => {
+    obj.timestampPowerPairs.forEach((pair:any) => {
+      const time = pair.timestamp.split('T')[1].split(':')[0];
+      this.timestampListProductionNext24h.push(time);
+      this.powerUsageListProductionNext24h.push(pair.powerUsage);
+    });
+  });
+
+  this.timestampListProductionNext24h.sort((a: string, b: string) => {
+    return parseInt(a) - parseInt(b);
+  });
+  this.nextProduction24Graph(this.timestampListProductionNext24h, this.powerUsageListProductionNext24h);
+}
+
+nextProduction24Graph(list:any, valueList:any){
+  if (this.next24ProductionGraph){
+
+    if (this.chartProductionNext24) {
+      this.chartProductionNext24.destroy();
+    }
+
+  const data = {
+    labels: list,
+    datasets: [{
+      label: 'Production For The Next 24h',
+      data: valueList,
+      fill: true,
+      borderColor: 'rgb(59, 193, 74)',
+      backgroundColor:'rgba(59, 193, 74,0.4)',
+      pointBackgroundColor: 'rgba(59, 193, 74,0.7)',
+      borderWidth: 1,
+      pointBorderColor:'rgb(59, 193, 74)'
+    }]
+  }
+  const options: ChartOptions = {
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: 'Time (hour)',
+        },
+        ticks: {
+          font: {
+            size: 14,
+          },
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: 'Power production (kW)',
+          font:{
+            size: 10,
+          }
+        },
+        ticks: {
+          font: {
+            size: 9,
+          },
+        },
+      },
+    },
+  };
+  this.chartProductionNext24 = new Chart(this.next24ProductionGraph.nativeElement, {
+    type: 'line',
+    data: data,
+    options: options,
+  });
 }
 }
 

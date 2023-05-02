@@ -88,4 +88,16 @@ export class AuthUserService {
     return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/previousMonth/production/user-every-day-device-usage/"+userID, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
   }
 
+  getProductionNext24Hours(userID : string):Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/next24Hours/production/user-every-day-device-usage/" + userID, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
+  }
+
+  getProductionNext7days(userID : string):Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/next7Days/production/user-every-day-device-usage/" + userID, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
+  }
+
+  getProductionNextMonth(userID: any):Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/nextMonth/production/user-every-day-device-usage/" + userID, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
+  }
+
 }
