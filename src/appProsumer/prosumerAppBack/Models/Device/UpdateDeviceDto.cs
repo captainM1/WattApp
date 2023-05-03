@@ -9,5 +9,7 @@
         public string? MacAdress { get; set; }
         public int DeviceAge { get; set; }
         public Boolean IsOn { get; set; }
+        public Boolean SharesDataWithDso { get; set; }
+        public Boolean DsoHasControl { get; set; }
     }
 }

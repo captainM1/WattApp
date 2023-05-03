@@ -27,8 +27,8 @@ namespace prosumerAppBack.DataAccess
             }
             updatedDevice.MacAdress = deviceUpdateDto.MacAdress;
             updatedDevice.IsOn = deviceUpdateDto.IsOn;
-            updatedDevice.sharesDataWithDso = deviceUpdateDto.sharesDataWithDso;
-            updatedDevice.dsoHasControl = deviceUpdateDto.dsoHasControl;
+            updatedDevice.SharesDataWithDso = deviceUpdateDto.SharesDataWithDso;
+            updatedDevice.DsoHasControl = deviceUpdateDto.DsoHasControl;
             updatedDevice.DeviceName = deviceUpdateDto.DeviceName;
             updatedDevice.MacAdress = deviceUpdateDto.MacAdress;
 

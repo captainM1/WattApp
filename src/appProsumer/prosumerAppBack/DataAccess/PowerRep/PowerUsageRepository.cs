@@ -557,52 +557,6 @@ public class PowerUsageRepository : IPowerUsageRepository
         return pu;
     }
 
-    public List<PowerUsage> GetPowerUsageSumByDeviceProducer(int direction)
-    {
-        var startOfMonth = DateTime.Now.AddMonths(direction);
-        var endOfMonth = startOfMonth.AddMonths(1);
-
-        var deviceTypes = mongoCollection.AsQueryable().ToList();
-
-        List<PowerUsage> listPU = new List<PowerUsage>();
-
-        foreach (var device in deviceTypes)
-        {
-            double sum = 0;
-            PowerUsage sums;
-
-            string deviceGroupName = _dataContext.DeviceGroups
-               .Where(g => g.ID == _dataContext.DeviceTypes
-                   .Where(dt => dt.ID.ToString().ToUpper() == device.ID.ToString().ToUpper())
-                   .Select(dt => dt.GroupID)
-                   .FirstOrDefault())
-               .Select(g => g.Name)
-               .FirstOrDefault();
-
-            if (deviceGroupName == "Producer")
-            {
-                sums = new PowerUsage();
-                sums.TimestampPowerPairs = new List<TimestampPowerPair>();
-                sums.ID = device.ID;
-
-                var powerUsageData = deviceTypes
-                    .Where(p => device.ID.ToString().ToUpper() == p.ID.ToString().ToUpper())
-                    .ToList()
-                    .SelectMany(p => p.TimestampPowerPairs)
-                    .Where(t => t.Timestamp >= startOfMonth && t.Timestamp <= endOfMonth);
-
-                sum = powerUsageData.Sum(p => p.PowerUsage);
-
-                var tsp = new TimestampPowerPair();
-                tsp.PowerUsage = sum;
-                sums.TimestampPowerPairs.Add(tsp);
-                listPU.Add(sums);
-            }
-        }
-
-        return listPU;
-    }
-
     public PowerUsage GetPowerUsagesForEachDayProduction(int direction)
     {
         var devices = _dataContext.Devices.Select(d => d.ID);
@@ -1683,10 +1637,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         return savedEnergy;
     }
 
-    public double percentSavedEnergyUserConsumer()
-    {
-
-    }
+   
 
     public double percentPowerUsageForPreviousHour(Guid deviceID)
     {
