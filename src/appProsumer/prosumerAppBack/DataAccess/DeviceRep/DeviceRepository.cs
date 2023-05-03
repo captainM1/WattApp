@@ -29,6 +29,8 @@ namespace prosumerAppBack.DataAccess
             updatedDevice.IsOn = deviceUpdateDto.IsOn;
             updatedDevice.sharesDataWithDso = deviceUpdateDto.sharesDataWithDso;
             updatedDevice.dsoHasControl = deviceUpdateDto.dsoHasControl;
+            updatedDevice.DeviceName = deviceUpdateDto.DeviceName;
+            updatedDevice.MacAdress = deviceUpdateDto.MacAdress;
 
             _dbContext.Devices.Update(updatedDevice);
             await _dbContext.SaveChangesAsync();
@@ -95,6 +97,7 @@ namespace prosumerAppBack.DataAccess
                 ID = Guid.NewGuid(),
                 OwnerID = _userService.GetID().Value,
                 MacAdress = addDeviceDto.MacAdress,
+                DeviceName = addDeviceDto.DeviceName,
                 DeviceTypeID = addDeviceDto.DeviceTypeID,
                 sharesDataWithDso = addDeviceDto.sharesDataWithDso,
                 dsoHasControl = addDeviceDto.dsoHasControl

@@ -2,7 +2,7 @@
 {
     public class UpdateDeviceDto
     {
-        public string? Name { get; set; }
+        public string? DeviceName { get; set; }
         public string? Manufacturer { get; set; }
         public double Wattage { get; set; }
         public double UsageFrequency { get; set; }
