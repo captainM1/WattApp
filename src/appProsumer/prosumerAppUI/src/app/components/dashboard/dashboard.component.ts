@@ -399,7 +399,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
     const data = {
       labels: this.extractedDatesPrevMonth,
       datasets: [{
-        label: 'Previous Month',
+        label: 'Consumption For The Previous Month',
         data: this.powerUsageConsumption,
         fill: true,
         borderColor: 'rgb(255, 200, 0)',
@@ -484,7 +484,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
     const data = {
       labels: this.extractedDatesNextMonth,
       datasets: [{
-        label: 'Next Month',
+        label: 'Consumption For The Next Month',
         data: this.powerUsageConsumptionNextMonth,
         fill: true,
 					borderColor: 'rgb(59, 193, 74)',
@@ -574,7 +574,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
     const data = {
       labels: this.extractedDatesPrev7Days,
       datasets: [{
-        label: 'Previous 7 days Consumption',
+        label: 'Consumption For The Previous 7 days',
         data: this.powerUsageConsumptionPrev7days,
         fill: true,
         borderColor: 'rgb(255, 200, 0)',
@@ -654,7 +654,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
     const data = {
       labels: this.extractedDatesNext7Days,
       datasets: [{
-        label: 'Next 7 days Consumption',
+        label: 'Consumption For The Next 7 days',
         data: this.powerUsageConsumptionNext7days,
         fill: true,
         borderColor: 'rgb(59, 193, 74)',
@@ -823,7 +823,7 @@ chartProductionPreviousMonth(){
   const data = {
     labels: this.extractedDatesProductionPrevMonth,
     datasets: [{
-      label: 'Previous Month',
+      label: 'Production For The Previous Month',
       data: this.powerUsageProductionPrevMonth,
       fill: true,
       borderColor: 'rgb(255, 200, 0)',
@@ -912,7 +912,7 @@ chartProductionPrev7Days(){
   const data = {
     labels: this.extractedDatesProductionPrev7Days,
     datasets: [{
-      label: 'Previous 7 days Production',
+      label: 'Production For The Previous 7 days',
       data: this.powerUsageProductionPrev7days,
       fill: true,
       borderColor: 'rgb(255, 200, 0)',
@@ -1080,7 +1080,7 @@ chartProductionNext7Days(){
   const data = {
     labels: this.extractedDatesProductionNext7Days,
     datasets: [{
-      label: 'Next 7 days Production',
+      label: 'Production For The Next 7 days',
       data: this.powerUsageProductionNext7days,
       fill: true,
       borderColor: 'rgb(59, 193, 74)',
@@ -1162,7 +1162,7 @@ chartProductionNextMonth(){
   const data = {
     labels: this.extractedDatesProductionNextMonth,
     datasets: [{
-      label: 'Previous Month',
+      label: 'Production For The Next Month',
       data: this.powerUsageProductionNextMonth,
       fill: true,
       borderColor: 'rgb(59, 193, 74)',

@@ -256,7 +256,7 @@ halfDoughnutMostProduces(usage: any){
   });
 }
 
-showDetails: boolean = false;
+showDetails: boolean = true;
 showWeatherDetails()
 {
 

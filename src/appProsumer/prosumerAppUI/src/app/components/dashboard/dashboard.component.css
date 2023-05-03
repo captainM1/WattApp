@@ -150,6 +150,7 @@
 .outer{
   height:100vh;
 }
+
 .centriranje{
   display:flex;
   justify-content: center;
