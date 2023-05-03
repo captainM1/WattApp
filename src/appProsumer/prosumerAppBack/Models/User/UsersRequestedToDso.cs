@@ -15,5 +15,7 @@ namespace prosumerAppBack.Models
         public string? City { get; set; }
         public string? Country { get; set; }
         public string? Email { get; set; }
+        public Boolean sharesDataWithDso { get; set; }
+        public Boolean dsoHasControl { get; set; }
     }
 }

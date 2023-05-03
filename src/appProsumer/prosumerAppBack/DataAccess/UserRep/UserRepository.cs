@@ -51,6 +51,39 @@ public class UserRepository : IUserRepository
         return user;
     }
 
+    public async Task CreatePasswordResetToken(string email)
+    {
+        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
+
+        user.PasswordResetTokenExpires = DateTime.Now.AddDays(1);
+        user.PasswordResetToken = CreateTokenForPassword();
+        await _dbContext.SaveChangesAsync();
+    }
+    public async Task ResetPasswordToken(string token)
+    {
+        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.PasswordResetToken == token);
+
+        user.PasswordResetTokenExpires = null;
+        user.PasswordResetToken = null;
+        await _dbContext.SaveChangesAsync();
+    }
+    public async Task<User> GetUserByPasswordResetTokenAsync(string passwordResetToken)
+    {
+        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.PasswordResetToken == passwordResetToken);
+
+        if (user == null)
+        {
+            return null;
+        }
+
+        return user;
+    }
+
+    private string CreateTokenForPassword()
+    {
+        return Convert.ToHexString(RandomNumberGenerator.GetBytes(64));
+    }
+
     public async Task<User> CreateUser(UserRegisterDto userRegisterDto)
     {
         byte[] salt;
@@ -122,6 +155,10 @@ public class UserRepository : IUserRepository
         user.Country = userUpdateDto.Country;
         user.Email = userUpdateDto.Email;
         user.PhoneNumber = userUpdateDto.PhoneNumber;
+        user.dsoHasControl = userUpdateDto.dsoHasControl;
+        user.sharesDataWithDso = user.sharesDataWithDso;
+
+        await this.UpdatePassword(id, userUpdateDto.Password);
         
 
         _dbContext.Users.Update(user);
@@ -172,7 +209,9 @@ public class UserRepository : IUserRepository
             Country = user.Country,
             Salt = user.Salt,
             PasswordHash = user.PasswordHash,
-            ID = user.ID,            
+            ID = user.ID,
+            sharesDataWithDso = user.sharesDataWithDso,
+            dsoHasControl = user.dsoHasControl,
         };
         _dbContext.UsersAppliedToDSO.Add(newUser);
         await _dbContext.SaveChangesAsync();

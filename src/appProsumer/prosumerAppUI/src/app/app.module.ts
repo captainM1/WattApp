@@ -49,6 +49,7 @@ import { WelcomeComponent } from './components/welcome/welcome.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { DeviceEditPopupComponent } from './components/device-edit-popup/device-edit-popup.component';
 
 import { NgxUiLoaderHttpModule, NgxUiLoaderModule } from 'ngx-ui-loader';
 
@@ -79,7 +80,8 @@ import { NgxUiLoaderHttpModule, NgxUiLoaderModule } from 'ngx-ui-loader';
     PermissionsComponent,
     FilterPipe,
     WelcomeComponent,
-    DashboardComponent
+    DashboardComponent,
+    DeviceEditPopupComponent
   ],
   imports: [
     BrowserModule,

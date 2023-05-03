@@ -62,7 +62,7 @@ public class PowerUsageService:IPowerUsageService
         var powerUsages = _repository.AveragePowerUsageConsumption(userID);
         if (powerUsages == 0)
         {
-            throw new NotFoundException();
+            return 0;
         }
         return powerUsages;
     }
@@ -143,7 +143,7 @@ public class PowerUsageService:IPowerUsageService
         return powerUsage;
     }
 
-    /*    public PowerUsage GetPowerUsagesForEachDayProduction(int direction)
+        public PowerUsage GetPowerUsagesForEachDayProduction(int direction)
         {
             var powerUsage = _repository.GetPowerUsagesForEachDayProduction(direction);
             if (powerUsage == null)
@@ -152,8 +152,8 @@ public class PowerUsageService:IPowerUsageService
             }
             return powerUsage;
         }
-
-        public PowerUsage GetPowerUsagesForEachDayConsumtion(int direction)
+     
+    public PowerUsage GetPowerUsagesForEachDayConsumtion(int direction)
         {
             var powerUsage = _repository.GetPowerUsagesForEachDayConsumption(direction);
             if (powerUsage == null)
@@ -162,7 +162,7 @@ public class PowerUsageService:IPowerUsageService
             }
             return powerUsage;
         }
-    */
+   
 
     public List<PowerUsage> GetPowerUsageForDevicesProduction(Guid userID, int direction)
     {
@@ -306,9 +306,9 @@ public class PowerUsageService:IPowerUsageService
         return result;
     }
 
-    public PowerUsage GetMaxUsagePreviousMonthConsumption(Guid userID)
+    public PowerUsage GetMaxUsagePreviousMonthConsumption(Guid userID, int direction)
     {
-        PowerUsage result = _repository.GetDeviceWithMaxPowerUsagePreviousMonthConsumption(userID);
+        PowerUsage result = _repository.GetDeviceWithMaxPowerUsagePreviousMonthConsumption(userID, direction);
         return result;
     }
 
@@ -324,9 +324,9 @@ public class PowerUsageService:IPowerUsageService
         return result;
     }
 
-    public PowerUsage GetMaxUsagePreviousMonthProduction(Guid userID)
+    public PowerUsage GetMaxUsagePreviousMonthProduction(Guid userID, int direction)
     {
-        PowerUsage result = _repository.GetDeviceWithMaxPowerUsagePreviousMonthProduction(userID);
+        PowerUsage result = _repository.GetDeviceWithMaxPowerUsagePreviousMonthProduction(userID, direction);
         return result;
     }
 

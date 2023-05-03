@@ -2,14 +2,14 @@
 {
     public class UpdateDeviceDto
     {
-        public string? Name { get; set; }
+        public string? DeviceName { get; set; }
         public string? Manufacturer { get; set; }
         public double Wattage { get; set; }
         public double UsageFrequency { get; set; }
         public string? MacAdress { get; set; }
         public int DeviceAge { get; set; }
         public Boolean IsOn { get; set; }
-        public Boolean sharesDataWithDso { get; set; }
-        public Boolean dsoHasControl { get; set; }
+        public Boolean SharesDataWithDso { get; set; }
+        public Boolean DsoHasControl { get; set; }
     }
 }

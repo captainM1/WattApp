@@ -60,9 +60,6 @@ const routes: Routes = [
     path:'profile-prosumer', component:ProfileProsumerComponent
   },
   {
-    path:'home2', component: Home2Component
-  },
-  {
     path: 'device-details/:id', component: DeviceDetailsComponent
   },
   {
