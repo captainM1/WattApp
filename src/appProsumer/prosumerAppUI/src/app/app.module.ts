@@ -51,6 +51,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { DeviceEditPopupComponent } from './components/device-edit-popup/device-edit-popup.component';
 
+import { NgxUiLoaderHttpModule, NgxUiLoaderModule } from 'ngx-ui-loader';
+
 
 @NgModule({
   declarations: [
@@ -99,7 +101,11 @@ import { DeviceEditPopupComponent } from './components/device-edit-popup/device-
     ConfirmDialogModule,
     Ng2SearchPipeModule,
     [MatProgressSpinnerModule],
-    MatSnackBarModule
+    MatSnackBarModule,
+    NgxUiLoaderModule,
+    NgxUiLoaderHttpModule.forRoot({
+      showForeground: true
+    })
   ],
   providers: [MessageService,ConfirmationService, {provide:HTTP_INTERCEPTORS,useClass:TokenInterceptor,multi:true}],
   bootstrap: [AppComponent]

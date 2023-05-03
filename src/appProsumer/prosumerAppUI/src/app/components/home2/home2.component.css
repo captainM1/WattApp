@@ -30,7 +30,7 @@
 
 .card-title
 {
-  color:#FF8811;
+  color:#026670;
 }
 
 h2{
@@ -45,6 +45,7 @@ h2{
   padding: 10px;
   border-radius: 8px;
   margin-top: 15px;
+  --bs-gutter-x: 0;
 }
 
 p
@@ -186,17 +187,10 @@ img
     margin-top: 40px;
   }
 
-  img
-  {
-    width: 40%;
-    padding-top: 10px;
-    padding-bottom: 10px;
-  }
-
   .card
   {
-    width:45%;
-    background-color: #fff;
+    width:30%;
+    background-color: #FCFBFB;
     float:left;
     margin-left: 15px;
     text-align: center;
@@ -232,6 +226,60 @@ img
   }
 
 
+  img
+  {
+    width:80%;
+    padding: 10px;
+  }
+
+  .vreme {
+    display: flex;
+    align-items: center;
+    background-color: #FCFBFB;
+    filter:drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
+    border-radius: 10px;
+    height: 100px;
+    padding: 10px;
+  }
+
+  .icon-wrapper {
+    width: 30%;
+  }
+
+  .text-wrapper {
+    width: 35%;
+    text-align: center;
+  }
+
+  .temperature-wrapper {
+    width: 30%;
+    text-align: right;
+    font-weight: bold;
+  }
+
+  h3 {
+    font-size: 15px;
+    padding-left: 10px;
+  }
+
+  .potrosnja
+  {
+    text-align: center;
+    font-size: 18px;
+  }
+
+  h4
+  {
+    text-align: center;
+    color: #026670;
+    font-weight: bold;
+    font-size: 14px;
+  }
+
+  h5 {
+    font-size: 10px;
+  }
+
 }
 
 @media(min-width: 1024px){
@@ -256,7 +304,7 @@ img
 
   img
   {
-    width: 15%;
+    width: 20%;
     padding-top: 15px;
     padding-right: 10px;
     padding-bottom: 10px;
@@ -408,4 +456,7 @@ img
   }
 
 }
+
+
+
 

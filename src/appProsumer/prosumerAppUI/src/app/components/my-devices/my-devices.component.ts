@@ -9,6 +9,7 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class MyDevicesComponent implements OnInit {
   devices: any;
+
   searchName: string = '';
   constructor(
     private auth: AuthService,
