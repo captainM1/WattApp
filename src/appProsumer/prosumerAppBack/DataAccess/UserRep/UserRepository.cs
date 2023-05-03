@@ -155,6 +155,8 @@ public class UserRepository : IUserRepository
         user.Country = userUpdateDto.Country;
         user.Email = userUpdateDto.Email;
         user.PhoneNumber = userUpdateDto.PhoneNumber;
+        user.dsoHasControl = userUpdateDto.dsoHasControl;
+        user.sharesDataWithDso = user.sharesDataWithDso;
 
         await this.UpdatePassword(id, userUpdateDto.Password);
         
@@ -207,7 +209,9 @@ public class UserRepository : IUserRepository
             Country = user.Country,
             Salt = user.Salt,
             PasswordHash = user.PasswordHash,
-            ID = user.ID,            
+            ID = user.ID,
+            sharesDataWithDso = user.sharesDataWithDso,
+            dsoHasControl = user.dsoHasControl,
         };
         _dbContext.UsersAppliedToDSO.Add(newUser);
         await _dbContext.SaveChangesAsync();

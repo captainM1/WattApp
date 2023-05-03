@@ -27,6 +27,8 @@ namespace prosumerAppBack.Models
 
         [Required]
         public string? LastName { get; set; }
+        public Boolean sharesDataWithDso { get; set; }
+        public Boolean dsoHasControl { get; set; }
     }
 }
 

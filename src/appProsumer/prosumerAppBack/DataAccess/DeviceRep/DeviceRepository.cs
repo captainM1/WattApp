@@ -27,8 +27,10 @@ namespace prosumerAppBack.DataAccess
             }
             updatedDevice.MacAdress = deviceUpdateDto.MacAdress;
             updatedDevice.IsOn = deviceUpdateDto.IsOn;
-            updatedDevice.sharesDataWithDso = deviceUpdateDto.sharesDataWithDso;
-            updatedDevice.dsoHasControl = deviceUpdateDto.dsoHasControl;
+            updatedDevice.SharesDataWithDso = deviceUpdateDto.SharesDataWithDso;
+            updatedDevice.DsoHasControl = deviceUpdateDto.DsoHasControl;
+            updatedDevice.DeviceName = deviceUpdateDto.DeviceName;
+            updatedDevice.MacAdress = deviceUpdateDto.MacAdress;
 
             _dbContext.Devices.Update(updatedDevice);
             await _dbContext.SaveChangesAsync();
@@ -95,9 +97,8 @@ namespace prosumerAppBack.DataAccess
                 ID = Guid.NewGuid(),
                 OwnerID = _userService.GetID().Value,
                 MacAdress = addDeviceDto.MacAdress,
+                DeviceName = addDeviceDto.DeviceName,
                 DeviceTypeID = addDeviceDto.DeviceTypeID,
-                sharesDataWithDso = addDeviceDto.sharesDataWithDso,
-                dsoHasControl = addDeviceDto.dsoHasControl
             };
 
             _dbContext.Devices.Add(newDevice);
@@ -125,13 +126,14 @@ namespace prosumerAppBack.DataAccess
             return _dbContext.Devices
                 .Include(d => d.DeviceType)
                 .ThenInclude(dt => dt.Manufacturer)
+                .Include(d => d.DeviceName)
                 .Where(d => d.OwnerID == userID)
                 .Select(d => new DeviceInfo()
                 {
                     deviceId = d.ID,
                     deviceTypeName = d.DeviceType.Name,
                     macAdress = d.MacAdress,
-                    manufacturerName = d.DeviceType.Manufacturer.Name
+                    manufacturerName = d.DeviceType.Manufacturer.Name,
                 })
                 .ToListAsync();
         }
@@ -144,6 +146,7 @@ namespace prosumerAppBack.DataAccess
                 .ThenInclude(dt => dt.Manufacturer)
                 .Include(d => d.DeviceType)
                 .ThenInclude(dt => dt.Group)
+                .Include(d => d.DeviceName)
                 .Where(d => d.ID == deviceID)
                 .Select(d => new DeviceInfo()
                 {
@@ -161,11 +164,12 @@ namespace prosumerAppBack.DataAccess
             return _dbContext.Devices
                 .Include(d => d.DeviceType)
                 .ThenInclude(dt => dt.Group)
+                .Include(d => d.DeviceName)
                 .Select(d => new DeviceInfoWithType()
                 {
                     deviceTypeId = d.ID,
                     deviceTypeName = d.DeviceType.Name,
-                    groupName = d.DeviceType.Group.Name
+                    groupName = d.DeviceType.Group.Name,
                 })
                 .ToList();
         }

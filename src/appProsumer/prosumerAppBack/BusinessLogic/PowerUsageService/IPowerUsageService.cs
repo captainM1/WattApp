@@ -39,10 +39,10 @@ public interface IPowerUsageService
     public PowerUsage GetMaxUsagePast24HoursConsumption(Guid userID);
     public PowerUsage GetMaxUsagePast24HoursProduction(Guid userID);
     public PowerUsage GetMaxUsagePreviousWeekConsumption(Guid userID);
-    public PowerUsage GetMaxUsagePreviousMonthConsumption(Guid userID);
+    public PowerUsage GetMaxUsagePreviousMonthConsumption(Guid userID, int direction);
     public PowerUsage GetMaxUsagePreviousCurrentConsumption(Guid userID);
     public PowerUsage GetMaxUsagePreviousWeekProductoin(Guid userID);
-    public PowerUsage GetMaxUsagePreviousMonthProduction(Guid userID);
+    public PowerUsage GetMaxUsagePreviousMonthProduction(Guid userID, int direction);
     public PowerUsage GetMaxUsagePreviousCurrentProduction(Guid userID);
     public double SavedEnergySystemProducer();
     public double SavedEnergySystemConsumer();

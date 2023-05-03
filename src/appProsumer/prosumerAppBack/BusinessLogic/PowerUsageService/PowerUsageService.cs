@@ -306,9 +306,9 @@ public class PowerUsageService:IPowerUsageService
         return result;
     }
 
-    public PowerUsage GetMaxUsagePreviousMonthConsumption(Guid userID)
+    public PowerUsage GetMaxUsagePreviousMonthConsumption(Guid userID, int direction)
     {
-        PowerUsage result = _repository.GetDeviceWithMaxPowerUsagePreviousMonthConsumption(userID);
+        PowerUsage result = _repository.GetDeviceWithMaxPowerUsagePreviousMonthConsumption(userID, direction);
         return result;
     }
 
@@ -324,9 +324,9 @@ public class PowerUsageService:IPowerUsageService
         return result;
     }
 
-    public PowerUsage GetMaxUsagePreviousMonthProduction(Guid userID)
+    public PowerUsage GetMaxUsagePreviousMonthProduction(Guid userID, int direction)
     {
-        PowerUsage result = _repository.GetDeviceWithMaxPowerUsagePreviousMonthProduction(userID);
+        PowerUsage result = _repository.GetDeviceWithMaxPowerUsagePreviousMonthProduction(userID, direction);
         return result;
     }
 
