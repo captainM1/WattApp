@@ -44,7 +44,7 @@ export class DeviceDetailsComponent implements OnInit {
     private router: Router,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-    private dialog: MatDialog
+    
   )
   {}
 
@@ -166,16 +166,7 @@ export class DeviceDetailsComponent implements OnInit {
     );
   }
 
-  editDetails() {
-    const dialogRef = this.dialog.open(DeviceEditPopupComponent, {
-      width: '500px',
-      data: { /* device information to be edited */ }
-    });
   
-    dialogRef.afterClosed().subscribe(result => {
-      // update information in the component
-    });
-  }
 
   showPermissions(){
     this.router.navigate(['/permissions', this.deviceId]);

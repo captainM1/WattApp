@@ -2,9 +2,17 @@
 <app-mob-nav class="mobile"></app-mob-nav>
 <div class="outer centriranje">
     <div class="container">
-        <h3 class="align-center">Add New Device</h3>
+        <div class="row">
+            <div class="col-1 align-center">
+                <button mat-icon-button (click)="goBack()">
+                    <mat-icon>arrow_back</mat-icon>
+                </button>
+            </div>
+            <div class="centriranje col-10"><h3>Add New Device</h3></div>
+            <div class="col-1"></div>
+        </div>
                 <form [formGroup]="addDeviceForm" (ngSubmit)="onSubmit()">
-                    <div class="row pb-4 forma">
+                    <div class="row red1">
                         <div class="custom-select col-sm">
                                 <div class="pt-3">
                                     <label for="type">Device Type:</label>
@@ -31,31 +39,17 @@
                         <div class="col-sm">   
                             <div class="inputi">
                                     <div class="form-group pt-3">
+                                        <label for="deviceName">Device Name</label>
+                                        <input class = "form-control" formControlName = "deviceName" type="text" placeholder="Insert Device Name">
+                                    </div>
+                                    <div class="form-group pt-3">
                                         <label for="macAddress">Device Mac Address</label>
                                         <input class = "form-control" formControlName = "macAddress" type="text" placeholder="Insert Device Mac Address">
                                     </div>
                                     <div class="form-group pt-3">
                                         <label for="watage">Wattage:</label>
-                                        <input disabled  class = "form-control" type="text" [value]="selectedWattage?.wattage">
+                                        <input disabled  class = "form-control" type="text" [value]="selectedWattage?.wattage" placeholder="0.50">
                                     </div>
-                            </div>
-                            <div class="text-center mt-4 pt-3 pb-3 bg-white permissions mx-auto">
-                                <label class="text-center font-weight-bold pb-2" for="toggle-buttons">Permissions</label>
-                                <hr>
-                                <div id="toggle-buttons" >    
-                                    <div class="form-group form-switch pt-3 d-flex justify-content-center">                            
-                                        <label class="form-check-label me-4" for="toggle-button-1">Allow DSO To Collect Data</label>
-                                        <input class="form-check-input" formControlName = "sharesDataWithDso" type="checkbox" id="toggle-button-1">
-                                    </div>
-                                    <div class="form-group form-switch d-flex justify-content-center">
-                                        <label class="form-check-label me-4" for="toggle-button-2">Allow DSO To Control Consumption Time</label>
-                                        <input class="form-check-input" formControlName = "dsoHasControl" type="checkbox" id="toggle-button-2" (change)="onToggle2Change($event)">
-                                    </div>
-                                </div> 
-                            </div>
-                            <div class="pt-4">
-                                <button class="mx-2 mt-2"><img src="assets/icons/add.png" alt="icon" style="width:20px; margin-right: 10px;">Add New Rule</button>
-                                <button class="mx-2 mt-2" [disabled]="!toggle2Checked"><img src="assets/icons/log-out.png" alt="icon" style="width:15px; color: white; margin-right: 10px;">Add New Requirement</button>
                             </div>
                         </div> 
                     </div>

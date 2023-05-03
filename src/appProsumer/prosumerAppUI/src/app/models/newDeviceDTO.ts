@@ -1,13 +1,11 @@
 export class newDeviceDTO {
+    public deviceName: string;
     public macAdress: string;
     public deviceTypeID: string;
-    public sharesDataWithDso: boolean;
-    public dsoHasControl: boolean;
 
-    constructor(macaddress: string, devicetypeid: string, sharesData: boolean, controls: boolean) {
+    constructor(devicename: string, macaddress: string, devicetypeid: string) {
         this.macAdress = macaddress;
         this.deviceTypeID = devicetypeid;
-        this.sharesDataWithDso = sharesData;
-        this.dsoHasControl = controls;
+        this.deviceName = devicename;
     }
 }
