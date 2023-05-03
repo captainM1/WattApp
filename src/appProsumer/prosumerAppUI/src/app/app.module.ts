@@ -49,6 +49,7 @@ import { WelcomeComponent } from './components/welcome/welcome.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { DeviceEditPopupComponent } from './components/device-edit-popup/device-edit-popup.component';
 
 
 @NgModule({
@@ -77,7 +78,8 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
     PermissionsComponent,
     FilterPipe,
     WelcomeComponent,
-    DashboardComponent
+    DashboardComponent,
+    DeviceEditPopupComponent
   ],
   imports: [
     BrowserModule,
