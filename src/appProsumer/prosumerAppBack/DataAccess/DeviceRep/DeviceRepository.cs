@@ -99,8 +99,6 @@ namespace prosumerAppBack.DataAccess
                 MacAdress = addDeviceDto.MacAdress,
                 DeviceName = addDeviceDto.DeviceName,
                 DeviceTypeID = addDeviceDto.DeviceTypeID,
-                sharesDataWithDso = addDeviceDto.sharesDataWithDso,
-                dsoHasControl = addDeviceDto.dsoHasControl
             };
 
             _dbContext.Devices.Add(newDevice);

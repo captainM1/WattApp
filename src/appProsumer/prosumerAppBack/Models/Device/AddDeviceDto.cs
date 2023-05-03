@@ -10,8 +10,6 @@ namespace prosumerAppBack.Models.Device
 		[Required]
         public string? MacAdress { get; set; }
 		public string DeviceName { get; set; }
-		public Boolean sharesDataWithDso { get; set; }
-        public Boolean dsoHasControl { get; set; }
     }
 }
 
