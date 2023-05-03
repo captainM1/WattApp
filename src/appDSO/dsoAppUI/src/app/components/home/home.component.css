@@ -35,28 +35,38 @@ img{
 .card-container {
     display: flex;
     flex-wrap: wrap;
+    text-align: center;
+    justify-content: center;
 }
-  
+ 
 .card {
-    width: 25%;
-    padding: 20px;
+    width: 22%;
+    padding: 5px 10px;
     box-sizing: border-box;
+    border-radius: 10px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+    margin-right: 5px;
+    margin-left: 5px;
 }
 .card-title{
     font-weight: 500; 
     color:black;
     text-align: center;
     letter-spacing: 0.5px;
+    color: #026670; 
+    margin-bottom: 10px;
+    text-align: center;
+    
 }
 .card-text{
     text-align: center; 
     font-weight: 500; 
-    font-size: 20px; 
+    font-size: 18px; 
+    padding-bottom: 5px;
     
-    color: #026670; 
+   
 }
 select{
-    
     background-color:  white;
     color: #026670;
     padding-left: 20px;
@@ -90,4 +100,21 @@ label{
     color: #026670;
     font-style: italic;
     text-align: center;
+}
+.green {
+    color: green;
+}
+  
+.red {
+    color: red;
+}
+span{
+    font-size: 12px;
+    font-style: oblique;
+}
+
+col{
+    color: #F6F5F3;
+    border: none;
+
 }

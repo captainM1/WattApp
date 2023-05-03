@@ -12,7 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+import { NgxSpinnerModule } from 'ngx-spinner';
 import { GoogleMapsModule } from '@angular/google-maps';
 
 import { NgChartsModule } from 'ng2-charts';
@@ -30,7 +30,7 @@ import { WelcomeComponent } from './components/welcome/welcome.component';
 import { MessageService } from 'primeng/api';
 import { TokenInterceptor } from './interceptors/interceptor';
 
-
+import { NgxUiLoaderHttpModule, NgxUiLoaderModule  } from 'ngx-ui-loader';
 
 
 var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
@@ -64,7 +64,11 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     NgChartsModule,
     FormsModule,
     MatTableModule,
-    PaginatorModule
+    PaginatorModule,
+    NgxSpinnerModule,
+    NgxUiLoaderModule,
+    NgxUiLoaderHttpModule
+   
   ],
   providers: [MessageService,{provide:HTTP_INTERCEPTORS,useClass:TokenInterceptor,multi:true}],
   bootstrap: [AppComponent]
