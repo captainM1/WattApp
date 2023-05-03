@@ -38,10 +38,10 @@ namespace prosumerAppBack.BusinessLogic
         public PowerUsage GetDeviceWithMaxPowerUsage24Production(Guid userID);
         public PowerUsage GetDeviceWithMaxPowerUsage24Consumption(Guid userID);
         public PowerUsage GetDeviceWithMaxPowerUsagePreviousWeekProduction(Guid userID);
-        public PowerUsage GetDeviceWithMaxPowerUsagePreviousMonthProduction(Guid userID);
+        public PowerUsage GetDeviceWithMaxPowerUsagePreviousMonthProduction(Guid userID, int direction);
         public PowerUsage GetDeviceWithMaxPowerUsageCurrentProduction(Guid userID);
         public PowerUsage GetDeviceWithMaxPowerUsagePreviousWeekConsumption(Guid userID);
-        public PowerUsage GetDeviceWithMaxPowerUsagePreviousMonthConsumption(Guid userID);
+        public PowerUsage GetDeviceWithMaxPowerUsagePreviousMonthConsumption(Guid userID, int direction);
         public PowerUsage GetDeviceWithMaxPowerUsageCurrentConsumption(Guid userID);
         public PowerUsage Get12hoursBefore12hoursAfter(Guid deviceID);
         public double SavedEnergySystemConsumer();

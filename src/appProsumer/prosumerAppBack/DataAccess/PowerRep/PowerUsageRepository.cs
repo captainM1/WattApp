@@ -1421,10 +1421,10 @@ public class PowerUsageRepository : IPowerUsageRepository
         return pu;
     }
 
-    public PowerUsage GetDeviceWithMaxPowerUsagePreviousMonthConsumption(Guid userID)
+    public PowerUsage GetDeviceWithMaxPowerUsagePreviousMonthConsumption(Guid userID, int direction) // ubacen direction da diktira koliko meseci ide unazad (direction => broj meseci)
     {
         DateTime endDate = DateTime.Now;
-        DateTime startDate = endDate.AddDays(-30);
+        DateTime startDate = endDate.AddMonths( -1 * direction );
 
         PowerUsage pu = new PowerUsage();
         pu.TimestampPowerPairs = new List<TimestampPowerPair>();
@@ -1471,10 +1471,10 @@ public class PowerUsageRepository : IPowerUsageRepository
            return pu;
     }
 
-    public PowerUsage GetDeviceWithMaxPowerUsagePreviousMonthProduction(Guid userID)
+    public PowerUsage GetDeviceWithMaxPowerUsagePreviousMonthProduction(Guid userID, int direction)
     {
         DateTime endDate = DateTime.Now;
-        DateTime startDate = endDate.AddDays(-30);
+        DateTime startDate = endDate.AddMonths( -1 * direction );
 
         PowerUsage pu = new PowerUsage();
         pu.TimestampPowerPairs = new List<TimestampPowerPair>();
@@ -1681,6 +1681,11 @@ public class PowerUsageRepository : IPowerUsageRepository
         var savedEnergy = ((lastMonth - thisMonth) / lastMonth) * 100;
 
         return savedEnergy;
+    }
+
+    public double percentSavedEnergyUserConsumer()
+    {
+
     }
 
     public double percentPowerUsageForPreviousHour(Guid deviceID)
