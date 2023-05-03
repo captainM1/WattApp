@@ -4,6 +4,8 @@ import { Info, User } from 'src/app/models/user';
 import { Root } from 'src/app/models/weather';
 import { AuthUserService } from 'src/app/services/auth-user.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { DatePipe } from '@angular/common';
+import { Observable, map, timer } from 'rxjs';
 
 @Component({
   selector: 'app-home2',
@@ -28,11 +30,18 @@ export class Home2Component implements OnInit, AfterViewInit {
   numberOfConsumers:number = 0;
   numberOfStorage:number = 0;
   allUserDevices!: Info[];
+  currentDate!: Observable<Date>;
+
+  isSunny!: boolean;
+  isCloudy!: boolean;
+  isRainy!: boolean;
+  isSnowy!: boolean;
 
   constructor(
 		private auth : AuthService,
-    private auth1 : AuthUserService,
+    private auth1 : AuthUserService
 	){}
+
 
   @ViewChild('myChart') myChart!: ElementRef;
   @ViewChild('hourlyTemp') hourlyTemp!: ElementRef;
@@ -53,6 +62,11 @@ export class Home2Component implements OnInit, AfterViewInit {
     this.getToken();
     this.numberOfDevices();
 
+    this.currentDate = timer(0,1000).pipe(
+      map(()=>{
+        return new Date();
+      })
+    )
   }
 
   numberOfDevices(){
@@ -265,6 +279,11 @@ showWeatherDetails()
   this.auth.getWeather().subscribe(
     (response: any) => {
       this.weather = response;
+      this.isSunny = this.weather.daily.temperature_2m_max[0] > 20 &&  this.weather.hourly.relativehumidity_2m[0]< 60 && this.weather.current_weather.windspeed >= 10 && this.weather.current_weather.windspeed <= 20;
+      this.isCloudy = this.weather.current_weather.temperature <= 15;
+      this.isRainy = this.weather.daily.temperature_2m_max[0] < 15 && this.weather.hourly.relativehumidity_2m[0] >= 60;
+      this.isSnowy = this.weather.daily.temperature_2m_max[0] <= 0;
+      console.log(this.isCloudy);
       const timeSlice = this.weather.hourly.time.slice(0, 24);
       const time = timeSlice.map((time) => {
         const date = new Date(time);

@@ -52,6 +52,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 import { NgxUiLoaderHttpModule, NgxUiLoaderModule } from 'ngx-ui-loader';
 
+
 @NgModule({
   declarations: [
     AppComponent,
