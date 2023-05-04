@@ -279,5 +279,26 @@ public class UserRepository : IUserRepository
         return users;
     }
 
+    public bool SharesWhidDSO(Guid userID)
+    {
+        bool sharesWithDSO = _dbContext.Users
+                            .Where(u => u.ID == userID)
+                            .Select(share => share.sharesDataWithDso)
+                            .FirstOrDefault();
+
+        return sharesWithDSO;
+                            
+    }
+
+    public bool DSOHasControl(Guid userID)
+    {
+        bool sharesWithDSO = _dbContext.Users
+                            .Where(u => u.ID == userID)
+                            .Select(share => share.dsoHasControl)
+                            .FirstOrDefault();
+
+        return sharesWithDSO;
+
+    }
 
 }

@@ -285,4 +285,16 @@ public class UserService:IUserService
     {
         await _repository.ResetPasswordToken(token);
     }
+
+    public bool SharesWhidDSO(Guid userID)
+    {
+        return _repository.SharesWhidDSO(userID);
+    }
+
+    public bool DSOHasControl(Guid userID)
+    {
+        return _repository.DSOHasControl(userID);
+    }
+
+
 }

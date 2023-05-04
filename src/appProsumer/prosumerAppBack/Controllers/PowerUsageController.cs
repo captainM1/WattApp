@@ -236,31 +236,87 @@ public class PowerUsageController : ControllerBase
         return Ok(powerUsages);
     }
 
-    [HttpGet("power-usage/previousMonth/consumption/every-day-usage")]
+    [HttpGet("power-usage/previousMonth/consumption/every-day-usage/system")]
     public ActionResult<PowerUsage> GetPowerUsagesOfEachDayPrevMonthConsumption()
     {
-        var powerUsages = _powerUsageService.GetPowerUsagesForEachDayConsumtion(-1);
+        var powerUsages = _powerUsageService.GetPowerUsagesForEachDayConsumtionMonth(-1);
         return Ok(powerUsages);
     }
 
-    [HttpGet("power-usage/nextMonth/consumption/every-day-usage")]
+    [HttpGet("power-usage/nextMonth/consumption/every-day-usage/system")]
     public ActionResult<PowerUsage> GetPowerUsagesOfEachDayNextMontConsumption()
     {
-        var powerUsages = _powerUsageService.GetPowerUsagesForEachDayConsumtion(1);
+        var powerUsages = _powerUsageService.GetPowerUsagesForEachDayConsumtionMonth(1);
         return Ok(powerUsages);
     }
 
-    [HttpGet("power-usage/previousMonth/production/every-day-usage")]
+    [HttpGet("power-usage/previousMonth/production/every-day-usage/system")]
     public ActionResult<PowerUsage> GetPowerUsagesOfEachDayPrevMonthProduction()
     {
-        var powerUsages = _powerUsageService.GetPowerUsagesForEachDayProduction(-1);
+        var powerUsages = _powerUsageService.GetPowerUsagesForEachDayProductionMonth(-1);
         return Ok(powerUsages);
     }
 
-    [HttpGet("power-usage/nextMonth/production/every-day-usage")]
+    [HttpGet("power-usage/nextMonth/production/every-day-usage/system")]
     public ActionResult<PowerUsage> GetPowerUsagesOfEachDayNextMontProduction()
     {
-        var powerUsages = _powerUsageService.GetPowerUsagesForEachDayProduction(1);
+        var powerUsages = _powerUsageService.GetPowerUsagesForEachDayProductionMonth(1);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/nextWeek/consumption/every-day-usage/system")]
+    public ActionResult<PowerUsage> GetPowerUsagesOfEachDayWeekConsumption()
+    {
+        var powerUsages = _powerUsageService.GetPowerUsagesForEachDayConsumptionWeek(1);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/previousWeek/consumption/every-day-usage/system")]
+    public ActionResult<PowerUsage> GetPowerUsagesOfEachDaypreviousWeekConsumptionMonth()
+    {
+        var powerUsages = _powerUsageService.GetPowerUsagesForEachDayConsumptionWeek(-1);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/previousWeek/production/every-day-usage/system")]
+    public ActionResult<PowerUsage> GetPowerUsagesOfEachDapreviousWeekConsumption()
+    {
+        var powerUsages = _powerUsageService.GetPowerUsagesForEachDayProductionWeek(-1);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/nextWeek/production/every-day-usage/system")]
+    public ActionResult<PowerUsage> GetPowerUsagesOfEachDayNextWeekConsumption()
+    {
+        var powerUsages = _powerUsageService.GetPowerUsagesForEachDayProductionWeek(1);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/next24h/consumption/every-hour-usage/system")]
+    public ActionResult<PowerUsage> GetPowerUsagesOf24h()
+    {
+        var powerUsages = _powerUsageService.GetPowerUsagesForEachDayConsumption24h(1);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/previous24h/consumption/every-hour-usage/system")]
+    public ActionResult<PowerUsage> GetPowerUsagesOfEachDayprevious24h()
+    {
+        var powerUsages = _powerUsageService.GetPowerUsagesForEachDayConsumption24h(-1);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/previous24h/production/every-hour-usage/system")]
+    public ActionResult<PowerUsage> GetPowerUsagesOfEachDaprevious24h()
+    {
+        var powerUsages = _powerUsageService.GetPowerUsagesForEachDayProduction24h(-1);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/next24h/production/every-hour-usage/system")]
+    public ActionResult<PowerUsage> GetPowerUsagesOfEachDay24h()
+    {
+        var powerUsages = _powerUsageService.GetPowerUsagesForEachDayProduction24h(1);
         return Ok(powerUsages);
     }
 
@@ -459,6 +515,20 @@ public class PowerUsageController : ControllerBase
     public ActionResult<double> DeviceSystemUsagePercent(Guid deviceID)
     {
         var powerUsage = _powerUsageService.DeviceSystemPowerUsage(deviceID);
+        return Ok(powerUsage);
+    }
+    
+    [HttpGet("power-usage/user-usage-saved-energy-month/production/{userID}")]
+    public ActionResult<double> savedEnergyForUserProducer(Guid userID)
+    {
+        var powerUsage = _powerUsageService.savedEnergyForUserProducer(userID);
+        return Ok(powerUsage);
+    }
+
+    [HttpGet("power-usage/user-usage-saved-energy-month/consumer/{userID}")]
+    public ActionResult<double> savedEnergyForUserConsumer(Guid userID)
+    {
+        var powerUsage = _powerUsageService.savedEnergyForUserConsumer(userID);
         return Ok(powerUsage);
     }
 }
