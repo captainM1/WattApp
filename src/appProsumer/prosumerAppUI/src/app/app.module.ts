@@ -49,6 +49,9 @@ import { WelcomeComponent } from './components/welcome/welcome.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { DeviceEditPopupComponent } from './components/device-edit-popup/device-edit-popup.component';
+
+import { NgxUiLoaderHttpModule, NgxUiLoaderModule } from 'ngx-ui-loader';
 
 
 @NgModule({
@@ -77,7 +80,8 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
     PermissionsComponent,
     FilterPipe,
     WelcomeComponent,
-    DashboardComponent
+    DashboardComponent,
+    DeviceEditPopupComponent
   ],
   imports: [
     BrowserModule,
@@ -97,7 +101,11 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
     ConfirmDialogModule,
     Ng2SearchPipeModule,
     [MatProgressSpinnerModule],
-    MatSnackBarModule
+    MatSnackBarModule,
+    NgxUiLoaderModule,
+    NgxUiLoaderHttpModule.forRoot({
+      showForeground: true
+    })
   ],
   providers: [MessageService,ConfirmationService, {provide:HTTP_INTERCEPTORS,useClass:TokenInterceptor,multi:true}],
   bootstrap: [AppComponent]

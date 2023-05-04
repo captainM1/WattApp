@@ -1,4 +1,12 @@
+<!-- <ngx-ui-loader
+  fgsColor="#fff"
+  pbColor="#fff"
+  text="Please wait..."
+  textColor="#fff"
+>
+</ngx-ui-loader> -->
 <app-nav></app-nav>
+
 <div class="row" style="margin-top: 100px;" id = "myBack">
   <div class="col-lg-7">
     <div class="input-div">
@@ -21,8 +29,8 @@
                   <th >First Name</th>
                   <th >Last Name</th>
                   <th style="width: 23%;">Address</th>
-                  <th style="width: 15%;"(click)="sortData1('consumption')"><i class="fa fa-arrow-up" aria-hidden="true" style = "color:white" *ngIf="currentSortOrder1 ==='asc'"></i><i class="fa fa-arrow-down"  style ="color:white" *ngIf="currentSortOrder1 === 'desc'"></i>Consumption</th>
-                  <th style="width: 15%;"(click)="sortData2('production')"><i class="fa fa-arrow-up" aria-hidden="true" style = "color:white" *ngIf="currentSortOrder2 ==='asc'"></i><i class="fa fa-arrow-down"  style ="color:white" *ngIf="currentSortOrder2 === 'desc'"></i>Production</th>
+                  <th style="width: 15%;"(click)="sortData2('production')"><i class="fa fa-arrow-down" aria-hidden="true" style = "color:white" *ngIf="currentSortOrder2 ==='asc'"></i><i class="fa fa-arrow-up"  style ="color:white" *ngIf="currentSortOrder2 === 'desc'"></i>Production</th>
+                  <th style="width: 15%;"(click)="sortData1('consumption')"><i class="fa fa-arrow-down" aria-hidden="true" style = "color:white" *ngIf="currentSortOrder1 ==='asc'"></i><i class="fa fa-arrow-up"  style ="color:white" *ngIf="currentSortOrder1 === 'desc'"></i>Consumption</th>
                   <th style="width: 20%;"></th>
                   
                 </tr>
@@ -56,8 +64,9 @@
       
     </div>
  </div>
- 
+ <!-- <ngx-spinner></ngx-spinner> -->
  <div class="modal" id="myModal">
+  
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -95,14 +104,14 @@
               <button  class = "my-button active" [class.active]="isActiveSystem" (click)="toggleActive('system'); showDevicePage = false; showSystemPage = true; showMeGeneral = false;">System</button>
             </div>
             <div class="row" *ngIf="showMeGeneral">
-              <div class="col-sm" >
+              <div class="col-sm" id = "userInfo">
                 <h2 class="text-left">General information</h2>
                 <p><span>E-mail: </span>{{userPopUp.email}}</p>
                 <p><span>Phone number:</span> {{userPopUp.phoneNumber}}</p>
                 <p><span>City: </span>{{userPopUp.country}}, {{userPopUp.city}}</p>
                 <p><span>Address: </span>{{userPopUp.address}}</p>
               </div>
-              <div class="col-sm">
+              <div class="col-sm" id = "userInfo"> 
                 <h2 class="text-right">Device Details</h2>  
                 <p><span>Total numer of devices:</span> {{allUserDevices.length}} </p>
                 <p><span>Prosumers:</span> {{numberOfProsumers}}</p>
@@ -127,17 +136,17 @@
                     </thead>
                     <tbody>
                       <tr *ngFor="let device of allUserDevices" [(ngModel)]="selectedDevice" (click)="displayGraph(device)">
-                        <td  >{{device.deviceTypeName}}</td>
+                        <td>{{device.deviceTypeName}}</td>
                         <td>{{device.manufacturerName}}</td>
                         <td>{{device.macAdress}}</td>
                         <td>{{device.typeOfDevice}}</td>
-                        <td>{{device.powerUsage}} kw/h</td>
+                        <td>{{device.powerusage}} kw/h</td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
                 <div class="col">
-                  <div *ngIf="selectedDevice">
+                  <div >
                    <canvas #prev24DeviceID></canvas>
                   </div>
                 </div>
@@ -146,57 +155,96 @@
             </div>
             <div *ngIf="showSystemPage">
              <div class="row">
-                <h3>Consumption</h3>
-                <div class="col">
-                  <label for="graphSelect">Select Graph:</label>
-                <select [(ngModel)]="selectedGraphHistoryConsumption" (click)="HistoryConsumption(selectedGraphHistoryConsumption)">
-                    <option value="month">Previous Month</option>
-                    <option value="7days">Previous 7 days</option>
-                    <option value="24h">Previous 24 hours</option>
-                </select>
-
-                <div class="col" *ngIf="selectedGraphHistoryConsumption === 'month'">
-                  <canvas  #consumptionPrevMonthUSER></canvas>
-                </div>
-                <div  *ngIf="selectedGraphHistoryConsumption === '7days'">
-                  <canvas #consumptionPrev7DAYS></canvas>
-                </div>
-                </div>
-                <div class="col">
-                  <label for="graphSelect">Select Graph:</label>
-                <select [(ngModel)]="selectedGraphFutureConsumption" (click)="FutureConsumption(selectedGraphFutureConsumption)">
-                    <option value="month">Next Month</option>
-                    <option value="7days">Next 7 days</option>
-                    <option value="24h">Next 24 hours</option>
-                </select>
-              <div class="col">
-                <div *ngIf="selectedGraphFutureConsumption === 'month'">
-                  <canvas  #consumptionNextMonthUSER></canvas>
-                </div>
-                <div  *ngIf="selectedGraphFutureConsumption === '7days'">
-                  
+                <div class="id-button-popUp" >
+                  <button class = "my-button active"[class.active]="isActioveConsumer" (click)="toggleActiveCP('consumer'); showMeConsumption = true; showMeProduction = false;">Consumption</button>
+                  <button  class = "my-button active" [class.active]="isActiveProsumer" (click)="toggleActiveCP('prosumer'); showMeConsumption = false; showMeProduction = true;">Production</button>
                 </div>
               </div>
+              
+              <div class="row" id="graph-position" *ngIf="showMeConsumption">
+                <div class="col" id="graph" >
+                  <label for="graphSelect">Select Graph:</label>
+                  <select [(ngModel)]="selectedGraphHistoryConsumption" (ngModelChange)="HistoryConsumption()">
+                    <option value="month">Previous Month</option>
+                    <option value="7days">Previous 7 Days</option>
+                    <option value="24h">Previous 24 Hours</option>
+                  </select>
+                  <div *ngIf="selectedGraphHistoryConsumption === 'month'">
+                    <canvas  #consumptionPrevMonthGraph></canvas>
+                  </div>
+                  <div *ngIf="selectedGraphHistoryConsumption === '7days'">
+                    <canvas #consumptionPrev7DAYS></canvas>
+                  </div>
+                  <div  *ngIf="selectedGraphHistoryConsumption === '24h'">
+                    <canvas #previous24ConsumptionGraph></canvas>
+                  </div>
+                </div>
+              
+              
+                <div class="col" id="graph">
+                  <label for="graphSelect">Select Graph:</label>
+                  <select [(ngModel)]="selectedGraphFutureConsumption" (click)="FutureConsumption(selectedGraphFutureConsumption)">
+                      <option value="month">Next Month</option>
+                      <option value="7days">Next 7 days</option>
+                      <option value="24h">Next 24 hours</option>
+                  </select>
+                    <div *ngIf="selectedGraphFutureConsumption === 'month'">
+                      <canvas  #consumptionNextMonthGraph></canvas>
+                    </div>
+                    <div  *ngIf="selectedGraphFutureConsumption === '7days'">
+                      <canvas #consumptionNext7daysGraph></canvas>
+                    </div>
+                    <div  *ngIf="selectedGraphFutureConsumption === '24h'">
+                      <canvas #next24ConsumptionGraph></canvas>
+                    </div>
+                </div>
+                  
+              </div>
+            </div>
+           
+            
+             <div class="row" id="graph-position" *ngIf="showMeProduction">
+              <div class="col" id="graph">
+                  <label>Select Graph:</label>
+                  <select [(ngModel)]="selectedGraphHistoryProduction" (click)="HistoryProduction(selectedGraphHistoryProduction)">
+                      <option value="month">Previous Month</option>
+                      <option value="7days">Previous 7 days</option>
+                      <option value="24h">Previous 24 hours</option>
+                  </select>
+                  <div class="col" *ngIf="selectedGraphHistoryProduction === 'month'">
+                    <canvas  #productionPrevMonthGraph></canvas>
+                  </div>
+                  <div  *ngIf="selectedGraphHistoryProduction === '7days'">
+                    <canvas #productionPrev7daysGraph></canvas>
+                  </div>
+                  <div  *ngIf="selectedGraphHistoryProduction === '24h'">
+                    <canvas #previous24ProductionGraph></canvas>
+                  </div>
+                </div>
                 
+                <div class="col" id="graph">
+                  <label for="graphSelect">Select Graph:</label>
+                  <select [(ngModel)]="selectedGraphFutureProduction" (click)="FutureProduction(selectedGraphFutureProduction)">
+                      <option value="month">Next Month</option>
+                      <option value="7days">Next 7 days</option>
+                      <option value="24h">Next 24 hours</option>
+                  </select>
+               
+                    <div *ngIf="selectedGraphFutureProduction === 'month'">
+                      <canvas  #productionNextMonthGraph></canvas>
+                    </div>
+                    <div  *ngIf="selectedGraphFutureProduction === '7days'">
+                      <canvas #productionNext7daysGraph ></canvas>
+                    </div>
+                    <div  *ngIf="selectedGraphFutureProduction === '24h'">
+                      <canvas #next24ProductionGraph></canvas>
+                    </div>
                 </div>
-             </div>
-             
-             <!-- <div class="row">
-               <h3>Production</h3>
-                <div class="col">
-                  <canvas  #consumptionNextMonthUSER></canvas>
-                </div>
-                <div class="col">
-                  <canvas #productionNextMonthUSER></canvas>
-                </div>
-             </div> -->
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-      <!-- <div class="modal-footer">
-        <button type="button" class="btn btn-danger"  (click)="closeModel()" data-bs-dismiss="modal">Close</button>
-      </div> -->
+          
+      
     </div>
   </div>
 </div> 

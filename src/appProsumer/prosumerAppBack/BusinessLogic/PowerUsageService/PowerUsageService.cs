@@ -143,26 +143,65 @@ public class PowerUsageService:IPowerUsageService
         return powerUsage;
     }
 
-        public PowerUsage GetPowerUsagesForEachDayProduction(int direction)
+    public PowerUsage GetPowerUsagesForEachDayProductionMonth(int direction)
+    {
+        var powerUsage = _repository.GetPowerUsagesForEachDayProductionMonth(direction);
+        if (powerUsage == null)
         {
-            var powerUsage = _repository.GetPowerUsagesForEachDayProduction(direction);
-            if (powerUsage == null)
-            {
-                throw new NotFoundException();
-            }
-            return powerUsage;
+            throw new NotFoundException();
         }
+        return powerUsage;
+    }
      
-    public PowerUsage GetPowerUsagesForEachDayConsumtion(int direction)
+    public PowerUsage GetPowerUsagesForEachDayConsumtionMonth(int direction)
+    {
+        var powerUsage = _repository.GetPowerUsagesForEachDayConsumptionMonth(direction);
+        if (powerUsage == null)
         {
-            var powerUsage = _repository.GetPowerUsagesForEachDayConsumption(direction);
-            if (powerUsage == null)
-            {
-                throw new NotFoundException();
-            }
-            return powerUsage;
+            throw new NotFoundException();
         }
-   
+        return powerUsage;
+    }
+
+    public PowerUsage GetPowerUsagesForEachDayConsumptionWeek(int direction)
+    {
+        var powerUsage = _repository.GetPowerUsagesForEachDayConsumptionWeek(direction);
+        if (powerUsage == null)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsage;
+    }
+
+    public PowerUsage GetPowerUsagesForEachDayProductionWeek(int direction)
+    {
+        var powerUsage = _repository.GetPowerUsagesForEachDayProductionWeek(direction);
+        if (powerUsage == null)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsage;
+    }
+
+    public PowerUsage GetPowerUsagesForEachDayConsumption24h(int direction)
+    {
+        var powerUsage = _repository.GetPowerUsagesForEachDayConsumption24h(direction);
+        if (powerUsage == null)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsage;
+    }
+
+    public PowerUsage GetPowerUsagesForEachDayProduction24h(int direction)
+    {
+        var powerUsage = _repository.GetPowerUsagesForEachDayProduction24h(direction);
+        if (powerUsage == null)
+        {
+            throw new NotFoundException();
+        }
+        return powerUsage;
+    }
 
     public List<PowerUsage> GetPowerUsageForDevicesProduction(Guid userID, int direction)
     {
@@ -306,9 +345,9 @@ public class PowerUsageService:IPowerUsageService
         return result;
     }
 
-    public PowerUsage GetMaxUsagePreviousMonthConsumption(Guid userID)
+    public PowerUsage GetMaxUsagePreviousMonthConsumption(Guid userID, int direction)
     {
-        PowerUsage result = _repository.GetDeviceWithMaxPowerUsagePreviousMonthConsumption(userID);
+        PowerUsage result = _repository.GetDeviceWithMaxPowerUsagePreviousMonthConsumption(userID, direction);
         return result;
     }
 
@@ -324,9 +363,9 @@ public class PowerUsageService:IPowerUsageService
         return result;
     }
 
-    public PowerUsage GetMaxUsagePreviousMonthProduction(Guid userID)
+    public PowerUsage GetMaxUsagePreviousMonthProduction(Guid userID, int direction)
     {
-        PowerUsage result = _repository.GetDeviceWithMaxPowerUsagePreviousMonthProduction(userID);
+        PowerUsage result = _repository.GetDeviceWithMaxPowerUsagePreviousMonthProduction(userID, direction);
         return result;
     }
 
@@ -389,4 +428,17 @@ public class PowerUsageService:IPowerUsageService
         var powerUsage = _repository.percentPowerUsageForPreviousHour(deviceID);
         return powerUsage;
     }
+
+    public double savedEnergyForUserProducer(Guid userID)
+    {
+        var powerUsage = _repository.savedEnergyForUserProducer(userID);
+        return powerUsage;
+    }
+
+    public double savedEnergyForUserConsumer(Guid userID)
+    {
+        var powerUsage = _repository.savedEnergyForUserConsumer(userID);
+        return powerUsage;
+    }
+
 }

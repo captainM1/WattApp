@@ -19,8 +19,8 @@ namespace prosumerAppBack.BusinessLogic
         public double GetPowerUsageForAMonthSystemProducer(int direction);
         public List<PowerUsage> GetPowerUsageSumByDeviceProducer(int direction); // za svaki uredjaj u sitemu vraca njegovu ukupnu potrosnju za prethodnih/sledecih mesec dana
         public List<PowerUsage> GetPowerUsageSumByDeviceConsumer(int direction);
-        public PowerUsage GetPowerUsagesForEachDayProduction(int direction); // za svaki dan prethodnih/sledecih mesec dana ukupna potrosnja svih uredjaja u danu
-        public PowerUsage GetPowerUsagesForEachDayConsumption(int direction);
+        public PowerUsage GetPowerUsagesForEachDayProductionMonth(int direction); // za svaki dan prethodnih/sledecih mesec dana ukupna potrosnja svih uredjaja u danu
+        public PowerUsage GetPowerUsagesForEachDayConsumptionMonth(int direction);
         public List<PowerUsage> GetPowerUsageForDevicesProduction(Guid userID, int direction);
         public List<PowerUsage> GetPowerUsageForDevicesConsumption(Guid userID, int direction);        
         public PowerUsage GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction);       
@@ -38,10 +38,10 @@ namespace prosumerAppBack.BusinessLogic
         public PowerUsage GetDeviceWithMaxPowerUsage24Production(Guid userID);
         public PowerUsage GetDeviceWithMaxPowerUsage24Consumption(Guid userID);
         public PowerUsage GetDeviceWithMaxPowerUsagePreviousWeekProduction(Guid userID);
-        public PowerUsage GetDeviceWithMaxPowerUsagePreviousMonthProduction(Guid userID);
+        public PowerUsage GetDeviceWithMaxPowerUsagePreviousMonthProduction(Guid userID, int direction);
         public PowerUsage GetDeviceWithMaxPowerUsageCurrentProduction(Guid userID);
         public PowerUsage GetDeviceWithMaxPowerUsagePreviousWeekConsumption(Guid userID);
-        public PowerUsage GetDeviceWithMaxPowerUsagePreviousMonthConsumption(Guid userID);
+        public PowerUsage GetDeviceWithMaxPowerUsagePreviousMonthConsumption(Guid userID, int direction);
         public PowerUsage GetDeviceWithMaxPowerUsageCurrentConsumption(Guid userID);
         public PowerUsage Get12hoursBefore12hoursAfter(Guid deviceID);
         public double SavedEnergySystemConsumer();
@@ -50,5 +50,11 @@ namespace prosumerAppBack.BusinessLogic
         List<PowerUsage> GetPowerUsageForDevicePast24Hoursv2(Guid deviceId, int i);
         double GetHowMuchUserIsConsuming(Guid userId);
         public double deviceEnergySaved(Guid deviceID);
+        public double savedEnergyForUserProducer(Guid userID);
+        public double savedEnergyForUserConsumer(Guid userID);
+        public PowerUsage GetPowerUsagesForEachDayProductionWeek(int direction);
+        public PowerUsage GetPowerUsagesForEachDayConsumptionWeek(int direction);
+        public PowerUsage GetPowerUsagesForEachDayProduction24h(int direction);
+        public PowerUsage GetPowerUsagesForEachDayConsumption24h(int direction);
     }
 }

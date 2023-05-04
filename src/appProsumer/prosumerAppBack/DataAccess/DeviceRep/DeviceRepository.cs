@@ -27,8 +27,8 @@ namespace prosumerAppBack.DataAccess
             }
             updatedDevice.MacAdress = deviceUpdateDto.MacAdress;
             updatedDevice.IsOn = deviceUpdateDto.IsOn;
-            updatedDevice.sharesDataWithDso = deviceUpdateDto.sharesDataWithDso;
-            updatedDevice.dsoHasControl = deviceUpdateDto.dsoHasControl;
+            updatedDevice.DeviceName = deviceUpdateDto.DeviceName;
+            updatedDevice.MacAdress = deviceUpdateDto.MacAdress;
 
             _dbContext.Devices.Update(updatedDevice);
             await _dbContext.SaveChangesAsync();
@@ -95,9 +95,9 @@ namespace prosumerAppBack.DataAccess
                 ID = Guid.NewGuid(),
                 OwnerID = _userService.GetID().Value,
                 MacAdress = addDeviceDto.MacAdress,
+                DeviceName = addDeviceDto.DeviceName,
                 DeviceTypeID = addDeviceDto.DeviceTypeID,
-                sharesDataWithDso = addDeviceDto.sharesDataWithDso,
-                dsoHasControl = addDeviceDto.dsoHasControl
+                IsOn = false,
             };
 
             _dbContext.Devices.Add(newDevice);
@@ -128,10 +128,11 @@ namespace prosumerAppBack.DataAccess
                 .Where(d => d.OwnerID == userID)
                 .Select(d => new DeviceInfo()
                 {
+                    deviceName = d.DeviceName,
                     deviceId = d.ID,
                     deviceTypeName = d.DeviceType.Name,
                     macAdress = d.MacAdress,
-                    manufacturerName = d.DeviceType.Manufacturer.Name
+                    manufacturerName = d.DeviceType.Manufacturer.Name,
                 })
                 .ToListAsync();
         }
@@ -147,6 +148,7 @@ namespace prosumerAppBack.DataAccess
                 .Where(d => d.ID == deviceID)
                 .Select(d => new DeviceInfo()
                 {
+                    deviceName = d.DeviceName,
                     deviceId = d.ID,
                     deviceTypeName = d.DeviceType.Name, 
                     macAdress = d.MacAdress,
@@ -163,9 +165,10 @@ namespace prosumerAppBack.DataAccess
                 .ThenInclude(dt => dt.Group)
                 .Select(d => new DeviceInfoWithType()
                 {
+                    deviceName = d.DeviceName,
                     deviceTypeId = d.ID,
                     deviceTypeName = d.DeviceType.Name,
-                    groupName = d.DeviceType.Group.Name
+                    groupName = d.DeviceType.Group.Name,
                 })
                 .ToList();
         }
@@ -272,10 +275,12 @@ namespace prosumerAppBack.DataAccess
         public string macAdress { get; set; }
         public string manufacturerName { get; set; }       
         public string groupName { get; set; }
+        public string deviceName { get; set; }
     }
 
     public class DeviceInfoWithType
     {
+        public string deviceName { get; set; }
         public Guid deviceTypeId { get; set; }
         public string deviceTypeName { get; set; }
         public string groupName { get; set; }

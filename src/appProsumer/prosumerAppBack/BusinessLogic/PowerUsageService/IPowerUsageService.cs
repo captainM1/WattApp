@@ -25,8 +25,8 @@ public interface IPowerUsageService
     public double GetPoweUsageForAMonthSystemConsumer(int direction);
     public List<PowerUsage> GetPowerUsageSumByDeviceConsumer(int direction);
     public List<PowerUsage> GetPowerUsageSumByDeviceProducer(int direction);
-    public PowerUsage GetPowerUsagesForEachDayConsumtion(int direction);
-    public PowerUsage GetPowerUsagesForEachDayProduction(int direction);
+    public PowerUsage GetPowerUsagesForEachDayConsumtionMonth(int direction);
+    public PowerUsage GetPowerUsagesForEachDayProductionMonth(int direction);
     public IEnumerable<TimestampPowerPair> GetForDeviceByHour(Guid deviceID);
     public List<PowerUsage> GetPowerUsageForDevicesConsumption(Guid userID, int direction);
     public List<PowerUsage> GetPowerUsageForDevicesProduction(Guid userID, int direction);
@@ -39,10 +39,10 @@ public interface IPowerUsageService
     public PowerUsage GetMaxUsagePast24HoursConsumption(Guid userID);
     public PowerUsage GetMaxUsagePast24HoursProduction(Guid userID);
     public PowerUsage GetMaxUsagePreviousWeekConsumption(Guid userID);
-    public PowerUsage GetMaxUsagePreviousMonthConsumption(Guid userID);
+    public PowerUsage GetMaxUsagePreviousMonthConsumption(Guid userID, int direction);
     public PowerUsage GetMaxUsagePreviousCurrentConsumption(Guid userID);
     public PowerUsage GetMaxUsagePreviousWeekProductoin(Guid userID);
-    public PowerUsage GetMaxUsagePreviousMonthProduction(Guid userID);
+    public PowerUsage GetMaxUsagePreviousMonthProduction(Guid userID, int direction);
     public PowerUsage GetMaxUsagePreviousCurrentProduction(Guid userID);
     public double SavedEnergySystemProducer();
     public double SavedEnergySystemConsumer();
@@ -50,4 +50,10 @@ public interface IPowerUsageService
     object? GetPowerUsageForDevicePast24Hoursv2(Guid deviceId, int i);
     double GetHowMuchUserIsConsuming(Guid userId);
     public double deviceEnergySaved(Guid deviceID);
+    public double savedEnergyForUserConsumer(Guid userID);
+    public double savedEnergyForUserProducer(Guid userID);
+    public PowerUsage GetPowerUsagesForEachDayProductionWeek(int direction);
+    public PowerUsage GetPowerUsagesForEachDayConsumptionWeek(int direction);
+    public PowerUsage GetPowerUsagesForEachDayConsumption24h(int direction);
+    public PowerUsage GetPowerUsagesForEachDayProduction24h(int direction);
 }

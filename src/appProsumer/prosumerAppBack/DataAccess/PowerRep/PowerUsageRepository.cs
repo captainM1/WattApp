@@ -513,7 +513,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         return listPU;
     }
 
-    public PowerUsage GetPowerUsagesForEachDayConsumption(int direction)
+    public PowerUsage GetPowerUsagesForEachDayConsumptionMonth(int direction)
     {
         var devices = _dataContext.Devices.Select(d => d.ID);
 
@@ -557,53 +557,184 @@ public class PowerUsageRepository : IPowerUsageRepository
         return pu;
     }
 
-    public List<PowerUsage> GetPowerUsageSumByDeviceProducer(int direction)
+    public PowerUsage GetPowerUsagesForEachDayConsumptionWeek(int direction)
     {
-        var startOfMonth = DateTime.Now.AddMonths(direction);
-        var endOfMonth = startOfMonth.AddMonths(1);
+        var devices = _dataContext.Devices.Select(d => d.ID);
 
-        var deviceTypes = mongoCollection.AsQueryable().ToList();
+        PowerUsage pu = null;
 
-        List<PowerUsage> listPU = new List<PowerUsage>();
-
-        foreach (var device in deviceTypes)
+        foreach (var device in devices)
         {
-            double sum = 0;
-            PowerUsage sums;
+            var deviceType = _dataContext.Devices
+                            .Where(d => d.ID == device)
+                            .Select(d => d.DeviceTypeID)
+                            .FirstOrDefault();
 
             string deviceGroupName = _dataContext.DeviceGroups
-               .Where(g => g.ID == _dataContext.DeviceTypes
-                   .Where(dt => dt.ID.ToString().ToUpper() == device.ID.ToString().ToUpper())
-                   .Select(dt => dt.GroupID)
-                   .FirstOrDefault())
-               .Select(g => g.Name)
-               .FirstOrDefault();
+                        .Where(g => g.ID == _dataContext.DeviceTypes
+                            .Where(dt => dt.ID == deviceType)
+                            .Select(dt => dt.GroupID)
+                            .FirstOrDefault())
+                        .Select(g => g.Name)
+                        .FirstOrDefault();
 
-            if (deviceGroupName == "Producer")
+            if (deviceGroupName == "Consumer")
             {
-                sums = new PowerUsage();
-                sums.TimestampPowerPairs = new List<TimestampPowerPair>();
-                sums.ID = device.ID;
-
-                var powerUsageData = deviceTypes
-                    .Where(p => device.ID.ToString().ToUpper() == p.ID.ToString().ToUpper())
-                    .ToList()
-                    .SelectMany(p => p.TimestampPowerPairs)
-                    .Where(t => t.Timestamp >= startOfMonth && t.Timestamp <= endOfMonth);
-
-                sum = powerUsageData.Sum(p => p.PowerUsage);
-
-                var tsp = new TimestampPowerPair();
-                tsp.PowerUsage = sum;
-                sums.TimestampPowerPairs.Add(tsp);
-                listPU.Add(sums);
+                double sum = 0;
+                var pu2 = GetPowerUsageFor7Days(device, direction);
+                if (pu == null)
+                {
+                    pu = pu2;
+                    continue;
+                }
+                foreach (var tsp in pu2.TimestampPowerPairs)
+                {
+                    foreach (var y in pu.TimestampPowerPairs)
+                    {
+                        if (y.Timestamp == tsp.Timestamp)
+                            y.PowerUsage += tsp.PowerUsage;
+                    }
+                }
             }
         }
 
-        return listPU;
+        return pu;
     }
 
-    public PowerUsage GetPowerUsagesForEachDayProduction(int direction)
+    public PowerUsage GetPowerUsagesForEachDayProductionWeek(int direction)
+    {
+        var devices = _dataContext.Devices.Select(d => d.ID);
+
+        PowerUsage pu = null;
+
+        foreach (var device in devices)
+        {
+            var deviceType = _dataContext.Devices
+                            .Where(d => d.ID == device)
+                            .Select(d => d.DeviceTypeID)
+                            .FirstOrDefault();
+
+            string deviceGroupName = _dataContext.DeviceGroups
+                        .Where(g => g.ID == _dataContext.DeviceTypes
+                            .Where(dt => dt.ID == deviceType)
+                            .Select(dt => dt.GroupID)
+                            .FirstOrDefault())
+                        .Select(g => g.Name)
+                        .FirstOrDefault();
+
+            if (deviceGroupName == "Producer")
+            {
+                double sum = 0;
+                var pu2 = GetPowerUsageFor7Days(device, direction);
+                if (pu == null)
+                {
+                    pu = pu2;
+                    continue;
+                }
+                foreach (var tsp in pu2.TimestampPowerPairs)
+                {
+                    foreach (var y in pu.TimestampPowerPairs)
+                    {
+                        if (y.Timestamp == tsp.Timestamp)
+                            y.PowerUsage += tsp.PowerUsage;
+                    }
+                }
+            }
+        }
+
+        return pu;
+    }
+
+    public PowerUsage GetPowerUsagesForEachDayProduction24h(int direction)
+    {
+        var devices = _dataContext.Devices.Select(d => d.ID);
+
+        PowerUsage pu = null;
+
+        foreach (var device in devices)
+        {
+            var deviceType = _dataContext.Devices
+                            .Where(d => d.ID == device)
+                            .Select(d => d.DeviceTypeID)
+                            .FirstOrDefault();
+
+            string deviceGroupName = _dataContext.DeviceGroups
+                        .Where(g => g.ID == _dataContext.DeviceTypes
+                            .Where(dt => dt.ID == deviceType)
+                            .Select(dt => dt.GroupID)
+                            .FirstOrDefault())
+                        .Select(g => g.Name)
+                        .FirstOrDefault();
+
+            if (deviceGroupName == "Producer")
+            {
+                double sum = 0;
+                var pu2 = GetPowerUsageForDevicePast24Hours(device, direction);
+                if (pu == null)
+                {
+                    pu = pu2;
+                    continue;
+                }
+                foreach (var tsp in pu2.TimestampPowerPairs)
+                {
+                    foreach (var y in pu.TimestampPowerPairs)
+                    {
+                        if (y.Timestamp == tsp.Timestamp)
+                            y.PowerUsage += tsp.PowerUsage;
+                    }
+                }
+            }
+        }
+
+        return pu;
+    }
+
+    public PowerUsage GetPowerUsagesForEachDayConsumption24h(int direction)
+    {
+        var devices = _dataContext.Devices.Select(d => d.ID);
+
+        PowerUsage pu = null;
+
+        foreach (var device in devices)
+        {
+            var deviceType = _dataContext.Devices
+                            .Where(d => d.ID == device)
+                            .Select(d => d.DeviceTypeID)
+                            .FirstOrDefault();
+
+            string deviceGroupName = _dataContext.DeviceGroups
+                        .Where(g => g.ID == _dataContext.DeviceTypes
+                            .Where(dt => dt.ID == deviceType)
+                            .Select(dt => dt.GroupID)
+                            .FirstOrDefault())
+                        .Select(g => g.Name)
+                        .FirstOrDefault();
+
+            if (deviceGroupName == "Consumer")
+            {
+                double sum = 0;
+                var pu2 = GetPowerUsageForDevicePast24Hours(device, direction);
+                if (pu == null)
+                {
+                    pu = pu2;
+                    continue;
+                }
+                foreach (var tsp in pu2.TimestampPowerPairs)
+                {
+                    foreach (var y in pu.TimestampPowerPairs)
+                    {
+                        if (y.Timestamp == tsp.Timestamp)
+                            y.PowerUsage += tsp.PowerUsage;
+                    }
+                }
+            }
+        }
+
+        return pu;
+    }
+
+
+    public PowerUsage GetPowerUsagesForEachDayProductionMonth(int direction)
     {
         var devices = _dataContext.Devices.Select(d => d.ID);
 
@@ -956,7 +1087,6 @@ public class PowerUsageRepository : IPowerUsageRepository
         PowerUsage pu = new PowerUsage();
         pu.ID = deviceID;
         pu.TimestampPowerPairs = new List<TimestampPowerPair>();
-        TimestampPowerPair tsp = new TimestampPowerPair();
 
         var startOf24Period = direction > 0
             ? utcNow
@@ -981,6 +1111,7 @@ public class PowerUsageRepository : IPowerUsageRepository
 
         foreach(var powerUsage in powerUsages)
         {
+            TimestampPowerPair tsp = new TimestampPowerPair();
             tsp.Timestamp = powerUsage.Timestamp;
             tsp.PowerUsage = powerUsage.PowerUsage;
             pu.TimestampPowerPairs.Add(tsp);
@@ -1421,10 +1552,10 @@ public class PowerUsageRepository : IPowerUsageRepository
         return pu;
     }
 
-    public PowerUsage GetDeviceWithMaxPowerUsagePreviousMonthConsumption(Guid userID)
+    public PowerUsage GetDeviceWithMaxPowerUsagePreviousMonthConsumption(Guid userID, int direction) // ubacen direction da diktira koliko meseci ide unazad (direction => broj meseci)
     {
         DateTime endDate = DateTime.Now;
-        DateTime startDate = endDate.AddDays(-30);
+        DateTime startDate = endDate.AddMonths( -1 * direction );
 
         PowerUsage pu = new PowerUsage();
         pu.TimestampPowerPairs = new List<TimestampPowerPair>();
@@ -1471,10 +1602,10 @@ public class PowerUsageRepository : IPowerUsageRepository
            return pu;
     }
 
-    public PowerUsage GetDeviceWithMaxPowerUsagePreviousMonthProduction(Guid userID)
+    public PowerUsage GetDeviceWithMaxPowerUsagePreviousMonthProduction(Guid userID, int direction)
     {
         DateTime endDate = DateTime.Now;
-        DateTime startDate = endDate.AddDays(-30);
+        DateTime startDate = endDate.AddMonths( -1 * direction );
 
         PowerUsage pu = new PowerUsage();
         pu.TimestampPowerPairs = new List<TimestampPowerPair>();
@@ -1682,6 +1813,167 @@ public class PowerUsageRepository : IPowerUsageRepository
 
         return savedEnergy;
     }
+
+    public double savedEnergyForUserConsumer(Guid userID, int direction)
+    {
+        DateTime endDate = DateTime.Now;
+        DateTime startDate = DateTime.Now;
+
+        if (direction == 1)
+        {
+            endDate = DateTime.Now;
+            startDate = endDate.AddMonths(-1);
+        }
+
+        if (direction == 2)
+        {
+            endDate = DateTime.Now.AddMonths(-1);
+            startDate = endDate.AddMonths(-1);
+        }
+
+
+        double sum = 0;
+
+        var devices = _deviceRepository.GetDevicesForUser(userID);
+
+        foreach(var device in devices)
+        {
+            var deviceType = _dataContext.Devices
+                            .Where(d => d.ID == device.ID)
+                            .Select(dt => dt.DeviceTypeID)
+                            .FirstOrDefault();
+
+            string deviceGroupName = _dataContext.DeviceGroups
+                        .Where(g => g.ID == _dataContext.DeviceTypes
+                            .Where(dt => dt.ID == deviceType)
+                            .Select(dt => dt.GroupID)
+                            .FirstOrDefault())
+                        .Select(g => g.Name)
+                        .FirstOrDefault();
+
+            if(deviceGroupName == "Consumer")
+            {
+                var powerUsages = mongoCollection.AsQueryable()
+                    .Where(p => p.ID.ToString().ToUpper() == deviceType.ToString().ToUpper())
+                    .SelectMany(p => p.TimestampPowerPairs)
+                    .ToList()
+                    .Where(t => t.Timestamp >= startDate && t.Timestamp <= endDate)
+                    .ToList();
+
+                foreach(var powerUsage in powerUsages)
+                {
+                    sum += powerUsage.PowerUsage;
+                }
+            }
+        }
+
+        return sum;
+    }
+
+    public double savedEnergyForUserProducer(Guid userID, int direction)
+    {
+        DateTime endDate = DateTime.Now;
+        DateTime startDate = DateTime.Now;
+
+        if (direction == 1)
+        {
+            endDate = DateTime.Now;
+            startDate = endDate.AddMonths(-1);
+        }
+
+        if (direction == 2)
+        {
+            endDate = DateTime.Now.AddMonths(-1);
+            startDate = endDate.AddMonths(-1);
+        }
+
+        double sum = 0;
+
+        var devices = _deviceRepository.GetDevicesForUser(userID);
+
+        foreach (var device in devices)
+        {
+            var deviceType = _dataContext.Devices
+                            .Where(d => d.ID == device.ID)
+                            .Select(dt => dt.DeviceTypeID)
+                            .FirstOrDefault();
+
+            string deviceGroupName = _dataContext.DeviceGroups
+                        .Where(g => g.ID == _dataContext.DeviceTypes
+                            .Where(dt => dt.ID == deviceType)
+                            .Select(dt => dt.GroupID)
+                            .FirstOrDefault())
+                        .Select(g => g.Name)
+                        .FirstOrDefault();
+
+            if (deviceGroupName == "Producer")
+            {
+                var powerUsages = mongoCollection.AsQueryable()
+                    .Where(p => p.ID.ToString().ToUpper() == deviceType.ToString().ToUpper())
+                    .SelectMany(p => p.TimestampPowerPairs)
+                    .ToList()
+                    .Where(t => t.Timestamp >= startDate && t.Timestamp <= endDate)
+                    .ToList();
+
+                foreach (var powerUsage in powerUsages)
+                {
+                    sum += powerUsage.PowerUsage;
+                }
+            }
+        }
+
+        return sum;
+    }
+
+    public double savedEnergyForUserConsumer(Guid userID)
+    {
+        var previousMonth = savedEnergyForUserConsumer(userID, 2);
+        var thisMonth = savedEnergyForUserConsumer(userID, 1);
+
+        var savedEnergy = ((previousMonth - thisMonth) / previousMonth) * 100;
+
+        return savedEnergy;
+    }
+
+    public double savedEnergyForUserProducer(Guid userID)
+    {
+        var previousMonth = savedEnergyForUserProducer(userID, 2);
+        var thisMonth = savedEnergyForUserProducer(userID, 1);
+
+        var savedEnergy = ((previousMonth - thisMonth) / previousMonth) * 100;
+
+        return savedEnergy;
+    }
+
+    public PowerUsage GetPowerUsageForAMonthConsumption(Guid deviceId, int direction)
+    {
+        Guid deviceTypeID = _dataContext.Devices
+            .Where(d => d.ID == deviceId)
+            .Select(d => d.DeviceTypeID)
+            .FirstOrDefault();
+
+        var powerUsage = new PowerUsage();
+        powerUsage.TimestampPowerPairs = new List<TimestampPowerPair>();
+        var today = DateTime.Today;
+
+        for (int i = 1; i <= 31; i++)
+        {
+            var day = today.AddDays(i * direction);
+            var powerUsageD = GetPowerUsageForDay(deviceId, day);
+            var ts = new TimestampPowerPair();
+            ts.PowerUsage = powerUsageD;
+            ts.Timestamp = day;
+            powerUsage.TimestampPowerPairs.Add(ts);
+
+        }
+
+        if (direction == -1)
+            powerUsage.TimestampPowerPairs.Reverse();
+
+        return powerUsage;
+    }
+
+
 
     public double percentPowerUsageForPreviousHour(Guid deviceID)
     {

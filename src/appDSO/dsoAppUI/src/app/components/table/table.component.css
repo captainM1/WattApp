@@ -196,7 +196,7 @@ h2{
   font-weight: 500;
 }
 p{
-  text-align: justify;
+  text-align: center;
   
 }
 p span{
@@ -205,4 +205,33 @@ p span{
 }
 input{
   padding: 10px;
+}
+#userInfo{
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+  border-radius: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+#graph{
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+  border-radius: 10px;
+}
+select{
+  color: #026670;
+  border-radius: 10px;
+  border: 2px solid #026670;
+  font-size:16px;
+  font-weight: 500;
+  background-color: white;
+  width: 100%;
+  text-align: center;
+}
+label{
+  color: #026670;
+  font-style: italic;
+  text-align: center;
+}
+#graph-position{
+  margin-left: 20px;
+  margin-right: 0px;
 }
