@@ -146,7 +146,7 @@ export class AuthService {
   }
 
   devicePrevious24h(deviceID : any) : Observable<any>{
-    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/Previous24h/device-usage_per_hour/"+deviceID);
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/Previous24h/device-usage_per_hour_v2/"+deviceID);
   }
 
   groupDevice():Observable<any>{
