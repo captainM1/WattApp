@@ -1637,7 +1637,141 @@ public class PowerUsageRepository : IPowerUsageRepository
         return savedEnergy;
     }
 
-   
+    public double savedEnergyForUserConsumer(Guid userID, int direction)
+    {
+        var endDate = DateTime.Now;
+        var startDate = endDate.AddMonths(-1 * direction);
+
+        double sum = 0;
+
+        var devices = _deviceRepository.GetDevicesForUser(userID);
+
+        foreach(var device in devices)
+        {
+            var deviceType = _dataContext.Devices
+                            .Where(d => d.ID == device.ID)
+                            .Select(dt => dt.DeviceTypeID)
+                            .FirstOrDefault();
+
+            string deviceGroupName = _dataContext.DeviceGroups
+                        .Where(g => g.ID == _dataContext.DeviceTypes
+                            .Where(dt => dt.ID == deviceType)
+                            .Select(dt => dt.GroupID)
+                            .FirstOrDefault())
+                        .Select(g => g.Name)
+                        .FirstOrDefault();
+
+            if(deviceGroupName == "Consumer")
+            {
+                var powerUsages = mongoCollection.AsQueryable()
+                    .Where(p => p.ID.ToString().ToUpper() == deviceType.ToString().ToUpper())
+                    .SelectMany(p => p.TimestampPowerPairs)
+                    .ToList()
+                    .Where(t => t.Timestamp >= startDate && t.Timestamp <= endDate)
+                    .ToList();
+
+                foreach(var powerUsage in powerUsages)
+                {
+                    sum += powerUsage.PowerUsage;
+                }
+            }
+        }
+
+        return sum;
+    }
+
+    public double savedEnergyForUserProducer(Guid userID, int direction)
+    {
+        var endDate = DateTime.Now;
+        var startDate = endDate.AddMonths(-1 * direction);
+
+        double sum = 0;
+
+        var devices = _deviceRepository.GetDevicesForUser(userID);
+
+        foreach (var device in devices)
+        {
+            var deviceType = _dataContext.Devices
+                            .Where(d => d.ID == device.ID)
+                            .Select(dt => dt.DeviceTypeID)
+                            .FirstOrDefault();
+
+            string deviceGroupName = _dataContext.DeviceGroups
+                        .Where(g => g.ID == _dataContext.DeviceTypes
+                            .Where(dt => dt.ID == deviceType)
+                            .Select(dt => dt.GroupID)
+                            .FirstOrDefault())
+                        .Select(g => g.Name)
+                        .FirstOrDefault();
+
+            if (deviceGroupName == "Producer")
+            {
+                var powerUsages = mongoCollection.AsQueryable()
+                    .Where(p => p.ID.ToString().ToUpper() == deviceType.ToString().ToUpper())
+                    .SelectMany(p => p.TimestampPowerPairs)
+                    .ToList()
+                    .Where(t => t.Timestamp >= startDate && t.Timestamp <= endDate)
+                    .ToList();
+
+                foreach (var powerUsage in powerUsages)
+                {
+                    sum += powerUsage.PowerUsage;
+                }
+            }
+        }
+
+        return sum;
+    }
+
+    public double savedEnergyForUserConsumer(Guid userID)
+    {
+        var previousMonth = savedEnergyForUserConsumer(userID, 2);
+        var thisMonth = savedEnergyForUserConsumer(userID, 1);
+
+        var savedEnergy = ((previousMonth - thisMonth) / previousMonth) * 100;
+
+        return savedEnergy;
+    }
+
+    public double savedEnergyForUserProducer(Guid userID)
+    {
+        var previousMonth = savedEnergyForUserProducer(userID, 2);
+        var thisMonth = savedEnergyForUserProducer(userID, 1);
+
+        var savedEnergy = ((previousMonth - thisMonth) / previousMonth) * 100;
+
+        return savedEnergy;
+    }
+
+    public PowerUsage GetPowerUsageForAMonthConsumption(Guid deviceId, int direction)
+    {
+        Guid deviceTypeID = _dataContext.Devices
+            .Where(d => d.ID == deviceId)
+            .Select(d => d.DeviceTypeID)
+            .FirstOrDefault();
+
+        var powerUsage = new PowerUsage();
+        powerUsage.TimestampPowerPairs = new List<TimestampPowerPair>();
+        var today = DateTime.Today;
+
+        for (int i = 1; i <= 31; i++)
+        {
+            var day = today.AddDays(i * direction);
+            var powerUsageD = GetPowerUsageForDay(deviceId, day);
+            var ts = new TimestampPowerPair();
+            ts.PowerUsage = powerUsageD;
+            ts.Timestamp = day;
+            powerUsage.TimestampPowerPairs.Add(ts);
+
+        }
+
+        if (direction == -1)
+            powerUsage.TimestampPowerPairs.Reverse();
+
+        return powerUsage;
+    }
+
+
 
     public double percentPowerUsageForPreviousHour(Guid deviceID)
     {

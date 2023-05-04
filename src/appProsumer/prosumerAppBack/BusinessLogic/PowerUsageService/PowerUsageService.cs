@@ -389,4 +389,17 @@ public class PowerUsageService:IPowerUsageService
         var powerUsage = _repository.percentPowerUsageForPreviousHour(deviceID);
         return powerUsage;
     }
+
+    public double savedEnergyForUserProducer(Guid userID)
+    {
+        var powerUsage = _repository.savedEnergyForUserProducer(userID);
+        return powerUsage;
+    }
+
+    public double savedEnergyForUserConsumer(Guid userID)
+    {
+        var powerUsage = _repository.savedEnergyForUserConsumer(userID);
+        return powerUsage;
+    }
+
 }

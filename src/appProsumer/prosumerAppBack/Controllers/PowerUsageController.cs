@@ -461,4 +461,18 @@ public class PowerUsageController : ControllerBase
         var powerUsage = _powerUsageService.DeviceSystemPowerUsage(deviceID);
         return Ok(powerUsage);
     }
+    
+    [HttpGet("power-usage/user-usage-saved-energy-month/production/{userID}")]
+    public ActionResult<double> savedEnergyForUserProducer(Guid userID)
+    {
+        var powerUsage = _powerUsageService.savedEnergyForUserProducer(userID);
+        return Ok(powerUsage);
+    }
+
+    [HttpGet("power-usage/user-usage-saved-energy-month/production/{userID}")]
+    public ActionResult<double> savedEnergyForUserConsumer(Guid userID)
+    {
+        var powerUsage = _powerUsageService.savedEnergyForUserConsumer(userID);
+        return Ok(powerUsage);
+    }
 }
