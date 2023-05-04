@@ -24,4 +24,6 @@ public interface IUserService
     Task CreatePasswordResetToken(string email);
     Task<User> GetUserByPasswordResetTokenAsync(string passwordResetToken);
     Task ResetPasswordToken(string token);
+    public bool DSOHasControl(Guid userID);
+    public bool SharesWhidDSO(Guid userID);
 }

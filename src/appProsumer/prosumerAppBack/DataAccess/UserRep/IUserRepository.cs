@@ -18,4 +18,6 @@ public interface IUserRepository
     Task CreatePasswordResetToken(string email);
     Task<User> GetUserByPasswordResetTokenAsync(string passwordResetToken);
     Task ResetPasswordToken(string token);
+    public bool SharesWhidDSO(Guid userID);
+    public bool DSOHasControl(Guid userID);
 }

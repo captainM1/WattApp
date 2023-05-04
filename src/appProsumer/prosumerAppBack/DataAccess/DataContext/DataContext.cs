@@ -169,7 +169,7 @@ namespace prosumerAppBack.DataAccess
                 AddDefaultDisp()
             );
             modelBuilder.Entity<Device>().HasData(
-                new Device{ID=new Guid("32EA7105-F582-4441-AE81-B738C4284F7E"), MacAdress="00-1B-63-84-45-E6", DeviceTypeID=new Guid("32EA7105-F582-4441-AE81-B738C4284F7E"), OwnerID = new Guid("6BCE51EA-9824-4393-B9A5-732B5A9B7F52")}
+                new Device{ID=new Guid("32EA7105-F582-4441-AE81-B738C4284F7E"), MacAdress="00-1B-63-84-45-E6", DeviceTypeID=new Guid("32EA7105-F582-4441-AE81-B738C4284F7E"), OwnerID = new Guid("6BCE51EA-9824-4393-B9A5-732B5A9B7F52"), DeviceName = "name 1"}
             );
         }
     }
