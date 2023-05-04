@@ -9,7 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatToolbarModule } from '@angular/material/toolbar';
-
+import { MatDialogModule } from '@angular/material/dialog';
 //import {NgToastModule} from 'ng-angular-popup'
 import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -51,7 +51,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { DeviceEditPopupComponent } from './components/device-edit-popup/device-edit-popup.component';
 
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -78,8 +77,7 @@ import { DeviceEditPopupComponent } from './components/device-edit-popup/device-
     PermissionsComponent,
     FilterPipe,
     WelcomeComponent,
-    DashboardComponent,
-    DeviceEditPopupComponent
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
@@ -99,9 +97,11 @@ import { DeviceEditPopupComponent } from './components/device-edit-popup/device-
     ConfirmDialogModule,
     Ng2SearchPipeModule,
     [MatProgressSpinnerModule],
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatDialogModule
   ],
   providers: [MessageService,ConfirmationService, {provide:HTTP_INTERCEPTORS,useClass:TokenInterceptor,multi:true}],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents:[DeviceEditPopupComponent]
 })
 export class AppModule { }

@@ -7,7 +7,7 @@ import Chart from 'chart.js/auto';
 import { ViewChild, ElementRef } from '@angular/core';
 import { ConfirmationService, MessageService, ConfirmEventType } from 'primeng/api';
 import { DeviceEditPopupComponent } from '../device-edit-popup/device-edit-popup.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig} from '@angular/material/dialog';
 
 
 @Component({
@@ -35,7 +35,7 @@ export class DeviceDetailsComponent implements OnInit {
   hourly: any = [];
   data: any = [];
   formattedLabels: any = [];
-  deviceToday: any;
+  deviceToday: any = 0;
   chart:any;
 
   constructor(
@@ -44,7 +44,7 @@ export class DeviceDetailsComponent implements OnInit {
     private router: Router,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-    
+    private dialog: MatDialog
   )
   {}
 
@@ -89,8 +89,9 @@ export class DeviceDetailsComponent implements OnInit {
           console.error('Error fetching device future:', error);
         })
       
-      this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/Next24h/device-usage_per_hour_v2/${this.deviceId}`)
+      this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/Next24h/device-usage_per_hour/${this.deviceId}`)
       .subscribe((data:any) =>{
+        console.log(data);
         this.next24HoursDate = data.timestampPowerPairs.map((item: any) => item.timestamp);
         this.next24HoursPower = data.timestampPowerPairs.map((item: any) => item.powerUsage);
       },
@@ -98,7 +99,7 @@ export class DeviceDetailsComponent implements OnInit {
          console.error('Error fetching todays info:', error);
       })
 
-      this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/Previous24h/device-usage_per_hour_v2/${this.deviceId}`)
+      this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/Previous24h/device-usage_per_hour/${this.deviceId}`)
       .subscribe((data:any) =>{
         console.log(data);
         this.last24HoursDate = data.timestampPowerPairs.map((item: any) => item.timestamp);
@@ -166,7 +167,9 @@ export class DeviceDetailsComponent implements OnInit {
     );
   }
 
-  
+  edit(){
+    this.showEditPopup = true;
+  }
 
   showPermissions(){
     this.router.navigate(['/permissions', this.deviceId]);

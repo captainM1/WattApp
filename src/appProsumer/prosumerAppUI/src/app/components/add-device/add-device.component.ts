@@ -14,9 +14,6 @@ import { CookieService } from 'ngx-cookie-service';
   styleUrls: ['./add-device.component.css']
 })
 export class AddDeviceComponent {
-  showConsumer: boolean = true;
-  showStorage: boolean = false;
-  showProducer: boolean = false;
 
   groups: any[] = [];
   selectedGroup!: string;
@@ -109,7 +106,6 @@ export class AddDeviceComponent {
   }
 
   onSubmit() {
-    if (this.showConsumer) {
       const formData = this.addDeviceForm.value;
       console.log(formData);
       const headers = new HttpHeaders()
@@ -120,7 +116,6 @@ export class AddDeviceComponent {
           console.log(response);
           this.router.navigate(['home']);
         });
-    }
   }
 
   goBack(){

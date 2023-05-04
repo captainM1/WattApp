@@ -32,14 +32,15 @@
                 </button>
             </div>
         </div>
-        <div class="row" *ngIf="showDetails">
+        <div class="row detalji mb-3 pt-3" *ngIf="showDetails">
             <div class="col-8">
-            <p><span>Manufacturer:</span> {{device?.manufacturerName}}</p>
-            <p><span>Wattage:</span> {{device?.deviceWattage}}</p>
-            <p><span>Mac Address:</span> {{device?.macAdress}}</p>
+                <p><span>Name:</span> {{device?.deviceName}}</p>
+                <p><span>Manufacturer:</span> {{device?.manufacturerName}}</p>
+                <p><span>Wattage:</span> {{device?.deviceWattage}}</p>
+                <p><span>Mac Address:</span> {{device?.macAdress}}</p>
             </div>
-            <div class="col-4 centriranje" >
-            <button mat-icon-button class="simple edit align-center">
+            <div class="col-4 klasa" >
+            <button mat-icon-button class="edit" (click)="edit()">
                 <mat-icon>edit</mat-icon>
             </button>
             </div>

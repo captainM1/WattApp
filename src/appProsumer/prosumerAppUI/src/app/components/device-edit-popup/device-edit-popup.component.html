@@ -1,4 +1,11 @@
-<form (ngSubmit)="onSubmit()">
-    <!-- device detail fields -->
+<form class="normal-form"(ngSubmit)="onSubmit()">
+    <div class="form-group">
+        <label for="deviceName">Device Name:</label>
+        <input type="text" class="form-control" formControlName="deviceName">
+    </div>
+    <div class="form-group">
+        <label for="macAddress">Device Mac Address:</label>
+        <input type="text" class="form-control" formControlName="macAddress">
+    </div>
     <button type="submit">Save</button>
 </form>
