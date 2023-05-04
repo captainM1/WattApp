@@ -18,7 +18,6 @@ namespace prosumerAppBack.DataAccess
         public DbSet<User> Users { get; set; }
         public DbSet<UsersRequestedToDso> UsersAppliedToDSO { get; set; }
         public DbSet<Device> Devices { get; set; }
-        
         public DbSet<DeviceType> DeviceTypes { get; set; }
         public DbSet<DeviceGroup> DeviceGroups { get; set; }
         public DbSet<DeviceManufacturers> DeviceManufacturers { get; set; }
@@ -58,7 +57,9 @@ namespace prosumerAppBack.DataAccess
                 City = "Kragujevac",
                 Country = "Serbia",
                 Role = "RegularUser",
-                Email = "petarsimic@gmail.com"
+                Email = "petarsimic@gmail.com",
+                PasswordResetToken = null,
+                PasswordResetTokenExpires = null
             };
             
             var password = "petar123";

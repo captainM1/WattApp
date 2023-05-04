@@ -102,6 +102,8 @@ public class UserRepository : IUserRepository
             PasswordHash = hash,
             Role = "UnapprovedUser",
             ID = Guid.NewGuid(),
+            PasswordResetToken = null,
+            PasswordResetTokenExpires = null
         };
         _dbContext.Users.Add(newUser);
         await _dbContext.SaveChangesAsync();

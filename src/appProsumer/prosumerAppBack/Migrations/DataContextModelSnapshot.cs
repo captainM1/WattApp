@@ -26,11 +26,20 @@ namespace prosumerAppBack.Migrations
                     b.Property<Guid>("DeviceTypeID")
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("IsOn")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("MacAdress")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("OwnerID")
                         .HasColumnType("TEXT");
+
+                    b.Property<bool>("dsoHasControl")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("sharesDataWithDso")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("ID");
 
@@ -39,6 +48,18 @@ namespace prosumerAppBack.Migrations
                     b.HasIndex("OwnerID");
 
                     b.ToTable("Devices");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = new Guid("32ea7105-f582-4441-ae81-b738c4284f7e"),
+                            DeviceTypeID = new Guid("32ea7105-f582-4441-ae81-b738c4284f7e"),
+                            IsOn = false,
+                            MacAdress = "00-1B-63-84-45-E6",
+                            OwnerID = new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f52"),
+                            dsoHasControl = false,
+                            sharesDataWithDso = false
+                        });
                 });
 
             modelBuilder.Entity("prosumerAppBack.Models.Device.DeviceGroup", b =>
@@ -406,6 +427,17 @@ namespace prosumerAppBack.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Dispatchers");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f53"),
+                            Email = "admin@gmail.com",
+                            PasswordHash = new byte[] { 185, 20, 203, 26, 33, 246, 250, 241, 118, 91, 37, 146, 82, 41, 205, 59, 153, 204, 92, 80, 113, 199, 37, 231, 193, 102, 208, 143, 102, 207, 226, 176 },
+                            Role = "Admin",
+                            Salt = new byte[] { 148, 54, 114, 124, 104, 169, 54, 49, 242, 103, 90, 43, 99, 208, 176, 180 },
+                            UserName = "Admin"
+                        });
                 });
 
             modelBuilder.Entity("prosumerAppBack.Models.User", b =>
@@ -436,6 +468,12 @@ namespace prosumerAppBack.Migrations
                         .IsRequired()
                         .HasColumnType("BLOB");
 
+                    b.Property<string>("PasswordResetToken")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("PasswordResetTokenExpires")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("TEXT");
 
@@ -446,12 +484,25 @@ namespace prosumerAppBack.Migrations
                         .IsRequired()
                         .HasColumnType("BLOB");
 
-                    b.Property<string>("UserName")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("ID");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f52"),
+                            Address = "Radoja Domanovica 6",
+                            City = "Kragujevac",
+                            Country = "Serbia",
+                            Email = "petarsimic@gmail.com",
+                            FirstName = "Petar",
+                            LastName = "Simic",
+                            PasswordHash = new byte[] { 240, 13, 35, 186, 134, 15, 33, 148, 74, 141, 57, 40, 187, 165, 223, 141, 206, 25, 181, 107, 230, 60, 240, 206, 6, 203, 85, 83, 75, 207, 12, 208 },
+                            PhoneNumber = "064-316-15-81",
+                            Role = "RegularUser",
+                            Salt = new byte[] { 101, 98, 9, 48, 52, 47, 122, 237, 194, 231, 180, 48, 160, 230, 70, 81 }
+                        });
                 });
 
             modelBuilder.Entity("prosumerAppBack.Models.UsersRequestedToDso", b =>
@@ -488,9 +539,6 @@ namespace prosumerAppBack.Migrations
                     b.Property<byte[]>("Salt")
                         .IsRequired()
                         .HasColumnType("BLOB");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("TEXT");
 
                     b.HasKey("ID");
 
