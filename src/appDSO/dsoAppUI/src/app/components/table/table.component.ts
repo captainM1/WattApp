@@ -616,8 +616,8 @@ export class TableComponent implements OnInit, AfterViewInit, OnChanges {
     }
    this.auth.devicePrevious24h(this.selectedDevice.deviceId).subscribe(
       (response : any) => {
-        this.graph24prev = response[0]['timestampPowerPairs'];
-        console.log("res", response[0]['timestampPowerPairs']);
+        this.graph24prev = response['timestampPowerPairs'];
+        console.log("res", response['timestampPowerPairs']);
         this.makeDataGraph24(this.graph24prev);
         this.deviceGraphPrev24();
       }
@@ -629,7 +629,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnChanges {
   makeDataGraph24(dataGraph:any){
     this.timeStampDevice24h = [];
     this.powerUsageDevice24h = [];
-    for(let i = 0; i < dataGraph.length-3; i++){
+    for(let i = 0; i < dataGraph.length; i++){
       this.timeStampDevice24h.push(this.graph24prev[i]['timestamp']);
       this.powerUsageDevice24h.push(this.graph24prev[i]['powerUsage']);
     }

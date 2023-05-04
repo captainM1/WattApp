@@ -16,13 +16,13 @@ import { Subscription } from 'rxjs';
 })
 export class HomeComponent implements OnInit, AfterViewInit{
 	
-	
+	public selectedGraph!:any;
 	constructor(
 		private auth : AuthService
 	){}
 
 	ngOnInit(): void {	
-	
+		this.selectedGraph = 'current';
 		// temperature
 		this.giveMeWeather();
 		this.getAllUserInfo();
@@ -32,10 +32,6 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		this.getDeviceGroup();
 		this.Day();
 		this.eachDeviceConsumptingPrevMonth();
-		
-		
-		
-		
 	}
 
 	ngAfterViewInit(): void {
@@ -48,14 +44,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		this.getProductionCurrent();
 		this.nextMonthProductionSystem();
 		this.prevMonthProductionSystem();
-		
-		
-		
 	}
-	
-	chartInstance!: Chart;
-  	subscription!: Subscription;
- 
 	
 	ngOnDestroy(): void {
     if (this.subscription) {
@@ -134,15 +123,16 @@ export class HomeComponent implements OnInit, AfterViewInit{
 
 	public savedC!:any;
 	public savedP!:any;
-	
-		currentDataC!:[];
-		currentDataP!:[];
-		timestamps1!:any[];
-		timestamps2!:any[];
-		powerusage1!:any[];
-		powerusage2!:any[];
+		
+	currentDataC!:[];
+	currentDataP!:[];
+	timestamps1!:any[];
+	timestamps2!:any[];
+	powerusage1!:any[];
+	powerusage2!:any[];
 
-	
+	chartInstance!: Chart;
+	subscription!: Subscription;
 	
 	
 	getDate(){
@@ -395,10 +385,6 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			options: options,
 			});
 		}
-// prevMonthEachDevice
-
-
-
 // PRODUCTION 
 // currentProductionSYS
 		prevMonthProductionSystem(){
@@ -583,7 +569,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		}
 		
 //CONSUMPTION		
-		selectedGraph = 'current'; // set default graph
+		 // set default graph
 		displayGraphConsumption(graph: string) {
  
 		this.selectedGraph = graph;
@@ -647,32 +633,6 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			console.log("ALL", this.all);
 		}
 		
-		
-		lineChartConsumptionProduction(data1 : any[], label1 : any[], data2 : any[], label2:any[]){
-			this.Day();
-			const data = {
-				labels: label1,
-				datasets: [
-				  {
-					label: 'Consumtion',
-					data: data1,
-				  },
-				  {
-					label: 'Production',
-					data: data2,
-				  }
-				]
-			  };
-				const stackedLine = new Chart(this.consumptionProduction.nativeElement, {
-					type: 'line',
-					data: data,
-					
-				});
-			 }
-		
-	
-		
-		
 		Day(){
 			this.auth.currentConsumptionDay().subscribe(
 				(response:any)=>{
@@ -683,10 +643,9 @@ export class HomeComponent implements OnInit, AfterViewInit{
 					this.prevHour = response['timestampPowerPairs'][12]['powerUsage'].toFixed(2);
 					this.currentHour = response['timestampPowerPairs'][13]['powerUsage'].toFixed(2);
 					this.razlika = (((this.currentHour-this.prevHour)*100)/100).toFixed(2);
-					
 				}
-				)
-				this.auth.currentProcustionDay().subscribe(
+			)
+				this.auth.currentProductionDay().subscribe(
 					(response:any)=>{
 						this.currentDataP = response['timestampPowerPairs'];
 						this.timestamps1 = this.currentDataP.map((obj: { timestamp: any[]; }) => obj.timestamp.slice(11, 16));
@@ -695,7 +654,6 @@ export class HomeComponent implements OnInit, AfterViewInit{
 						this.prevHour1 = response['timestampPowerPairs'][12]['powerUsage'].toFixed(2);
 						this.currentHour1 = response['timestampPowerPairs'][13]['powerUsage'].toFixed(2);
 						this.razlika1 = (((this.currentHour1-this.prevHour1)*100)/100).toFixed(2);
-					
 					}
 				)
 			
@@ -712,9 +670,33 @@ export class HomeComponent implements OnInit, AfterViewInit{
 					this.savedP = response.toFixed(2);
 				}
 			)
-			
+			this.lineChartConsumptionProduction();
 			
 		}
+
+		lineChartConsumptionProduction(){
+			this.Day();
+			console.log(this.currentDataC);
+			console.log(this.currentDataP)
+			const data = {
+				labels: ['aaa','aaa'],
+				datasets: [
+				  {
+					label: 'Consumtion',
+					data: [10,10,10],
+				  },
+				  {
+					label: 'Production',
+					data: [14,15,74],
+				  }
+				]
+			  };
+				const stackedLine = new Chart(this.consumptionProduction.nativeElement, {
+					type: 'line',
+					data: data
+					
+				});
+			 }
 
 		
 }

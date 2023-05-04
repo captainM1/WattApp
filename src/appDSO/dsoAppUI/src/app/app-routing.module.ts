@@ -30,7 +30,7 @@ const routes: Routes = [
     path: 'requirements', component: RequirementsComponent
   },
   {
-    path:'welcome', component:WelcomeComponent
+    path:'', component:WelcomeComponent
   }
 
 ]

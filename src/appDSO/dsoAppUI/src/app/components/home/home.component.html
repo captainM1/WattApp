@@ -1,10 +1,10 @@
-<ngx-ui-loader
+<!-- <ngx-ui-loader
   fgsColor="#fff"
   pbColor="#fff"
   text="Please wait..."
   textColor="#fff"
 >
-</ngx-ui-loader>
+</ngx-ui-loader> -->
 <app-nav></app-nav>
 <div class="outer" style="margin-top: 90px; margin-left: 0; margin-right: 0;">
 <div class="container">
@@ -116,48 +116,10 @@
                             </div>
                        </div>
                        
+                   </div>
+                       
                     </div>
-                            
-                      </div>
-                  <div class="row">
-                    <h2 class="text-center" style="text-align: center; padding-top: 10px;">Production</h2>
-                        <div class="col">
-                            <div class="card-container">
-                                
-                            </div>
-                        </div>
-                    
-                        <div class="col">
-                            <div class="card-container">
-                                <div class="card" style="width:100%">
-                                    <label for="graphSelect">Select Graph:</label>
-                                    <select [(ngModel)]="selectedGraphEachDeviceProduction" (click)="displayGraphProductionEachDevice(selectedGraphEachDevice)">
-                                        <option value="prev">Previous Month Production Each Device</option>
-                                        <option value="next">Next Month Production Each Device</option>
-                                    </select>
-                                    <div class="card-body" *ngIf="selectedGraphEachDeviceProduction === 'prev'" >
-                                        <!-- <canvas #currentConsumptionSYS></canvas> -->
-                                    </div>
-                                    <div class="card-body" *ngIf="selectedGraphEachDeviceProduction === 'next'">
-                                        <!-- <canvas #prevMonthConsumptionSYS></canvas> -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                <div class="row">
-                    <h2 class="text-center" style="text-align: center; padding-top: 10px;">Consumption</h2>
-                        <div class="col">
-                           
-                        </div>
-                    
-                        <div class="col">
-                            <div class="card-container">
-                               
-                            </div>
-                        </div>
-                    </div>
+         </div>
        </div>
     </div>
 

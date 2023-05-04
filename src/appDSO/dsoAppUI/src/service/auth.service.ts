@@ -146,7 +146,7 @@ export class AuthService {
   }
 
   devicePrevious24h(deviceID : any) : Observable<any>{
-    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/Previous24h/device-usage_per_hour_v2/"+deviceID);
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/Previous24h/device-usage_per_hour/"+deviceID);
   }
 
   groupDevice():Observable<any>{
@@ -172,9 +172,7 @@ export class AuthService {
     return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/next24Hours/consumption/user-every-day-device-usage/"+userID);
 
   }
-  currentConsumptionDay():Observable<any>{
-    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/currentDay/consumption/system");
-  }
+  
   
   consumptionPrevMonth(userID : string) : Observable<any>{
     return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/previousMonth/consumption/user-every-day-device-usage/"+userID);
@@ -197,10 +195,6 @@ export class AuthService {
 
   deviceTypeInfo():Observable<any>{
     return this.http.get(environment.apiUrl + "/api/Device/devices/deviceType-info");
-  }
-
-  currentProcustionDay():Observable<any>{
-    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/current-production/system");
   }
 
   getProductionPrevious24Hours(userID : any):Observable<any>{
@@ -237,5 +231,15 @@ export class AuthService {
 
   getDeviceConsumption(deviceID : any):Observable<any>{
     return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/today/currentPowerUsage/" +deviceID);
+  }
+
+// getAllDispechers
+
+// HOME
+  currentConsumptionDay():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/currentDay/consumption/system");
+  }
+  currentProductionDay():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/currentDay/production/system");
   }
 }
