@@ -105,6 +105,16 @@
         font-size: 9px;
     }
 
+    .edit{
+        width: 50%;
+        margin-left: 20px;
+        background-color: white !important;
+    }
+
+    .edit  mat-icon{
+        color:#026670 !important;
+    }
+
     .simple mat-icon{
         font-size: 18px;
     }

@@ -3,6 +3,12 @@ export interface deviceGroup{
     name: string,
     deviceType: string
 }
+
+export interface deviceTypeInformation{
+    deviceTypeId: string,
+    deviceTypeName: string,
+    groupName: string
+}
 export interface deviceManifacturers{
     manufacturerID: string,
     manufacturerName: string

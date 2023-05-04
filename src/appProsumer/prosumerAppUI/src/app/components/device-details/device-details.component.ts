@@ -6,6 +6,9 @@ import { Router } from '@angular/router';
 import Chart from 'chart.js/auto';
 import { ViewChild, ElementRef } from '@angular/core';
 import { ConfirmationService, MessageService, ConfirmEventType } from 'primeng/api';
+import { DeviceEditPopupComponent } from '../device-edit-popup/device-edit-popup.component';
+import { MatDialog } from '@angular/material/dialog';
+
 
 @Component({
   selector: 'app-device-details',
@@ -40,7 +43,8 @@ export class DeviceDetailsComponent implements OnInit {
     private http: HttpClient,
     private router: Router,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    
   )
   {}
 
@@ -125,7 +129,7 @@ export class DeviceDetailsComponent implements OnInit {
   }
 
   goBack(){
-    this.router.navigate(['/home2']);
+    this.router.navigate(['/home']);
   }
 
   del() {
@@ -153,7 +157,7 @@ export class DeviceDetailsComponent implements OnInit {
     this.http.delete(`${environment.apiUrl}/api/Device/delete-device/${this.deviceId}`)
     .subscribe(
       () => {
-        this.router.navigate(['/home2']);
+        this.router.navigate(['/home']);
       },
       error => {
         console.log(error)
@@ -161,6 +165,8 @@ export class DeviceDetailsComponent implements OnInit {
       }
     );
   }
+
+  
 
   showPermissions(){
     this.router.navigate(['/permissions', this.deviceId]);

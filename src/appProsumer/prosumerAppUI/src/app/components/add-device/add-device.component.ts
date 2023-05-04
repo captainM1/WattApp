@@ -17,7 +17,6 @@ export class AddDeviceComponent {
   showConsumer: boolean = true;
   showStorage: boolean = false;
   showProducer: boolean = false;
-  toggle2Checked = false;
 
   groups: any[] = [];
   selectedGroup!: string;
@@ -41,6 +40,7 @@ export class AddDeviceComponent {
     type:['', Validators.required],
     manufacturer: ['', Validators.required],
     device: ['', Validators.required],
+    deviceName: ['', Validators.required],
     macAddress: ['', Validators.required]
   });
 
@@ -111,20 +111,20 @@ export class AddDeviceComponent {
   onSubmit() {
     if (this.showConsumer) {
       const formData = this.addDeviceForm.value;
-
+  
       const headers = new HttpHeaders()
-        .set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`);
-
-      this.http.post(environment.apiUrl + '/api/Device/devices/add-new', new newDeviceDTO(formData.macAddress, this.selectedDevice), { headers })
+        .set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`); 
+  
+        this.http.post(environment.apiUrl + '/api/Device/devices/add-new', new newDeviceDTO(formData.macAddress, this.selectedDevice, formData.deviceName), { headers })
         .subscribe(response => {
           console.log(response);
-          this.router.navigate(['home2']);
+          this.router.navigate(['home']);
         });
     }
   }
 
-  onToggle2Change(event: any) {
-    this.toggle2Checked = event.target.checked;
+  goBack(){
+    this.router.navigate(['/home']);
   }
 
 }
