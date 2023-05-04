@@ -11,7 +11,7 @@ using prosumerAppBack.DataAccess;
 namespace prosumerAppBack.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230504111349_InitialMigration")]
+    [Migration("20230504145455_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -26,6 +26,9 @@ namespace prosumerAppBack.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("DeviceName")
+                        .HasColumnType("TEXT");
+
                     b.Property<Guid>("DeviceTypeID")
                         .HasColumnType("TEXT");
 
@@ -37,12 +40,6 @@ namespace prosumerAppBack.Migrations
 
                     b.Property<Guid>("OwnerID")
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("dsoHasControl")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("sharesDataWithDso")
-                        .HasColumnType("INTEGER");
 
                     b.HasKey("ID");
 
@@ -56,12 +53,11 @@ namespace prosumerAppBack.Migrations
                         new
                         {
                             ID = new Guid("32ea7105-f582-4441-ae81-b738c4284f7e"),
+                            DeviceName = "name 1",
                             DeviceTypeID = new Guid("32ea7105-f582-4441-ae81-b738c4284f7e"),
                             IsOn = false,
                             MacAdress = "00-1B-63-84-45-E6",
-                            OwnerID = new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f52"),
-                            dsoHasControl = false,
-                            sharesDataWithDso = false
+                            OwnerID = new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f52")
                         });
                 });
 
@@ -436,9 +432,9 @@ namespace prosumerAppBack.Migrations
                         {
                             ID = new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f53"),
                             Email = "admin@gmail.com",
-                            PasswordHash = new byte[] { 185, 20, 203, 26, 33, 246, 250, 241, 118, 91, 37, 146, 82, 41, 205, 59, 153, 204, 92, 80, 113, 199, 37, 231, 193, 102, 208, 143, 102, 207, 226, 176 },
+                            PasswordHash = new byte[] { 147, 192, 144, 49, 149, 16, 75, 196, 135, 4, 191, 223, 191, 49, 252, 185, 119, 183, 153, 214, 64, 64, 127, 220, 37, 236, 153, 170, 201, 32, 242, 239 },
                             Role = "Admin",
-                            Salt = new byte[] { 148, 54, 114, 124, 104, 169, 54, 49, 242, 103, 90, 43, 99, 208, 176, 180 },
+                            Salt = new byte[] { 159, 15, 17, 46, 85, 203, 29, 102, 217, 134, 80, 160, 248, 80, 50, 148 },
                             UserName = "Admin"
                         });
                 });
@@ -487,6 +483,12 @@ namespace prosumerAppBack.Migrations
                         .IsRequired()
                         .HasColumnType("BLOB");
 
+                    b.Property<bool>("dsoHasControl")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("sharesDataWithDso")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("ID");
 
                     b.ToTable("Users");
@@ -501,10 +503,12 @@ namespace prosumerAppBack.Migrations
                             Email = "petarsimic@gmail.com",
                             FirstName = "Petar",
                             LastName = "Simic",
-                            PasswordHash = new byte[] { 240, 13, 35, 186, 134, 15, 33, 148, 74, 141, 57, 40, 187, 165, 223, 141, 206, 25, 181, 107, 230, 60, 240, 206, 6, 203, 85, 83, 75, 207, 12, 208 },
+                            PasswordHash = new byte[] { 182, 53, 0, 236, 184, 26, 192, 244, 217, 135, 95, 15, 185, 15, 229, 209, 216, 215, 212, 77, 90, 233, 150, 200, 219, 243, 196, 81, 36, 217, 167, 4 },
                             PhoneNumber = "064-316-15-81",
                             Role = "RegularUser",
-                            Salt = new byte[] { 101, 98, 9, 48, 52, 47, 122, 237, 194, 231, 180, 48, 160, 230, 70, 81 }
+                            Salt = new byte[] { 216, 88, 195, 235, 170, 213, 115, 43, 237, 6, 98, 21, 39, 13, 169, 241 },
+                            dsoHasControl = false,
+                            sharesDataWithDso = false
                         });
                 });
 
@@ -542,6 +546,12 @@ namespace prosumerAppBack.Migrations
                     b.Property<byte[]>("Salt")
                         .IsRequired()
                         .HasColumnType("BLOB");
+
+                    b.Property<bool>("dsoHasControl")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("sharesDataWithDso")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("ID");
 

@@ -104,7 +104,9 @@ namespace prosumerAppBack.Migrations
                     Role = table.Column<string>(type: "TEXT", nullable: true),
                     Email = table.Column<string>(type: "TEXT", nullable: true),
                     PasswordResetToken = table.Column<string>(type: "TEXT", nullable: true),
-                    PasswordResetTokenExpires = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    PasswordResetTokenExpires = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    sharesDataWithDso = table.Column<bool>(type: "INTEGER", nullable: false),
+                    dsoHasControl = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -124,7 +126,9 @@ namespace prosumerAppBack.Migrations
                     Address = table.Column<string>(type: "TEXT", nullable: true),
                     City = table.Column<string>(type: "TEXT", nullable: true),
                     Country = table.Column<string>(type: "TEXT", nullable: true),
-                    Email = table.Column<string>(type: "TEXT", nullable: true)
+                    Email = table.Column<string>(type: "TEXT", nullable: true),
+                    sharesDataWithDso = table.Column<bool>(type: "INTEGER", nullable: false),
+                    dsoHasControl = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -164,10 +168,9 @@ namespace prosumerAppBack.Migrations
                 {
                     ID = table.Column<Guid>(type: "TEXT", nullable: false),
                     MacAdress = table.Column<string>(type: "TEXT", nullable: true),
+                    DeviceName = table.Column<string>(type: "TEXT", nullable: true),
                     DeviceTypeID = table.Column<Guid>(type: "TEXT", nullable: false),
                     OwnerID = table.Column<Guid>(type: "TEXT", nullable: false),
-                    sharesDataWithDso = table.Column<bool>(type: "INTEGER", nullable: false),
-                    dsoHasControl = table.Column<bool>(type: "INTEGER", nullable: false),
                     IsOn = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
@@ -225,12 +228,12 @@ namespace prosumerAppBack.Migrations
             migrationBuilder.InsertData(
                 table: "Dispatchers",
                 columns: new[] { "ID", "Email", "PasswordHash", "Role", "Salt", "UserName" },
-                values: new object[] { new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f53"), "admin@gmail.com", new byte[] { 185, 20, 203, 26, 33, 246, 250, 241, 118, 91, 37, 146, 82, 41, 205, 59, 153, 204, 92, 80, 113, 199, 37, 231, 193, 102, 208, 143, 102, 207, 226, 176 }, "Admin", new byte[] { 148, 54, 114, 124, 104, 169, 54, 49, 242, 103, 90, 43, 99, 208, 176, 180 }, "Admin" });
+                values: new object[] { new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f53"), "admin@gmail.com", new byte[] { 147, 192, 144, 49, 149, 16, 75, 196, 135, 4, 191, 223, 191, 49, 252, 185, 119, 183, 153, 214, 64, 64, 127, 220, 37, 236, 153, 170, 201, 32, 242, 239 }, "Admin", new byte[] { 159, 15, 17, 46, 85, 203, 29, 102, 217, 134, 80, 160, 248, 80, 50, 148 }, "Admin" });
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "ID", "Address", "City", "Country", "Email", "FirstName", "LastName", "PasswordHash", "PasswordResetToken", "PasswordResetTokenExpires", "PhoneNumber", "Role", "Salt" },
-                values: new object[] { new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f52"), "Radoja Domanovica 6", "Kragujevac", "Serbia", "petarsimic@gmail.com", "Petar", "Simic", new byte[] { 240, 13, 35, 186, 134, 15, 33, 148, 74, 141, 57, 40, 187, 165, 223, 141, 206, 25, 181, 107, 230, 60, 240, 206, 6, 203, 85, 83, 75, 207, 12, 208 }, null, null, "064-316-15-81", "RegularUser", new byte[] { 101, 98, 9, 48, 52, 47, 122, 237, 194, 231, 180, 48, 160, 230, 70, 81 } });
+                columns: new[] { "ID", "Address", "City", "Country", "Email", "FirstName", "LastName", "PasswordHash", "PasswordResetToken", "PasswordResetTokenExpires", "PhoneNumber", "Role", "Salt", "dsoHasControl", "sharesDataWithDso" },
+                values: new object[] { new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f52"), "Radoja Domanovica 6", "Kragujevac", "Serbia", "petarsimic@gmail.com", "Petar", "Simic", new byte[] { 182, 53, 0, 236, 184, 26, 192, 244, 217, 135, 95, 15, 185, 15, 229, 209, 216, 215, 212, 77, 90, 233, 150, 200, 219, 243, 196, 81, 36, 217, 167, 4 }, null, null, "064-316-15-81", "RegularUser", new byte[] { 216, 88, 195, 235, 170, 213, 115, 43, 237, 6, 98, 21, 39, 13, 169, 241 }, false, false });
 
             migrationBuilder.InsertData(
                 table: "DeviceTypes",
@@ -254,8 +257,8 @@ namespace prosumerAppBack.Migrations
 
             migrationBuilder.InsertData(
                 table: "Devices",
-                columns: new[] { "ID", "DeviceTypeID", "IsOn", "MacAdress", "OwnerID", "dsoHasControl", "sharesDataWithDso" },
-                values: new object[] { new Guid("32ea7105-f582-4441-ae81-b738c4284f7e"), new Guid("32ea7105-f582-4441-ae81-b738c4284f7e"), false, "00-1B-63-84-45-E6", new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f52"), false, false });
+                columns: new[] { "ID", "DeviceName", "DeviceTypeID", "IsOn", "MacAdress", "OwnerID" },
+                values: new object[] { new Guid("32ea7105-f582-4441-ae81-b738c4284f7e"), "name 1", new Guid("32ea7105-f582-4441-ae81-b738c4284f7e"), false, "00-1B-63-84-45-E6", new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f52") });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Devices_DeviceTypeID",

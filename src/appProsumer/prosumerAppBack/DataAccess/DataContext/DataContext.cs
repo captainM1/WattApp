@@ -164,7 +164,7 @@ namespace prosumerAppBack.DataAccess
                 new DeviceType{ID=new Guid("F2F9BE26-5C5F-43E1-AA2F-8E64960D03DD"), Name="Dryer", GroupID=new Guid("77CBC929-1CF2-4750-900A-164DE4ABE28B"), ManufacturerID=new Guid("4D4D4D4D-4D4D-4D4D-4D4D-4D4D4D4D4D4D"), Wattage=3400}
             );
             modelBuilder.Entity<User>().HasData(
-                new User(AddDefaultUser())
+                AddDefaultUser()
             );
             modelBuilder.Entity<Dispatcher>().HasData(
                 AddDefaultDisp()

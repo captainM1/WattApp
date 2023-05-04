@@ -675,7 +675,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		}
 
 		lineChartConsumptionProduction(){
-			this.Day();
+			//this.Day();
 			console.log(this.currentDataC);
 			console.log(this.currentDataP)
 			const data = {
