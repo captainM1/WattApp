@@ -67,7 +67,9 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     PaginatorModule,
     NgxSpinnerModule,
     NgxUiLoaderModule,
-    NgxUiLoaderHttpModule
+    NgxUiLoaderHttpModule.forRoot({
+      showForeground: true
+    })
    
   ],
   providers: [MessageService,{provide:HTTP_INTERCEPTORS,useClass:TokenInterceptor,multi:true}],

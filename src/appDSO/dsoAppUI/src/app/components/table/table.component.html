@@ -1,5 +1,10 @@
-<ngx-spinner></ngx-spinner>
-
+<!-- <ngx-ui-loader
+  fgsColor="#fff"
+  pbColor="#fff"
+  text="Please wait..."
+  textColor="#fff"
+>
+</ngx-ui-loader> -->
 <app-nav></app-nav>
 
 <div class="row" style="margin-top: 100px;" id = "myBack">
@@ -24,8 +29,8 @@
                   <th >First Name</th>
                   <th >Last Name</th>
                   <th style="width: 23%;">Address</th>
-                  <th style="width: 15%;"(click)="sortData1('consumption')"><i class="fa fa-arrow-up" aria-hidden="true" style = "color:white" *ngIf="currentSortOrder1 ==='asc'"></i><i class="fa fa-arrow-down"  style ="color:white" *ngIf="currentSortOrder1 === 'desc'"></i>Consumption</th>
-                  <th style="width: 15%;"(click)="sortData2('production')"><i class="fa fa-arrow-up" aria-hidden="true" style = "color:white" *ngIf="currentSortOrder2 ==='asc'"></i><i class="fa fa-arrow-down"  style ="color:white" *ngIf="currentSortOrder2 === 'desc'"></i>Production</th>
+                  <th style="width: 15%;"(click)="sortData2('production')"><i class="fa fa-arrow-down" aria-hidden="true" style = "color:white" *ngIf="currentSortOrder2 ==='asc'"></i><i class="fa fa-arrow-up"  style ="color:white" *ngIf="currentSortOrder2 === 'desc'"></i>Production</th>
+                  <th style="width: 15%;"(click)="sortData1('consumption')"><i class="fa fa-arrow-down" aria-hidden="true" style = "color:white" *ngIf="currentSortOrder1 ==='asc'"></i><i class="fa fa-arrow-up"  style ="color:white" *ngIf="currentSortOrder1 === 'desc'"></i>Consumption</th>
                   <th style="width: 20%;"></th>
                   
                 </tr>
@@ -59,8 +64,9 @@
       
     </div>
  </div>
- <ngx-spinner></ngx-spinner>
+ <!-- <ngx-spinner></ngx-spinner> -->
  <div class="modal" id="myModal">
+  
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -98,14 +104,14 @@
               <button  class = "my-button active" [class.active]="isActiveSystem" (click)="toggleActive('system'); showDevicePage = false; showSystemPage = true; showMeGeneral = false;">System</button>
             </div>
             <div class="row" *ngIf="showMeGeneral">
-              <div class="col-sm" >
+              <div class="col-sm" id = "userInfo">
                 <h2 class="text-left">General information</h2>
                 <p><span>E-mail: </span>{{userPopUp.email}}</p>
                 <p><span>Phone number:</span> {{userPopUp.phoneNumber}}</p>
                 <p><span>City: </span>{{userPopUp.country}}, {{userPopUp.city}}</p>
                 <p><span>Address: </span>{{userPopUp.address}}</p>
               </div>
-              <div class="col-sm">
+              <div class="col-sm" id = "userInfo"> 
                 <h2 class="text-right">Device Details</h2>  
                 <p><span>Total numer of devices:</span> {{allUserDevices.length}} </p>
                 <p><span>Prosumers:</span> {{numberOfProsumers}}</p>
@@ -129,8 +135,8 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr *ngFor="let device of allUserDevices" [(ngModel)]="selectedDevice" (click)="displayGraph(selectedDevice)">
-                        <td (click)="displayGraph(selectedDevice)" >{{device.deviceTypeName}}</td>
+                      <tr *ngFor="let device of allUserDevices" [(ngModel)]="selectedDevice" (click)="displayGraph(device)">
+                        <td>{{device.deviceTypeName}}</td>
                         <td>{{device.manufacturerName}}</td>
                         <td>{{device.macAdress}}</td>
                         <td>{{device.typeOfDevice}}</td>
@@ -140,7 +146,7 @@
                   </table>
                 </div>
                 <div class="col">
-                  <div *ngIf="selectedDevice">
+                  <div >
                    <canvas #prev24DeviceID></canvas>
                   </div>
                 </div>
@@ -155,17 +161,16 @@
                 </div>
               </div>
               
-              <div class="row" *ngIf="showMeConsumption">
-                <div class="col" >
-                    <label for="graphSelect">Select Graph:</label>
-                    <select [(ngModel)]="selectedGraphHistoryConsumption" (click)="HistoryConsumption(selectedGraphHistoryConsumption)">
-                        <option value="month">Previous Month</option>
-                        <option value="7days">Previous 7 Days</option>
-                        <option value="24h">Previous 24 Hours</option>
-                    </select>
-                
+              <div class="row" id="graph-position" *ngIf="showMeConsumption">
+                <div class="col" id="graph" >
+                  <label for="graphSelect">Select Graph:</label>
+                  <select [(ngModel)]="selectedGraphHistoryConsumption" (ngModelChange)="HistoryConsumption()">
+                    <option value="month">Previous Month</option>
+                    <option value="7days">Previous 7 Days</option>
+                    <option value="24h">Previous 24 Hours</option>
+                  </select>
                   <div *ngIf="selectedGraphHistoryConsumption === 'month'">
-                    <canvas  #consumptionPrevMonthUSER></canvas>
+                    <canvas  #consumptionPrevMonthGraph></canvas>
                   </div>
                   <div *ngIf="selectedGraphHistoryConsumption === '7days'">
                     <canvas #consumptionPrev7DAYS></canvas>
@@ -174,7 +179,9 @@
                     <canvas #previous24ConsumptionGraph></canvas>
                   </div>
                 </div>
-                <div class="col">
+              
+              
+                <div class="col" id="graph">
                   <label for="graphSelect">Select Graph:</label>
                   <select [(ngModel)]="selectedGraphFutureConsumption" (click)="FutureConsumption(selectedGraphFutureConsumption)">
                       <option value="month">Next Month</option>
@@ -182,7 +189,7 @@
                       <option value="24h">Next 24 hours</option>
                   </select>
                     <div *ngIf="selectedGraphFutureConsumption === 'month'">
-                      <canvas  #consumptionNextMonthUSER></canvas>
+                      <canvas  #consumptionNextMonthGraph></canvas>
                     </div>
                     <div  *ngIf="selectedGraphFutureConsumption === '7days'">
                       <canvas #consumptionNext7daysGraph></canvas>
@@ -193,12 +200,12 @@
                 </div>
                   
               </div>
-            
+            </div>
            
             
-             <div class="row" *ngIf="showMeProduction">
-              <div class="col">
-                  <label for="graphSelect">Select Graph:</label>
+             <div class="row" id="graph-position" *ngIf="showMeProduction">
+              <div class="col" id="graph">
+                  <label>Select Graph:</label>
                   <select [(ngModel)]="selectedGraphHistoryProduction" (click)="HistoryProduction(selectedGraphHistoryProduction)">
                       <option value="month">Previous Month</option>
                       <option value="7days">Previous 7 days</option>
@@ -215,7 +222,7 @@
                   </div>
                 </div>
                 
-                <div class="col">
+                <div class="col" id="graph">
                   <label for="graphSelect">Select Graph:</label>
                   <select [(ngModel)]="selectedGraphFutureProduction" (click)="FutureProduction(selectedGraphFutureProduction)">
                       <option value="month">Next Month</option>
