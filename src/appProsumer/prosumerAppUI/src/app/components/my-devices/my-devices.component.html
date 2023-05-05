@@ -7,8 +7,11 @@
   <div class="row mt-4">
     <div *ngFor="let device of devices | searchDevice: searchName" class="device-col mt-4 mx-3">
       <div class="card-toggle">
-        <input type="checkbox" id="switch" />
-        <label for="switch">Toggle</label>
+        <div class="button r" id="button-1">
+          <input type="checkbox" class="checkbox" />
+          <div class="knobs"></div>
+          <div class="layer"></div>
+        </div>
       </div>
       <div class="card" [routerLink]="['/device-details', device.deviceId]">
         <img [src]="'/assets/icons-devices/' + device.deviceTypeName.toLowerCase() + '.png'" class="card-img-top" alt="{{ device.deviceTypeName }}">
