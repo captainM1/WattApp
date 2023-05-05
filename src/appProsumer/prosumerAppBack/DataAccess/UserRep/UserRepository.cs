@@ -159,10 +159,7 @@ public class UserRepository : IUserRepository
         user.PhoneNumber = userUpdateDto.PhoneNumber;
         user.dsoHasControl = userUpdateDto.dsoHasControl;
         user.sharesDataWithDso = user.sharesDataWithDso;
-
-        await this.UpdatePassword(id, userUpdateDto.Password);
         
-
         _dbContext.Users.Update(user);
         await _dbContext.SaveChangesAsync();
 

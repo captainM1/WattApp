@@ -114,6 +114,14 @@ public class UserController : ControllerBase
         return Ok(new { message = "user updated successfully" });
     }
 
+    [HttpPost("update-password/{userID}")]
+    public async Task<IActionResult> UpdatePassword(Guid userID, string newPassword)
+    {
+        await _userService.UpdatePassword(userID, newPassword);
+
+        return Ok(new { message = "password changed successfully" });
+    }
+
     [HttpPost("forgot-password")]
     [AllowAnonymous]
     public async Task<IActionResult> SendResetEmail([FromBody] ResetPasswordEmailDto resetPasswordEmailDto)
