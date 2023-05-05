@@ -3,7 +3,7 @@
     src: url(/assets/fonts/Inter-Regular.ttf);
  }
 
- @media(max-width: 480px) {
+@media(max-width: 480px) {
     .mobile{
         display: contents;
     }
@@ -15,7 +15,7 @@
     }
   }
   
-  @media(min-width: 481px){
+@media(min-width: 481px){
     .mobile{
         display: none;
     }
@@ -24,7 +24,7 @@
     }
   }
 
-
+  
 @media (max-width: 280px) /*Fold*/
 { 
     .container{

@@ -52,7 +52,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { DeviceEditPopupComponent } from './components/device-edit-popup/device-edit-popup.component';
 
 import { NgxUiLoaderHttpModule, NgxUiLoaderModule } from 'ngx-ui-loader';
-
+import { SettingsComponent } from './components/settings/settings.component';
 
 @NgModule({
   declarations: [
@@ -81,7 +81,8 @@ import { NgxUiLoaderHttpModule, NgxUiLoaderModule } from 'ngx-ui-loader';
     FilterPipe,
     WelcomeComponent,
     DashboardComponent,
-    DeviceEditPopupComponent
+    DeviceEditPopupComponent,
+    SettingsComponent
   ],
   imports: [
     BrowserModule,

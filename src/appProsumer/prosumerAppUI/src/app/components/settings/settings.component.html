@@ -1,0 +1,19 @@
+<app-nav class="desktop"></app-nav>
+<app-mob-nav class="mobile"></app-mob-nav>
+
+<div class="outer centriranje">
+    <div class="container">
+        <h3>Settings</h3>
+        <div>
+            <label for="access-switch">Allow DSO to access my information:</label>
+            <input type="checkbox" id="access-switch" [(ngModel)]="allowAccess" (click)="toggleAccess()">
+          </div>
+          
+          <div>
+            <label for="control-switch">Allow DSO to control consumption time:</label>
+            <input type="checkbox" id="control-switch" [disabled]="!allowAccess" [(ngModel)]="allowControl" (click)="toggleControl()">
+          </div>
+        <button>Change Password</button>
+        <button>Log Out</button>
+    </div>
+</div>
