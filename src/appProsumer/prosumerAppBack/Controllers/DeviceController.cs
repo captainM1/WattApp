@@ -301,6 +301,22 @@ namespace prosumerAppBack.Controllers
                 throw new ArgumentException(ex.Message);
             }
         }
-	}
+
+        [HttpPost("update-device-state")]
+        //  [Authorize(Roles = "UnapprovedUser,RegularUser")]
+        public async Task<IActionResult> UpdateDeviceState([FromBody] DeviceStateDto deviceStateDto)
+        {
+            try
+            {
+                var check = await _deviceService.UpdateDeviceState(deviceStateDto);
+
+                return Ok(new { message = "Device state updated" });
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
+        }
+    }
 }
 

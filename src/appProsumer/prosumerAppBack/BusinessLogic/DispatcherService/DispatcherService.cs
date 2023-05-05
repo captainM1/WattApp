@@ -85,16 +85,6 @@ namespace prosumerAppBack.BusinessLogic.DispatcherService
 
             return dispatcher;
         }
-        public async Task<Dispatcher> CheckUsername(string username)
-        {
-            var dispatcher = await _repository.GetDispatcherByUsernameAsync(username);
-            if (dispatcher != null)
-            {
-                throw new NotFoundException("username already exist");
-            }
-
-            return dispatcher;
-        }
 
         public async Task<List<Dispatcher>> GetAllDispatchersAsync()
         {
