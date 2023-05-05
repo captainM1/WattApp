@@ -145,6 +145,22 @@ button:focus{
   {
     font-size:6px;
   }
+
+  .card-toggle {
+    margin-left: 35px;
+  }
+
+  label {
+    width: 25px;
+    height: 15px;
+  }
+
+  label:after {
+    top: 3px;
+    left: 3px;
+    width: 10px;
+    height: 10px;
+  }
 }
 
 @media(min-width: 281px) and  (max-width: 480px){
@@ -203,6 +219,22 @@ button:focus{
     font-size:7px;
   }
 
+  .card-toggle {
+    margin-left: 75px;
+  }
+
+  label {
+    width: 35px;
+    height: 20px;
+  }
+
+  label:after {
+    top: 3px;
+    left: 3px;
+    width: 15px;
+    height: 15px;
+  }
+
 }
 @media(min-width: 1024px){
   .container
@@ -253,8 +285,26 @@ button:focus{
     width:50%;
   }
 
+  .card-toggle {
+    margin-left: 110px;
   }
-  @media (min-width: 481px) and (max-width: 720px)
+
+  label {
+    width: 45px;
+    height: 25px;
+  }
+
+  label:after {
+    top: 5px;
+    left: 5px;
+    width: 15px;
+    height: 15px;
+  }
+
+}
+
+
+@media (min-width: 481px) and (max-width: 720px)
 {
   .container
   {
@@ -303,6 +353,23 @@ button:focus{
   {
     font-size: 8px;
   }
+
+  .card-toggle {
+    margin-left: 45px;
+  }
+
+  label {
+    width: 30px;
+    height: 16px;
+  }
+
+  label:after {
+    top: 3px;
+    left: 5px;
+    width: 10px;
+    height: 10px;
+  }
+
 }
 
 @media (min-width: 721px) and (max-width: 1023px)  /*Tablet*/
@@ -354,7 +421,24 @@ button:focus{
   {
     font-size: 13px;
   }
+
+  .card-toggle {
+    margin-left: 70px;
+  }
+
+  label {
+    width: 45px;
+    height: 25px;
+  }
+
+  label:after {
+    top: 5px;
+    left: 5px;
+    width: 15px;
+    height: 15px;
+  }
 }
+
 
 input{
   margin-top: 10px;
@@ -370,3 +454,38 @@ input::placeholder{
   color:rgba(2, 102, 112, 0.5);
 }
 
+input[type=checkbox]{
+  height: 0;
+  width: 0;
+  visibility: hidden;
+}
+
+label {
+  cursor: pointer;
+  text-indent: -9999px;
+  background: grey;
+  display: block;
+  border-radius: 100px;
+  position: relative;
+}
+
+label:after {
+  content: '';
+  position: absolute;
+  background: #fff;
+  border-radius: 90px;
+  transition: 0.3s;
+}
+
+input:checked + label {
+  background: #026670;
+}
+
+input:checked + label:after {
+  left: calc(100% - 5px);
+  transform: translateX(-100%);
+}
+
+label:active:after {
+  width: 30px;
+}
