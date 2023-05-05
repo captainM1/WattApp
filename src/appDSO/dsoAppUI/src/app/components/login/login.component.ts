@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'service/auth.service';
-import { MessageService } from 'primeng/api';
+import { ConfirmEventType, MessageService } from 'primeng/api';
 import { CookieService } from "ngx-cookie-service";
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-login',
@@ -16,9 +17,15 @@ export class LoginComponent implements OnInit{
   eyeIcon: string = "fa-eye-slash";
   isText: boolean = false;
   loginForm!: FormGroup;
-  
-  constructor(private fb: FormBuilder, private router : Router,private auth: AuthService,private cookie: CookieService,
-    private messageService: MessageService){}
+  showsignin!:boolean;
+  constructor(
+    private fb: FormBuilder, 
+    private router : Router,
+    private auth: AuthService,
+    private cookie: CookieService,
+    private messageService: MessageService,
+    private spinner: NgxSpinnerService,
+   ){}
   
   ngOnInit(): void {
     this.loginForm = this.fb.group({
@@ -40,17 +47,25 @@ export class LoginComponent implements OnInit{
   
   onSubmit(){
     this.submitted = true;
+    this.spinner.show();
+    this.showsignin = true;
     if(this.loginForm.valid){
       this.auth.login(this.loginForm.get('email')?.value, this.loginForm.get('password')?.value)
       .subscribe(
         (response) => {
           this.cookie.set('jwtToken', response);
-          this.messageService.add({ severity: 'success', summary: 'Logged in', detail: 'Welcome back' });
+          this.messageService.add({ severity: 'success', summary: 'Logged in', detail: 'Welcome back', life: 1000 });
+          
           setTimeout(() => {
-            this.router.navigate(['home'])
+            
+            this.spinner.hide();
+            this.showsignin = false;
+            this.router.navigate(['home']);
           }, 1000);
         },
         (error) => {
+          this.spinner.hide();
+          this.showsignin = false;
           if (error.status === 400) {
             this.messageService.add({ severity: 'error', summary: 'Invalid credentials', detail: error.error });  
             this.router.navigate(['signin'])
@@ -77,7 +92,8 @@ export class LoginComponent implements OnInit{
       })
     }
 
-    
-}
+
+    }
+
 
 
