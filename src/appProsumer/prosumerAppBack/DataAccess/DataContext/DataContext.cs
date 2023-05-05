@@ -76,7 +76,6 @@ namespace prosumerAppBack.DataAccess
             var user = new Dispatcher
             {
                 ID = new Guid("6BCE51EA-9824-4393-B9A5-732B5A9B7F53"),
-                UserName = "Admin",
                 Role = "Admin",
                 Email = "admin@gmail.com"
             };

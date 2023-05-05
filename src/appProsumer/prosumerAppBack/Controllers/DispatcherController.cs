@@ -29,7 +29,6 @@ public class DispatcherController : ControllerBase
         try
         {
             await _dispatcherService.CheckEmail(userRegisterDto.Email);
-            await _dispatcherService.CheckUsername(userRegisterDto.Username);
 
             await _dispatcherService.CreateDispatcher(userRegisterDto);
 

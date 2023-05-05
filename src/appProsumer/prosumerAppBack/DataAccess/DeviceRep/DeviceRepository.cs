@@ -266,6 +266,17 @@ namespace prosumerAppBack.DataAccess
 
             return false;
         }
+
+        public async Task<bool> UpdateDeviceState(DeviceStateDto deviceStateDto)
+        {
+            var device = await _dbContext.Devices.FirstOrDefaultAsync(d => d.ID == deviceStateDto.ID);
+            device.IsOn = deviceStateDto.IsOn;
+            
+            _dbContext.Devices.Update(device);
+            await _dbContext.SaveChangesAsync();
+            return true;
+
+        }
     }
 
     public class DeviceInfo
