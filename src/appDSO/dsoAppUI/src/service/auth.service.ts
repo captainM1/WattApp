@@ -245,4 +245,6 @@ export class AuthService {
   currentProductionDay():Observable<any>{
     return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/currentDay/production/system");
   }
+
+  
 }

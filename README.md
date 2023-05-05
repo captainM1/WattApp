@@ -49,6 +49,19 @@ To deploy app, follow these steps:
     Specifically, ensure that the ConnectionStrings section points to your database, 
     and that the AllowedOrigins section contains the appropriate URLs for your Angular app.
 
+## Credentials and links
+
+    DSO:
+
+    http://softeng.pmf.kg.ac.rs:10042
+
+    admin@gmail.com:admin123
+
+    Prosumer:
+
+    http://softeng.pmf.kg.ac.rs:10043
+
+    petarsimic@gmail.com:petar123
 
 # Built With
 

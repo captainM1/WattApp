@@ -223,4 +223,16 @@ public class DeviceService:IDeviceService
             throw new Exception("Failed to delete device: " + ex.Message);
         }
     }
+
+    public async Task<bool> UpdateDeviceState(DeviceStateDto deviceStateDto)
+    {
+        try
+        {
+            return await _repository.UpdateDeviceState(deviceStateDto);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Failed to update device state: " + ex.Message);
+        }
+    }
 }

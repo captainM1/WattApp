@@ -54,7 +54,7 @@ export class SignupComponent implements OnInit {
       this.submitted = true;
       if(this.signupForm.invalid){
   
-        this.messageService.add({ severity: 'error', summary: 'Invalid data', detail: 'Invalid data format' });
+        this.messageService.add({ severity: 'error', summary: 'Invalid data', detail: 'Invalid data format', life:1000 });
         this.router.navigate(['signup']);
         return;
       }else if(this.signupForm.valid){

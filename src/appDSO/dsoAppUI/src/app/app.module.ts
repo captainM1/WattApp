@@ -29,7 +29,7 @@ import { FilterPipe } from './components/table/filer.pipe';
 import { WelcomeComponent } from './components/welcome/welcome.component';
 import { MessageService } from 'primeng/api';
 import { TokenInterceptor } from './interceptors/interceptor';
-
+import { ToastModule } from 'primeng/toast';
 import { NgxUiLoaderHttpModule, NgxUiLoaderModule  } from 'ngx-ui-loader';
 import { TableModule } from 'primeng/table';
 
@@ -70,7 +70,9 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     TableModule,
     NgxUiLoaderHttpModule.forRoot({
       showForeground: true
-    })
+    }),
+    ToastModule
+    
    
   ],
   providers: [MessageService,{provide:HTTP_INTERCEPTORS,useClass:TokenInterceptor,multi:true}],
