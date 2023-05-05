@@ -406,9 +406,18 @@ namespace prosumerAppBack.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("FirstName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("TEXT");
+
                     b.Property<byte[]>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("BLOB");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Role")
                         .HasColumnType("TEXT");
@@ -416,9 +425,6 @@ namespace prosumerAppBack.Migrations
                     b.Property<byte[]>("Salt")
                         .IsRequired()
                         .HasColumnType("BLOB");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("TEXT");
 
                     b.HasKey("ID");
 
@@ -429,10 +435,9 @@ namespace prosumerAppBack.Migrations
                         {
                             ID = new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f53"),
                             Email = "admin@gmail.com",
-                            PasswordHash = new byte[] { 147, 192, 144, 49, 149, 16, 75, 196, 135, 4, 191, 223, 191, 49, 252, 185, 119, 183, 153, 214, 64, 64, 127, 220, 37, 236, 153, 170, 201, 32, 242, 239 },
+                            PasswordHash = new byte[] { 9, 240, 144, 23, 20, 85, 174, 135, 225, 101, 173, 223, 111, 4, 206, 137, 224, 74, 218, 94, 207, 97, 141, 65, 197, 26, 69, 9, 159, 185, 73, 22 },
                             Role = "Admin",
-                            Salt = new byte[] { 159, 15, 17, 46, 85, 203, 29, 102, 217, 134, 80, 160, 248, 80, 50, 148 },
-                            UserName = "Admin"
+                            Salt = new byte[] { 47, 68, 162, 51, 181, 3, 82, 56, 169, 3, 173, 187, 86, 160, 243, 33 }
                         });
                 });
 
@@ -500,10 +505,10 @@ namespace prosumerAppBack.Migrations
                             Email = "petarsimic@gmail.com",
                             FirstName = "Petar",
                             LastName = "Simic",
-                            PasswordHash = new byte[] { 182, 53, 0, 236, 184, 26, 192, 244, 217, 135, 95, 15, 185, 15, 229, 209, 216, 215, 212, 77, 90, 233, 150, 200, 219, 243, 196, 81, 36, 217, 167, 4 },
+                            PasswordHash = new byte[] { 168, 69, 127, 0, 155, 98, 230, 17, 220, 37, 47, 27, 215, 219, 113, 113, 43, 137, 142, 216, 82, 58, 128, 112, 110, 170, 219, 221, 37, 254, 138, 201 },
                             PhoneNumber = "064-316-15-81",
                             Role = "RegularUser",
-                            Salt = new byte[] { 216, 88, 195, 235, 170, 213, 115, 43, 237, 6, 98, 21, 39, 13, 169, 241 },
+                            Salt = new byte[] { 248, 186, 106, 223, 35, 107, 190, 0, 101, 159, 65, 114, 102, 135, 155, 25 },
                             dsoHasControl = false,
                             sharesDataWithDso = false
                         });
