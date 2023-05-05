@@ -26,4 +26,5 @@ public interface IUserService
     Task ResetPasswordToken(string token);
     public bool DSOHasControl(Guid userID);
     public bool SharesWhidDSO(Guid userID);
+    Task<User> DisconnectFromDso(Guid id);
 }

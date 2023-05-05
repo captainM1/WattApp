@@ -190,6 +190,39 @@ public class UserController : ControllerBase
         }
     }
 
+    [HttpPost("remove-request-to-dso/{id}")]
+    //[Authorize(Roles = "UnapprovedUser")]
+    public async Task<IActionResult> RemoveRequestForDso(Guid id)
+    {
+        try
+        {
+            var result = await _userService.DeclineUserRequestToDso(id);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpPost("disconnect-from-dso/{id}")]
+    //[Authorize(Roles = "RegularUser")]
+    public async Task<IActionResult> DisconnectFromDso(Guid id)
+    {
+        try
+        {
+            var user = await _userService.DisconnectFromDso(id);
+
+            var token = _tokenMaker.GenerateToken(user);
+            return Ok(JsonSerializer.Serialize(token));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
     [HttpGet("coordinates/{id}")]
    // [Authorize(Roles = "Dispatcher,Admin")]
     public async Task<IActionResult> GetCoordinatesForUser(Guid id)
@@ -238,7 +271,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("approve-request-to-dso/{id}")]
-    [Authorize(Roles = "Dispatcher,Admin")]
+   // [Authorize(Roles = "Dispatcher,Admin")]
     public async Task<IActionResult> ApproveRequestForDso(Guid id)
     {
         try

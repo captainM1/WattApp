@@ -257,6 +257,16 @@ public class UserRepository : IUserRepository
         return true;
     }
 
+    public async Task<User> DisconnectFromDso(Guid id)
+    {
+        var user = await _dbContext.Users.FindAsync(id);
+        user.Role = "UnapprovedUser";
+
+        _dbContext.Users.Update(user);
+        await _dbContext.SaveChangesAsync();
+        return user;
+    }
+
     public async Task<int> GetNumberOfUsers()
     {
         return await _dbContext.Users.CountAsync();

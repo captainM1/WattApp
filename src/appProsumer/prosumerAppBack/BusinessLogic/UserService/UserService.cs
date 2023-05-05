@@ -276,6 +276,16 @@ public class UserService:IUserService
         return true;
     }
 
+    public async Task<User> DisconnectFromDso(Guid id)
+    {
+        var user = await _repository.DisconnectFromDso(id);
+        if (user == null)
+        {
+            throw new NullReferenceException("Action failed");
+        }
+        return user;
+    }
+
     public async Task CreatePasswordResetToken(string email)
     {
         await _repository.CreatePasswordResetToken(email);        
