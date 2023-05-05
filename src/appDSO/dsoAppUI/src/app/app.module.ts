@@ -31,7 +31,7 @@ import { MessageService } from 'primeng/api';
 import { TokenInterceptor } from './interceptors/interceptor';
 
 import { NgxUiLoaderHttpModule, NgxUiLoaderModule  } from 'ngx-ui-loader';
-
+import { TableModule } from 'primeng/table';
 
 var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
 
@@ -67,6 +67,7 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     PaginatorModule,
     NgxSpinnerModule,
     NgxUiLoaderModule,
+    TableModule,
     NgxUiLoaderHttpModule.forRoot({
       showForeground: true
     })

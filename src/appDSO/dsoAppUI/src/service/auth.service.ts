@@ -234,6 +234,9 @@ export class AuthService {
   }
 
 // getAllDispechers
+  getAllDispechers():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/Dispatcher/get-all-dispatchers");
+  }
 
 // HOME
   currentConsumptionDay():Observable<any>{

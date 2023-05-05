@@ -5,6 +5,7 @@ import { AuthService } from 'service/auth.service';
 import { MessageService } from 'primeng/api';
 import { CookieService } from "ngx-cookie-service";
 
+
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
@@ -16,7 +17,7 @@ export class SignupComponent implements OnInit {
   eyeIcon: string = "fa-eye-slash";
   isText: boolean = false;
   signupForm!: FormGroup;
-
+  allWorkers: any;
   constructor(
     private fb: FormBuilder,
     private router : Router,
@@ -32,7 +33,11 @@ export class SignupComponent implements OnInit {
         phonenumber: ['', Validators.required],
         password: ['', [Validators.required, Validators.minLength(6)]]
       })
-
+      this.auth.getAllDispechers().subscribe(
+        (response) => {
+          this.allWorkers = response
+        }
+      )
     }
 
     get fields(){
