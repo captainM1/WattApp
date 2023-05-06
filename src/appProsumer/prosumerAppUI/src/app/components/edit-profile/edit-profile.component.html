@@ -58,7 +58,7 @@
                         <input style = "width: 100%" type="text" class="form-control" id="country" name="country"  [(ngModel)]="country">
                     </div>
                     <div class="form-group" id = "change-pass">
-                        <button id = "btnbtn"type="button" id = "change" routerLink="/reset-password">Change Password</button>
+                        <button id = "btnbtn"type="button" id = "change"  data-bs-toggle="modal" data-bs-target="#exampleModal">Change Password</button>
                     </div>
                 </form>
             </div>
@@ -70,6 +70,50 @@
             </div>
         </div>
 
+    </div>
+
+    <div class="modal fade"#exampleModal id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabe" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <p class="modal-title" id="exampleModalLabel">
+              <span style="color: #026670; padding-left: 10px; font-size: 22px; font-weight: bold"> Change password </span><br>
+
+            </p>
+
+            <button type="button" id="closeBtn" class="btn-close" (click)="reset()" data-bs-dismiss="modal" aria-label="Close"></button>
+
+          </div>
+          <div class="modal-body">
+            <form [formGroup] = "resetForm" (ngSubmit)="onReset()">
+                <div class="input-group form-group pt-4">
+                  <input class="form-control inputChange" [ngClass]="{'is-invalid invalid-input': fields['password'].errors && (fields['password'].dirty || fields['password'].touched || submitted)}" formControlName="password" [type]="type" placeholder="New Password">
+                  <span class="input-group-addon addon-icon" [ngClass]="{'is-invalid invalid-icon': fields['password'].errors && (fields['password'].dirty || fields['password'].touched || submitted)}" ><i style="cursor:pointer" (click)="hideShowPass()" class="fa {{eyeIcon}}"></i></span>
+                  <div class="invalid-feedback">
+                    <ng-container *ngIf="fields['password'].errors">
+                      <span class="text-danger" *ngIf="fields['password'].errors?.['required'] && (fields['password'].touched || submitted)">*New password is required!</span>
+                      <span class="text-danger" *ngIf="fields['password'].errors?.['minlength'] && (fields['password'].dirty || submitted)">*Please provide a valid password!</span>
+                    </ng-container>
+                  </div>
+                </div>
 
 
+                <div class="input-group form-group pt-2 pb-2">
+                  <input class="form-control inputChange invalid-input" [ngClass]="{'is-invalid invalid-input': fields['confirmPassword'].errors && (fields['confirmPassword'].dirty || fields['confirmPassword'].touched || submitted)}" formControlName="confirmPassword" [type]="type2" placeholder="Confirm Password">
+                  <span class="input-group-addon addon-icon" [ngClass]="{'is-invalid invalid-icon': fields['confirmPassword'].errors && (fields['confirmPassword'].dirty || fields['confirmPassword'].touched || submitted)}" ><i style="cursor:pointer" (click)="hideShowPass2()" class="fa {{eyeIcon2}}"></i></span>
+                  <div class="invalid-feedback">
+                    <ng-container *ngIf="fields['confirmPassword'].errors">
+                      <span class="text-danger" *ngIf="fields['confirmPassword'].errors?.['required'] && (fields['confirmPassword'].touched || submitted)">*Confirm password is required!</span>
+                      <span class="text-danger" *ngIf="resetForm.hasError('confirmPasswordValidator', 'confirmPassword') && (fields['confirmPassword'].dirty || submitted)">*Password doesn't match!</span>
+                    </ng-container>
+                  </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer justify-content-center">
+          <button id="sendButton" type="button" class="btn btn-primary" >CHANGE </button>
+        </div>
+      </div>
+    </div>
+    </div>
 
