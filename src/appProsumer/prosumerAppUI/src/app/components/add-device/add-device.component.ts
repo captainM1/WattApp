@@ -14,7 +14,7 @@ import { CookieService } from 'ngx-cookie-service';
   styleUrls: ['./add-device.component.css']
 })
 export class AddDeviceComponent {
-
+  submitted: boolean = false;
   groups: any[] = [];
   selectedGroup!: string;
 
@@ -38,7 +38,7 @@ export class AddDeviceComponent {
     manufacturer: ['', Validators.required],
     device: ['', Validators.required],
     deviceName: ['', Validators.required],
-    macAddress: ['', Validators.required]
+    macAddress: ['', [Validators.required, Validators.pattern(/^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/)]]
   });
 
   ngOnInit() {
@@ -50,6 +50,11 @@ export class AddDeviceComponent {
     this.http.get<any[]>(environment.apiUrl + '/api/Device/groups')
       .subscribe(groups => this.groups = groups);
   }
+
+  get fields(){
+    return this.addDeviceForm.controls;
+  }
+
 
   onGroupSelected(event: any) {
     const selectElement = event.target as HTMLSelectElement;
@@ -106,6 +111,8 @@ export class AddDeviceComponent {
   }
 
   onSubmit() {
+    this.submitted = true;
+    console.log(this.fields);
     if (this.addDeviceForm.valid) {
       const formData = this.addDeviceForm.value;
   
@@ -119,6 +126,7 @@ export class AddDeviceComponent {
         });
     } else {
       this.messageService.add({ severity: 'error', summary: 'Fill out all information first!'});     
+      this.router.navigate(['add-device']);
     }
   }
 
