@@ -1,0 +1,16 @@
+<h1>{{data.title}}</h1>
+
+<table>
+    <tr>
+        <th>Date</th>
+        <th>Power Usage</th>
+    </tr>
+    <tr *ngFor = "let item of data.items">
+        <td>{{item['timestamp']}}</td>
+        <td>{{item['powerUsage'].toFixed(2)}}</td>
+    </tr>
+</table>
+
+<button mat-button (click)="onClose()">Close</button>
+
+

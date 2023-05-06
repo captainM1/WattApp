@@ -9,6 +9,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { ModalTableComponent } from './components/modal-table/modal-table.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+
 
 //import {NgToastModule} from 'ng-angular-popup'
 import { ToastModule } from 'primeng/toast';
@@ -81,7 +84,8 @@ import { NgxUiLoaderHttpModule, NgxUiLoaderModule } from 'ngx-ui-loader';
     FilterPipe,
     WelcomeComponent,
     DashboardComponent,
-    DeviceEditPopupComponent
+    DeviceEditPopupComponent,
+    ModalTableComponent
   ],
   imports: [
     BrowserModule,
@@ -93,6 +97,7 @@ import { NgxUiLoaderHttpModule, NgxUiLoaderModule } from 'ngx-ui-loader';
     MatInputModule,
     MatButtonModule,
     MatIconModule,
+    MatDialogModule,
     FormsModule,
     BrowserAnimationsModule,
     ToastModule,
@@ -107,7 +112,7 @@ import { NgxUiLoaderHttpModule, NgxUiLoaderModule } from 'ngx-ui-loader';
       showForeground: true
     })
   ],
-  providers: [MessageService,ConfirmationService, {provide:HTTP_INTERCEPTORS,useClass:TokenInterceptor,multi:true}],
+  providers: [MessageService,ConfirmationService, {provide:HTTP_INTERCEPTORS,useClass:TokenInterceptor,multi:true}, MatDialog],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

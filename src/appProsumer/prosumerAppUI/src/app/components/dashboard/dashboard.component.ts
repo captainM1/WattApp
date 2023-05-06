@@ -1,7 +1,9 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Chart, ChartOptions } from 'chart.js';
 import { AuthUserService } from 'src/app/services/auth-user.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { ModalTableComponent } from '../modal-table/modal-table.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -68,10 +70,12 @@ export class DashboardComponent implements OnInit, AfterViewInit{
   timeStampProductionNextMonth = [];
   powerUsageProductionNextMonth = [];
   chartProdNextMonth!:any;
+  data!:[];
 
   constructor(
 		private auth : AuthService,
-    private auth1 : AuthUserService
+    private auth1 : AuthUserService,
+    public dialog : MatDialog
 	){}
 
   @ViewChild('consumptionPrevMonthGraph') consumptionPrevMonthGraph!:ElementRef;
@@ -112,6 +116,21 @@ export class DashboardComponent implements OnInit, AfterViewInit{
     )
   }
 
+  openDialog1(){
+
+    const dialogRef = this.dialog.open(ModalTableComponent,{
+        width:'500px',
+        height: '500px',
+        position: { top: '-700px', left: '250px' },
+        data:{title: 'Current Consumption', items: this.data}
+    });
+
+    dialogRef.afterClosed().subscribe(
+        (result)=>{
+            console.log("The dialog was closed");
+        }
+    )
+}
 
 
   selectedGraphHistoryConsumption = '24h';
@@ -193,6 +212,8 @@ export class DashboardComponent implements OnInit, AfterViewInit{
       (response : any) => {
         this.graph24prev = response;
         console.log(response);
+        this.data = response[0].timestampPowerPairs;
+        console.log(this.data);
         this.makeData(this.graph24prev);
       }
      );
