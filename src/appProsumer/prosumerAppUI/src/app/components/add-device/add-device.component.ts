@@ -14,9 +14,6 @@ import { CookieService } from 'ngx-cookie-service';
   styleUrls: ['./add-device.component.css']
 })
 export class AddDeviceComponent {
-  showConsumer: boolean = true;
-  showStorage: boolean = false;
-  showProducer: boolean = false;
 
   groups: any[] = [];
   selectedGroup!: string;
@@ -109,17 +106,19 @@ export class AddDeviceComponent {
   }
 
   onSubmit() {
-    if (this.showConsumer) {
+    if (this.addDeviceForm.valid) {
       const formData = this.addDeviceForm.value;
   
       const headers = new HttpHeaders()
-        .set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`); 
+        .set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`);
   
-        this.http.post(environment.apiUrl + '/api/Device/devices/add-new', new newDeviceDTO(formData.macAddress, this.selectedDevice, formData.deviceName), { headers })
+      this.http.post(environment.apiUrl + '/api/Device/devices/add-new', new newDeviceDTO(formData.macAddress, this.selectedDevice, formData.deviceName), { headers })
         .subscribe(response => {
           console.log(response);
           this.router.navigate(['home']);
         });
+    } else {
+      this.messageService.add({ severity: 'error', summary: 'Fill out all information first!'});     
     }
   }
 

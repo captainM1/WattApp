@@ -5,15 +5,21 @@
     <div class="container">
         <h3>Settings</h3>
         <div>
-            <label for="access-switch">Allow DSO to access my information:</label>
-            <input type="checkbox" id="access-switch" [(ngModel)]="allowAccess" (click)="toggleAccess()">
-          </div>
-          
-          <div>
-            <label for="control-switch">Allow DSO to control consumption time:</label>
-            <input type="checkbox" id="control-switch" [disabled]="!allowAccess" [(ngModel)]="allowControl" (click)="toggleControl()">
-          </div>
+          <label class="toggle">
+            <span class="toggle-label">Allow DSO to access my information:</span>
+            <input class="toggle-checkbox" type="checkbox" [(ngModel)]="allowAccess" (click)="toggleAccess()">
+            <div class="toggle-switch"></div>
+          </label>
+        </div>
+        <div>
+          <label class="toggle">
+            <span class="toggle-label">Allow DSO to control consumption time:</span>
+            <input class="toggle-checkbox" type="checkbox" [disabled]="!allowAccess" [(ngModel)]="allowControl" (click)="toggleControl()">
+            <div class="toggle-switch"></div>
+          </label>
+        </div>
         <button>Change Password</button>
-        <button>Log Out</button>
+        <button (click)="signOut()">Log Out</button>
+        <p-confirmDialog></p-confirmDialog>
     </div>
 </div>

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AuthService } from 'src/app/services/auth.service';
 import { SettingsService } from 'src/app/services/settings.service';
 
 @Component({
@@ -10,7 +11,7 @@ export class SettingsComponent {
   allowAccess = false;
   allowControl = false;
 
-  constructor(private apiService: SettingsService) { }
+  constructor(private apiService: SettingsService, private auth: AuthService) { }
 
   toggleAccess() {
     this.allowAccess = !this.allowAccess;
@@ -21,5 +22,9 @@ export class SettingsComponent {
   toggleControl() {
     this.allowControl = !this.allowControl;
     this.apiService.allowControlConsumptionTime(this.allowControl).subscribe();
+  }
+
+  signOut(){
+    this.auth.signOut();
   }
 }
