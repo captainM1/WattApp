@@ -38,7 +38,7 @@
             </a>
 
             <a class="text-reset me-3" >
-              <i class="fa fa-sign-out" [routerLinkActive]="'active'" (click)="signOut()"></i><br>
+              <i class="fa fa-cog" [routerLinkActive]="'active'" routerLinkActive #rlp ="routerLinkActive" routerLink="/settings" ></i><br>
               <p-confirmDialog></p-confirmDialog>
             </a>
           </div>
