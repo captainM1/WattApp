@@ -190,6 +190,12 @@ col{
     padding-top: 0px;
 
 }
+
 #card-consumption{
-    width: 100%;
+    width: 95%;
+}
+#graphInline1{
+    display: inline-flex;
+    margin-top: 20px;
+    margin-left: 20px;
 }
