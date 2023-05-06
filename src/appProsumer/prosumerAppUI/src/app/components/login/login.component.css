@@ -76,7 +76,7 @@ h3{
     font-weight: 900;
 }
 
-input{
+.form-control{
     border:2px solid #026670;
     border-radius: 5px;
     font-style: italic;
@@ -200,4 +200,13 @@ button:focus{
 .modal-content
 {
   border-radius: 17px !important;
+}
+
+input[type=checkbox]{
+    accent-color: #026670;
+    margin-right: 5px;
+}
+
+.zapamti{
+    padding-left: 4px;
 }
