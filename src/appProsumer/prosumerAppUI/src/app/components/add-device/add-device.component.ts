@@ -112,7 +112,6 @@ export class AddDeviceComponent {
 
   onSubmit() {
     this.submitted = true;
-    console.log(this.fields);
     if (this.addDeviceForm.valid) {
       const formData = this.addDeviceForm.value;
   

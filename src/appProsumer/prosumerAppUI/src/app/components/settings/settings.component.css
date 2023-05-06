@@ -28,7 +28,7 @@
 @media (max-width: 280px) /*Fold*/
 { 
     .container{
-        width: 90%;
+        width: 98%;
         background-color: white;
         margin-bottom:10%;
     }
@@ -38,46 +38,52 @@
         margin-top:15px;
     }
     
+    button{       
+        font-size: 14px;
+        height: 40px;
+        text-align: left;
+        width: 80%;
+        margin-top: 20px;
+    }
+
     h3{
         color: #026670;
         text-transform: none;
         margin-top: 25px;
-        font-size: 18px;
     }
 
-    h5{
-        color: #026670;
-        text-transform: none;
-        margin-top: 15px;
-    }
-
-    .simple{
-        margin-top: 10px;
-        margin-bottom: 20px;
+    .permissions{
+        text-align: left;
         width: 100%;
-        text-align: center;
-        font-size: 12px;
+        filter:drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
+        border-radius: 10px;
+        background-color: white;
+        margin:auto;
+        padding: 10px 15px;
     }
 
-    .simple mat-icon{
-        font-size: 16px;
+    span{
+        font-size: 15px;
+    }
+
+    h4{
+        font-size:16px;
     }
 
     mat-icon{
-        color:#026670;
+        color:white;
+        font-size: 22px;
     }
-    
-    .chart{
-        height: 300px;
-    }
+
     
 }
 
 @media (min-width: 281px) and (max-width: 480px) /*Phones*/
 {
     .container{
-        width: 95%;
+        width: 98%;
         background-color: white;
+        padding-bottom: 20px;
     }
 
     .outer{
@@ -85,46 +91,41 @@
         margin-top:30px;
     }
 
+    button{       
+        font-size: 14px;
+        height: 40px;
+        text-align: left;
+        width: 60%;
+        margin-top: 20px;
+    }
+
     h3{
         color: #026670;
         text-transform: none;
         margin-top: 25px;
     }
 
-    h5{
-        color: #026670;
-        text-transform: none;
-        margin-top: 15px;
-    }
-
-    .simple{
-        margin-top: 10px;
-        margin-bottom: 20px;
+    .permissions{
+        text-align: left;
         width: 100%;
-        text-align: center;
-        font-size: 9px;
+        filter:drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
+        border-radius: 10px;
+        background-color: white;
+        margin:auto;
+        padding: 10px 15px;
     }
 
-    .edit{
-        width: 50%;
-        margin-left: 20px;
-        background-color: white !important;
+    span{
+        font-size: 15px;
     }
 
-    .edit  mat-icon{
-        color:#026670 !important;
-    }
-
-    .simple mat-icon{
-        font-size: 18px;
+    h4{
+        font-size:16px;
     }
 
     mat-icon{
-        color:#026670;
-    }
-
-    .chart{
-        height: 300px;
+        color:white;
+        font-size: 22px;
     }
 
 }
@@ -132,80 +133,104 @@
 @media (min-width: 481px) and (max-width: 1023px)  /*Tablet*/
 {
     .container{
-        width: 60%;
+        width: 70%;
+        background-color: white;
+        padding-bottom: 20px;
     }
 
-    .outer{ 
-        margin-top: 80px;
+    .outer{
+        margin-bottom: 10%;
+        margin-top:30px;
     }
 
-    h3, h5{
-        color:#026670;
-        text-transform: uppercase;
-        margin: 25px 0;
-        padding-top:15px;
-    }
-    
-
-    .simple{
-        margin-bottom: 20px;
-        text-align: center;
-        width:80%;
-        font-size:16px;
+    button{       
+        font-size: 20px;
+        height: 40px;
+        text-align: left;
+        width: 50%;
+        margin-top: 30px;
     }
 
-    .part{
-        background-color:white;
-        border-radius: 17px;
-        filter: drop-shadow(0 4px 4px rgba(0,0,0,0.25));
+    h3{
+        color: #026670;
+        text-transform: none;
+        margin-top: 25px;
+        font-size: 25px;
+    }
+
+    .permissions{
+        text-align: left;
+        width: 90%;
+        filter:drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
+        border-radius: 10px;
+        background-color: white;
+        margin:auto;
+        padding: 10px 15px;
+    }
+
+    span{
+        font-size: 20px;
+    }
+
+    h4{
+        font-size:20px;
     }
 
     mat-icon{
-        color:#026670;
+        color:white;
+        font-size: 22px;
     }
-
-    .chart{
-        height: 400px;
-    }
-    
 }
 
 @media (min-width: 1024px) /*Laptops and Desktops */
 {
     .container{
-        width: 50%;
+        width: 40%;
+        background-color: white;
+        padding-bottom: 20px;
     }
 
-    .outer{ 
-        margin-top: 40px;
+    .outer{
+        margin-bottom: 10%;
+        margin-top:70px;
     }
 
-    h3, h5{
-        color:#026670;
-        text-transform: uppercase;
-        margin: 25px 0;
-        padding-top:15px;
+    button{       
+        font-size: 20px;
+        height: 40px;
+        text-align: left;
+        width: 70%;
+        margin-top: 30px;
     }
 
-    .simple{
-        margin-bottom: 30px;
-        text-align: center;
-        width:80%;
-        font-size:16px;
+    h3{
+        color: #026670;
+        text-transform: none;
+        margin-top: 25px;
+        font-size: 25px;
     }
 
-    .part{
-        background-color:white;
-        border-radius: 17px;
-        filter: drop-shadow(0 4px 4px rgba(0,0,0,0.25));
+    .permissions{
+        text-align: left;
+        width: 90%;
+        filter:drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
+        border-radius: 10px;
+        background-color: white;
+        margin:auto;
+        padding: 10px 15px;
+    }
+
+    span{
+        font-size: 20px;
+    }
+
+    h4{
+        font-size:20px;
     }
 
     mat-icon{
-        color:#026670;
-    }
-    
-    .chart{
-        height: 400px;
+        color:white;
+        font-size: 22px;
     }
     
 }
@@ -228,75 +253,38 @@ h3{
     font-weight: bold;
 }
 
-h5{
-    font-weight: bold;
-}
-
-
 .centriranje{
     display:flex;
     justify-content: center;
     align-items: center;
 }
 
-.simple{
-    border-radius: 17px;
-    background-color:#026670;
-    color:white;
-    font-weight: bold;
-    border: none;
-    filter:drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
-    padding: 2px 5px;
-}
-
-.simple:hover {
-    background-color: #0394a2;
-    color:white;    
-}
-
-.simple:focus{
-    background-color: #0394a2;
-    color: white;
-}
-
-.simple mat-icon{
-    color:white;
-}
-
-.align-center {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-p{
-    text-align: left;
-    text-transform:uppercase;
-    font-size: 14px;
-    color:#026670;
-    margin-left: 1%;
+h4{
+    text-transform: uppercase;
+    color: #026670;
+    font-weight: bolder;
 }
 
 span{
     font-weight: bold;
-    color:black;
 }
 
-select {
-    color: white;
+button{
     background-color: #026670;
-    width:90%;
-    font-weight: bold;
-    font-size: 13px;
-    text-transform: uppercase;
-    border-radius: 10px;
+    color:white;
     text-align: center;
-    height: 50px;
+    border-radius: 15px;
+    filter:drop-shadow(0px 8px 4px rgba(0,0,0,0.25));
 }
 
-select option:not(:checked) {
-    color: #026670;
-    background-color: white;
+button:hover {
+    background-color: #227982;
+}
+button:active {
+    background-color: #026670;
+}
+button:focus{
+    background-color: #026670;
 }
 
 *,
@@ -346,6 +334,9 @@ body {
 .toggle-checkbox:checked + .toggle-switch {
   background: #026670;
 }
+.toggle-checkbox:disabled + .toggle-switch {
+    background: grey;
+  }
 .toggle-checkbox:checked + .toggle-switch:before {
   left: 20px;
 }
@@ -358,5 +349,4 @@ body {
 .toggle-label {
   position: relative;
   top: 2px;
-  margin-right: 5px;
 }
