@@ -31,6 +31,8 @@ import { MessageService } from 'primeng/api';
 import { TokenInterceptor } from './interceptors/interceptor';
 import { ToastModule } from 'primeng/toast';
 import { NgxUiLoaderHttpModule, NgxUiLoaderModule  } from 'ngx-ui-loader';
+import { ModalTableComponent } from './components/modal-table/modal-table.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 
 var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
@@ -48,6 +50,7 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     RequirementsComponent,
     FilterPipe,
     WelcomeComponent,
+    ModalTableComponent,
 
 ],
   imports: [
@@ -70,11 +73,12 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     NgxUiLoaderHttpModule.forRoot({
       showForeground: true
     }),
-    ToastModule
+    ToastModule,
+    MatDialogModule
     
    
   ],
-  providers: [MessageService,{provide:HTTP_INTERCEPTORS,useClass:TokenInterceptor,multi:true}],
+  providers: [MessageService,{provide:HTTP_INTERCEPTORS,useClass:TokenInterceptor,multi:true}, MatDialog],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

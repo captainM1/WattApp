@@ -88,6 +88,8 @@ export class AuthService {
     return this.http.get<any>(environment.apiUrl + "/api/Device/groups/"+groupID);
   }
   
+
+
 // USERS
   getAllUserInfo(){
     return this.http.get(environment.apiUrl + '/api/User/allUserInfo')
@@ -153,7 +155,7 @@ export class AuthService {
     return this.http.get(environment.apiUrl + "/api/Device/groups");
   }
 
-  // table
+  // table - USER ID pozivi
   UserConsumptionSummary(id : any):Observable<any>{
     return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/currentUsageUser/consumption-summary/"+id);
   }
@@ -221,7 +223,7 @@ export class AuthService {
 
 
   
-// energy saved
+// SAVED ENERGY
   savedEnergyConsumption():Observable<any>{
     return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/saved-energy/consumer/system");
   }
@@ -233,7 +235,7 @@ export class AuthService {
     return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/today/currentPowerUsage/" +deviceID);
   }
 
-// getAllDispechers
+
 
 // HOME
   currentConsumptionDay():Observable<any>{
@@ -242,6 +244,55 @@ export class AuthService {
   currentProductionDay():Observable<any>{
     return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/currentDay/production/system");
   }
+
+  consumptionPrev24h():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/previous24h/consumption/every-hour-usage/system");
+  }
+
+  consumptionPrev7Days():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/previousWeek/consumption/every-day-usage/system");
+
+  }
+  consumptionPreviousMonth():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/previousMonth/consumption/every-day-usage/system");
+  }
+
+  productionPrev24h():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/previous24h/production/every-hour-usage/system");
+  }
+
+  productionPrev7Days():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/previousWeek/production/every-day-usage/system");
+
+  }
+  productionPreviousMonth():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/previousMonth/production/every-day-usage/system");
+  }
+
+  consumptionNext24h():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/next24h/consumption/every-hour-usage/system");
+  }
+
+  consumptionNext7Days():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/nextWeek/consumption/every-day-usage/system");
+
+  }
+  consumptionNexxtMonth():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/nextMonth/consumption/every-day-usage/system");
+  }
+
+  productionNext24h():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/next24h/production/every-hour-usage/system");
+  }
+
+  productionNext7Days():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/nextWeek/production/every-day-usage/system");
+
+  }
+  productionNextMonth():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/nextMonth/production/every-day-usage/system");
+  }
+
 
   
 }

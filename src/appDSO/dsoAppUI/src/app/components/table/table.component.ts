@@ -1104,15 +1104,16 @@ consPrev7Days = [];
        // set default graph
        HistoryConsumption() {
         switch (this.selectedGraphHistoryConsumption) {
+          case '24h':
+            this.consumptionPrevious24h(this.id);
+            break;
           case 'month':
             this.consumptionPrevMonth(this.id);
             break;
           case '7days':
             this.consumptionPrev7Days(this.id);
             break;
-          case '24h':
-            this.consumptionPrevious24h(this.id);
-            break;
+          
         }
       }
 
