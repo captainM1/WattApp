@@ -26,7 +26,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   {
-    path: 'signin', component: LoginComponent, canActivate:[NotauthGuard]
+    path: 'signin', component: LoginComponent //canActivate:[NotauthGuard] ne radi dobro
   },
   {
     path:'signup', component: SignupComponent

@@ -86,7 +86,18 @@
           </div>
           <div class="modal-body">
             <form [formGroup] = "resetForm" (ngSubmit)="onReset()">
-                <div class="input-group form-group pt-4">
+              <div class="input-group form-group pt-2">
+                <input class="form-control inputChange" [ngClass]="{'is-invalid invalid-input': fields['currentPassword'].errors && (fields['currentPassword'].dirty || fields['currentPassword'].touched || submitted)}" formControlName="currentPassword" [type]="type3" placeholder="Current Password">
+                <span class="input-group-addon addon-icon" [ngClass]="{'is-invalid invalid-icon': fields['currentPassword'].errors && (fields['currentPassword'].dirty || fields['currentPassword'].touched || submitted)}" ><i style="cursor:pointer" (click)="hideShowPass3()" class="fa {{eyeIcon3}}"></i></span>
+                <div class="invalid-feedback">
+                  <ng-container *ngIf="fields['currentPassword'].errors">
+                    <span class="text-danger" *ngIf="fields['currentPassword'].errors?.['required'] && (fields['currentPassword'].touched || submitted)">*New password is required!</span>
+                    <span class="text-danger" *ngIf="fields['currentPassword'].errors?.['minlength'] && (fields['currentPassword'].dirty || submitted)">*Please provide a valid password!</span>
+                  </ng-container>
+                </div>
+              </div>
+
+                <div class="input-group form-group pt-2">
                   <input class="form-control inputChange" [ngClass]="{'is-invalid invalid-input': fields['password'].errors && (fields['password'].dirty || fields['password'].touched || submitted)}" formControlName="password" [type]="type" placeholder="New Password">
                   <span class="input-group-addon addon-icon" [ngClass]="{'is-invalid invalid-icon': fields['password'].errors && (fields['password'].dirty || fields['password'].touched || submitted)}" ><i style="cursor:pointer" (click)="hideShowPass()" class="fa {{eyeIcon}}"></i></span>
                   <div class="invalid-feedback">

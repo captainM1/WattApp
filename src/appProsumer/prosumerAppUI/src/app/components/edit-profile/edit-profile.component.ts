@@ -25,10 +25,13 @@ export class EditProfileComponent implements OnInit, AfterViewInit{
   email!: string;
   type: string = "password";
   type2: string = "password";
+  type3: string = "password";
   eyeIcon: string = "fa-eye-slash";
   eyeIcon2: string = "fa-eye-slash";
+  eyeIcon3: string = "fa-eye-slash";
   isText: boolean = false;
   isText2: boolean = false;
+  isText3: boolean = false;
   resetForm!: FormGroup;
   submitted = false;
 
@@ -50,6 +53,7 @@ export class EditProfileComponent implements OnInit, AfterViewInit{
   ngOnInit(): void {
     this.getToken();
     this.resetForm = this.fb.group({
+      currentPassword: ['', [Validators.required, Validators.minLength(6)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required, Validators.minLength(6)]]
     },{
@@ -88,6 +92,12 @@ export class EditProfileComponent implements OnInit, AfterViewInit{
     this.isText2 ? this.type2 = "text" : this.type2 = "password";
   }
 
+  hideShowPass3(){
+    this.isText3 = !this.isText3;
+    this.isText3 ? this.eyeIcon3 = "fa-eye" : this.eyeIcon3 = "fa-eye-slash";
+    this.isText3 ? this.type3 = "text" : this.type3 = "password";
+  }
+
   get fields(){
     return this.resetForm.controls;
   }
@@ -107,5 +117,11 @@ export class EditProfileComponent implements OnInit, AfterViewInit{
   reset()
   {
     this.resetForm.reset();
+    this.type = "password";
+    this.type2 = "password";
+    this.type3 = "password";
+    this.eyeIcon = "fa-eye-slash";
+    this.eyeIcon2 = "fa-eye-slash";
+    this.eyeIcon3 = "fa-eye-slash";
   }
 }
