@@ -3,8 +3,9 @@
   <app-nav class="desktop"></app-nav>
   <app-mob-nav class="mobile"></app-mob-nav>
 
-  <div class="outer" ngxUiLoaderBlurred>
+  <div class="outer">
     <div class="container">
+      <app-modal-table #ModalTableComponent [data]="data"></app-modal-table>
       <div class="row centriranje">
         <h2>Consumption</h2>
         <div class="col-sm mt-4 pt-2">

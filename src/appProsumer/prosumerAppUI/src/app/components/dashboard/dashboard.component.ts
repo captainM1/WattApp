@@ -91,7 +91,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
   @ViewChild('productionNextMonthGraph') productionNextMonthGraph!:ElementRef;
   @ViewChild('productionNext7daysGraph')  productionNext7daysGraph!:ElementRef;
 
-
+  @ViewChild('ModalTableComponent') modalTableComponent!: ModalTableComponent;
 
   ngAfterViewInit(): void {
   }
@@ -116,21 +116,11 @@ export class DashboardComponent implements OnInit, AfterViewInit{
     )
   }
 
-  openDialog1(){
 
-    const dialogRef = this.dialog.open(ModalTableComponent,{
-        width:'500px',
-        height: '500px',
-        position: { top: '-700px', left: '250px' },
-        data:{title: 'Current Consumption', items: this.data}
-    });
+    openDialog1() {
+      this.modalTableComponent.open();
+    }
 
-    dialogRef.afterClosed().subscribe(
-        (result)=>{
-            console.log("The dialog was closed");
-        }
-    )
-}
 
 
   selectedGraphHistoryConsumption = '24h';

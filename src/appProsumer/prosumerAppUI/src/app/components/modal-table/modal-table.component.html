@@ -1,16 +1,29 @@
-<h1>{{data.title}}</h1>
+<div class="modal-fade"  [hidden]="!showModal" tabindex="-1"  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <p class="modal-title" id="exampleModalLabel">
+          <span style="color: #026670; font-size: 25px; font-weight: 700;"> Consumption </span><br>
+        </p>
 
-<table>
-    <tr>
-        <th>Date</th>
-        <th>Power Usage</th>
-    </tr>
-    <tr *ngFor = "let item of data.items">
-        <td>{{item['timestamp']}}</td>
-        <td>{{item['powerUsage'].toFixed(2)}}</td>
-    </tr>
-</table>
+        <button type="button" (click)="close()" id="closeBtn" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 
-<button mat-button (click)="onClose()">Close</button>
+      </div>
+      <div class="modal-body">
+            <table>
+              <tr>
+                  <th>Date</th>
+                  <th>Power Usage</th>
+              </tr>
+              <tr *ngFor="let item of data">
+                  <td>{{ item.timestamp }}</td>
+                  <td>{{ item.powerUsage.toFixed(2) }}</td>
+              </tr>
+          </table>
+    </div>
+  </div>
+</div>
+</div>
+
 
 
