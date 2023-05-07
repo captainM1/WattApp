@@ -7,6 +7,7 @@ import { TableComponent } from './components/table/table.component';
 import { RequirementsComponent } from './components/requirements/requirements.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { WelcomeComponent } from './components/welcome/welcome.component';
+import { ErrorPageComponent } from './components/error-page/error-page.component';
 
 
 const routes: Routes = [
@@ -31,6 +32,12 @@ const routes: Routes = [
   },
   {
     path:'', component:WelcomeComponent
+  },
+  {
+    path:'**', component:ErrorPageComponent
+  },
+  {
+    path:'error-page', component:ErrorPageComponent
   }
 
 ]

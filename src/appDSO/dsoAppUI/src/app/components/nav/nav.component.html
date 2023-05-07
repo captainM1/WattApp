@@ -36,8 +36,8 @@
               <i class="fa fa-user-circle" routerLinkActive #rlp ="routerLinkActive" [routerLinkActive]="'active'"></i><br>
             </a>
             <a class="text-reset me-3" >
-              <i class="fa fa-sign-out" [routerLinkActive]="'active'" routerLink="/signin"> </i><br>
-              <!-- <p-confirmDialog></p-confirmDialog> -->
+              <i class="fa fa-sign-out" [routerLinkActive]="'active'" (click)="signOut()"></i><br>
+              <p-confirmDialog></p-confirmDialog>
             </a>
           </div>
         </div>

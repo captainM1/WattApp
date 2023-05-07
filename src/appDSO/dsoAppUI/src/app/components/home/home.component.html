@@ -1,5 +1,7 @@
 <app-nav></app-nav>
 <div class="outer" style="margin-top: 90px; margin-left: 0; margin-right: 0;">
+   
+    <button mat-button (click)="openDialog2()">OPEN 2</button>
 <div class="container">
     <!-- WEATHER -->
             <div class="row" >
@@ -59,9 +61,19 @@
                     </div>
                   </div>
                   <div class="row">
-                    <h2 class="text-center">Energy Consumption and Production for the entire system <i class="fa fa-info-circle" aria-hidden="true" ></i></h2>
+                    <h2 class="text-center">Energy Consumption and Production for the entire system </h2>
+                    <div class="style-info">
+                            <li class = "info">
+                              <i class="fa fa-square" aria-hidden="true" style="color:#62C370"></i> Green zone (up to 350 kWh)
+                            </li>
+                            <li class = "info" >
+                              <i class="fa fa-square" aria-hidden="true" style="color:#EC7357"></i> Orange zone (from 350kWh to 700kWh)
+                            </li>
+                            <li class = "info">
+                              <i class="fa fa-square" aria-hidden="true" style="color:#F42C04"></i> Red zone (over 700kWh)
+                            </li>
+                    </div>
                     <div class="card-container">
-                        
                         <div class="card" >
                             <label for="graphSelect">Select Graph:</label>
                             <select [(ngModel)]="selectedGraph" (click)="displayGraphConsumption(selectedGraph)">
@@ -71,12 +83,13 @@
                             </select>
                             
                             <div class="card-body" *ngIf="selectedGraph === 'current'" >
+                                 
                                 <div class="graph-style">
                                     <ngx-spinner bdColor = "rgba(0, 0, 0, 0.5)" size = "medium" color = "#fff" type = "ball-spin" [showSpinner]="consumptionCurrentLoader" [fullScreen]="false" *ngIf="consumptionCurrentLoader"><p style="color: #fff; margin-top:60px;"> Please wait... </p></ngx-spinner>
                                     <canvas #currentConsumptionSYS></canvas>
                                 </div>
                                 <p class="card-text" id = "text-consumption-production" [ngClass]="{'green': currentConsumptionSys <= 350, 'blue': currentConsumptionSys >= 350 && currentConsumptionSys < 700, 'red':currentConsumptionSys >= 700 }">{{currentConsumptionSys}} kWh</p>
-                                <i class="fa fa-bolt" [ngClass]="{'green': razlika > 0, 'red': razlika <= 0}" ><span>  {{razlika}}  % compared to the previous hour</span></i>
+                                <i class="fa fa-bolt" [ngClass]="{'green': razlika > 0, 'red': razlika <= 0}" ><span>  {{razlika}}  % {{text}}</span></i>
                             </div>
                             
                             <div class="card-body" *ngIf="selectedGraph === 'prevMonth'">
@@ -93,7 +106,7 @@
                                 </div>
                                 <p class="card-text" id = "text-consumption-production" [ngClass]="{'green': nextMonthConsumptionSys <= 350, 'blue': nextMonthConsumptionSys >= 350 && nextMonthConsumptionSys < 700, 'red':nextMonthConsumptionSys >= 700 }">{{nextMonthConsumptionSys}} kWh</p>
                             </div>
-                    </div> 
+                        </div> 
                     <div class="card" >
                         <label for="graphSelect">Select Graph:</label>
                         <select [(ngModel)]="selectedGraphProduction" (click)="displayGraphProduction(selectedGraphProduction)">
@@ -102,34 +115,12 @@
                             <option value="nextMonth">Next Month Production</option>
                         </select>
                         <div class="card-body" *ngIf="selectedGraphProduction === 'current'">
-                            
                             <div class="graph-style">
                                 <ngx-spinner bdColor = "rgba(0, 0, 0, 0.5)" size = "medium" color = "#fff" type = "ball-spin" [showSpinner]="productionCurrentLoader" [fullScreen]="false" *ngIf="productionCurrentLoader"><p style="color: #fff; margin-top:60px;"> Please wait... </p></ngx-spinner>
-
                                 <canvas #currentProductionSYS></canvas>
-                                </div>
-                                <button class="open-btn" onclick="openModel()">Open Table</button>
-
-                                <div class="modal" id="myPopup">
-  
-                                    <div class="modal-dialog">
-                                      <div class="modal-content">
-                                        <div class="modal-header">
-                                          <h4 class="modal-title">User Profile</h4>
-                                          <button type="button" class="btn-close" (click)="closeModel()" data-bs-dismiss="modal"></button>
-                                        </div>
-                                        <div class="modal-body" >
-                                          <div class="row">
-                                            <h1 class="text-center">OPREM</h1>
-                                            </div>
-                                        </div>
-                                        </div>
-                                        </div>
-                                        </div>
-                                        </div>
-
+                            </div>
                             <p class="card-text" id = "text-consumption-production" [ngClass]="{'green': currentProductionSys <= 350, 'blue': currentProductionSys >= 350 && currentProductionSys < 700, 'red':currentProductionSys >= 700 }">{{currentProductionSys}} kWh</p>
-                            <i class="fa fa-bolt"  [ngClass]="{'green': razlika > 0, 'red': razlika <= 0}"><span>  {{razlika1}} % compared to the previous hour</span></i>
+                            <i class="fa fa-bolt"  [ngClass]="{'green': razlika > 0, 'red': razlika <= 0}"><span>  {{razlika1}} % {{text1}}</span></i>
                         </div>
                         <div class="card-body" *ngIf="selectedGraphProduction === 'prevMonth'">
                             <div class="graph-style">
@@ -148,19 +139,92 @@
                     </div>
                     <div class="card" id = "card-lg">
                         <p class="card-title" id = "card-title-lg">
-                            Consumption & Production 
+                            Consumption & Production <button mat-button (click)="openDialog1()"><i class="fa fa-table" aria-hidden="true"></i>
+                            </button> 
                         </p>
                        <div class="card-body">
                             <div>
-                                <ngx-spinner bdColor = "rgba(0, 0, 0, 0.5)" size = "medium" color = "#fff" type = "ball-spin" [showSpinner]="currentProductionDayLoader && currentConsumptionDayLoader" [fullScreen]="false" *ngIf="currentProductionDayLoader && currentConsumptionDayLoader"><p style="color: #fff; margin-top:60px;"> Please wait... </p></ngx-spinner>
-
+                                <ngx-spinner bdColor = "rgba(0, 0, 0, 0.5)" size = "medium" color = "#fff" type = "ball-spin" [showSpinner]="currentProductionDayLoader " [fullScreen]="false" *ngIf="currentProductionDayLoader "><p style="color: #fff; margin-top:60px;"> Please wait... </p></ngx-spinner>
                                 <canvas #consumptionProduction></canvas>
                             </div>
                        </div>
-                       
                    </div>
-                       
+                </div>
+
+                <div class="container">
+                    <div class="row">
+                        <div class="col">
+                            <label for="graphSelect">Select Graph:</label>
+                            <select [(ngModel)]="selectedGraphHistoryConsumption" (ngModelChange)="HistoryConsumption()">
+                              <option value="month">Previous Month</option>
+                              <option value="7days">Previous 7 Days</option>
+                              <option value="24h">Previous 24 Hours</option>
+                            </select>
+                            
+                            <div class="card" id = "card-consumption" *ngIf="selectedGraphHistoryConsumption === 'month'">
+                                <div class="card-body">
+                                     <div>
+                                        <ngx-spinner bdColor = "rgba(0, 0, 0, 0.5)" size = "medium" color = "#fff" type = "ball-spin" [showSpinner]="consumptionPreviousMonthLoader " [fullScreen]="false" *ngIf="consumptionPreviousMonthLoader "><p style="color: #fff; margin-top:60px;"> Please wait... </p></ngx-spinner>
+                                        <canvas  #consumptionPrevMonthGraph></canvas>
+                                     </div>
+                                </div>
+                            </div>
+
+                            <div class="card" id = "card-consumption"  *ngIf="selectedGraphHistoryConsumption === '7days'">
+                                <div class="card-body">
+                                     <div>
+                                        <ngx-spinner bdColor = "rgba(0, 0, 0, 0.5)" size = "medium" color = "#fff" type = "ball-spin" [showSpinner]="consumptionPrev7DaysLoader " [fullScreen]="false" *ngIf="consumptionPrev7DaysLoader "><p style="color: #fff; margin-top:60px;"> Please wait... </p></ngx-spinner>
+                                        <canvas #consumptionPrev7daysGraph></canvas>
+                                     </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card" id = "card-consumption" *ngIf="selectedGraphHistoryConsumption === '24h'">
+                               <div class="card-body">
+                                    <div>
+                                        <ngx-spinner bdColor = "rgba(0, 0, 0, 0.5)" size = "medium" color = "#fff" type = "ball-spin" [showSpinner]="consumptionPrev24hLoader " [fullScreen]="false" *ngIf="consumptionPrev24hLoader "><p style="color: #fff; margin-top:60px;"> Please wait... </p></ngx-spinner>
+                                        <canvas #previous24ConsumptionGraph></canvas>
+                                    </div>
+                               </div>
+                           </div>
+                        </div>
+                        <div class="col">
+                            <label for="graphSelect">Select Graph:</label>
+                            <select [(ngModel)]="selectedGraphFutureConsumption" (ngModelChange)="FutureConsumption()">
+                              <option value="month">Next Month</option>
+                              <option value="7days">Next 7 Days</option>
+                              <option value="24h">Next 24 Hours</option>
+                            </select>
+                            
+                            <div class="card" id = "card-consumption" *ngIf="selectedGraphFutureConsumption === 'month'">
+                                <div class="card-body">
+                                     <div class="graph-style1">
+                                        <ngx-spinner bdColor = "rgba(0, 0, 0, 0.5)" size = "medium" color = "#fff" type = "ball-spin" [showSpinner]="ConsumptionNextMonthLoader " [fullScreen]="false" *ngIf="ConsumptionNextMonthLoader"><p style="color: #fff; margin-top:60px;"> Please wait... </p></ngx-spinner>
+                                        <canvas  #consumptionNextMonthGraph></canvas>
+                                     </div>
+                                </div>
+                            </div>
+
+                            <div class="card" id = "card-consumption"  *ngIf="selectedGraphFutureConsumption === '7days'">
+                                <div class="card-body">
+                                     <div class="graph-style1">
+                                        <ngx-spinner bdColor = "rgba(0, 0, 0, 0.5)" size = "medium" color = "#fff" type = "ball-spin" [showSpinner]="consumptionNext7DaysLoader " [fullScreen]="false" *ngIf="consumptionNext7DaysLoader"><p style="color: #fff; margin-top:60px;"> Please wait... </p></ngx-spinner>
+                                        <canvas #consumptionNext7daysGraph></canvas>
+                                     </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card" id = "card-consumption" *ngIf="selectedGraphFutureConsumption === '24h'">
+                               <div class="card-body">
+                                    <div class="graph-style1"> 
+                                        <ngx-spinner bdColor = "rgba(0, 0, 0, 0.5)" size = "medium" color = "#fff" type = "ball-spin" [showSpinner]="consumptionNext24hLoader " [fullScreen]="false" *ngIf="consumptionNext24hLoader"><p style="color: #fff; margin-top:60px;"> Please wait... </p></ngx-spinner>
+                                        <canvas #consumptionNext24hGraph></canvas>
+                                    </div>
+                               </div>
+                           </div>
+                        </div>
                     </div>
+                </div>
          </div>
        </div>
     </div>
