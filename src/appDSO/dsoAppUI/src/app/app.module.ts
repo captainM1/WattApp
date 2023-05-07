@@ -30,7 +30,6 @@ import { WelcomeComponent } from './components/welcome/welcome.component';
 import { MessageService } from 'primeng/api';
 import { TokenInterceptor } from './interceptors/interceptor';
 
-import { NgxUiLoaderHttpModule, NgxUiLoaderModule  } from 'ngx-ui-loader';
 
 
 var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
@@ -65,12 +64,8 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     FormsModule,
     MatTableModule,
     PaginatorModule,
-    NgxSpinnerModule,
-    NgxUiLoaderModule,
-    NgxUiLoaderHttpModule.forRoot({
-      showForeground: true
-    })
-   
+    NgxSpinnerModule
+
   ],
   providers: [MessageService,{provide:HTTP_INTERCEPTORS,useClass:TokenInterceptor,multi:true}],
   bootstrap: [AppComponent]
