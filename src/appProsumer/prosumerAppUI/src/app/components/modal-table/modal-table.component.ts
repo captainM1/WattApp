@@ -10,7 +10,8 @@ export class ModalTableComponent {
   ){}
 
   @Input() data:any;
-
+  @Input() message!: string;
+  @Input() time!: string;
 
   showModal = false;
 
