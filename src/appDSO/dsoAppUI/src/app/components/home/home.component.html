@@ -83,8 +83,7 @@
                             </select>
                             
                             <div class="card-body" *ngIf="selectedGraph === 'current'" >
-                                <!-- <button mat-button (click)="openDialog1()"><i class="fa fa-table" aria-hidden="true"></i>
-                                </button> -->
+                                 
                                 <div class="graph-style">
                                     <ngx-spinner bdColor = "rgba(0, 0, 0, 0.5)" size = "medium" color = "#fff" type = "ball-spin" [showSpinner]="consumptionCurrentLoader" [fullScreen]="false" *ngIf="consumptionCurrentLoader"><p style="color: #fff; margin-top:60px;"> Please wait... </p></ngx-spinner>
                                     <canvas #currentConsumptionSYS></canvas>
@@ -140,7 +139,8 @@
                     </div>
                     <div class="card" id = "card-lg">
                         <p class="card-title" id = "card-title-lg">
-                            Consumption & Production 
+                            Consumption & Production <button mat-button (click)="openDialog1()"><i class="fa fa-table" aria-hidden="true"></i>
+                            </button> 
                         </p>
                        <div class="card-body">
                             <div>

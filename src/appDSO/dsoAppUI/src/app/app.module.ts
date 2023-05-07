@@ -33,6 +33,7 @@ import { ToastModule } from 'primeng/toast';
 import { NgxUiLoaderHttpModule, NgxUiLoaderModule  } from 'ngx-ui-loader';
 import { ModalTableComponent } from './components/modal-table/modal-table.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ErrorPageComponent } from './components/error-page/error-page.component';
 
 
 var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
@@ -51,6 +52,7 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     FilterPipe,
     WelcomeComponent,
     ModalTableComponent,
+    ErrorPageComponent,
 
 ],
   imports: [

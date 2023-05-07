@@ -193,9 +193,15 @@ col{
 
 #card-consumption{
     width: 95%;
+    margin-left: 15px;
 }
 #graphInline1{
     display: inline-flex;
     margin-top: 20px;
     margin-left: 20px;
+}
+mat-button{
+ color: #026670;
+ padding: 0;
+    
 }

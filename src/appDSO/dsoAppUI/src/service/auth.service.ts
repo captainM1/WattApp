@@ -230,6 +230,12 @@ export class AuthService {
   savedEnergyProduction():Observable<any>{
     return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/saved-energy/producer/system");
   }
+  savedEnergyConsumptionUser(userID : any) : Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/user-usage-saved-energy-month/consumer/"+userID);
+  }
+  savedEnergyProductionUser(userID : any) : Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/user-usage-saved-energy-month/production/"+userID);
+  }
 
   getDeviceConsumption(deviceID : any):Observable<any>{
     return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/today/currentPowerUsage/" +deviceID);

@@ -3,6 +3,7 @@
     border-radius: 10px;
     margin-top: 50px;
     margin-left: 20px;
+    border: 2px solid #026670;
 }
 
 .card table thead{
@@ -49,11 +50,11 @@ input{
   margin-right: 10px;
   height: 30px;
   border-radius: 8px;
-  border: 1px solid #026670;
+  border: 2px solid #026670;
 }
 button{
   margin-left: 10px;
-  margin-top: 25px;
+  margin-top: 20px;
   width: 120px;
   height: 40px;
   padding-top: 5px;
@@ -155,9 +156,12 @@ table tr td{
 #card-popUp{
   width: 90%;
   margin-top: 5px;
-  margin-left: 5px;
+  margin-left: 2px;
+  margin-right: 2px;
   padding: 0;
   text-align: center;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+  border: 2px solid #026670;
 }
 #card-title-popUp{
   font-size: medium;
@@ -172,31 +176,42 @@ table tr td{
   
 }
 .modal-dialog{
-  max-width: 1000px;
+  max-width: 1150px;
   text-align: center;
   margin-top: 40px;
 }
 .id-button-popUp{
-  margin: 5px;
+  margin-bottom: 10px;
 }
 .active{
   background-color: white;
   color: #026670;
   border: 2px solid #026670;
 }
+.tableDevices{
+  border: 2px solid #026670;
+ 
+
+}
 .tableDevices th tr{
   font-size: 12px;
   font-weight: normal;
+  border-radius: 8px;
+
 }
 .tableDevices td{
   font-size: 12px;
+}
+#table{
+  margin-top: 5px;
 }
 h2{
   color: #026670;
   font-weight: 500;
 }
 p{
-  text-align: center;
+  text-align: left;
+  margin-bottom: 5px;
   
 }
 p span{
@@ -211,10 +226,14 @@ input{
   border-radius: 10px;
   margin-left: 10px;
   margin-right: 10px;
+  padding-bottom: 10px;
 }
 #graph{
   box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
   border-radius: 10px;
+  padding-left: 0px;
+  padding-right: 0px;
+  margin-left: 10px;
 }
 select{
   color: #026670;
@@ -223,7 +242,7 @@ select{
   font-size:16px;
   font-weight: 500;
   background-color: white;
-  width: 100%;
+  width: 90%;
   text-align: center;
 }
 label{
@@ -234,4 +253,22 @@ label{
 #graph-position{
   margin-left: 20px;
   margin-right: 0px;
+}
+#myBack{
+    background-color: #FFF;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 10px;
+    
+}
+#cards-current{
+  margin: 10px;
+}
+#style-card-next{
+  width: 90%;
+  margin-top: 5px;
+  margin-right: 5px;
+  margin-left: 25px;
+  margin-bottom: 10px;
+  border: 0px;
 }

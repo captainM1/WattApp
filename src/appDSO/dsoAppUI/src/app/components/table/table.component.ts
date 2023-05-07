@@ -27,7 +27,7 @@ import { NgxUiLoaderModule,NgxUiLoaderHttpModule, NgxUiLoaderService } from 'ngx
   styleUrls: ['./table.component.css'],
   
 })
-export class TableComponent implements OnInit, AfterViewInit, OnChanges {
+export class TableComponent implements OnInit, AfterViewInit {
 
 
   @ViewChild('powerUsageGraph') powerUsageGraph!:ElementRef;
@@ -63,7 +63,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnChanges {
   chartNext24h: any;
   graph24next: any;
  
-  graph = 'month';
+  
  
   
   ngOnDestroy(): void {
@@ -182,9 +182,9 @@ export class TableComponent implements OnInit, AfterViewInit, OnChanges {
     this.showMeUsers(this.page,this.pageSize);
     this.popUp(this.id);
     this.displayGraph(this.selectedDevice);
-    
+   
   }
-  selectedGraphHistoryConsumption = '24h';
+  
   ngOnChanges(changes: SimpleChanges) {
     
     if (changes) {
@@ -192,6 +192,8 @@ export class TableComponent implements OnInit, AfterViewInit, OnChanges {
       this.HistoryConsumption();
     }
   }
+
+  selectedGraphHistoryConsumption = '24h';
 
   ngOnInit(): void {
     this.spinner.show();
@@ -203,11 +205,12 @@ export class TableComponent implements OnInit, AfterViewInit, OnChanges {
     
     this.showCoordsForEveryUser();
     this.getDeviceGroup();
-   
     this.HistoryConsumption();
-    this.HistoryProduction(this.graph);
-    this.FutureConsumption(this.graph);
-    this.FutureProduction(this.graph);
+    this.HistoryProduction();
+    this.FutureConsumption();
+    this.FutureProduction();
+  
+    this.savedEnergy(this.id);
 
 
   }
@@ -506,10 +509,11 @@ export class TableComponent implements OnInit, AfterViewInit, OnChanges {
   productionNextMonthUserLoader = false;
   productionPrevMonthUserLoader = false;
   popUp(id: string){
+    
     this.auth.getUserInformation(id).subscribe(
       (response : any) => {
         this.userPopUp = response;
-      
+        console.log("USER ID",response);
         
         this.auth.UserConsumptionSummary(this.userPopUp.id).subscribe(
           (response:any) => {
@@ -528,10 +532,37 @@ export class TableComponent implements OnInit, AfterViewInit, OnChanges {
         
       });
 
-      // this.consumptionPrevMonth(this.userPopUp.id);
-      // this.consumptionNextMonth(this.userPopUp.id);
-     
-      this.spinner.show();
+      this.savedEnergy(id);
+      this.HistoryConsumption();
+      this.HistoryProduction();
+      this.FutureConsumption();
+      this.FutureProduction();
+      this.productionNextMonth(this.userPopUp.id);
+      this.prevMonthProduction(this.userPopUp.id);
+      }
+    );
+   }
+
+   prevMonthProduction(id : any){
+    this.spinner.show();
+    this.productionPrevMonthUserLoader = false;
+
+    this.auth.productionPrevMonthUser(this.userPopUp.id).subscribe({
+      next: (response : any) => {
+        this.productionPrevMonthUser = response[0]['timestampPowerPairs'];
+        this.spinner.hide();
+        this.productionPrevMonthUserLoader = false;
+      },
+      error: (err : any) => {
+        console.log("error production prev month");
+        this.spinner.hide();
+        this.productionPrevMonthUserLoader = false;
+      }
+    })
+   }
+
+   productionNextMonth(id : any){
+    this.spinner.show();
       this.productionNextMonthUserLoader = true;
         this.auth.productionNextMonthUser(this.userPopUp.id).subscribe({
        
@@ -551,56 +582,8 @@ export class TableComponent implements OnInit, AfterViewInit, OnChanges {
                 this.productionNextMonthUserLoader = false;
           }
         })
-        
-        this.spinner.show();
-        this.productionPrevMonthUserLoader = false;
-
-        this.auth.productionPrevMonthUser(this.userPopUp.id).subscribe({
-          next: (response : any) => {
-            this.productionPrevMonthUser = response[0]['timestampPowerPairs'];
-            this.spinner.hide();
-            this.productionPrevMonthUserLoader = false;
-          },
-          error: (err : any) => {
-            console.log("error production prev month");
-            this.spinner.hide();
-            this.productionPrevMonthUserLoader = false;
-          }
-        })
-     
-      }
-    );
-    this.halfDought();
-    
-   
    }
-
-   
-   
-  halfDought(){
-    const d = this.powerUsagePopUp;
-    const data = {
-      datasets: [
-        {
-          label: 'Energy consumption',
-          data: [d, 1000-d],
-          backgroundColor: ['#FFC107', '#ECEFF1'],
-        },
-      ],
-    };
-
-    const options = {
-     circumference:180,
-     rotation:270,
-     aspectRation: 2
-    };
-
-    const chart = new Chart(this.powerUsageGraph.nativeElement, {
-      type: 'doughnut',
-      data: data,
-      options: options,
-    });
-  }
+  
   
   
   isActiveUser = false; 
@@ -655,10 +638,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnChanges {
       this.timeStampDevice24h.push(this.graph24prev[i]['timestamp']);
       this.powerUsageDevice24h.push(this.graph24prev[i]['powerUsage']);
     }
-    
-
-    
-  }
+ }
   extractedDatesDevice24h!:string[];
   
   deviceGraphPrev24(){
@@ -1168,12 +1148,11 @@ consumptionPrev7DaysLoader = false;
 
     
       selectedGraphFutureConsumption = 'month'; // set default graph
-      FutureConsumption(graph: string) {
-      this.selectedGraphFutureConsumption = graph;
-      switch (graph) {
+      FutureConsumption() {
+     
+      switch (this.selectedGraphFutureConsumption) {
         case 'month':
           this.consumptionNextMonth(this.id);
-        
         break;
         case '7days':
           this.consumptionNext7Days(this.id);
@@ -1186,21 +1165,24 @@ consumptionPrev7DaysLoader = false;
 
     consumptionPrevious24hLoader = false;
     consumptionPrevious24h(id:any){
-    this.timestampListPrev24h=[];
-    this.powerUsageListPrev24h=[];
+    
     this.spinner.show();
     this.consumptionPrevious24hLoader = true;
     this.auth.getConsumptionPrevious24Hours(id).subscribe(
       (response : any) => {
         this.graph24prev = response;
-        this.makeData(this.graph24prev);
+        this.makeDataconsumptionPrevious24h(this.graph24prev);
+        this.previous24Graph(this.timestampListPrev24h, this.powerUsageListPrev24h);
+        
         this.spinner.hide();
         this.consumptionPrevious24hLoader = false;
       }
      );
   }
 
-  makeData(dataGraph:any){
+  makeDataconsumptionPrevious24h(dataGraph:any){
+    this.timestampListPrev24h=[];
+    this.powerUsageListPrev24h=[];
     dataGraph.forEach((obj:any) => {
       obj.timestampPowerPairs.forEach((pair:any) => {
         const time = pair.timestamp.split('T')[1].split(':')[0];
@@ -1212,12 +1194,11 @@ consumptionPrev7DaysLoader = false;
     this.timestampListPrev24h.sort((a: string, b: string) => {
       return parseInt(a) - parseInt(b);
     });
-    this.previous24Graph(this.timestampListPrev24h, this.powerUsageListPrev24h);
+   
   }
 
   previous24Graph(list:any, valueList:any){
     if (this.previous24ConsumptionGraph){
-
       if (this.chartPrev24h) {
         this.chartPrev24h.destroy();
       }
@@ -1365,9 +1346,9 @@ next24Graph(list:any, valueList:any){
 */
 
 selectedGraphHistoryProduction = '24h'; 
-    HistoryProduction(graph: string) {
-    this.selectedGraphHistoryProduction = graph;
-    switch (graph) {
+    HistoryProduction() {
+   
+    switch (this.selectedGraphHistoryProduction) {
       case 'month':
           this.productionPrevMonth(this.id);
       break;
@@ -1381,9 +1362,9 @@ selectedGraphHistoryProduction = '24h';
   }
 
   selectedGraphFutureProduction = '24h'; // set default graph
-      FutureProduction(graph: string) {
-      this.selectedGraphFutureProduction = graph;
-      switch (graph) {
+      FutureProduction() {
+     
+      switch (this.selectedGraphFutureProduction) {
         case 'month':
           this.productionNextMonth(this.id);
         break;
@@ -1398,14 +1379,14 @@ selectedGraphHistoryProduction = '24h';
     productionPrevious24hLoader = false;
     productionPrevious24h(id:any)
     {
-      this.timestampListProductionPrev24h=[];
-      this.powerUsageListProductionPrev24h=[];
+      
       this.spinner.show();
       this.productionPrevious24hLoader = true;
       this.auth.getProductionPrevious24Hours(id).subscribe(
         (response : any) => {
           this.graphProduction24prev = response;
           this.makeDataProduction24(this.graphProduction24prev);
+          this.previousProduction24Graph(this.timestampListProductionPrev24h, this.powerUsageListProductionPrev24h);
           this.spinner.hide();
           this.productionPrevious24hLoader = false;
 
@@ -1414,6 +1395,8 @@ selectedGraphHistoryProduction = '24h';
     }
     
     makeDataProduction24(dataGraph:any){
+      this.timestampListProductionPrev24h=[];
+      this.powerUsageListProductionPrev24h=[];
       dataGraph.forEach((obj:any) => {
         obj.timestampPowerPairs.forEach((pair:any) => {
           const time = pair.timestamp.split('T')[1].split(':')[0];
@@ -1425,7 +1408,7 @@ selectedGraphHistoryProduction = '24h';
       this.timestampListProductionPrev24h.sort((a: string, b: string) => {
         return parseInt(a) - parseInt(b);
       });
-      this.previousProduction24Graph(this.timestampListProductionPrev24h, this.powerUsageListProductionPrev24h);
+      
     }
     
     previousProduction24Graph(list:any, valueList:any){
@@ -1490,8 +1473,7 @@ selectedGraphHistoryProduction = '24h';
     productionPrevMonthLoader = false;
     productionPrevMonth(id:any)
     {
-      this.timeStampProductionPrevMonth = [];
-      this.powerUsageProductionPrevMonth = [];
+      
       this.spinner.show();
       this.productionPrevMonthLoader = true;
       this.auth.getProductionPrevMonth(id).subscribe(
@@ -1499,18 +1481,18 @@ selectedGraphHistoryProduction = '24h';
           next: (response : any) => {
             this.productionPrevMonthUser = response[0]['timestampPowerPairs'];
     
-    
             for(let i = 0; i < this.productionPrevMonthUser.length; i++){
               this.timeStampProductionPrevMonth.push(this.productionPrevMonthUser[i]['timestamp']);
               this.powerUsageProductionPrevMonth.push(this.productionPrevMonthUser[i]['powerUsage']);
             }
+            
     
               this.chartProductionPreviousMonth();
-            this.spinner.hide();
-            this.productionPrevMonthLoader = false;
+              this.spinner.hide();
+              this.productionPrevMonthLoader = false;
             },
           error: () => {
-            console.log("GRESKA.");
+            console.log("productionPrevMonth - err.");
             this.spinner.hide();
             this.productionPrevMonthLoader = false;
           }
@@ -1520,6 +1502,8 @@ selectedGraphHistoryProduction = '24h';
     extractedDatesProductionPrevMonth!:string[];
     chartProductionPrevMonth!:any;
     chartProductionPreviousMonth(){
+      this.timeStampProductionPrevMonth = [];
+      this.powerUsageProductionPrevMonth = [];
       for(let i = 0; i < this.timeStampProductionPrevMonth.length; i++){
         const dateStringList = this.timeStampProductionPrevMonth.toString();
         const substrings = dateStringList.split(',');
@@ -1552,7 +1536,7 @@ selectedGraphHistoryProduction = '24h';
           x: {
             title: {
               display: true,
-              text: 'Date ',
+              text: 'Date (month and day) ',
             },
             ticks: {
               font: {
@@ -1853,7 +1837,7 @@ selectedGraphHistoryProduction = '24h';
     
     timeStampProductionNextMonth!:[];
     productionNextMonthLoader = false;
-    productionNextMonth(id:any)
+    nextMonthProduction(id:any)
     {
       this.spinner.show();
       this.productionNextMonthLoader = true;
@@ -1946,8 +1930,28 @@ selectedGraphHistoryProduction = '24h';
     }
     }
     
-   
+   public savedEnergyUser!:any;
+    savedEnergy(userID : any){
+      this.auth.savedEnergyConsumptionUser(userID).subscribe({
+        next:(response : any) =>{
+          this.savedEnergyUser = response.toFixed(2);
+          console.log("savedEnergyConsumptionUser",response);
+        },
+        error : (err : any) => {
+          this.savedEnergyUser = 0;
+        }
+      });
 
+      this.auth.savedEnergyProductionUser(userID).subscribe({
+        next:(response : any)=>{
+          this.savedEnergyUser += response.toFixed(2);
+          console.log("savedEnergyProductionUser",response);
+        },
+        error: (err : any)=>{
+          this.savedEnergyUser += 0;
+        }
+      })
+    }
 }
 
 
