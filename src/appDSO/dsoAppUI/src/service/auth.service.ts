@@ -4,7 +4,8 @@ import { environment } from 'app/environments/environment';
 import { Info } from 'models/User';
 import { Observable } from 'rxjs';
 import { CookieService } from "ngx-cookie-service"
-
+import { ConfirmationService, MessageService, ConfirmEventType } from 'primeng/api';
+import { Router } from '@angular/router';
 @Injectable({
   providedIn: 'root'
 })
@@ -12,7 +13,10 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
-    private cookie:CookieService
+    private router:Router,
+    private cookie:CookieService,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService
   ) { }
 
   getCoords():Observable<any>{
@@ -39,6 +43,29 @@ export class AuthService {
     const jwtToken = this.cookie.get('jwtToken');
     return jwtToken;
   }
+
+  signOut() {
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to log out?',
+      header: 'Confirmation',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.cookie.delete('jwtToken');
+        this.router.navigate(['/signin']);
+      },
+      reject: (type: any) => {
+        switch (type) {
+          case ConfirmEventType.REJECT:
+            this.messageService.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected' });
+            break;
+          case ConfirmEventType.CANCEL:
+            this.messageService.add({ severity: 'warn', summary: 'Cancelled', detail: 'You have cancelled' });
+            break;
+        }
+      }
+    });
+  }
+  
   getPagination(pageNumber : number, pageSize : number) : Observable<any>{
     return this.http.get<any>(environment.apiUrl + "/api/User/users", {
       params: {
