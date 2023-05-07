@@ -13,17 +13,17 @@
           <a class="text-reset me-3">
             <i class="fa fa-plus me-1"  routerLink = "/signup" routerLinkActive #rlw ="routerLinkActive" [routerLinkActive]="'active'"></i><br>
           </a>
-         
+
         </div>
 
         <div class="col-md-2 d-none d-lg-block">
           <a  class="ms-md-2" id = "logo">
             <img src="../../../assets/icons/white no-background.png" height="32px">
           </a>
-          
+
           <span *ngIf="rld.isActive">Home</span>
           <span *ngIf="rlt.isActive">Tables</span>
-          <span *ngIf="rlw.isActive">Add Worker</span>
+          <span *ngIf="rlw.isActive">Add Employee</span>
           <span *ngIf="rln.isActive">Notifications</span>
           <span *ngIf="rlp.isActive">Profile</span>
         </div>

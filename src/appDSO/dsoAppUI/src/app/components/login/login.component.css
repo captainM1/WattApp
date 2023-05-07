@@ -18,7 +18,7 @@ color: #026670;
     }
 }
 
-@media (min-width: 1280px) and (min-height: 800px) 
+@media (min-width: 1280px) and (min-height: 800px)
 {
     .slika{
         width: 50%;
@@ -89,7 +89,7 @@ color: #026670;
     filter: drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
             /* drop-shadow(-3px -1px 4px rgba(0,0,0,0.25))
             drop-shadow(2px -2px 4px rgba(0,0,0,0.25)); */
-    background-color:  #F6F5F3; 
+    background-color:  #F6F5F3;
 }
 form{
     text-align: center;
@@ -167,18 +167,18 @@ button:focus{
     transition: all 0.2s ease-in-out;
     border-radius:0 5px 5px 0 !important;
 }
-  
+
 .addon-icon i {
     color: #6c757d;
 }
-  
+
 .form-control {
     position:relative;
     transition: all 0.2s ease-in-out;
     border-right: none;
     padding-right: 20px;
     font-weight: 500;
-    
+
     font-size: medium;
     color: black;
 }
@@ -193,7 +193,7 @@ button:focus{
     border:2px solid black;
     border-right: none;
     box-shadow: none;
-} 
+}
 .form-control:focus + .addon-icon {
     border:2px solid #026670;
     border-left:none;
@@ -204,4 +204,14 @@ button:focus{
     color: #6c757d;
     opacity: 0.5;
     font-style: normal;
+}
+
+.invalid-input {
+  border: 2px solid #dc3545;
+  border-right: none;
+}
+
+.invalid-icon {
+  border: 2px solid #dc3545;
+  border-left: none;
 }
