@@ -5,7 +5,6 @@ import { AuthService } from 'service/auth.service';
 import { MessageService } from 'primeng/api';
 import { CookieService } from "ngx-cookie-service";
 
-
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',

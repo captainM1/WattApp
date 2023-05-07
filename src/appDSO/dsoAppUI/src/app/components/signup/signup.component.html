@@ -57,20 +57,24 @@
             </div>
         </div>
             
-        <div class="col-6 centriranjegore" style="height: 50%;">
-            <p-table [value]="allWorkers" [tableStyle]="{ 'min-width': '50rem' }">
+        <div class="col-6 centriranjegore">
+            <p-table [value]="allWorkers" styleClass="p-datatable-gridlines" [tableStyle]="{ 'min-width': '50rem' }"> 
                 <ng-template pTemplate="header">
                     <tr>
-                        <th>Username</th>
+                        <th>Name</th>
+                        <th>Surename</th>
                         <th>Role</th>
                         <th>Email</th>
+                        <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-worker>
                     <tr>
-                        <td>{{ worker.userName }}</td>
+                        <td>{{ worker.firstName }}</td>
+                        <td>{{ worker.lastName }}</td>
                         <td>{{ worker.role }}</td>
                         <td>{{ worker.email }}</td>
+                        <td><button style="width: fit-content;"><i class="bi bi-x-lg" style="color:white"></i></button></td>
                     </tr>
                 </ng-template>
             </p-table>
