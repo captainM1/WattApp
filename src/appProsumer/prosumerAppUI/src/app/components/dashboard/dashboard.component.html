@@ -1,17 +1,8 @@
-<ngx-ui-loader
-  fgsColor="#fff"
-  pbColor="#fff"
-  text="Please wait..."
-  textColor="#fff"
->
-</ngx-ui-loader>
-
-
-
   <app-nav class="desktop"></app-nav>
   <app-mob-nav class="mobile"></app-mob-nav>
 
-  <div class="outer" ngxUiLoaderBlurred>
+  <div class="outer">
+
     <div class="container">
       <div class="row centriranje">
         <h2>Consumption</h2>
@@ -23,12 +14,15 @@
             </select>
 
             <div *ngIf="selectedGraphHistoryConsumption === 'month'">
+                <ngx-spinner bdColor = "rgba(0, 0, 0, 0.5)" size = "medium" color = "#fff" type = "ball-spin" [showSpinner]="showPreviousMonth" [fullScreen]="false" *ngIf="showPreviousMonth"><p style="color: #fff; margin-top: 60px;" > Please wait... </p></ngx-spinner>
               <canvas #consumptionPrevMonthGraph></canvas>
             </div>
             <div *ngIf="selectedGraphHistoryConsumption === '7days'">
+              <ngx-spinner bdColor = "rgba(0, 0, 0, 0.5)" size = "medium" color = "#fff" type = "ball-spin" [showSpinner]="showPrevious7days" [fullScreen]="false" *ngIf="showPrevious7days"><p style="color: #fff; margin-top: 60px;" > Please wait... </p></ngx-spinner>
               <canvas #consumptionPrev7daysGraph ></canvas>
             </div>
             <div *ngIf="selectedGraphHistoryConsumption === '24h'">
+              <ngx-spinner bdColor = "rgba(0, 0, 0, 0.5)" size = "medium" color = "#fff" type = "ball-spin" [showSpinner]="showPrevious24h" [fullScreen]="false" *ngIf="showPrevious24h"><p style="color: #fff; margin-top: 60px;" > Please wait... </p></ngx-spinner>
               <canvas #previous24ConsumptionGraph ></canvas>
             </div>
         </div>
@@ -40,12 +34,15 @@
           </select>
 
           <div *ngIf="selectedGraphFutureConsumption === 'month'" >
+            <ngx-spinner bdColor = "rgba(0, 0, 0, 0.5)" size = "medium" color = "#fff" type = "ball-spin" [showSpinner]="showNextMonth" [fullScreen]="false" *ngIf="showNextMonth"><p style="color: #fff; margin-top: 60px;" > Please wait... </p></ngx-spinner>
             <canvas #consumptionNextMonthGraph></canvas>
           </div>
           <div *ngIf="selectedGraphFutureConsumption === '24h'" >
+            <ngx-spinner bdColor = "rgba(0, 0, 0, 0.5)" size = "medium" color = "#fff" type = "ball-spin" [showSpinner]="showNext24h" [fullScreen]="false" *ngIf="showNext24h"><p style="color: #fff; margin-top: 60px;" > Please wait... </p></ngx-spinner>
             <canvas #next24ConsumptionGraph></canvas>
           </div>
           <div *ngIf="selectedGraphFutureConsumption === '7days'" >
+            <ngx-spinner bdColor = "rgba(0, 0, 0, 0.5)" size = "medium" color = "#fff" type = "ball-spin" [showSpinner]="showNext7days" [fullScreen]="false" *ngIf="showNext7days"><p style="color: #fff; margin-top: 60px;" > Please wait... </p></ngx-spinner>
             <canvas #consumptionNext7daysGraph></canvas>
           </div>
       </div>
@@ -60,14 +57,17 @@
           </select>
 
           <div *ngIf="selectedGraphHistoryProduction === '24h'">
-            <canvas #previous24ProductionGraph ></canvas>
+            <ngx-spinner bdColor = "rgba(0, 0, 0, 0.5)" size = "medium" color = "#fff" type = "ball-spin" [showSpinner]="showProdPrevious24h" [fullScreen]="false" *ngIf="showProdPrevious24h"><p style="color: #fff; margin-top: 60px;" > Please wait... </p></ngx-spinner>
+             <canvas #previous24ProductionGraph ></canvas>
           </div>
 
           <div *ngIf="selectedGraphHistoryProduction === 'month'">
+            <ngx-spinner bdColor = "rgba(0, 0, 0, 0.5)" size = "medium" color = "#fff" type = "ball-spin" [showSpinner]="showProdPreviousMonth" [fullScreen]="false" *ngIf="showProdPreviousMonth"><p style="color: #fff; margin-top: 60px;" > Please wait... </p></ngx-spinner>
             <canvas #productionPrevMonthGraph></canvas>
           </div>
 
           <div *ngIf="selectedGraphHistoryProduction === '7days'" >
+            <ngx-spinner bdColor = "rgba(0, 0, 0, 0.5)" size = "medium" color = "#fff" type = "ball-spin" [showSpinner]="showProdPrevious7days" [fullScreen]="false" *ngIf="showProdPrevious7days"><p style="color: #fff; margin-top: 60px;" > Please wait... </p></ngx-spinner>
             <canvas #productionPrev7daysGraph></canvas>
           </div>
 
@@ -82,15 +82,18 @@
             </select>
 
             <div *ngIf="selectedGraphFutureProduction === 'month'" >
+              <ngx-spinner bdColor = "rgba(0, 0, 0, 0.5)" size = "medium" color = "#fff" type = "ball-spin" [showSpinner]="showProdNextMonth" [fullScreen]="false" *ngIf="showProdNextMonth"><p style="color: #fff; margin-top: 60px;" > Please wait... </p></ngx-spinner>
               <canvas #productionNextMonthGraph></canvas>
             </div>
 
             <div *ngIf="selectedGraphFutureProduction === '24h'" >
-              <canvas #next24ProductionGraph></canvas>
+              <ngx-spinner bdColor = "rgba(0, 0, 0, 0.5)" size = "medium" color = "#fff" type = "ball-spin" [showSpinner]="showProdNext24h" [fullScreen]="false" *ngIf="showProdNext24h"><p style="color: #fff; margin-top: 60px;" > Please wait... </p></ngx-spinner>
+            <canvas #next24ProductionGraph></canvas>
             </div>
 
             <div *ngIf="selectedGraphFutureProduction === '7days'" >
-              <canvas #productionNext7daysGraph></canvas>
+              <ngx-spinner bdColor = "rgba(0, 0, 0, 0.5)" size = "medium" color = "#fff" type = "ball-spin" [showSpinner]="showProdNext7days" [fullScreen]="false" *ngIf="showProdNext7days"><p style="color: #fff; margin-top: 60px;" > Please wait... </p></ngx-spinner>
+            <canvas #productionNext7daysGraph></canvas>
             </div>
         </div>
 

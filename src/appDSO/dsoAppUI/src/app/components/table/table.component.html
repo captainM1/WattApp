@@ -36,7 +36,7 @@
                 </tr>
               </thead>
               <tr *ngFor="let user of allUsers | filterName : _searchByName: _searchByAddress" (click) = "showMeOnMap(user.id)">
-                  <td *ngIf="user"><input [(ngModel)]="user.selected"  type = "checkbox" style="width: 20px;" (click) = "toggleExportSelected()"></td>  
+                  <td *ngIf="user"><input [(ngModel)]="exportSelected"  type = "checkbox" style="width: 20px;" (click) = "toggleExportSelected()"></td>  
                   <td >{{user.firstName}}</td> 
                   <td>{{user.lastName}}</td>
                   <td>{{user.address}}, {{user.city}}, {{user.country}}</td>
@@ -99,9 +99,9 @@
         <div class="row">
           <div class="col">
             <div class="id-button-popUp" >
-              <button class = "my-button active"[class.active]="isActiveUser" (click)="toggleActive('user'); showMeGeneral = true; showDevicePage = false; showSystemPage = false;">About User</button>
-              <button  class = "my-button active" [class.active]="isActiveDevice" (click)="toggleActive('device'); showDevicePage = true; showSystemPage = false; showMeGeneral = false;">Devices</button>
-              <button  class = "my-button active" [class.active]="isActiveSystem" (click)="toggleActive('system'); showDevicePage = false; showSystemPage = true; showMeGeneral = false;">System</button>
+              <button class = "my-button active"[class.active]="isActiveUser" (click)="toggleActive('user'); showMeGeneral = true; showDevicePage = false; showSystemPage = false; showMeProduction = false">About User</button>
+              <button  class = "my-button active" [class.active]="isActiveDevice" (click)="toggleActive('device'); showDevicePage = true; showSystemPage = false; showMeGeneral = false; showMeProduction = false">Devices</button>
+              <button  class = "my-button active" [class.active]="isActiveSystem" (click)="toggleActive('system'); showDevicePage = false; showSystemPage = true; showMeGeneral = false; showMeProduction = false">System</button>
             </div>
             <div class="row" *ngIf="showMeGeneral">
               <div class="col-sm" id = "userInfo">

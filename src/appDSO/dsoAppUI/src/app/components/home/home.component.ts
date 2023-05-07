@@ -7,7 +7,8 @@ import { User } from 'models/User';
 import { animation } from '@angular/animations';
 import { Root } from 'models/weather';
 import { FormsModule } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Subscription, map, timer } from 'rxjs';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-home',
@@ -15,14 +16,20 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit, AfterViewInit{
-	
+// loader
+	weatherLoader!:boolean;
 	public selectedGraph!:any;
+	backgroundColorsGraphs =  ['#62C370', '#EC7357', '#F42C04'];
+	currentDate: any;
+	summarySavedEnergy: any;
+	showProdPrevious24h!: boolean;
 	constructor(
-		private auth : AuthService
+		private auth : AuthService,
+		private spinner: NgxSpinnerService
 	){}
 
 	ngOnInit(): void {	
-		this.selectedGraph = 'current';
+		
 		// temperature
 		this.giveMeWeather();
 		this.getAllUserInfo();
@@ -30,20 +37,26 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		this.getDate();
 		this.getNumberOfUsers();
 		this.getDeviceGroup();
-		this.Day();
-		this.eachDeviceConsumptingPrevMonth();
+		this.currentConsumptionDay();
+		this.currentProductionDay();
+		this.openModel();
+		this.closeModel();
+		
 	}
 
 	ngAfterViewInit(): void {
 		this.giveMeChartForTemperatureDaily();
-		
+		this.lineChartConsumptionProduction();
 		this.getConsumptionCurrent();
+
 		this.getConsumtionPrevMonth();
 		this.getConsumtionNextMonth();
 
 		this.getProductionCurrent();
 		this.nextMonthProductionSystem();
 		this.prevMonthProductionSystem();
+		this.selectedGraph = 'current';
+		
 	}
 	
 	ngOnDestroy(): void {
@@ -90,7 +103,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 	labStorages!:string[];
 	
 // consumption 
-	currentConsumptionSys!:any;
+	public currentConsumptionSys!:any;
 	prevMonthConsumptionSys!:any;
 	nextMonthConsumptionSys!:any;
 	prevMonthEachDeviceConsumption!: eachDevice[];
@@ -136,22 +149,21 @@ export class HomeComponent implements OnInit, AfterViewInit{
 	
 	
 	getDate(){
-		this.today = new Date();
-		this.dateForWeater = this.today.toLocaleString('en-US',{ hour: 'numeric', minute: 'numeric', day:'numeric', month:'numeric', year:'numeric' });
-		this.currHour = this.today.getHours();
-		this.MonthPrev = new Date(this.today.getFullYear(), this.today.getMonth() - 1);
-		this.month = this.MonthPrev.toLocaleString('default', { month: 'long', year: 'numeric' });
-		
-		this.MonthNext = new Date(this.today.getFullYear(), this.today.getMonth() + 1);
-		this.next =  this.MonthNext.toLocaleString('default', { month: 'long', year: 'numeric' });
+		this.currentDate = timer(0,1000).pipe(
+			map(()=>{
+			  return new Date();
+			})
+		  )
 	}
 //  --- weater ---	
 	giveMeWeather(){
+		this.spinner.show();
+		this.weatherLoader = true;
 		this.auth.getWeather().subscribe(
 			(response :any)=>{
 				this.weather = response;
-				console.log(this.weather);
-				
+				this.spinner.hide();
+				this.weatherLoader = false;
 			}
 		)
 	}
@@ -269,11 +281,24 @@ export class HomeComponent implements OnInit, AfterViewInit{
 	
 	
 // CONSUMPTION 
+		consumptionCurrentLoader:boolean = false;
 		getConsumptionCurrent(){
+			this.spinner.show();
+			this.consumptionCurrentLoader = true;
 			this.auth.currentConsumptionSystem().subscribe(
-				(response:any)=>{
-					this.currentConsumptionSys = response.toFixed(2);
-					this.halfDoughnutConsumtionSys(this.currentConsumptionSys);
+				{
+					next:(response:any)=>{
+						
+						this.currentConsumptionSys = (response).toFixed(2);
+						this.currentConsumptionDay();
+						this.halfDoughnutConsumtionSys(this.currentConsumptionSys);
+						this.spinner.hide();
+						this.consumptionCurrentLoader = false;
+					},
+					error:(error:any)=>{
+						this.spinner.hide();
+						this.consumptionCurrentLoader = false;
+					}
 				}
 			)
 		}
@@ -281,13 +306,22 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		
 		halfDoughnutConsumtionSys(usage: any){
 		  const d = usage;
+		  console.log("USAGE - consumption",usage);
+			let selectColor = this.backgroundColorsGraphs[0];
+			if(d < 350){
+				selectColor = this.backgroundColorsGraphs[0];
+			}else if(d > 350 && d < 700){
+				selectColor = this.backgroundColorsGraphs[1];
+			}else if(d > 700) {
+				selectColor = this.backgroundColorsGraphs[2];
+			}
 		  const data = {
 			labels: ['Energy consumption'],
 			datasets: [
 			  {
 				label: 'Energy consumption',
 				data: [d, 1000-d],
-				backgroundColor: ['#FF8811', '#ECEFF1'],
+				backgroundColor: [selectColor, '#ECEFF1'],
 			  },
 			],
 		  };
@@ -305,26 +339,31 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		  });
 		}
 
-
+		consumptionPrevMonthLoader:boolean = false;;
 		getConsumtionPrevMonth(){
+			this.spinner.show();
+			this.consumptionPrevMonthLoader = true;
 			this.auth.prevMonthConsumptionSystem().subscribe(
+				
 				(response : any) => {
-					this.prevMonthConsumptionSys = response.toFixed(2);
+					
+					this.prevMonthConsumptionSys = (response/1000).toFixed(2);
 					this.halfDoughnutPrevMonthConsumtionSys(this.prevMonthConsumptionSys);
+					this.spinner.hide();
+					this.consumptionPrevMonthLoader = false;
 				}
 			)
 		}
 // prevMonthConsumptionSYS
 		halfDoughnutPrevMonthConsumtionSys(usage: any){
-			const d = usage / 1000;
-			const backgroundColor = ['#3bc14a', '#2de1fc', '#D00000'];
-			let selectColor = '#3bc14a';
-			if(d/1000 < 350){
-				selectColor = '#3bc14a';
-			}else if(d/1000 > 350){
-				selectColor = '#2de1fc';
-			}else{
-				selectColor = '#D00000';
+			const d = usage;
+			let selectColor = this.backgroundColorsGraphs[0];
+			if(d < 350){
+				selectColor = this.backgroundColorsGraphs[0];
+			}else if(d > 350 && d < 700){
+				selectColor = this.backgroundColorsGraphs[1];
+			}else if(d > 700) {
+				selectColor = this.backgroundColorsGraphs[2];
 			}
 			
 			const data = {
@@ -332,7 +371,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			datasets: [
 				{
 				label : 'Energy Consumption',
-				data: [d, 1000 -d ],
+				data: [d, 1000 - d ],
 				backgroundColor: [selectColor, '#ECEFF1'],
 				},
 			],
@@ -350,25 +389,39 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			options: options,
 			});
 		}
-
+		consumptionNextMonthLoader:boolean = false;
 		getConsumtionNextMonth(){
+			this.spinner.show();
+			this.consumptionNextMonthLoader = true;
 			this.auth.nextMonthConsumtionSystem().subscribe(
 				(response : any) => {
-					this.nextMonthConsumptionSys = response.toFixed(2);
+					this.nextMonthConsumptionSys = (response/1000).toFixed(2);
 					this.halfDoughnutNextMonthConsumtionSys(this.nextMonthConsumptionSys);
+					this.spinner.hide();
+					this.consumptionNextMonthLoader = false;
 				}
 			)
 		}
 // prevMonthConsumptionSYS
 		halfDoughnutNextMonthConsumtionSys(usage: any){
 			const d = usage;
+		  	
+			let selectColor = this.backgroundColorsGraphs[0];
+			if(d < 350){
+				selectColor = this.backgroundColorsGraphs[0];
+			}else if(d > 350 && d < 700){
+				selectColor = this.backgroundColorsGraphs[1];
+			}else if(d > 700) {
+				selectColor = this.backgroundColorsGraphs[2];
+			}
+			
 			const data = {
 			labels: ['Energy consumption'],
 			datasets: [
 				{
 				label: 'Energy consumption',
 				data: [d, 1000-d],
-				backgroundColor: ['#FF8811', '#ECEFF1'],
+				backgroundColor: [selectColor, '#ECEFF1'],
 				},
 			],
 			};
@@ -387,24 +440,41 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		}
 // PRODUCTION 
 // currentProductionSYS
+		productionPrevMonthLoader:boolean = false;
 		prevMonthProductionSystem(){
-			this.auth.currentProcustionSystem().subscribe(
-				(response : any) => {
-					this.prevMonthConsumptionSys = response.toFixed(2);
-					
-					
+			this.spinner.show();
+			this.productionPrevMonthLoader = true;
+			this.auth.currentProcustionSystem().subscribe({
+				next:(response : any) => {
+					this.prevMonthConsumptionSys = (response/1000).toFixed(2);
+					this.spinner.hide();
+					this.productionPrevMonthLoader = false;
+				},
+				error: (error : any) => {
+					this.prevMonthProductionSys = 0;
+					this.spinner.hide();
+					this.productionPrevMonthLoader = false;
 				}
+			}
 			)
 		}
 		halfDoughnutPrevMonthProductionSys(usage: any){
 			const d = usage;
+			let selectColor = this.backgroundColorsGraphs[0];
+			if(d < 350){
+				selectColor = this.backgroundColorsGraphs[0];
+			}else if(d > 350 && d < 700){
+				selectColor = this.backgroundColorsGraphs[1];
+			}else if(d > 700) {
+				selectColor = this.backgroundColorsGraphs[2];
+			}
 			const data = {
 			labels: ['Energy production'],
 			datasets: [
 				{
 				label: 'Energy production',
 				data: [d, 1000-d],
-				backgroundColor: ['#FF8811', '#ECEFF1'],
+				backgroundColor: [selectColor, '#ECEFF1'],
 				},
 			],
 			};
@@ -421,25 +491,44 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			options: options,
 			});
 		}
-		
+		productionCurrentLoader:boolean = false;
 		getProductionCurrent(){
+			this.spinner.show();
+			this.productionCurrentLoader = true;
 			this.auth.currentProcustionSystem().subscribe(
-				(response : any) => {
-					this.currentProductionSys = response.toFixed(2);
-					//console.log(this.currentProductionSys);
-					
+				{
+					next:(response : any) => {
+						this.currentProductionSys = response.toFixed(2);
+						this.halfDoughnutProductionSys(this.currentProductionSys);
+						this.spinner.hide();
+						this.productionCurrentLoader = false;
+					},
+					error:(err : any) => {
+						this.currentProductionSys = 0;
+						this.spinner.hide();
+						this.productionCurrentLoader = false;
+					}
 				}
 			)
 		}
 		halfDoughnutProductionSys(usage: any){
 			const d = usage;
+			let selectColor = this.backgroundColorsGraphs[0];
+			if(d < 350){
+				selectColor = this.backgroundColorsGraphs[0];
+			}else if(d > 350 && d < 700){
+				selectColor = this.backgroundColorsGraphs[1];
+			}else if(d > 700) {
+				selectColor = this.backgroundColorsGraphs[2];
+			}
+
 			const data = {
 			labels: ['Energy production'],
 			datasets: [
 				{
 				label: 'Energy production',
 				data: [d, 1000-d],
-				backgroundColor: ['#FF8811', '#ECEFF1'],
+				backgroundColor: [selectColor, '#ECEFF1'],
 				},
 			],
 			};
@@ -456,17 +545,22 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			options: options,
 			});
 		}	
-
+		nextMonthProductionLoader: boolean =false;
 		nextMonthProductionSystem(){
+			this.spinner.show();
+			this.nextMonthProductionLoader = true;
 			this.auth.nextMonthProductionSystem().subscribe(
 				{
 					next: (response : any) => {
 						this.nextMonthProductionSys = response.toFixed(2);
-						//console.log("nextMonthProductionSys:",this.nextMonthProductionSys);
 						this.halfDoughnutNextMonthProductionSys(this.nextMonthProductionSys);
+						this.spinner.hide();
+						this.nextMonthProductionLoader = false;
 					},
 					error: (err : any) => {
 						this.nextMonthProductionSys = 0;
+						this.spinner.hide();
+						this.nextMonthProductionLoader = false;
 					}
 				}
 				
@@ -474,13 +568,21 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		}
 		halfDoughnutNextMonthProductionSys(usage: any){
 			const d = usage;
+			let selectColor = this.backgroundColorsGraphs[0];
+			if(d < 350){
+				selectColor = this.backgroundColorsGraphs[0];
+			}else if(d > 350 && d < 700){
+				selectColor = this.backgroundColorsGraphs[1];
+			}else if(d > 700) {
+				selectColor = this.backgroundColorsGraphs[2];
+			}
 			const data = {
 			labels: ['Energy production'],
 			datasets: [
 				{
 				label: 'Energy production',
 				data: [d, 1000-d],
-				
+				backgroundColor: [selectColor, '#ECEFF1'],
 				},
 			],
 			};
@@ -531,8 +633,6 @@ export class HomeComponent implements OnInit, AfterViewInit{
 				this.auth.deviceTypeInfo().subscribe(
 					(response : any) => {
 						this.deviceTypeINFO = response;
-						console.log("Join1,", this.deviceTypeINFO);
-						this.join();
 					},
 					(err : any) => {
 						console.error(err);
@@ -604,7 +704,9 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		this.selectedGraphProduction = graph;
 		switch (graph) {
 			case 'current':
+				
 				this.getProductionCurrent();
+				
 			break;
 			case 'prevMonth':
 				this.prevMonthProductionSystem();
@@ -626,79 +728,128 @@ export class HomeComponent implements OnInit, AfterViewInit{
 					break;
 			}
 		}
+		timeStampCurrDayC = [];
+		powerUsageCurrDayC = [];
+		stringsCurrDayC!:string[];
+		currentConsumptionDayLoader:boolean = false;
 
-		join(){
-			console.log("Join2",this.prevMonthEachDeviceConsumption.length);
-			console.log("Join1,",this.deviceTypeINFO.length)
-			console.log("ALL", this.all);
-		}
-		
-		Day(){
+		currentConsumptionDay(){
+			this.spinner.show();
+			this.currentConsumptionDayLoader = true;
 			this.auth.currentConsumptionDay().subscribe(
 				(response:any)=>{
 					this.currentDataC = response['timestampPowerPairs'];
+					
 					this.timestamps1 = this.currentDataC.map((obj: { timestamp:any[]; }) => obj.timestamp.slice(11, 16));
 					this.powerusage1 = this.currentDataC.map((obj: { powerUsage: any[]; }) => obj.powerUsage);
 					
 					this.prevHour = response['timestampPowerPairs'][12]['powerUsage'].toFixed(2);
 					this.currentHour = response['timestampPowerPairs'][13]['powerUsage'].toFixed(2);
-					this.razlika = (((this.currentHour-this.prevHour)*100)/100).toFixed(2);
+					this.razlika = (((this.currentHour - this.prevHour)/this.prevHour)*100).toFixed(2);
+					this.makeDataForConsumptionDay(this.currentDataC);
+					this.spinner.hide();
+					this.currentConsumptionDayLoader = false;
 				}
 			)
-				this.auth.currentProductionDay().subscribe(
-					(response:any)=>{
-						this.currentDataP = response['timestampPowerPairs'];
-						this.timestamps1 = this.currentDataP.map((obj: { timestamp: any[]; }) => obj.timestamp.slice(11, 16));
-						this.powerusage2 = this.currentDataP.map((obj: { powerUsage: any[]; }) => obj.powerUsage);
-	
-						this.prevHour1 = response['timestampPowerPairs'][12]['powerUsage'].toFixed(2);
-						this.currentHour1 = response['timestampPowerPairs'][13]['powerUsage'].toFixed(2);
-						this.razlika1 = (((this.currentHour1-this.prevHour1)*100)/100).toFixed(2);
-					}
-				)
-			
-			
+		}
+		timeStampCurrDayP = [];
+		powerUsageCurrDayP = [];
+		stringsCurrDayP!:string[];
+		currentProductionDayLoader : boolean = false;
+		currentProductionDay(){
+			this.spinner.show();
+			this.currentProductionDayLoader = true;
+			this.auth.currentProductionDay().subscribe(
+				(response:any)=>{
+					this.currentDataP = response['timestampPowerPairs'];
+					
+					this.timestamps2 = this.currentDataP.map((obj: { timestamp: any[]; }) => obj.timestamp.slice(11, 16));
+					this.powerusage2 = this.currentDataP.map((obj: { powerUsage: any[]; }) => obj.powerUsage);
 
+					this.prevHour1 = response['timestampPowerPairs'][12]['powerUsage'].toFixed(2);
+					this.currentHour1 = response['timestampPowerPairs'][13]['powerUsage'].toFixed(2);
+					this.razlika1 = (((this.currentHour1 - this.prevHour1)/this.prevHour1)*100).toFixed(2);
+					this.makeDataForProductionDay(this.currentDataP);
+					this.spinner.hide();
+					this.currentProductionDayLoader = false;
+				}
+			)	
+		}
+
+		makeDataForConsumptionDay(dataGraph : any){
+			for(let i = 0; i < dataGraph.length; i++){
+				this.timeStampCurrDayC.push(this.currentDataC[i]['timestamp']);
+				this.powerUsageCurrDayC.push(this.currentDataC[i]['powerUsage']);
+			  }
+			for(let i = 0; i < this.timeStampCurrDayP.length; i++){
+				const dateStringList = this.timeStampCurrDayC.toString();
+				const substrings = dateStringList.split(',');
+				this.stringsCurrDayC = substrings.map(date => date.substring(0, date.indexOf('T')));
+			  }
+		}
+		makeDataForProductionDay(dataGraph:any){
+			for(let i = 0; i < dataGraph.length; i++){
+				this.timeStampCurrDayP.push(this.currentDataP[i]['timestamp']);
+				this.powerUsageCurrDayP.push(this.currentDataP[i]['powerUsage']);
+			  }
+			
+		}
+
+		
+		savedEnergy(){
 			this.auth.savedEnergyConsumption().subscribe(
 				(response : any)=>{
 					this.savedC = response.toFixed(2);
 				}
 			)
-
 			this.auth.savedEnergyProduction().subscribe(
 				(response : any)=>{
 					this.savedP = response.toFixed(2);
 				}
 			)
-			this.lineChartConsumptionProduction();
-			
+			this.summarySavedEnergy = this.savedC + this.savedP;
 		}
 
 		lineChartConsumptionProduction(){
-			//this.Day();
-			console.log(this.currentDataC);
-			console.log(this.currentDataP)
+			
 			const data = {
-				labels: ['aaa','aaa'],
+				labels: this.stringsCurrDayC,
 				datasets: [
 				  {
 					label: 'Consumtion',
-					data: [10,10,10],
+					data:this.powerUsageCurrDayC,
+					backgroundColor: this.backgroundColorsGraphs[0],
+					borderColor: 'rgba(98, 195, 112, 20)',
+					borderWidth: 1
 				  },
 				  {
 					label: 'Production',
-					data: [14,15,74],
+					data: this.powerUsageCurrDayP,
+					backgroundColor: this.backgroundColorsGraphs[1],
+					borderColor: 'rgba(236, 115, 87, 20)',
+					borderWidth: 1
 				  }
 				]
 			  };
 				const stackedLine = new Chart(this.consumptionProduction.nativeElement, {
 					type: 'line',
 					data: data
-					
 				});
 			 }
 
-		
+			 openModel() {
+				const modal = document.getElementById("myPopup");
+				if(modal){
+				modal.style.display = "block";
+				}
+			  }
+			  
+			  closeModel() {
+				const modal = document.getElementById("myPopup");
+				if(modal){
+				modal.style.display = "none";
+				}
+			  }
 }
 
 

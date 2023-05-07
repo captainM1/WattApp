@@ -90,7 +90,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnChanges {
 
 // pagination
   public page = 1;
-  public pageSize = 10;
+  public pageSize = 5;
   
   showAllUsersOnMap : boolean = true;
   lengthOfUsers!: number;
@@ -116,7 +116,7 @@ export class TableComponent implements OnInit, AfterViewInit, OnChanges {
   private latlng: L.LatLng[] = [];
   
   selected: string = "";
-  pageSizeOptions = [10, 25, 50];
+  pageSizeOptions = [5, 10, 25, 50];
 
   powerUsage!: string;
   deviceGroup!: any[];
@@ -260,7 +260,8 @@ export class TableComponent implements OnInit, AfterViewInit, OnChanges {
 
     toggleExportSelected(): void {
       this.exportSelected = !this.exportSelected;
-      // console.log(this.exportSelected);
+      
+      console.log(this.exportSelected);
     }
     activeColIndex: number = -1;
 
