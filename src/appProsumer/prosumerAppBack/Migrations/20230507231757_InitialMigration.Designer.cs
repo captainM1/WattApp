@@ -11,8 +11,8 @@ using prosumerAppBack.DataAccess;
 namespace prosumerAppBack.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230505111148_ChangedDispatcher")]
-    partial class ChangedDispatcher
+    [Migration("20230507231757_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,10 +53,19 @@ namespace prosumerAppBack.Migrations
                         new
                         {
                             ID = new Guid("32ea7105-f582-4441-ae81-b738c4284f7e"),
-                            DeviceName = "name 1",
+                            DeviceName = "Ves Masina",
                             DeviceTypeID = new Guid("32ea7105-f582-4441-ae81-b738c4284f7e"),
                             IsOn = false,
                             MacAdress = "00-1B-63-84-45-E6",
+                            OwnerID = new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f52")
+                        },
+                        new
+                        {
+                            ID = new Guid("32ea7105-f582-4441-ae81-b738c4284f7d"),
+                            DeviceName = "Solarni Panel",
+                            DeviceTypeID = new Guid("a2d2d5ec-b064-4f72-9e0e-84c1171cc14d"),
+                            IsOn = false,
+                            MacAdress = "00-1B-63-84-45-E7",
                             OwnerID = new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f52")
                         });
                 });
@@ -397,6 +406,38 @@ namespace prosumerAppBack.Migrations
                             ManufacturerID = new Guid("4d4d4d4d-4d4d-4d4d-4d4d-4d4d4d4d4d4d"),
                             Name = "Dryer",
                             Wattage = 3400.0
+                        },
+                        new
+                        {
+                            ID = new Guid("696e9069-6bac-47e4-a7c2-8c4779ed33bb"),
+                            GroupID = new Guid("18f30035-59de-474f-b9db-987476de551f"),
+                            ManufacturerID = new Guid("4d4d4d4d-4d4d-4d4d-4d4d-4d4d4d4d4d50"),
+                            Name = "Wind Turbine",
+                            Wattage = 2000.0
+                        },
+                        new
+                        {
+                            ID = new Guid("696e9069-6bac-47e4-a7c2-8c4779ed33ba"),
+                            GroupID = new Guid("18f30035-59de-474f-b9db-987476de551f"),
+                            ManufacturerID = new Guid("4d4d4d4d-4d4d-4d4d-4d4d-4d4d4d4d4d4f"),
+                            Name = "Wind Turbine",
+                            Wattage = 1000.0
+                        },
+                        new
+                        {
+                            ID = new Guid("a2d2d5ec-b064-4f72-9e0e-84c1171cc14f"),
+                            GroupID = new Guid("18f30035-59de-474f-b9db-987476de551f"),
+                            ManufacturerID = new Guid("4d4d4d4d-4d4d-4d4d-4d4d-4d4d4d4d4d54"),
+                            Name = "Solar Panel",
+                            Wattage = 6000.0
+                        },
+                        new
+                        {
+                            ID = new Guid("a2d2d5ec-b064-4f72-9e0e-84c1171cc14d"),
+                            GroupID = new Guid("18f30035-59de-474f-b9db-987476de551f"),
+                            ManufacturerID = new Guid("4d4d4d4d-4d4d-4d4d-4d4d-4d4d4d4d4d63"),
+                            Name = "Solar Panel",
+                            Wattage = 4000.0
                         });
                 });
 
@@ -438,9 +479,9 @@ namespace prosumerAppBack.Migrations
                         {
                             ID = new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f53"),
                             Email = "admin@gmail.com",
-                            PasswordHash = new byte[] { 9, 240, 144, 23, 20, 85, 174, 135, 225, 101, 173, 223, 111, 4, 206, 137, 224, 74, 218, 94, 207, 97, 141, 65, 197, 26, 69, 9, 159, 185, 73, 22 },
+                            PasswordHash = new byte[] { 5, 239, 171, 209, 102, 62, 204, 32, 57, 229, 238, 152, 68, 130, 169, 190, 123, 89, 16, 203, 181, 134, 248, 190, 144, 31, 65, 205, 100, 146, 145, 20 },
                             Role = "Admin",
-                            Salt = new byte[] { 47, 68, 162, 51, 181, 3, 82, 56, 169, 3, 173, 187, 86, 160, 243, 33 }
+                            Salt = new byte[] { 158, 40, 185, 3, 226, 183, 69, 58, 97, 9, 173, 249, 188, 70, 247, 103 }
                         });
                 });
 
@@ -508,10 +549,10 @@ namespace prosumerAppBack.Migrations
                             Email = "petarsimic@gmail.com",
                             FirstName = "Petar",
                             LastName = "Simic",
-                            PasswordHash = new byte[] { 168, 69, 127, 0, 155, 98, 230, 17, 220, 37, 47, 27, 215, 219, 113, 113, 43, 137, 142, 216, 82, 58, 128, 112, 110, 170, 219, 221, 37, 254, 138, 201 },
+                            PasswordHash = new byte[] { 127, 109, 204, 47, 182, 224, 231, 72, 196, 73, 180, 145, 154, 238, 3, 223, 115, 75, 50, 96, 77, 153, 9, 75, 73, 101, 124, 14, 92, 83, 13, 26 },
                             PhoneNumber = "064-316-15-81",
                             Role = "RegularUser",
-                            Salt = new byte[] { 248, 186, 106, 223, 35, 107, 190, 0, 101, 159, 65, 114, 102, 135, 155, 25 },
+                            Salt = new byte[] { 234, 9, 234, 20, 21, 57, 126, 237, 181, 211, 141, 20, 154, 236, 245, 118 },
                             dsoHasControl = false,
                             sharesDataWithDso = false
                         });

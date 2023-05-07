@@ -9,13 +9,25 @@ average_power_productions = {
         {
             "id": "A2D2D5EC-B064-4F72-9E0E-84C1171CC14D",
             "name": "Solar Panel",
-            "average_power_production": 4000,
+            "average_power_production": 4,
+            "peak_hours": [10, 11, 12, 13, 14, 15, 16, 17]
+        },
+        {
+            "id": "A2D2D5EC-B064-4F72-9E0E-84C1171CC14F",
+            "name": "Solar Panel",
+            "average_power_production": 6,
             "peak_hours": [10, 11, 12, 13, 14, 15, 16, 17]
         },
         {
             "id": "696E9069-6BAC-47E4-A7C2-8C4779ED33BA",
             "name": "Wind Turbine",
-            "average_power_production": 1000,
+            "average_power_production": 1,
+            "peak_hours": [8, 9, 10, 11, 12, 13, 14, 15, 16]
+        },
+        {
+            "id": "696E9069-6BAC-47E4-A7C2-8C4779ED33BB",
+            "name": "Wind Turbine",
+            "average_power_production": 2,
             "peak_hours": [8, 9, 10, 11, 12, 13, 14, 15, 16]
         }
     ]
