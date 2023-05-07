@@ -1205,7 +1205,6 @@ public class PowerUsageRepository : IPowerUsageRepository
 
         var devices = _dataContext.Devices.Select(d => d.DeviceTypeID).ToList();
 
-        var sums = new Dictionary<DateTime, double>();
         var currentDate = startOf24Period;
 
         while (currentDate <= endOf24Period)
@@ -1243,8 +1242,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         powerUsage.TimestampPowerPairs = new List<TimestampPowerPair>();
 
         var devices = _dataContext.Devices.Select(d => d.DeviceTypeID).ToList();
-
-        var sums = new Dictionary<DateTime, double>();
+       
         var currentDate = startOf24Period;
         
         while (currentDate <= endOf24Period)
