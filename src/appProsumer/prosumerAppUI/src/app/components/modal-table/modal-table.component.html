@@ -13,11 +13,11 @@
             <table>
               <tr>
                   <th>{{ time }}</th>
-                  <th>Power Usage</th>
+                  <th>Power {{ type }}</th>
               </tr>
               <tr *ngFor="let item of data">
-                  <td>{{ item.timestamp }}</td>
-                  <td>{{ item.powerUsage.toFixed(2) }}</td>
+                  <td>{{ item.timestamp }}h</td>
+                  <td>{{ item.powerUsage.toFixed(2) }} kWh</td>
               </tr>
           </table>
     </div>

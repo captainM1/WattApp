@@ -70,7 +70,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
   timeStampProductionNextMonth = [];
   powerUsageProductionNextMonth = [];
   chartProdNextMonth!:any;
-  data!:[];
+  data: any[]=[];
 
   constructor(
 		private auth : AuthService,
@@ -202,8 +202,6 @@ export class DashboardComponent implements OnInit, AfterViewInit{
       (response : any) => {
         this.graph24prev = response;
         console.log(response);
-        this.data = response[0].timestampPowerPairs;
-        console.log(this.data);
         this.makeData(this.graph24prev);
       }
      );
@@ -221,6 +219,15 @@ export class DashboardComponent implements OnInit, AfterViewInit{
     this.timestampListPrev24h.sort((a: string, b: string) => {
       return parseInt(a) - parseInt(b);
     });
+
+    for (let i = 0; i < this.timestampListPrev24h.length; i++) {
+      const pair = {
+        timestamp: this.timestampListPrev24h[i],
+        powerUsage: this.powerUsageListPrev24h[i]
+      };
+      this.data.push(pair);
+    }
+
     this.previous24Graph(this.timestampListPrev24h, this.powerUsageListPrev24h);
   }
 
