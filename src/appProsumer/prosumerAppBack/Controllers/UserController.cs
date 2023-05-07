@@ -323,4 +323,34 @@ public class UserController : ControllerBase
 
         return Ok("user is sharing informations with DSO");
     }
+
+    [HttpPost("update-user-data-sharing-permission/{id}")]
+    public async Task<IActionResult> UpdateUserDataSharing(Guid id, [FromBody] Boolean sharesDataWithDso)
+    {
+        try
+        {
+            var result = await _userService.UpdateUserDataSharing(id, sharesDataWithDso);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpPost("update-user-dso-control-permission/{id}")]
+    public async Task<IActionResult> UpdateUserDsoControl(Guid id, [FromBody] Boolean dsoHasControl)
+    {
+        try
+        {
+            var result = await _userService.UpdateUserDsoControl(id, dsoHasControl);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
 }
