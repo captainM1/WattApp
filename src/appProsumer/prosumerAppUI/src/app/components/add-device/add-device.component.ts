@@ -107,7 +107,7 @@ export class AddDeviceComponent {
     const deviceSelect = event.target as HTMLSelectElement;
     this.selectedDevice = deviceSelect.value;
     this.selectedWattage = this.devices.find(device => device.id === deviceSelect.value);
-    console.log(this.selectedWattage);
+    console.log(this.selectedDevice);
   }
 
   onSubmit() {
@@ -118,7 +118,7 @@ export class AddDeviceComponent {
       const headers = new HttpHeaders()
         .set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`);
   
-      this.http.post(environment.apiUrl + '/api/Device/devices/add-new', new newDeviceDTO(formData.macAddress, this.selectedDevice, formData.deviceName), { headers })
+      this.http.post(environment.apiUrl + '/api/Device/devices/add-new', new newDeviceDTO(this.selectedDevice, formData.macAddress, formData.deviceName), { headers })
         .subscribe(response => {
           console.log(response);
           this.router.navigate(['home']);
