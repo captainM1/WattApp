@@ -58,7 +58,7 @@
         </div>
             
         <div class="col-6 centriranjegore">
-            <p-table [value]="allWorkers" styleClass="p-datatable-gridlines" [tableStyle]="{ 'min-width': '50rem' }"> 
+            <p-table [value]="allWorkers" styleClass="p-datatable-gridlines" [tableStyle]="{ 'min-width': '50rem' }" style="height:65%;width: 100%;border-radius: 10px;padding: 50px;padding-top: 0px;"> 
                 <ng-template pTemplate="header">
                     <tr>
                         <th>Name</th>
@@ -74,7 +74,7 @@
                         <td>{{ worker.lastName }}</td>
                         <td>{{ worker.role }}</td>
                         <td>{{ worker.email }}</td>
-                        <td><button style="width: fit-content;"><i class="bi bi-x-lg" style="color:white"></i></button></td>
+                        <td><button style="width: 100%;"><i class="bi bi-x-lg" style="color:white"></i></button></td>
                     </tr>
                 </ng-template>
             </p-table>
