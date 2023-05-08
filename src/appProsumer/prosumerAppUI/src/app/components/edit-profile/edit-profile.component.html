@@ -91,7 +91,7 @@
                 <span class="input-group-addon addon-icon" [ngClass]="{'is-invalid invalid-icon': fields['currentPassword'].errors && (fields['currentPassword'].dirty || fields['currentPassword'].touched || submitted)}" ><i style="cursor:pointer" (click)="hideShowPass3()" class="fa {{eyeIcon3}}"></i></span>
                 <div class="invalid-feedback">
                   <ng-container *ngIf="fields['currentPassword'].errors">
-                    <span class="text-danger" *ngIf="fields['currentPassword'].errors?.['required'] && (fields['currentPassword'].touched || submitted)">*New password is required!</span>
+                    <span class="text-danger" *ngIf="fields['currentPassword'].errors?.['required'] && (fields['currentPassword'].touched || submitted)">*Current password is required!</span>
                     <span class="text-danger" *ngIf="fields['currentPassword'].errors?.['minlength'] && (fields['currentPassword'].dirty || submitted)">*Please provide a valid password!</span>
                   </ng-container>
                 </div>

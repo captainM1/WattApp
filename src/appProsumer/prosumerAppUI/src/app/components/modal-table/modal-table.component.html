@@ -1,32 +1,13 @@
-<div class="modal-fade" [hidden]="!showModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered " [hidden]="!showModal" >
-    <div class="modal-content">
-      <div class="modal-header">
-        <p class="modal-title" id="exampleModalLabel">
-          <span style="color: #026670; font-size: 20px; font-weight: 700;"> {{ message }} </span><br>
-        </p>
-
-        <button type="button" (click)="close()" id="closeBtn" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-
-      </div>
-      <div class="modal-body">
-            <table>
-              <tr>
-                  <th>{{ time }}</th>
-                  <th>Power {{ type }}</th>
-              </tr>
-              <tr *ngFor="let item of data">
-                  <td>{{ item.timestamp }}h</td>
-                  <td>{{ item.powerUsage.toFixed(2) }} kWh</td>
-              </tr>
-          </table>
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-primary" >EXPORT DATA</button>
-    </div>
-  </div>
-</div>
-</div>
+<table>
+  <tr>
+      <th>{{ time }}</th>
+      <th>Power {{ type }}</th>
+  </tr>
+  <tr *ngFor="let item of data">
+      <td>{{ item.timestamp }}</td>
+      <td>{{ item.powerUsage.toFixed(2) }} kWh</td>
+  </tr>
+</table>
 
 
 

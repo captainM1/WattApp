@@ -193,3 +193,47 @@ select option:not(:checked) {
   background-color: white;
 }
 
+
+#closeBtn
+{
+  width: 30px;
+  height: 20px;
+  font-size: 15px;
+  margin-left: 40px;
+}
+
+.modal-body {
+  max-height: 400px;
+  overflow-y: scroll;
+}
+
+.buttonOpenModal
+{
+  background-color: #026670 !important;
+}
+
+.buttonOpenModal:hover
+{
+  background-color: #38b4bf !important;
+}
+
+.fa-table
+{
+  color: #fff !important;
+  width: 40px;
+}
+
+button{
+  background-color: #026670;
+  text-transform: uppercase;
+  text-align: center;
+  border-radius: 8px;
+  filter:drop-shadow(0px 8px 4px rgba(0,0,0,0.25));
+  letter-spacing: 3px;
+  height: 40px;
+}
+
+button:hover {
+  background-color: #fff;
+  color: #026670;
+}

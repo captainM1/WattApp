@@ -70,7 +70,10 @@ export class DashboardComponent implements OnInit, AfterViewInit{
   timeStampProductionNextMonth = [];
   powerUsageProductionNextMonth = [];
   chartProdNextMonth!:any;
-  data: any[]=[];
+  data24h: any[]=[];
+  dataMonth: any[]=[];
+  data7days: any[]=[];
+
 
   constructor(
 		private auth : AuthService,
@@ -115,11 +118,6 @@ export class DashboardComponent implements OnInit, AfterViewInit{
       }
     )
   }
-
-
-    openDialog1() {
-      this.modalTableComponent.open();
-    }
 
 
 
@@ -225,7 +223,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
         timestamp: this.timestampListPrev24h[i],
         powerUsage: this.powerUsageListPrev24h[i]
       };
-      this.data.push(pair);
+      this.data24h.push(pair);
     }
 
     this.previous24Graph(this.timestampListPrev24h, this.powerUsageListPrev24h);
@@ -408,6 +406,15 @@ export class DashboardComponent implements OnInit, AfterViewInit{
     }
 
     this.extractedDatesPrevMonth.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+
+    for (let i = 0; i < this.extractedDatesPrevMonth.length; i++) {
+      const pair = {
+        timestamp: this.extractedDatesPrevMonth[i],
+        powerUsage: this.powerUsageConsumption[i]
+      };
+      this.dataMonth.push(pair);
+    }
+
     if (this.consumptionPrevMonthGraph){
 
       if (this.chartPrevMonth) {
@@ -582,6 +589,14 @@ export class DashboardComponent implements OnInit, AfterViewInit{
     console.log(this.powerUsageConsumptionPrev7days);
 
     this.extractedDatesPrev7Days.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+
+    for (let i = 0; i < this.extractedDatesPrev7Days.length; i++) {
+      const pair = {
+        timestamp: this.extractedDatesPrev7Days[i],
+        powerUsage: this.powerUsageConsumptionPrev7days[i]
+      };
+      this.data7days.push(pair);
+    }
 
     if (this.consumptionPrev7daysGraph){
 

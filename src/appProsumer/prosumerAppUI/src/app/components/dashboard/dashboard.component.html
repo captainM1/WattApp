@@ -4,7 +4,6 @@
   <app-mob-nav class="mobile"></app-mob-nav>
 
   <div class="outer">
-    <app-modal-table #ModalTableComponent [data]="data" [type]="'Consumption'" [message]="'Consumption For Previous 24h'" [time]="'Hour'"></app-modal-table>
     <div class="container">
       <div class="row centriranje">
         <h2>Consumption</h2>
@@ -15,7 +14,7 @@
               <option value="month">Previous Month</option>
             </select>
 
-            <button mat-button (click)="openDialog1()">
+            <button class="buttonOpenModal" style="margin-left: 5px;" mat-button data-bs-target="#id" data-bs-toggle="modal">
                 <i class="fa fa-table" aria-hidden="true"></i>
             </button>
 
@@ -100,3 +99,30 @@
   </div>
 
 
+  <div class="modal fade " id="id" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" >
+      <div class="modal-content">
+        <div class="modal-header">
+          <p class="modal-title" id="exampleModalLabel">
+            <span style="color: #026670; font-size: 20px; font-weight: 700;"> </span><br>
+          </p>
+
+          <button type="button" id="closeBtn" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+        </div>
+        <div *ngIf="selectedGraphHistoryConsumption === '24h'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
+          <app-modal-table #ModalTableComponent [data]="data24h" [type]="'Consumption'" [message]="'Consumption For Previous 24h'" [time]="'Hour'"></app-modal-table>
+      </div>
+        <div *ngIf="selectedGraphHistoryConsumption === 'month'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
+          <app-modal-table #ModalTableComponent [data]="dataMonth" [type]="'Consumption'" [message]="'Consumption For Previous Month'" [time]="'Date'"></app-modal-table>
+      </div>
+        <div *ngIf="selectedGraphHistoryConsumption === '7days'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
+          <app-modal-table #ModalTableComponent [data]="data7days" [type]="'Consumption'" [message]="'Consumption For Previous 7 days'" [time]="'Date'"></app-modal-table>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" >EXPORT DATA</button>
+      </div>
+    </div>
+  </div>
+  </div>
