@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace prosumerAppBack.Migrations
 {
     /// <inheritdoc />
-    public partial class ChangedDispatcher : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -230,12 +230,12 @@ namespace prosumerAppBack.Migrations
             migrationBuilder.InsertData(
                 table: "Dispatchers",
                 columns: new[] { "ID", "Email", "FirstName", "LastName", "PasswordHash", "PhoneNumber", "Role", "Salt" },
-                values: new object[] { new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f53"), "admin@gmail.com", null, null, new byte[] { 9, 240, 144, 23, 20, 85, 174, 135, 225, 101, 173, 223, 111, 4, 206, 137, 224, 74, 218, 94, 207, 97, 141, 65, 197, 26, 69, 9, 159, 185, 73, 22 }, null, "Admin", new byte[] { 47, 68, 162, 51, 181, 3, 82, 56, 169, 3, 173, 187, 86, 160, 243, 33 } });
+                values: new object[] { new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f53"), "admin@gmail.com", null, null, new byte[] { 233, 223, 167, 59, 47, 123, 84, 92, 126, 251, 90, 249, 75, 248, 92, 11, 206, 32, 112, 232, 3, 42, 86, 35, 120, 211, 200, 93, 253, 249, 189, 164 }, null, "Admin", new byte[] { 214, 213, 70, 101, 181, 188, 79, 249, 139, 201, 92, 215, 77, 225, 123, 246 } });
 
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "ID", "Address", "City", "Country", "Email", "FirstName", "LastName", "PasswordHash", "PasswordResetToken", "PasswordResetTokenExpires", "PhoneNumber", "Role", "Salt", "dsoHasControl", "sharesDataWithDso" },
-                values: new object[] { new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f52"), "Radoja Domanovica 6", "Kragujevac", "Serbia", "petarsimic@gmail.com", "Petar", "Simic", new byte[] { 168, 69, 127, 0, 155, 98, 230, 17, 220, 37, 47, 27, 215, 219, 113, 113, 43, 137, 142, 216, 82, 58, 128, 112, 110, 170, 219, 221, 37, 254, 138, 201 }, null, null, "064-316-15-81", "RegularUser", new byte[] { 248, 186, 106, 223, 35, 107, 190, 0, 101, 159, 65, 114, 102, 135, 155, 25 }, false, false });
+                values: new object[] { new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f52"), "Radoja Domanovica 6", "Kragujevac", "Serbia", "petarsimic@gmail.com", "Petar", "Simic", new byte[] { 186, 219, 45, 32, 89, 104, 49, 124, 245, 218, 156, 24, 246, 103, 240, 112, 207, 189, 53, 207, 193, 168, 28, 117, 125, 179, 85, 196, 46, 190, 153, 196 }, null, null, "064-316-15-81", "RegularUser", new byte[] { 30, 195, 168, 63, 174, 168, 211, 80, 237, 89, 105, 31, 220, 235, 33, 62 }, false, false });
 
             migrationBuilder.InsertData(
                 table: "DeviceTypes",
@@ -248,10 +248,14 @@ namespace prosumerAppBack.Migrations
                     { new Guid("1ac7203e-b15c-47ce-bc23-08b5b62d225e"), new Guid("77cbc929-1cf2-4750-900a-164de4abe28b"), new Guid("4d4d4d4d-4d4d-4d4d-4d4d-4d4d4d4d4d4e"), "Dryer", 3400.0 },
                     { new Guid("311175ce-f67c-4f5b-b96c-a11243534f3f"), new Guid("77cbc929-1cf2-4750-900a-164de4abe28b"), new Guid("4d4d4d4d-4d4d-4d4d-4d4d-4d4d4d4d4d4d"), "Washing Machine", 1000.0 },
                     { new Guid("32ea7105-f582-4441-ae81-b738c4284f7e"), new Guid("77cbc929-1cf2-4750-900a-164de4abe28b"), new Guid("4d4d4d4d-4d4d-4d4d-4d4d-4d4d4d4d4d54"), "Dishwasher", 1800.0 },
+                    { new Guid("696e9069-6bac-47e4-a7c2-8c4779ed33ba"), new Guid("18f30035-59de-474f-b9db-987476de551f"), new Guid("4d4d4d4d-4d4d-4d4d-4d4d-4d4d4d4d4d4f"), "Wind Turbine", 1000.0 },
+                    { new Guid("696e9069-6bac-47e4-a7c2-8c4779ed33bb"), new Guid("18f30035-59de-474f-b9db-987476de551f"), new Guid("4d4d4d4d-4d4d-4d4d-4d4d-4d4d4d4d4d50"), "Wind Turbine", 2000.0 },
                     { new Guid("73e8b43e-bfaf-4db9-9f36-cf40cc057a6c"), new Guid("77cbc929-1cf2-4750-900a-164de4abe28b"), new Guid("4d4d4d4d-4d4d-4d4d-4d4d-4d4d4d4d4d58"), "Refrigerator", 250.0 },
                     { new Guid("783d8bd7-725b-42b6-a76b-6e9ad0fca6da"), new Guid("77cbc929-1cf2-4750-900a-164de4abe28b"), new Guid("4d4d4d4d-4d4d-4d4d-4d4d-4d4d4d4d4d51"), "Refrigerator", 250.0 },
                     { new Guid("815f9d3e-f0f8-4e0d-9b6e-9043293bee9d"), new Guid("77cbc929-1cf2-4750-900a-164de4abe28b"), new Guid("4d4d4d4d-4d4d-4d4d-4d4d-4d4d4d4d4d52"), "Dishwasher", 1800.0 },
                     { new Guid("9d3d39b2-56d8-44e7-8ad5-b64efc6784fe"), new Guid("77cbc929-1cf2-4750-900a-164de4abe28b"), new Guid("4d4d4d4d-4d4d-4d4d-4d4d-4d4d4d4d4d61"), "Washing Machine", 1000.0 },
+                    { new Guid("a2d2d5ec-b064-4f72-9e0e-84c1171cc14d"), new Guid("18f30035-59de-474f-b9db-987476de551f"), new Guid("4d4d4d4d-4d4d-4d4d-4d4d-4d4d4d4d4d63"), "Solar Panel", 4000.0 },
+                    { new Guid("a2d2d5ec-b064-4f72-9e0e-84c1171cc14f"), new Guid("18f30035-59de-474f-b9db-987476de551f"), new Guid("4d4d4d4d-4d4d-4d4d-4d4d-4d4d4d4d4d54"), "Solar Panel", 6000.0 },
                     { new Guid("d3105304-6ec5-4aed-9b53-9c7ef8e81c4c"), new Guid("77cbc929-1cf2-4750-900a-164de4abe28b"), new Guid("4d4d4d4d-4d4d-4d4d-4d4d-4d4d4d4d4d60"), "Oven", 3500.0 },
                     { new Guid("da04e45d-559b-4b24-b20b-2d7335db2cf0"), new Guid("77cbc929-1cf2-4750-900a-164de4abe28b"), new Guid("4d4d4d4d-4d4d-4d4d-4d4d-4d4d4d4d4d56"), "Range", 4500.0 },
                     { new Guid("f2f9be26-5c5f-43e1-aa2f-8e64960d03dd"), new Guid("77cbc929-1cf2-4750-900a-164de4abe28b"), new Guid("4d4d4d4d-4d4d-4d4d-4d4d-4d4d4d4d4d4d"), "Dryer", 3400.0 }
@@ -260,7 +264,11 @@ namespace prosumerAppBack.Migrations
             migrationBuilder.InsertData(
                 table: "Devices",
                 columns: new[] { "ID", "DeviceName", "DeviceTypeID", "IsOn", "MacAdress", "OwnerID" },
-                values: new object[] { new Guid("32ea7105-f582-4441-ae81-b738c4284f7e"), "name 1", new Guid("32ea7105-f582-4441-ae81-b738c4284f7e"), false, "00-1B-63-84-45-E6", new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f52") });
+                values: new object[,]
+                {
+                    { new Guid("32ea7105-f582-4441-ae81-b738c4284f7d"), "Solarni Panel", new Guid("a2d2d5ec-b064-4f72-9e0e-84c1171cc14d"), false, "00-1B-63-84-45-E7", new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f52") },
+                    { new Guid("32ea7105-f582-4441-ae81-b738c4284f7e"), "Ves Masina", new Guid("32ea7105-f582-4441-ae81-b738c4284f7e"), false, "00-1B-63-84-45-E6", new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f52") }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Devices_DeviceTypeID",

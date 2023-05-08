@@ -54,8 +54,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { DeviceEditPopupComponent } from './components/device-edit-popup/device-edit-popup.component';
 
-import { NgxUiLoaderHttpModule, NgxUiLoaderModule } from 'ngx-ui-loader';
-
+import { NgxSpinnerModule } from 'ngx-spinner'import { SettingsComponent } from './components/settings/settings.component';
 
 @NgModule({
   declarations: [
@@ -85,7 +84,8 @@ import { NgxUiLoaderHttpModule, NgxUiLoaderModule } from 'ngx-ui-loader';
     WelcomeComponent,
     DashboardComponent,
     DeviceEditPopupComponent,
-    ModalTableComponent
+    ModalTableComponent,
+    SettingsComponent
   ],
   imports: [
     BrowserModule,
@@ -107,10 +107,7 @@ import { NgxUiLoaderHttpModule, NgxUiLoaderModule } from 'ngx-ui-loader';
     Ng2SearchPipeModule,
     [MatProgressSpinnerModule],
     MatSnackBarModule,
-    NgxUiLoaderModule,
-    NgxUiLoaderHttpModule.forRoot({
-      showForeground: true
-    })
+    NgxSpinnerModule
   ],
   providers: [MessageService,ConfirmationService, {provide:HTTP_INTERCEPTORS,useClass:TokenInterceptor,multi:true}, MatDialog],
   bootstrap: [AppComponent]

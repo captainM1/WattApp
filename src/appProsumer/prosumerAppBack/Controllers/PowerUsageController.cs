@@ -456,16 +456,16 @@ public class PowerUsageController : ControllerBase
     }
 
     [HttpGet("power-usage/most-consumes/last-month/{userID}")]
-    public ActionResult<PowerUsage> GetMostConsumerLastMonthConsumption(Guid userID, int direction)
+    public ActionResult<PowerUsage> GetMostConsumerLastMonthConsumption(Guid userID)
     {
-        var powerUsages = _powerUsageService.GetMaxUsagePreviousMonthConsumption(userID, direction);
+        var powerUsages = _powerUsageService.GetMaxUsagePreviousMonthConsumption(userID, -1);
         return Ok(powerUsages);
     }
 
     [HttpGet("power-usage/most-produces/last-month/{userID}")]
-    public ActionResult<PowerUsage> GetMostConsumerLastMonthPRoduction(Guid userID, int direction)
+    public ActionResult<PowerUsage> GetMostConsumerLastMonthPRoduction(Guid userID)
     {
-        var powerUsages = _powerUsageService.GetMaxUsagePreviousMonthProduction(userID, direction);
+        var powerUsages = _powerUsageService.GetMaxUsagePreviousMonthProduction(userID, -1);
         return Ok(powerUsages);
     }
 

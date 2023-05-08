@@ -12,4 +12,5 @@ public interface IDispatcherRepository
     Task<Dispatcher> CreateDispatcher(DispatcherRegisterDto dispatcherRegisterDto);
     Task<Dispatcher> GetDispatcherByEmailAsync(string email);
     Task<List<Dispatcher>> GetAllDispatchersAsync();
+    Task<Boolean> DeleteDispatcher(Guid dispatcherID);
 }

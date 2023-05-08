@@ -27,7 +27,7 @@ export class HomeComponent implements OnInit{
     this.auth.getData().subscribe((data) => {
       this.data = "Welcome, " + data;
     });*/
-
+    
     this.numberOfDevices();
 
   }

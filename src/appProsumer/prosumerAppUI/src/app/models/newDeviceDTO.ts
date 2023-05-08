@@ -1,9 +1,9 @@
 export class newDeviceDTO {
-    public deviceName: string;
-    public macAdress: string;
     public deviceTypeID: string;
+    public macAdress: string;
+    public deviceName: string;
 
-    constructor(devicename: string, macaddress: string, devicetypeid: string) {
+    constructor(devicetypeid: string, macaddress: string, devicename: string) {
         this.macAdress = macaddress;
         this.deviceTypeID = devicetypeid;
         this.deviceName = devicename;
