@@ -2,7 +2,6 @@ import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angula
 import { MatDialog } from '@angular/material/dialog';
 import { Chart, ChartOptions } from 'chart.js';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { AuthUserService } from 'src/app/services/auth-user.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ModalTableComponent } from '../modal-table/modal-table.component';
@@ -118,6 +117,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
   @ViewChild('productionNextMonthGraph') productionNextMonthGraph!:ElementRef;
   @ViewChild('productionNext7daysGraph')  productionNext7daysGraph!:ElementRef;
 
+  @ViewChild('myTable') myTable!: ElementRef;
   @ViewChild('ModalTableComponent') modalTableComponent!: ModalTableComponent;
 
   ngAfterViewInit(): void {
@@ -215,6 +215,8 @@ export class DashboardComponent implements OnInit, AfterViewInit{
     break;
   }
   }
+
+
 
 
 
