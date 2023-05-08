@@ -31,6 +31,7 @@ export class Home2Component implements OnInit, AfterViewInit {
   numberOfStorage:number = 0;
   allUserDevices!: Info[];
   currentDate!: Observable<Date>;
+  savedEnergyMonthConsumption!: number;
 
   isSunny!: boolean;
   isCloudy!: boolean;
@@ -76,6 +77,15 @@ export class Home2Component implements OnInit, AfterViewInit {
       console.log(this.number);
     }
     );
+  }
+
+  getConsumptionSevedEnergyMonth(id:any)
+  {
+    this.auth1.getConsumptionSavedEnergyMonth(id).subscribe(
+      (response:any)=>{
+        this.savedEnergyMonthConsumption = response.toFixed(2);
+      }
+    )
   }
 
   currentMostProduces(id:any)
@@ -135,6 +145,7 @@ export class Home2Component implements OnInit, AfterViewInit {
       (response :any)=>{
        this.userID = response.id;
        console.log(this.userID);
+       this.getConsumptionSevedEnergyMonth(this.userID);
        this.currentUsageUser(this.userID);
        this.currentProductionUser(this.userID);
        this.currentMostConsumes(this.userID);
@@ -279,7 +290,7 @@ showWeatherDetails()
   this.auth.getWeather().subscribe(
     (response: any) => {
       this.weather = response;
-      this.isSunny = this.weather.daily.temperature_2m_max[0] > 20 &&  this.weather.hourly.relativehumidity_2m[0]< 60 && this.weather.current_weather.windspeed >= 10 && this.weather.current_weather.windspeed <= 20;
+      this.isSunny = this.weather.daily.temperature_2m_max[0] > 15 &&  this.weather.hourly.relativehumidity_2m[0]< 60;
       this.isCloudy = this.weather.current_weather.temperature <= 15;
       this.isRainy = this.weather.daily.temperature_2m_max[0] < 15 && this.weather.hourly.relativehumidity_2m[0] >= 60;
       this.isSnowy = this.weather.daily.temperature_2m_max[0] <= 0;

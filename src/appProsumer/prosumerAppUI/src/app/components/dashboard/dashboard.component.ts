@@ -1,9 +1,11 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Chart, ChartOptions } from 'chart.js';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgxUiLoaderService } from 'ngx-ui-loader';
 import { AuthUserService } from 'src/app/services/auth-user.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { ModalTableComponent } from '../modal-table/modal-table.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -70,23 +72,35 @@ export class DashboardComponent implements OnInit, AfterViewInit{
   timeStampProductionNextMonth = [];
   powerUsageProductionNextMonth = [];
   chartProdNextMonth!:any;
-  showPreviousMonth!: boolean;
-  showPrevious24h!: boolean;
-  showPrevious7days!: boolean;
-  showNextMonth!: boolean;
-  showNext24h!: boolean;
-  showNext7days!: boolean;
-  showProdPreviousMonth!: boolean;
-  showProdPrevious24h!: boolean;
-  showProdPrevious7days!: boolean;
-  showProdNextMonth!: boolean;
-  showProdNext24h!: boolean;
-  showProdNext7days!: boolean;
-
+  data24h: any[]=[];
+  dataMonth: any[]=[];
+  data7days: any[]=[];
+  dataNext24h: any[]=[];
+  dataNextMonth: any[]=[];
+  dataNext7days: any[]=[];
+  data24hProd: any[]=[];
+  dataMonthProd: any[]=[];
+  data7daysProd: any[]=[];
+  dataNext24hProd: any[]=[];
+  dataNextMonthProd: any[]=[];
+  dataNext7daysProd: any[]=[];
+  showPreviousMonth!:boolean;
+  showPrevious7days!:boolean;
+  showPrevious24h!:boolean;
+  showNextMonth!:boolean;
+  showNext24h!:boolean;
+  showNext7days!:boolean;
+  showProdPrevious24h!:boolean;
+  showProdPreviousMonth!:boolean;
+  showProdPrevious7days!:boolean;
+  showProdNextMonth!:boolean;
+  showProdNext24h!:boolean;
+  showProdNext7days!:boolean;
 
   constructor(
 		private auth : AuthService,
     private auth1 : AuthUserService,
+    public dialog : MatDialog,
     private spinner: NgxSpinnerService
 
 	){}
@@ -104,7 +118,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
   @ViewChild('productionNextMonthGraph') productionNextMonthGraph!:ElementRef;
   @ViewChild('productionNext7daysGraph')  productionNext7daysGraph!:ElementRef;
 
-
+  @ViewChild('ModalTableComponent') modalTableComponent!: ModalTableComponent;
 
   ngAfterViewInit(): void {
   }
@@ -234,6 +248,17 @@ export class DashboardComponent implements OnInit, AfterViewInit{
     this.timestampListPrev24h.sort((a: string, b: string) => {
       return parseInt(a) - parseInt(b);
     });
+
+
+    this.data24h=[];
+    for (let i = 0; i < this.timestampListPrev24h.length; i++) {
+      const pair = {
+        timestamp: this.timestampListPrev24h[i],
+        powerUsage: this.powerUsageListPrev24h[i]
+      };
+      this.data24h.push(pair);
+    }
+
     this.previous24Graph(this.timestampListPrev24h, this.powerUsageListPrev24h);
   }
 
@@ -324,6 +349,17 @@ export class DashboardComponent implements OnInit, AfterViewInit{
     this.timestampListNext24h.sort((a: string, b: string) => {
       return parseInt(a) - parseInt(b);
     });
+
+    this.dataNext24h=[];
+    for (let i = 0; i < this.timestampListNext24h.length; i++) {
+      const pair = {
+        timestamp: this.timestampListNext24h[i],
+        powerUsage: this.powerUsageListNext24h[i]
+      };
+      this.dataNext24h.push(pair);
+    }
+
+
     this.next24Graph(this.timestampListNext24h, this.powerUsageListNext24h);
   }
 
@@ -428,6 +464,16 @@ export class DashboardComponent implements OnInit, AfterViewInit{
     }
 
     this.extractedDatesPrevMonth.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+
+    this.dataMonth=[];
+    for (let i = 0; i < this.extractedDatesPrevMonth.length; i++) {
+      const pair = {
+        timestamp: this.extractedDatesPrevMonth[i],
+        powerUsage: this.powerUsageConsumption[i]
+      };
+      this.dataMonth.push(pair);
+    }
+
     if (this.consumptionPrevMonthGraph){
 
       if (this.chartPrevMonth) {
@@ -520,6 +566,17 @@ export class DashboardComponent implements OnInit, AfterViewInit{
     }
 
     this.extractedDatesNextMonth.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+
+    this.dataNextMonth=[];
+    for (let i = 0; i < this.extractedDatesNextMonth.length; i++) {
+      const pair = {
+        timestamp: this.extractedDatesNextMonth[i],
+        powerUsage: this.powerUsageConsumptionNextMonth[i]
+      };
+      this.dataNextMonth.push(pair);
+    }
+
+
     if (this.consumptionNextMonthGraph){
 
       if (this.chartNextMonth) {
@@ -615,6 +672,15 @@ export class DashboardComponent implements OnInit, AfterViewInit{
 
     this.extractedDatesPrev7Days.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
+    this.data7days = [];
+    for (let i = 0; i < this.extractedDatesPrev7Days.length; i++) {
+      const pair = {
+        timestamp: this.extractedDatesPrev7Days[i],
+        powerUsage: this.powerUsageConsumptionPrev7days[i]
+      };
+      this.data7days.push(pair);
+    }
+
     if (this.consumptionPrev7daysGraph){
 
       if (this.chartPrev7days) {
@@ -702,6 +768,16 @@ export class DashboardComponent implements OnInit, AfterViewInit{
     console.log(this.powerUsageConsumptionNext7days);
 
     this.extractedDatesNext7Days.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+
+    this.dataNext7days = [];
+    for (let i = 0; i < this.extractedDatesNext7Days.length; i++) {
+      const pair = {
+        timestamp: this.extractedDatesNext7Days[i],
+        powerUsage: this.powerUsageConsumptionNext7days[i]
+      };
+      this.dataNext7days.push(pair);
+    }
+
     if (this.consumptionNext7daysGraph){
 
       if (this.chartNext7days) {
@@ -779,6 +855,16 @@ makeDataProduction24(dataGraph:any){
   this.timestampListProductionPrev24h.sort((a: string, b: string) => {
     return parseInt(a) - parseInt(b);
   });
+
+  this.data24hProd=[];
+  for (let i = 0; i < this.timestampListProductionPrev24h.length; i++) {
+    const pair = {
+      timestamp: this.timestampListProductionPrev24h[i],
+      powerUsage: this.powerUsageListProductionPrev24h[i]
+    };
+    this.data24hProd.push(pair);
+  }
+
   this.previousProduction24Graph(this.timestampListProductionPrev24h, this.powerUsageListProductionPrev24h);
 }
 
@@ -855,6 +941,15 @@ productionPrevMonth(id:any)
         for(let i = 0; i < this.productionPrevMonthUser.length; i++){
           this.timeStampProductionPrevMonth.push(this.productionPrevMonthUser[i]['timestamp']);
           this.powerUsageProductionPrevMonth.push(this.productionPrevMonthUser[i]['powerUsage']);
+        }
+
+        this.dataMonthProd=[];
+        for (let i = 0; i < this.timeStampProductionPrevMonth.length; i++) {
+          const pair = {
+            timestamp: this.timeStampProductionPrevMonth[i],
+            powerUsage: this.powerUsageProductionPrevMonth[i]
+          };
+          this.dataMonthProd.push(pair);
         }
 
           this.chartProductionPreviousMonth();
@@ -975,6 +1070,15 @@ chartProductionPrev7Days(){
 
   this.extractedDatesProductionPrev7Days.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
+  this.data7daysProd = [];
+    for (let i = 0; i < this.extractedDatesProductionPrev7Days.length; i++) {
+      const pair = {
+        timestamp: this.extractedDatesProductionPrev7Days[i],
+        powerUsage: this.powerUsageProductionPrev7days[i]
+      };
+      this.data7daysProd.push(pair);
+  }
+
   if (this.productionPrev7daysGraph){
 
     if (this.chartPrev7daysProduction) {
@@ -1051,6 +1155,17 @@ makeDataProductionNext24(dataGraph:any){
   this.timestampListProductionNext24h.sort((a: string, b: string) => {
     return parseInt(a) - parseInt(b);
   });
+
+  this.dataNext24hProd=[];
+  for (let i = 0; i < this.timestampListProductionNext24h.length; i++) {
+    const pair = {
+      timestamp: this.timestampListProductionNext24h[i],
+      powerUsage: this.powerUsageListProductionNext24h[i]
+    };
+    this.dataNext24hProd.push(pair);
+  }
+
+
   this.nextProduction24Graph(this.timestampListProductionNext24h, this.powerUsageListProductionNext24h);
 }
 
@@ -1151,6 +1266,16 @@ chartProductionNext7Days(){
 
   this.extractedDatesProductionNext7Days.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
+  this.dataNext7daysProd = [];
+  for (let i = 0; i < this.extractedDatesProductionNext7Days.length; i++) {
+    const pair = {
+      timestamp: this.extractedDatesProductionNext7Days[i],
+      powerUsage: this.powerUsageProductionNext7days[i]
+    };
+    this.dataNext7daysProd.push(pair);
+  }
+
+
   if (this.productionNext7daysGraph){
 
     if (this.chartNext7daysProduction) {
@@ -1239,6 +1364,16 @@ chartProductionNextMonth(){
   }
 
   this.extractedDatesProductionNextMonth.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+
+  this.dataNextMonthProd=[];
+    for (let i = 0; i < this.extractedDatesProductionNextMonth.length; i++) {
+      const pair = {
+        timestamp: this.extractedDatesProductionNextMonth[i],
+        powerUsage: this.powerUsageProductionNextMonth[i]
+      };
+      this.dataNextMonthProd.push(pair);
+    }
+
   if (this.productionNextMonthGraph){
 
     if (this.chartProdNextMonth) {

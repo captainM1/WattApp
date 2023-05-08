@@ -17,6 +17,7 @@ h3{
   color: #026670;
   font-family: font1;
   font-weight: 900;
+  text-align: center;
 }
 
 input{
@@ -107,13 +108,13 @@ button:active {
 }
 
 .invalid-input {
-  border: 2px solid #dc3545;
-  border-right: none;
+  border: 2px solid #dc3545 !important;
+  border-right: none !important;
 }
 
 .invalid-icon {
-  border: 2px solid #dc3545;
-  border-left: none;
+  border: 2px solid #dc3545 !important;
+  border-left: none !important;
 }
 
 @media (max-width: 280px) /*Fold*/
