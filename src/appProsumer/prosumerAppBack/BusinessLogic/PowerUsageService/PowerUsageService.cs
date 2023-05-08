@@ -441,4 +441,28 @@ public class PowerUsageService:IPowerUsageService
         return powerUsage;
     }
 
+    public double electricityBill2MonthsAgo(Guid userID, double electricityRate)
+    {
+        var price = _repository.electricityBill2MonthsAgo(userID, electricityRate);
+        return price;
+    }
+
+    public double electricityBillLastMonth(Guid userID, double electricityRate)
+    {
+        var price = _repository.electricityBillLastMonth(userID, electricityRate);
+        return price;
+    }
+
+    public double electricityEarnings2MonthsAgo(Guid userID, double electricityRate)
+    {
+        var price = _repository.electricityEarnings2MonthsAgo(userID, electricityRate);
+        return price;
+    }
+
+    public double electricityEarningsLastMonth(Guid userID, double electricityRate)
+    {
+        var price = _repository.electricityEarningsLastMonth(userID, electricityRate);
+        return price;
+    }
+
 }

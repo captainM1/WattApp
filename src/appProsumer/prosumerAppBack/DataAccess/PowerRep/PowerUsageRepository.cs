@@ -2007,4 +2007,32 @@ public class PowerUsageRepository : IPowerUsageRepository
         return (previopusHourDeviceUsage / previousHourSystemUsage) * 100;
     }
 
+    public double electricityBillLastMonth(Guid userID, double electricityRate)
+    {
+        var consumes = savedEnergyForUserConsumer(userID, 1);
+
+        return consumes * electricityRate;
+    }
+
+    public double electricityBill2MonthsAgo(Guid userID, double electricityRate)
+    {
+        var consumes = savedEnergyForUserConsumer(userID, 2);
+
+        return consumes * electricityRate;
+    }
+
+    public double electricityEarningsLastMonth(Guid userID, double electricityRate)
+    {
+        var consumes = savedEnergyForUserProducer(userID, 1);
+
+        return consumes * electricityRate;
+    }
+
+    public double electricityEarnings2MonthsAgo(Guid userID, double electricityRate)
+    {
+        var consumes = savedEnergyForUserProducer(userID, 2);
+
+        return consumes * electricityRate;
+    }
+
 }
