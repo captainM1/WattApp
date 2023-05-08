@@ -104,11 +104,11 @@
       <div class="modal-content">
         <div class="modal-header">
           <p class="modal-title" id="exampleModalLabel">
-            <span style="color: #026670; font-size: 20px; font-weight: 700;"> </span><br>
+            <span *ngIf="selectedGraphHistoryConsumption === '24h'" style="color: #026670; font-size: 20px; font-weight: 700;"> Consumption For The Previous 24h </span>
+            <span *ngIf="selectedGraphHistoryConsumption === 'month'" style="color: #026670; font-size: 20px; font-weight: 700;"> Consumption For The Previous Month </span>
+            <span *ngIf="selectedGraphHistoryConsumption === '7days'" style="color: #026670; font-size: 20px; font-weight: 700;"> Consumption For The Previous 7 days </span>
           </p>
-
           <button type="button" id="closeBtn" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-
         </div>
         <div *ngIf="selectedGraphHistoryConsumption === '24h'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
           <app-modal-table #ModalTableComponent [data]="data24h" [type]="'Consumption'" [message]="'Consumption For Previous 24h'" [time]="'Hour'"></app-modal-table>

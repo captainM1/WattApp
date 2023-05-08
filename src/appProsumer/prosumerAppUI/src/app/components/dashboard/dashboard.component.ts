@@ -218,6 +218,8 @@ export class DashboardComponent implements OnInit, AfterViewInit{
       return parseInt(a) - parseInt(b);
     });
 
+
+    this.data24h=[];
     for (let i = 0; i < this.timestampListPrev24h.length; i++) {
       const pair = {
         timestamp: this.timestampListPrev24h[i],
@@ -407,6 +409,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
 
     this.extractedDatesPrevMonth.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
+    this.dataMonth=[];
     for (let i = 0; i < this.extractedDatesPrevMonth.length; i++) {
       const pair = {
         timestamp: this.extractedDatesPrevMonth[i],
@@ -590,6 +593,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
 
     this.extractedDatesPrev7Days.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
+    this.data7days = [];
     for (let i = 0; i < this.extractedDatesPrev7Days.length; i++) {
       const pair = {
         timestamp: this.extractedDatesPrev7Days[i],
