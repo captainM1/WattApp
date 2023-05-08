@@ -20,6 +20,7 @@ import { DeviceDetailsComponent } from './components/device-details/device-detai
 import { PermissionsComponent } from './components/permissions/permissions.component';
 import { WelcomeComponent } from './components/welcome/welcome.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { SettingsComponent } from './components/settings/settings.component';
 
 
 
@@ -69,6 +70,9 @@ const routes: Routes = [
   },
   {
     path:'dashboard', component: DashboardComponent
+  },
+  {
+    path: 'settings', component: SettingsComponent
   }
 ];
 

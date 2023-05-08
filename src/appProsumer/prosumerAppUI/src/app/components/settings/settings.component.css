@@ -1,0 +1,352 @@
+@font-face {
+    font-family: font1;
+    src: url(/assets/fonts/Inter-Regular.ttf);
+ }
+
+@media(max-width: 480px) {
+    .mobile{
+        display: contents;
+    }
+    .desktop{
+        display: none;
+    }
+    .hide-on-mobile{
+        display: none;
+    }
+  }
+  
+@media(min-width: 481px){
+    .mobile{
+        display: none;
+    }
+    .desktop{
+        display: contents;
+    }
+  }
+
+  
+@media (max-width: 280px) /*Fold*/
+{ 
+    .container{
+        width: 98%;
+        background-color: white;
+        margin-bottom:10%;
+    }
+
+    .outer{
+        margin-bottom: 10%;
+        margin-top:15px;
+    }
+    
+    button{       
+        font-size: 14px;
+        height: 40px;
+        text-align: left;
+        width: 80%;
+        margin-top: 20px;
+    }
+
+    h3{
+        color: #026670;
+        text-transform: none;
+        margin-top: 25px;
+    }
+
+    .permissions{
+        text-align: left;
+        width: 100%;
+        filter:drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
+        border-radius: 10px;
+        background-color: white;
+        margin:auto;
+        padding: 10px 15px;
+    }
+
+    span{
+        font-size: 15px;
+    }
+
+    h4{
+        font-size:16px;
+    }
+
+    mat-icon{
+        color:white;
+        font-size: 22px;
+    }
+
+    
+}
+
+@media (min-width: 281px) and (max-width: 480px) /*Phones*/
+{
+    .container{
+        width: 98%;
+        background-color: white;
+        padding-bottom: 20px;
+    }
+
+    .outer{
+        margin-bottom: 10%;
+        margin-top:30px;
+    }
+
+    button{       
+        font-size: 14px;
+        height: 40px;
+        text-align: left;
+        width: 60%;
+        margin-top: 20px;
+    }
+
+    h3{
+        color: #026670;
+        text-transform: none;
+        margin-top: 25px;
+    }
+
+    .permissions{
+        text-align: left;
+        width: 100%;
+        filter:drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
+        border-radius: 10px;
+        background-color: white;
+        margin:auto;
+        padding: 10px 15px;
+    }
+
+    span{
+        font-size: 15px;
+    }
+
+    h4{
+        font-size:16px;
+    }
+
+    mat-icon{
+        color:white;
+        font-size: 22px;
+    }
+
+}
+ 
+@media (min-width: 481px) and (max-width: 1023px)  /*Tablet*/
+{
+    .container{
+        width: 70%;
+        background-color: white;
+        padding-bottom: 20px;
+    }
+
+    .outer{
+        margin-bottom: 10%;
+        margin-top:30px;
+    }
+
+    button{       
+        font-size: 20px;
+        height: 40px;
+        text-align: left;
+        width: 50%;
+        margin-top: 30px;
+    }
+
+    h3{
+        color: #026670;
+        text-transform: none;
+        margin-top: 25px;
+        font-size: 25px;
+    }
+
+    .permissions{
+        text-align: left;
+        width: 90%;
+        filter:drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
+        border-radius: 10px;
+        background-color: white;
+        margin:auto;
+        padding: 10px 15px;
+    }
+
+    span{
+        font-size: 20px;
+    }
+
+    h4{
+        font-size:20px;
+    }
+
+    mat-icon{
+        color:white;
+        font-size: 22px;
+    }
+}
+
+@media (min-width: 1024px) /*Laptops and Desktops */
+{
+    .container{
+        width: 40%;
+        background-color: white;
+        padding-bottom: 20px;
+    }
+
+    .outer{
+        margin-bottom: 10%;
+        margin-top:70px;
+    }
+
+    button{       
+        font-size: 20px;
+        height: 40px;
+        text-align: left;
+        width: 70%;
+        margin-top: 30px;
+    }
+
+    h3{
+        color: #026670;
+        text-transform: none;
+        margin-top: 25px;
+        font-size: 25px;
+    }
+
+    .permissions{
+        text-align: left;
+        width: 90%;
+        filter:drop-shadow(0px 4px 4px rgba(0,0,0,0.25));
+        border-radius: 10px;
+        background-color: white;
+        margin:auto;
+        padding: 10px 15px;
+    }
+
+    span{
+        font-size: 20px;
+    }
+
+    h4{
+        font-size:20px;
+    }
+
+    mat-icon{
+        color:white;
+        font-size: 22px;
+    }
+    
+}
+
+mat-toolbar {
+    display: flex;
+    justify-content: space-between;
+}
+
+.container{
+    border-radius: 17px;
+    margin: auto;
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    font-family: font1;
+}
+
+h3{
+    font-weight: bold;
+}
+
+.centriranje{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+h4{
+    text-transform: uppercase;
+    color: #026670;
+    font-weight: bolder;
+}
+
+span{
+    font-weight: bold;
+}
+
+button{
+    background-color: #026670;
+    color:white;
+    text-align: center;
+    border-radius: 15px;
+    filter:drop-shadow(0px 8px 4px rgba(0,0,0,0.25));
+}
+
+button:hover {
+    background-color: #227982;
+}
+button:active {
+    background-color: #026670;
+}
+button:focus{
+    background-color: #026670;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, ".SFNSText-Regular", "Helvetica Neue", "Roboto", "Segoe UI", sans-serif;
+}
+
+.toggle {
+  cursor: pointer;
+  display: inline-block;
+}
+
+.toggle-switch {
+  display: inline-block;
+  background: #ccc;
+  border-radius: 16px;
+  width: 34px;
+  height: 18px;
+  position: relative;
+  vertical-align: middle;
+  transition: background 0.25s;
+}
+.toggle-switch:before, .toggle-switch:after {
+  content: "";
+}
+.toggle-switch:before {
+  display: block;
+  background: linear-gradient(to bottom, #fff 0%, #eee 100%);
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25);
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  transition: left 0.25s;
+}
+.toggle:hover .toggle-switch:before {
+  background: linear-gradient(to bottom, #fff 0%, #fff 100%);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
+}
+.toggle-checkbox:checked + .toggle-switch {
+  background: #026670;
+}
+.toggle-checkbox:disabled + .toggle-switch {
+    background: grey;
+  }
+.toggle-checkbox:checked + .toggle-switch:before {
+  left: 20px;
+}
+
+.toggle-checkbox {
+  position: absolute;
+  visibility: hidden;
+}
+
+.toggle-label {
+  position: relative;
+  top: 2px;
+}

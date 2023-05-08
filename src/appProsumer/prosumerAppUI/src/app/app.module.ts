@@ -51,7 +51,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { DeviceEditPopupComponent } from './components/device-edit-popup/device-edit-popup.component';
 
-import { NgxSpinnerModule } from 'ngx-spinner'
+import { NgxSpinnerModule } from 'ngx-spinner'import { SettingsComponent } from './components/settings/settings.component';
 
 @NgModule({
   declarations: [
@@ -80,7 +80,8 @@ import { NgxSpinnerModule } from 'ngx-spinner'
     FilterPipe,
     WelcomeComponent,
     DashboardComponent,
-    DeviceEditPopupComponent
+    DeviceEditPopupComponent,
+    SettingsComponent
   ],
   imports: [
     BrowserModule,

@@ -30,6 +30,13 @@
                                         <span class= "text-danger" *ngIf="submitted && fields['password'].errors?.['required']">*Password is required!</span>
                                         <span class = "text-danger" *ngIf="fields['password'].errors?.['minlength']">*Please provide a valid password!</span>
                                     </div>
+                            </div>
+                            
+                                <div class="form-group form-check mb-3 mt-3 zapamti">
+                                    <input class="checkbox" formControlName="rememberMe" type="checkbox" id="rememberMe">
+                                    <label class="form-check-label" for="rememberMe">
+                                      Remember Me?
+                                    </label>
                                 </div>
 
                             <div class="form-inline fr mt-2 text-center">

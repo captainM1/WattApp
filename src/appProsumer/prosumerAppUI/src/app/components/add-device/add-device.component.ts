@@ -14,10 +14,7 @@ import { CookieService } from 'ngx-cookie-service';
   styleUrls: ['./add-device.component.css']
 })
 export class AddDeviceComponent {
-  showConsumer: boolean = true;
-  showStorage: boolean = false;
-  showProducer: boolean = false;
-
+  submitted: boolean = false;
   groups: any[] = [];
   selectedGroup!: string;
 
@@ -41,7 +38,7 @@ export class AddDeviceComponent {
     manufacturer: ['', Validators.required],
     device: ['', Validators.required],
     deviceName: ['', Validators.required],
-    macAddress: ['', Validators.required]
+    macAddress: ['', [Validators.required, Validators.pattern(/^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/)]]
   });
 
   ngOnInit() {
@@ -53,6 +50,11 @@ export class AddDeviceComponent {
     this.http.get<any[]>(environment.apiUrl + '/api/Device/groups')
       .subscribe(groups => this.groups = groups);
   }
+
+  get fields(){
+    return this.addDeviceForm.controls;
+  }
+
 
   onGroupSelected(event: any) {
     const selectElement = event.target as HTMLSelectElement;
@@ -105,21 +107,25 @@ export class AddDeviceComponent {
     const deviceSelect = event.target as HTMLSelectElement;
     this.selectedDevice = deviceSelect.value;
     this.selectedWattage = this.devices.find(device => device.id === deviceSelect.value);
-    console.log(this.selectedWattage);
+    console.log(this.selectedDevice);
   }
 
   onSubmit() {
-    if (this.showConsumer) {
+    this.submitted = true;
+    if (this.addDeviceForm.valid) {
       const formData = this.addDeviceForm.value;
   
       const headers = new HttpHeaders()
-        .set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`); 
+        .set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`);
   
-        this.http.post(environment.apiUrl + '/api/Device/devices/add-new', new newDeviceDTO(formData.macAddress, this.selectedDevice, formData.deviceName), { headers })
+      this.http.post(environment.apiUrl + '/api/Device/devices/add-new', new newDeviceDTO(this.selectedDevice, formData.macAddress, formData.deviceName), { headers })
         .subscribe(response => {
           console.log(response);
           this.router.navigate(['home']);
         });
+    } else {
+      this.messageService.add({ severity: 'error', summary: 'Fill out all information first!'});     
+      this.router.navigate(['add-device']);
     }
   }
 

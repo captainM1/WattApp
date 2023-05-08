@@ -1,0 +1,29 @@
+<app-nav class="desktop"></app-nav>
+<app-mob-nav class="mobile"></app-mob-nav>
+
+<div class="outer centriranje">
+    <div class="container">
+        <h3 class="mb-3">Settings</h3>
+        <div class="permissions">
+            <h4>Permissions</h4>
+            <div>
+            <label class="toggle mt-3">
+                <span class="toggle-label">Allow DSO to access my information: &nbsp;</span>
+                <input class="toggle-checkbox" type="checkbox" [(ngModel)]="allowAccess" (click)="toggleAccess()">
+                <div class="toggle-switch"></div>
+            </label>
+            </div>
+            <div>
+            <label class="toggle mt-3">
+                <span class="toggle-label">Allow DSO to control consumption time:&nbsp;</span>
+                <input class="toggle-checkbox" type="checkbox" [disabled]="!allowAccess" [(ngModel)]="allowControl" (click)="toggleControl()">
+                <div class="toggle-switch"></div>
+            </label>
+            </div>
+        </div>
+        <div>
+        <button class="btn btn-lock"><div class="centriranje"><mat-icon>lock</mat-icon> &nbsp; &nbsp;Change Password</div></button><br>
+        <button class="btn btn-lock mb-4" (click)="signOut()"><div class="centriranje"><mat-icon>exit_to_app</mat-icon>&nbsp; &nbsp;Log Out</div></button>
+        </div><p-confirmDialog></p-confirmDialog>
+    </div>
+</div>
