@@ -73,7 +73,9 @@ export class DashboardComponent implements OnInit, AfterViewInit{
   data24h: any[]=[];
   dataMonth: any[]=[];
   data7days: any[]=[];
-
+  dataNext24h: any[]=[];
+  dataNextMonth: any[]=[];
+  dataNext7days: any[]=[];
 
   constructor(
 		private auth : AuthService,
@@ -314,6 +316,17 @@ export class DashboardComponent implements OnInit, AfterViewInit{
     this.timestampListNext24h.sort((a: string, b: string) => {
       return parseInt(a) - parseInt(b);
     });
+
+    this.dataNext24h=[];
+    for (let i = 0; i < this.timestampListNext24h.length; i++) {
+      const pair = {
+        timestamp: this.timestampListNext24h[i],
+        powerUsage: this.powerUsageListNext24h[i]
+      };
+      this.dataNext24h.push(pair);
+    }
+
+
     this.next24Graph(this.timestampListNext24h, this.powerUsageListNext24h);
   }
 
@@ -504,6 +517,17 @@ export class DashboardComponent implements OnInit, AfterViewInit{
     }
 
     this.extractedDatesNextMonth.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+
+    this.dataNextMonth=[];
+    for (let i = 0; i < this.extractedDatesNextMonth.length; i++) {
+      const pair = {
+        timestamp: this.extractedDatesNextMonth[i],
+        powerUsage: this.powerUsageConsumptionNextMonth[i]
+      };
+      this.dataNextMonth.push(pair);
+    }
+
+
     if (this.consumptionNextMonthGraph){
 
       if (this.chartNextMonth) {
@@ -683,6 +707,17 @@ export class DashboardComponent implements OnInit, AfterViewInit{
     console.log(this.powerUsageConsumptionNext7days);
 
     this.extractedDatesNext7Days.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+
+    this.dataNext7days = [];
+    for (let i = 0; i < this.extractedDatesNext7Days.length; i++) {
+      const pair = {
+        timestamp: this.extractedDatesNext7Days[i],
+        powerUsage: this.powerUsageConsumptionNext7days[i]
+      };
+      this.dataNext7days.push(pair);
+      console.log( this.dataNext7days+"next 7 days")
+    }
+
     if (this.consumptionNext7daysGraph){
 
       if (this.chartNext7days) {
