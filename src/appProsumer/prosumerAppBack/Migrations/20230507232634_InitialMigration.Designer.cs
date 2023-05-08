@@ -11,7 +11,7 @@ using prosumerAppBack.DataAccess;
 namespace prosumerAppBack.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230507231757_InitialMigration")]
+    [Migration("20230507232634_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -479,9 +479,9 @@ namespace prosumerAppBack.Migrations
                         {
                             ID = new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f53"),
                             Email = "admin@gmail.com",
-                            PasswordHash = new byte[] { 5, 239, 171, 209, 102, 62, 204, 32, 57, 229, 238, 152, 68, 130, 169, 190, 123, 89, 16, 203, 181, 134, 248, 190, 144, 31, 65, 205, 100, 146, 145, 20 },
+                            PasswordHash = new byte[] { 233, 223, 167, 59, 47, 123, 84, 92, 126, 251, 90, 249, 75, 248, 92, 11, 206, 32, 112, 232, 3, 42, 86, 35, 120, 211, 200, 93, 253, 249, 189, 164 },
                             Role = "Admin",
-                            Salt = new byte[] { 158, 40, 185, 3, 226, 183, 69, 58, 97, 9, 173, 249, 188, 70, 247, 103 }
+                            Salt = new byte[] { 214, 213, 70, 101, 181, 188, 79, 249, 139, 201, 92, 215, 77, 225, 123, 246 }
                         });
                 });
 
@@ -549,10 +549,10 @@ namespace prosumerAppBack.Migrations
                             Email = "petarsimic@gmail.com",
                             FirstName = "Petar",
                             LastName = "Simic",
-                            PasswordHash = new byte[] { 127, 109, 204, 47, 182, 224, 231, 72, 196, 73, 180, 145, 154, 238, 3, 223, 115, 75, 50, 96, 77, 153, 9, 75, 73, 101, 124, 14, 92, 83, 13, 26 },
+                            PasswordHash = new byte[] { 186, 219, 45, 32, 89, 104, 49, 124, 245, 218, 156, 24, 246, 103, 240, 112, 207, 189, 53, 207, 193, 168, 28, 117, 125, 179, 85, 196, 46, 190, 153, 196 },
                             PhoneNumber = "064-316-15-81",
                             Role = "RegularUser",
-                            Salt = new byte[] { 234, 9, 234, 20, 21, 57, 126, 237, 181, 211, 141, 20, 154, 236, 245, 118 },
+                            Salt = new byte[] { 30, 195, 168, 63, 174, 168, 211, 80, 237, 89, 105, 31, 220, 235, 33, 62 },
                             dsoHasControl = false,
                             sharesDataWithDso = false
                         });
