@@ -84,6 +84,18 @@ export class DashboardComponent implements OnInit, AfterViewInit{
   dataNext24hProd: any[]=[];
   dataNextMonthProd: any[]=[];
   dataNext7daysProd: any[]=[];
+  showPreviousMonth!:boolean;
+  showPrevious7days!:boolean;
+  showPrevious24h!:boolean;
+  showNextMonth!:boolean;
+  showNext24h!:boolean;
+  showNext7days!:boolean;
+  showProdPrevious24h!:boolean;
+  showProdPreviousMonth!:boolean;
+  showProdPrevious7days!:boolean;
+  showProdNextMonth!:boolean;
+  showProdNext24h!:boolean;
+  showProdNext7days!:boolean;
 
   constructor(
 		private auth : AuthService,
