@@ -76,6 +76,12 @@ export class DashboardComponent implements OnInit, AfterViewInit{
   dataNext24h: any[]=[];
   dataNextMonth: any[]=[];
   dataNext7days: any[]=[];
+  data24hProd: any[]=[];
+  dataMonthProd: any[]=[];
+  data7daysProd: any[]=[];
+  dataNext24hProd: any[]=[];
+  dataNextMonthProd: any[]=[];
+  dataNext7daysProd: any[]=[];
 
   constructor(
 		private auth : AuthService,
@@ -715,7 +721,6 @@ export class DashboardComponent implements OnInit, AfterViewInit{
         powerUsage: this.powerUsageConsumptionNext7days[i]
       };
       this.dataNext7days.push(pair);
-      console.log( this.dataNext7days+"next 7 days")
     }
 
     if (this.consumptionNext7daysGraph){
@@ -791,6 +796,16 @@ makeDataProduction24(dataGraph:any){
   this.timestampListProductionPrev24h.sort((a: string, b: string) => {
     return parseInt(a) - parseInt(b);
   });
+
+  this.data24hProd=[];
+  for (let i = 0; i < this.timestampListProductionPrev24h.length; i++) {
+    const pair = {
+      timestamp: this.timestampListProductionPrev24h[i],
+      powerUsage: this.powerUsageListProductionPrev24h[i]
+    };
+    this.data24hProd.push(pair);
+  }
+
   this.previousProduction24Graph(this.timestampListProductionPrev24h, this.powerUsageListProductionPrev24h);
 }
 
@@ -865,6 +880,15 @@ productionPrevMonth(id:any)
         for(let i = 0; i < this.productionPrevMonthUser.length; i++){
           this.timeStampProductionPrevMonth.push(this.productionPrevMonthUser[i]['timestamp']);
           this.powerUsageProductionPrevMonth.push(this.productionPrevMonthUser[i]['powerUsage']);
+        }
+
+        this.dataMonthProd=[];
+        for (let i = 0; i < this.timeStampProductionPrevMonth.length; i++) {
+          const pair = {
+            timestamp: this.timeStampProductionPrevMonth[i],
+            powerUsage: this.powerUsageProductionPrevMonth[i]
+          };
+          this.dataMonthProd.push(pair);
         }
 
           this.chartProductionPreviousMonth();
@@ -975,6 +999,15 @@ chartProductionPrev7Days(){
 
   this.extractedDatesProductionPrev7Days.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
+  this.data7daysProd = [];
+    for (let i = 0; i < this.extractedDatesProductionPrev7Days.length; i++) {
+      const pair = {
+        timestamp: this.extractedDatesProductionPrev7Days[i],
+        powerUsage: this.powerUsageProductionPrev7days[i]
+      };
+      this.data7daysProd.push(pair);
+  }
+
   if (this.productionPrev7daysGraph){
 
     if (this.chartPrev7daysProduction) {
@@ -1047,6 +1080,17 @@ makeDataProductionNext24(dataGraph:any){
   this.timestampListProductionNext24h.sort((a: string, b: string) => {
     return parseInt(a) - parseInt(b);
   });
+
+  this.dataNext24hProd=[];
+  for (let i = 0; i < this.timestampListProductionNext24h.length; i++) {
+    const pair = {
+      timestamp: this.timestampListProductionNext24h[i],
+      powerUsage: this.powerUsageListProductionNext24h[i]
+    };
+    this.dataNext24hProd.push(pair);
+  }
+
+
   this.nextProduction24Graph(this.timestampListProductionNext24h, this.powerUsageListProductionNext24h);
 }
 
@@ -1143,6 +1187,16 @@ chartProductionNext7Days(){
 
   this.extractedDatesProductionNext7Days.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
+  this.dataNext7daysProd = [];
+  for (let i = 0; i < this.extractedDatesProductionNext7Days.length; i++) {
+    const pair = {
+      timestamp: this.extractedDatesProductionNext7Days[i],
+      powerUsage: this.powerUsageProductionNext7days[i]
+    };
+    this.dataNext7daysProd.push(pair);
+  }
+
+
   if (this.productionNext7daysGraph){
 
     if (this.chartNext7daysProduction) {
@@ -1225,6 +1279,16 @@ chartProductionNextMonth(){
   }
 
   this.extractedDatesProductionNextMonth.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+
+  this.dataNextMonthProd=[];
+    for (let i = 0; i < this.extractedDatesProductionNextMonth.length; i++) {
+      const pair = {
+        timestamp: this.extractedDatesProductionNextMonth[i],
+        powerUsage: this.powerUsageProductionNextMonth[i]
+      };
+      this.dataNextMonthProd.push(pair);
+    }
+
   if (this.productionNextMonthGraph){
 
     if (this.chartProdNextMonth) {

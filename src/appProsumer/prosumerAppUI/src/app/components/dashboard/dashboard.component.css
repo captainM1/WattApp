@@ -42,6 +42,17 @@
     font-size: 9px;
   }
 
+  .buttonOpenModal
+  {
+    width: 25px !important;
+    height: 25px !important;
+  }
+
+  .modal-title span
+  {
+    font-size: 16px !important;
+  }
+
 }
 
 @media(min-width: 281px) and (max-width: 480px) {
@@ -50,6 +61,17 @@
   }
   .desktop{
       display: none;
+  }
+
+  .buttonOpenModal
+  {
+    width: 30px !important;
+    height: 30px !important;
+  }
+
+  .modal-title span
+  {
+    font-size: 16px !important;
   }
 
   .container
@@ -212,6 +234,7 @@ select option:not(:checked) {
   background-color: #026670 !important;
 }
 
+
 .buttonOpenModal:hover
 {
   background-color: #38b4bf !important;
@@ -220,7 +243,6 @@ select option:not(:checked) {
 .fa-table
 {
   color: #fff !important;
-  width: 40px;
 }
 
 button{

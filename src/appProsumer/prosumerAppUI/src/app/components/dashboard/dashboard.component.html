@@ -36,9 +36,9 @@
               <option value="month">Next Month</option>
           </select>
 
-          <button class="buttonOpenModal" style="margin-left: 5px;" mat-button data-bs-target="#consumptionPrediction" data-bs-toggle="modal">
+          <button class="buttonOpenModal" style="margin-left: 5px;" mat-button data-bs-target="#futureConsumption" data-bs-toggle="modal">
             <i class="fa fa-table" aria-hidden="true"></i>
-        </button>
+          </button>
 
           <div *ngIf="selectedGraphFutureConsumption === 'month'" >
             <canvas #consumptionNextMonthGraph></canvas>
@@ -59,6 +59,11 @@
               <option value="7days">Previous 7 days</option>
               <option value="month">Previous Month</option>
           </select>
+
+          <button class="buttonOpenModal" style="margin-left: 5px;" mat-button data-bs-target="#productionHistory" data-bs-toggle="modal">
+            <i class="fa fa-table" aria-hidden="true"></i>
+          </button>
+
 
           <div *ngIf="selectedGraphHistoryProduction === '24h'">
             <canvas #previous24ProductionGraph ></canvas>
@@ -81,6 +86,10 @@
               <option value="7days">Next 7 days</option>
               <option value="month">Next Month</option>
             </select>
+
+            <button class="buttonOpenModal" style="margin-left: 5px;" mat-button data-bs-target="#futureProduction" data-bs-toggle="modal">
+              <i class="fa fa-table" aria-hidden="true"></i>
+            </button>
 
             <div *ngIf="selectedGraphFutureProduction === 'month'" >
               <canvas #productionNextMonthGraph></canvas>
@@ -132,7 +141,7 @@
   </div>
 
 
-  <div class="modal fade " id="consumptionPrediction" tabindex="-1" aria-hidden="true">
+  <div class="modal fade " id="futureConsumption" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" >
       <div class="modal-content">
         <div class="modal-header">
@@ -159,3 +168,60 @@
     </div>
   </div>
   </div>
+
+  <div class="modal fade " id="#productionHistory" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" >
+      <div class="modal-content">
+        <div class="modal-header">
+          <p class="modal-title" id="exampleModalLabel">
+            <span *ngIf="selectedGraphHistoryProduction === '24h'" style="color: #026670; font-size: 20px; font-weight: 700;"> Production For The Next 24h </span>
+            <span *ngIf="selectedGraphHistoryProduction === 'month'" style="color: #026670; font-size: 20px; font-weight: 700;"> Production For The Next Month </span>
+            <span *ngIf="selectedGraphHistoryProduction === '7days'" style="color: #026670; font-size: 20px; font-weight: 700;"> Production For The Next 7 days </span>
+          </p>
+          <button type="button" id="closeBtn" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+          <div *ngIf="selectedGraphHistoryProduction === '24h'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
+            <app-modal-table #ModalTableComponent [data]="data24hProd" [type]="'Production'" [message]="'Production For Previous 24h'" [time]="'Hour'"></app-modal-table>
+          </div>
+           <div *ngIf="selectedGraphHistoryProduction === 'month'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
+            <app-modal-table #ModalTableComponent [data]="dataMonthProd" [type]="'Production'" [message]="'Production For Previous Month'" [time]="'Date'"></app-modal-table>
+         </div>
+          <div *ngIf="selectedGraphHistoryProduction === '7days'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
+            <app-modal-table #ModalTableComponent [data]="data7daysProd" [type]="'Production'" [message]="'Production For Previous 7 days'" [time]="'Date'"></app-modal-table>
+          </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" >EXPORT DATA </button>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <div class="modal fade " id="#futureProduction" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" >
+      <div class="modal-content">
+        <div class="modal-header">
+          <p class="modal-title" id="exampleModalLabel">
+            <span *ngIf="selectedGraphFutureProduction === '24h'" style="color: #026670; font-size: 20px; font-weight: 700;"> Production For The Next 24h </span>
+            <span *ngIf="selectedGraphFutureProduction  === 'month'" style="color: #026670; font-size: 20px; font-weight: 700;"> Production For The Next Month </span>
+            <span *ngIf="selectedGraphFutureProduction  === '7days'" style="color: #026670; font-size: 20px; font-weight: 700;"> Production For The Next 7 days </span>
+          </p>
+          <button type="button" id="closeBtn" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+          <div *ngIf="selectedGraphFutureProduction === '24h'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
+            <app-modal-table #ModalTableComponent [data]="dataNext24hProd" [type]="'Production'" [message]="'Production For Next 24h'" [time]="'Hour'"></app-modal-table>
+          </div>
+           <div *ngIf="selectedGraphFutureProduction === 'month'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
+            <app-modal-table #ModalTableComponent [data]="dataNextMonthProd" [type]="'Production'" [message]="'Production For Next Month'" [time]="'Date'"></app-modal-table>
+         </div>
+          <div *ngIf="selectedGraphFutureProduction === '7days'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
+            <app-modal-table #ModalTableComponent [data]="dataNext7daysProd" [type]="'Production'" [message]="'Production For Next 7 days'" [time]="'Date'"></app-modal-table>
+          </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary"> EXPORT DATA </button>
+      </div>
+    </div>
+  </div>
+  </div>
+
