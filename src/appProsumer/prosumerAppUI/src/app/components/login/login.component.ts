@@ -8,6 +8,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { CookieService } from "ngx-cookie-service";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { NgxSpinnerService } from 'ngx-spinner';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -22,17 +23,19 @@ export class LoginComponent implements OnInit{
   loginForm!: FormGroup;
   public resetPasswordEmail !: string;
   public isValidEmail !: boolean;
-  
+  show!:boolean;
+
   constructor(
-    private fb: FormBuilder, 
+    private fb: FormBuilder,
     private router : Router,
     //private toast : NgToastService,
     private auth: AuthService,
     private cookie: CookieService,
     private messageService: MessageService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private spinner: NgxSpinnerService
     ){}
-  
+
   ngOnInit(): void {
     this.loginForm = this.fb.group({
       email : ['', [Validators.required, Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
@@ -63,6 +66,8 @@ export class LoginComponent implements OnInit{
   onSubmit(){
     this.submitted = true;
     if(this.loginForm.valid){
+      this.spinner.show();
+      this.show = true;
       this.auth.login(this.loginForm.get('email')?.value, this.loginForm.get('password')?.value)
       .subscribe(
         (response) => {
@@ -78,18 +83,20 @@ export class LoginComponent implements OnInit{
             this.cookie.delete('loginInfo');
           }
           setTimeout(() => {
+            this.spinner.show();
+            this.show = true;
             this.router.navigate(['home'])
           }, 1000);
         },
         (error) => {
           if (error.status === 400) {
-            this.messageService.add({ severity: 'error', summary: 'Invalid credentials', detail: error.error });  
+            this.messageService.add({ severity: 'error', summary: 'Invalid credentials', detail: error.error });
             this.router.navigate(['signin'])
           }
         }
       );
     }else{
-      this.messageService.add({ severity: 'error', summary: 'Invalid credentials', detail: 'Invalid data format' });  
+      this.messageService.add({ severity: 'error', summary: 'Invalid credentials', detail: 'Invalid data format' });
       this.router.navigate(['signin'])
     }
   }

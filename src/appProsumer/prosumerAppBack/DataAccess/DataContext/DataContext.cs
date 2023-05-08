@@ -76,7 +76,6 @@ namespace prosumerAppBack.DataAccess
             var user = new Dispatcher
             {
                 ID = new Guid("6BCE51EA-9824-4393-B9A5-732B5A9B7F53"),
-                UserName = "Admin",
                 Role = "Admin",
                 Email = "admin@gmail.com"
             };
@@ -161,7 +160,13 @@ namespace prosumerAppBack.DataAccess
             new DeviceType{ID=new Guid("783D8BD7-725B-42B6-A76B-6E9AD0FCA6DA"), Name="Refrigerator", GroupID=new Guid("77CBC929-1CF2-4750-900A-164DE4ABE28B"), ManufacturerID=new Guid("4D4D4D4D-4D4D-4D4D-4D4D-4D4D4D4D4D51"), Wattage=250},
 
             new DeviceType{ID=new Guid("32EA7105-F582-4441-AE81-B738C4284F7E"), Name="Dishwasher", GroupID=new Guid("77CBC929-1CF2-4750-900A-164DE4ABE28B"), ManufacturerID=new Guid("4D4D4D4D-4D4D-4D4D-4D4D-4D4D4D4D4D54"), Wattage=1800},
-                new DeviceType{ID=new Guid("F2F9BE26-5C5F-43E1-AA2F-8E64960D03DD"), Name="Dryer", GroupID=new Guid("77CBC929-1CF2-4750-900A-164DE4ABE28B"), ManufacturerID=new Guid("4D4D4D4D-4D4D-4D4D-4D4D-4D4D4D4D4D4D"), Wattage=3400}
+
+            new DeviceType{ID=new Guid("F2F9BE26-5C5F-43E1-AA2F-8E64960D03DD"), Name="Dryer", GroupID=new Guid("77CBC929-1CF2-4750-900A-164DE4ABE28B"), ManufacturerID=new Guid("4D4D4D4D-4D4D-4D4D-4D4D-4D4D4D4D4D4D"), Wattage=3400},
+
+            new DeviceType{ID=new Guid("696E9069-6BAC-47E4-A7C2-8C4779ED33BB"), Name="Wind Turbine", GroupID=new Guid("18F30035-59DE-474F-B9DB-987476DE551F"), ManufacturerID=new Guid("4D4D4D4D-4D4D-4D4D-4D4D-4D4D4D4D4D50"), Wattage=2000},
+            new DeviceType{ID=new Guid("696E9069-6BAC-47E4-A7C2-8C4779ED33BA"), Name="Wind Turbine", GroupID=new Guid("18F30035-59DE-474F-B9DB-987476DE551F"), ManufacturerID=new Guid("4D4D4D4D-4D4D-4D4D-4D4D-4D4D4D4D4D4F"), Wattage=1000},
+            new DeviceType{ID=new Guid("A2D2D5EC-B064-4F72-9E0E-84C1171CC14F"), Name="Solar Panel", GroupID=new Guid("18F30035-59DE-474F-B9DB-987476DE551F"), ManufacturerID=new Guid("4D4D4D4D-4D4D-4D4D-4D4D-4D4D4D4D4D54"), Wattage=6000},
+            new DeviceType{ID=new Guid("A2D2D5EC-B064-4F72-9E0E-84C1171CC14D"), Name="Solar Panel", GroupID=new Guid("18F30035-59DE-474F-B9DB-987476DE551F"), ManufacturerID=new Guid("4D4D4D4D-4D4D-4D4D-4D4D-4D4D4D4D4D63"), Wattage=4000}
             );
             modelBuilder.Entity<User>().HasData(
                 AddDefaultUser()
@@ -170,7 +175,8 @@ namespace prosumerAppBack.DataAccess
                 AddDefaultDisp()
             );
             modelBuilder.Entity<Device>().HasData(
-                new Device{ID=new Guid("32EA7105-F582-4441-AE81-B738C4284F7E"), MacAdress="00-1B-63-84-45-E6", DeviceTypeID=new Guid("32EA7105-F582-4441-AE81-B738C4284F7E"), OwnerID = new Guid("6BCE51EA-9824-4393-B9A5-732B5A9B7F52"), DeviceName = "name 1"}
+                new Device{ID=new Guid("32EA7105-F582-4441-AE81-B738C4284F7E"), MacAdress="00-1B-63-84-45-E6", DeviceTypeID=new Guid("32EA7105-F582-4441-AE81-B738C4284F7E"), OwnerID = new Guid("6BCE51EA-9824-4393-B9A5-732B5A9B7F52"), DeviceName = "Ves Masina"},
+                new Device{ID=new Guid("32EA7105-F582-4441-AE81-B738C4284F7D"), MacAdress="00-1B-63-84-45-E7", DeviceTypeID=new Guid("A2D2D5EC-B064-4F72-9E0E-84C1171CC14D"), OwnerID = new Guid("6BCE51EA-9824-4393-B9A5-732B5A9B7F52"), DeviceName = "Solarni Panel"}
             );
         }
     }

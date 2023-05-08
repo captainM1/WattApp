@@ -5,9 +5,16 @@
   </div>
 
   <div class="row mt-4">
-    <div *ngFor="let device of devices | searchDevice: searchName" class="device-col mt-4 mx-3" [routerLink]="['/device-details', device.deviceId]">
-      <div class="card">
-        <img [src]="'/assets/icons-devices/' + device.deviceTypeName.toLowerCase() + '.png'" class="card-img-top" alt="{{ device.deviceTypeName }}">
+    <div *ngFor="let device of devices | searchDevice: searchName" class="device-col mt-4 mx-3">
+      <div class="card-toggle">
+        <div class="button r" id="button-1">
+          <input type="checkbox" class="checkbox" />
+          <div class="knobs"></div>
+          <div class="layer"></div>
+        </div>
+      </div>
+      <div class="card" [routerLink]="['/device-details', device.deviceId]">
+        <img [src]="'/assets/icons-devices/' + device.deviceTypeName.toLowerCase().trim() + '.png'" class="card-img-top" alt="{{ device.deviceTypeName }}">
         <div class="card-body">
           <h5 class="card-title">{{ device.deviceTypeName }}</h5>
           <p class="card-text manufacturer" ><span style="font-weight: bold;">Manufacturer:</span><br> {{ device.manufacturerName }}</p>
@@ -20,4 +27,5 @@
   <div class="row mt-4">
     <button type="submit" class="btn btn-primary btn-lock mt-4 mb-4" routerLink="/add-device">Add New Devices</button>
   </div>
+
 </div>

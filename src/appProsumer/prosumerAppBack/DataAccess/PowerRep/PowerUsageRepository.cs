@@ -368,14 +368,14 @@ public class PowerUsageRepository : IPowerUsageRepository
         var startOfMonth = DateTime.Now.AddDays(-DateTime.Now.Day + 1).AddMonths(direction); // pocetak proslog meseca (npr 04.05.)
         var endOfMonth = startOfMonth.AddMonths(1); // (04. 06.)
 
-        var deviceTypes = mongoCollection.AsQueryable().ToList();
+        var devices = _dataContext.Devices.ToList();
 
         double powerUsages = 0;
-        foreach (var device in deviceTypes)
+        foreach (var device in devices)
         {
             string deviceGroupName = _dataContext.DeviceGroups
                .Where(g => g.ID == _dataContext.DeviceTypes
-                   .Where(dt => dt.ID.ToString().ToUpper() == device.ID.ToString().ToUpper())
+                   .Where(dt => dt.ID.ToString().ToUpper() == device.DeviceTypeID.ToString().ToUpper())
                    .Select(dt => dt.GroupID)
                    .FirstOrDefault())
                .Select(g => g.Name)
@@ -384,9 +384,8 @@ public class PowerUsageRepository : IPowerUsageRepository
 
             if (deviceGroupName == "Consumer")
             {
-                 powerUsages = deviceTypes
+                 powerUsages += mongoCollection.AsQueryable().ToList().Where(dt => dt.ID.ToString().ToUpper() == device.DeviceTypeID.ToString().ToUpper())
                 .Sum(p => p.TimestampPowerPairs.Where(t => t.Timestamp >= startOfMonth && t.Timestamp <= endOfMonth).Sum(p => p.PowerUsage));
-
             }
         }     
         return powerUsages;
@@ -397,14 +396,14 @@ public class PowerUsageRepository : IPowerUsageRepository
         var startOfMonth = DateTime.Now.AddDays(-DateTime.Now.Day + 1).AddMonths(direction); // pocetak proslog meseca (npr 04.05.)
         var endOfMonth = startOfMonth.AddMonths(1); // (04. 06.)
 
-        var deviceTypes = mongoCollection.AsQueryable().ToList();
+        var devices = _dataContext.Devices.ToList();
 
         double powerUsages = 0;
-        foreach (var device in deviceTypes)
+        foreach (var device in devices)
         {
             string deviceGroupName = _dataContext.DeviceGroups
                .Where(g => g.ID == _dataContext.DeviceTypes
-                   .Where(dt => dt.ID.ToString().ToUpper() == device.ID.ToString().ToUpper())
+                   .Where(dt => dt.ID.ToString().ToUpper() == device.DeviceTypeID.ToString().ToUpper())
                    .Select(dt => dt.GroupID)
                    .FirstOrDefault())
                .Select(g => g.Name)
@@ -413,9 +412,8 @@ public class PowerUsageRepository : IPowerUsageRepository
 
             if (deviceGroupName == "Producer")
             {
-                powerUsages = deviceTypes
+                powerUsages += mongoCollection.AsQueryable().ToList().Where(dt => dt.ID.ToString().ToUpper() == device.DeviceTypeID.ToString().ToUpper())
                .Sum(p => p.TimestampPowerPairs.Where(t => t.Timestamp >= startOfMonth && t.Timestamp <= endOfMonth).Sum(p => p.PowerUsage));
-
             }
         }
         return powerUsages;
@@ -1205,7 +1203,6 @@ public class PowerUsageRepository : IPowerUsageRepository
 
         var devices = _dataContext.Devices.Select(d => d.DeviceTypeID).ToList();
 
-        var sums = new Dictionary<DateTime, double>();
         var currentDate = startOf24Period;
 
         while (currentDate <= endOf24Period)
@@ -1243,8 +1240,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         powerUsage.TimestampPowerPairs = new List<TimestampPowerPair>();
 
         var devices = _dataContext.Devices.Select(d => d.DeviceTypeID).ToList();
-
-        var sums = new Dictionary<DateTime, double>();
+       
         var currentDate = startOf24Period;
         
         while (currentDate <= endOf24Period)
@@ -1480,16 +1476,17 @@ public class PowerUsageRepository : IPowerUsageRepository
 
             if(deviceGroupName == "Producer")
             {
-                while (currentTime <= endDate)
-                {
-                    double powerUsageSum = GetCurrentPowerUsage(currentTime, device);
-                    if (powerUsageSum > maxPowerUsage)
-                    {
-                        maxPowerUsage = powerUsageSum;
-                        maxDeviceID = device;
-                    }
+                var powerUsageData = mongoCollection.AsQueryable().Where(d => d.ID.ToString().ToUpper() == device.ToString().ToUpper())
+                                                                   .SelectMany(d => d.TimestampPowerPairs)
+                                                                   .ToList()
+                                                                   .Where(t => t.Timestamp >= startDate && t.Timestamp <= endDate);
 
-                    currentTime = currentTime.AddHours(1);
+                var maxPU = powerUsageData.Max(d => d.PowerUsage);
+
+                if (maxPU > maxPowerUsage)
+                {
+                    maxPowerUsage = maxPU;
+                    maxDeviceID = device;
                 }
             }
 
@@ -1530,16 +1527,17 @@ public class PowerUsageRepository : IPowerUsageRepository
 
             if (deviceGroupName == "Consumer")
             {
-                while (currentTime <= endDate)
-                {
-                    double powerUsageSum = GetCurrentPowerUsage(currentTime, device);
-                    if (powerUsageSum > maxPowerUsage)
-                    {
-                        maxPowerUsage = powerUsageSum;
-                        maxDeviceID = device;
-                    }
+                var powerUsageData = mongoCollection.AsQueryable().Where(d => d.ID.ToString().ToUpper() == device.ToString().ToUpper())
+                                                                  .SelectMany(d => d.TimestampPowerPairs)
+                                                                  .ToList()
+                                                                  .Where(t => t.Timestamp >= startDate && t.Timestamp <= endDate);
 
-                    currentTime = currentTime.AddHours(1);
+                var maxPU = powerUsageData.Max(d => d.PowerUsage);
+
+                if (maxPU > maxPowerUsage)
+                {
+                    maxPowerUsage = maxPU;
+                    maxDeviceID = device;
                 }
             }
 
@@ -1555,16 +1553,17 @@ public class PowerUsageRepository : IPowerUsageRepository
     public PowerUsage GetDeviceWithMaxPowerUsagePreviousMonthConsumption(Guid userID, int direction) // ubacen direction da diktira koliko meseci ide unazad (direction => broj meseci)
     {
         DateTime endDate = DateTime.Now;
-        DateTime startDate = endDate.AddMonths( -1 * direction );
+        DateTime startDate = endDate.AddMonths( direction );
 
         PowerUsage pu = new PowerUsage();
         pu.TimestampPowerPairs = new List<TimestampPowerPair>();
         TimestampPowerPair tsp = new TimestampPowerPair();
 
-        var devices = _deviceRepository.GetDevicesForUser(userID).Select(dt => dt.DeviceTypeID);
+        var devices = _deviceRepository.GetDevicesForUser(userID).Select(dt => dt.DeviceTypeID).Distinct();
 
         var maxDeviceID = Guid.Empty;
         double maxPowerUsage = 0;
+
 
         foreach (var device in devices)
         {
@@ -1581,17 +1580,21 @@ public class PowerUsageRepository : IPowerUsageRepository
 
             if(deviceGroupName == "Consumer")
             {
-                while (currentTime <= endDate)
-                {
-                    double powerUsageSum = GetCurrentPowerUsage(currentTime, device);
 
-                    if (powerUsageSum > maxPowerUsage)
-                    {
-                        maxPowerUsage = powerUsageSum;
-                        maxDeviceID = device;
-                    }
-                    currentTime = currentTime.AddHours(1);
+                var powerUsageData = mongoCollection.AsQueryable().Where(d => d.ID.ToString().ToUpper() == device.ToString().ToUpper())
+                                                                  .SelectMany(d => d.TimestampPowerPairs)
+                                                                  .ToList()
+                                                                  .Where(t => t.Timestamp >= startDate && t.Timestamp <= endDate);
+
+                var maxPU = powerUsageData.Max(d => d.PowerUsage);
+
+                if (maxPU > maxPowerUsage)
+                {
+                    maxPowerUsage = maxPU;
+                    maxDeviceID = device;
                 }
+
+
             }
         }
 
@@ -1631,16 +1634,17 @@ public class PowerUsageRepository : IPowerUsageRepository
 
             if (deviceGroupName == "Producer")
             {
-                while (currentTime <= endDate)
-                {
-                    double powerUsageSum = GetCurrentPowerUsage(currentTime, device);
+                var powerUsageData = mongoCollection.AsQueryable().Where(d => d.ID.ToString().ToUpper() == device.ToString().ToUpper())
+                                                                  .SelectMany(d => d.TimestampPowerPairs)
+                                                                  .ToList()
+                                                                  .Where(t => t.Timestamp >= startDate && t.Timestamp <= endDate);
 
-                    if (powerUsageSum > maxPowerUsage)
-                    {
-                        maxPowerUsage = powerUsageSum;
-                        maxDeviceID = device;
-                    }
-                    currentTime = currentTime.AddHours(1);
+                var maxPU = powerUsageData.Max(d => d.PowerUsage);
+
+                if (maxPU > maxPowerUsage)
+                {
+                    maxPowerUsage = maxPU;
+                    maxDeviceID = device;
                 }
             }
         }

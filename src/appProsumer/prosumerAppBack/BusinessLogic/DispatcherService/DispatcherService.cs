@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Http.HttpResults;
 using prosumerAppBack.DataAccess.DispatcherRep;
 using prosumerAppBack.Models.Dispatcher;
 using SendGrid.Helpers.Errors.Model;
@@ -85,16 +86,6 @@ namespace prosumerAppBack.BusinessLogic.DispatcherService
 
             return dispatcher;
         }
-        public async Task<Dispatcher> CheckUsername(string username)
-        {
-            var dispatcher = await _repository.GetDispatcherByUsernameAsync(username);
-            if (dispatcher != null)
-            {
-                throw new NotFoundException("username already exist");
-            }
-
-            return dispatcher;
-        }
 
         public async Task<List<Dispatcher>> GetAllDispatchersAsync()
         {
@@ -105,6 +96,17 @@ namespace prosumerAppBack.BusinessLogic.DispatcherService
             }
 
             return dispatchers;
+        }
+
+        public async Task<Boolean> DeleteDispatcher(Guid dispatcherID)
+        {
+            var action = await _repository.DeleteDispatcher(dispatcherID);
+            if (!action)
+            {
+                throw new BadRequestException("no dispatchers found");
+            }
+
+            return action;
         }
     }
 }

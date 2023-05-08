@@ -5,7 +5,13 @@ namespace prosumerAppBack.Models.Dispatcher
     public class DispatcherRegisterDto
     {
         [Required]
-        public string Username { get; set; }
+        public string? FirstName { get; set; }
+
+        [Required]
+        public string? LastName { get; set; }
+
+        [Required]
+        public string? PhoneNumber { get; set; }
 
         [Required]
         [EmailAddress]

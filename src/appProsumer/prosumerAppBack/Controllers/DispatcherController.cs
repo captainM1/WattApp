@@ -29,7 +29,6 @@ public class DispatcherController : ControllerBase
         try
         {
             await _dispatcherService.CheckEmail(userRegisterDto.Email);
-            await _dispatcherService.CheckUsername(userRegisterDto.Username);
 
             await _dispatcherService.CreateDispatcher(userRegisterDto);
 
@@ -85,6 +84,19 @@ public class DispatcherController : ControllerBase
         {
             return StatusCode(500, ex.Message);
         }
+    }
+
+    [HttpDelete("delete-dispathcer/{dispatcherID}")]
+    // [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> DeleteDevice(Guid dispatcherID)
+    {
+        var action = await _dispatcherService.DeleteDispatcher(dispatcherID);
+        if (!action)
+        {
+            return BadRequest("dispathcher has failed to be deleted");
+        }
+
+        return Ok(new { Message = "dispathcher deleted successfully" });
     }
 }
 

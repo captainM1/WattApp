@@ -11,6 +11,6 @@ public interface IDispatcherRepository
     Task<Boolean> UpdatePassword(Guid id, string newPassword);
     Task<Dispatcher> CreateDispatcher(DispatcherRegisterDto dispatcherRegisterDto);
     Task<Dispatcher> GetDispatcherByEmailAsync(string email);
-    Task<Dispatcher> GetDispatcherByUsernameAsync(string username);
     Task<List<Dispatcher>> GetAllDispatchersAsync();
+    Task<Boolean> DeleteDispatcher(Guid dispatcherID);
 }

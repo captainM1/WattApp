@@ -24,4 +24,5 @@ public interface IDeviceService
     Task<DeviceRequirement> UpdateDeviceRequirement(Guid id, [FromBody] DeviceRequirementDto deviceRequirementDto);
     Task<DeviceRequirement> AddDeviceRequirement(Guid id, [FromBody] DeviceRequirementDto deviceRequirementDto);
     Task<bool> DeleteDevice(Guid deviceID);
+    Task<bool> UpdateDeviceState(DeviceStateDto deviceStateDto);
 }

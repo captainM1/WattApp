@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using prosumerAppBack.Models.Dispatcher;
 using prosumerAppBack.Models;
+using Microsoft.AspNetCore.Components;
+using Dispatcher = prosumerAppBack.Models.Dispatcher.Dispatcher;
 
 namespace prosumerAppBack.DataAccess.DispatcherRep;
 
@@ -75,7 +77,9 @@ public class DispatcherRepository : IDispatcherRepository
         (salt, hash) = _passwordHasher.HashPassword(dispatcherRegisterDto.Password);
         var newDispatcher = new Dispatcher
         {
-            UserName = dispatcherRegisterDto.Username,
+            FirstName = dispatcherRegisterDto.FirstName,
+            LastName = dispatcherRegisterDto.LastName,
+            PhoneNumber = dispatcherRegisterDto.PhoneNumber,
             Email = dispatcherRegisterDto.Email,
             Salt = salt,
             PasswordHash = hash,
@@ -99,30 +103,34 @@ public class DispatcherRepository : IDispatcherRepository
         return dispatcher;
     }
 
-    public async Task<Dispatcher> GetDispatcherByUsernameAsync(string username)
-    {
-        var dispatcher = await _dbContext.Dispatchers.FirstOrDefaultAsync(u => u.UserName == username);
-
-        if (dispatcher == null)
-        {
-            return null;
-        }
-
-        return dispatcher;
-    }
-
     public async Task<List<Dispatcher>> GetAllDispatchersAsync()
     {
         var dispatchers = await _dbContext.Dispatchers
             .Select(u => new Dispatcher
             {
                 ID = u.ID,
-                UserName = u.UserName,
+                FirstName = u.FirstName,
+                LastName = u.LastName,
+                PhoneNumber = u.PhoneNumber,
                 Role = u.Role,
                 Email = u.Email
             })
             .ToListAsync();
 
         return dispatchers;
+    }
+
+    public async Task<Boolean> DeleteDispatcher(Guid dispatcherID)
+    {
+        var dispatcher = _dbContext.Dispatchers.FirstOrDefaultAsync(d => d.ID == dispatcherID);
+
+        if (dispatcher.Result != null)
+        {
+            _dbContext.Dispatchers.Remove(dispatcher.Result);
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
+
+        return false;
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -272,6 +273,34 @@ public class UserService:IUserService
         if (!action)
         {
             throw new NullReferenceException("Action failed");
+        }
+        return true;
+    }
+
+    public async Task<User> DisconnectFromDso(Guid id)
+    {
+        var user = await _repository.DisconnectFromDso(id);
+        if (user == null)
+        {
+            throw new NullReferenceException("Action failed");
+        }
+        return user;
+    }
+    public async Task<Boolean> UpdateUserDataSharing(Guid id, Boolean sharesDataWithDso)
+    {
+        var action = await _repository.UpdateUserDataSharing(id, sharesDataWithDso);
+        if (!action)
+        {
+            throw new BadRequestException("User data sharing permission has failed to update");
+        }
+        return true;
+    }
+    public async Task<Boolean> UpdateUserDsoControl(Guid id, Boolean dsoHasControl)
+    {
+        var action = await _repository.UpdateUserDsoControl(id, dsoHasControl);
+        if (!action)
+        {
+            throw new BadRequestException("User dso control consumption time permission has failed to update");
         }
         return true;
     }

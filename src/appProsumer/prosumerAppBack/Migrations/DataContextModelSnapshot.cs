@@ -50,10 +50,19 @@ namespace prosumerAppBack.Migrations
                         new
                         {
                             ID = new Guid("32ea7105-f582-4441-ae81-b738c4284f7e"),
-                            DeviceName = "name 1",
+                            DeviceName = "Ves Masina",
                             DeviceTypeID = new Guid("32ea7105-f582-4441-ae81-b738c4284f7e"),
                             IsOn = false,
                             MacAdress = "00-1B-63-84-45-E6",
+                            OwnerID = new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f52")
+                        },
+                        new
+                        {
+                            ID = new Guid("32ea7105-f582-4441-ae81-b738c4284f7d"),
+                            DeviceName = "Solarni Panel",
+                            DeviceTypeID = new Guid("a2d2d5ec-b064-4f72-9e0e-84c1171cc14d"),
+                            IsOn = false,
+                            MacAdress = "00-1B-63-84-45-E7",
                             OwnerID = new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f52")
                         });
                 });
@@ -394,6 +403,38 @@ namespace prosumerAppBack.Migrations
                             ManufacturerID = new Guid("4d4d4d4d-4d4d-4d4d-4d4d-4d4d4d4d4d4d"),
                             Name = "Dryer",
                             Wattage = 3400.0
+                        },
+                        new
+                        {
+                            ID = new Guid("696e9069-6bac-47e4-a7c2-8c4779ed33bb"),
+                            GroupID = new Guid("18f30035-59de-474f-b9db-987476de551f"),
+                            ManufacturerID = new Guid("4d4d4d4d-4d4d-4d4d-4d4d-4d4d4d4d4d50"),
+                            Name = "Wind Turbine",
+                            Wattage = 2000.0
+                        },
+                        new
+                        {
+                            ID = new Guid("696e9069-6bac-47e4-a7c2-8c4779ed33ba"),
+                            GroupID = new Guid("18f30035-59de-474f-b9db-987476de551f"),
+                            ManufacturerID = new Guid("4d4d4d4d-4d4d-4d4d-4d4d-4d4d4d4d4d4f"),
+                            Name = "Wind Turbine",
+                            Wattage = 1000.0
+                        },
+                        new
+                        {
+                            ID = new Guid("a2d2d5ec-b064-4f72-9e0e-84c1171cc14f"),
+                            GroupID = new Guid("18f30035-59de-474f-b9db-987476de551f"),
+                            ManufacturerID = new Guid("4d4d4d4d-4d4d-4d4d-4d4d-4d4d4d4d4d54"),
+                            Name = "Solar Panel",
+                            Wattage = 6000.0
+                        },
+                        new
+                        {
+                            ID = new Guid("a2d2d5ec-b064-4f72-9e0e-84c1171cc14d"),
+                            GroupID = new Guid("18f30035-59de-474f-b9db-987476de551f"),
+                            ManufacturerID = new Guid("4d4d4d4d-4d4d-4d4d-4d4d-4d4d4d4d4d63"),
+                            Name = "Solar Panel",
+                            Wattage = 4000.0
                         });
                 });
 
@@ -406,9 +447,18 @@ namespace prosumerAppBack.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("FirstName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("TEXT");
+
                     b.Property<byte[]>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("BLOB");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Role")
                         .HasColumnType("TEXT");
@@ -416,9 +466,6 @@ namespace prosumerAppBack.Migrations
                     b.Property<byte[]>("Salt")
                         .IsRequired()
                         .HasColumnType("BLOB");
-
-                    b.Property<string>("UserName")
-                        .HasColumnType("TEXT");
 
                     b.HasKey("ID");
 
@@ -429,10 +476,9 @@ namespace prosumerAppBack.Migrations
                         {
                             ID = new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f53"),
                             Email = "admin@gmail.com",
-                            PasswordHash = new byte[] { 147, 192, 144, 49, 149, 16, 75, 196, 135, 4, 191, 223, 191, 49, 252, 185, 119, 183, 153, 214, 64, 64, 127, 220, 37, 236, 153, 170, 201, 32, 242, 239 },
+                            PasswordHash = new byte[] { 233, 223, 167, 59, 47, 123, 84, 92, 126, 251, 90, 249, 75, 248, 92, 11, 206, 32, 112, 232, 3, 42, 86, 35, 120, 211, 200, 93, 253, 249, 189, 164 },
                             Role = "Admin",
-                            Salt = new byte[] { 159, 15, 17, 46, 85, 203, 29, 102, 217, 134, 80, 160, 248, 80, 50, 148 },
-                            UserName = "Admin"
+                            Salt = new byte[] { 214, 213, 70, 101, 181, 188, 79, 249, 139, 201, 92, 215, 77, 225, 123, 246 }
                         });
                 });
 
@@ -500,10 +546,10 @@ namespace prosumerAppBack.Migrations
                             Email = "petarsimic@gmail.com",
                             FirstName = "Petar",
                             LastName = "Simic",
-                            PasswordHash = new byte[] { 182, 53, 0, 236, 184, 26, 192, 244, 217, 135, 95, 15, 185, 15, 229, 209, 216, 215, 212, 77, 90, 233, 150, 200, 219, 243, 196, 81, 36, 217, 167, 4 },
+                            PasswordHash = new byte[] { 186, 219, 45, 32, 89, 104, 49, 124, 245, 218, 156, 24, 246, 103, 240, 112, 207, 189, 53, 207, 193, 168, 28, 117, 125, 179, 85, 196, 46, 190, 153, 196 },
                             PhoneNumber = "064-316-15-81",
                             Role = "RegularUser",
-                            Salt = new byte[] { 216, 88, 195, 235, 170, 213, 115, 43, 237, 6, 98, 21, 39, 13, 169, 241 },
+                            Salt = new byte[] { 30, 195, 168, 63, 174, 168, 211, 80, 237, 89, 105, 31, 220, 235, 33, 62 },
                             dsoHasControl = false,
                             sharesDataWithDso = false
                         });

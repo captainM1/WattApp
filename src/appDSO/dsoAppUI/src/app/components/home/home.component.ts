@@ -7,22 +7,34 @@ import { User } from 'models/User';
 import { animation } from '@angular/animations';
 import { Root } from 'models/weather';
 import { FormsModule } from '@angular/forms';
-import { Subscription } from 'rxjs';
-
+import { Subscription, map, timer } from 'rxjs';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { ModalTableComponent } from '../modal-table/modal-table.component';
+import { MatDialog } from '@angular/material/dialog';
+import * as bootstrap from 'bootstrap';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit, AfterViewInit{
-	
+// loader
+	weatherLoader!:boolean;
 	public selectedGraph!:any;
+	backgroundColorsGraphs =  ['#62C370', '#EC7357', '#F42C04'];
+	currentDate: any;
+	summarySavedEnergy: any;
+	showProdPrevious24h!: boolean;
+	chartPrev7days: any;
+	chartPrevMonth: any;
 	constructor(
-		private auth : AuthService
+		private auth : AuthService,
+		private spinner: NgxSpinnerService,
+		public dialog: MatDialog
 	){}
 
 	ngOnInit(): void {	
-		this.selectedGraph = 'current';
+		
 		// temperature
 		this.giveMeWeather();
 		this.getAllUserInfo();
@@ -30,20 +42,31 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		this.getDate();
 		this.getNumberOfUsers();
 		this.getDeviceGroup();
-		this.Day();
-		this.eachDeviceConsumptingPrevMonth();
+		this.currentConsumptionDay();
+		this.currentProductionDay();
+		this.productionPrev24h();
+		this.HistoryConsumption();
+		this.FutureConsumption();
 	}
 
 	ngAfterViewInit(): void {
 		this.giveMeChartForTemperatureDaily();
-		
+		setTimeout(()=>{
+			this.currentConsumptionDay();
+		this.currentProductionDay();
+			this.lineChartConsumptionProduction();
+		},1000);
 		this.getConsumptionCurrent();
+
 		this.getConsumtionPrevMonth();
 		this.getConsumtionNextMonth();
 
 		this.getProductionCurrent();
 		this.nextMonthProductionSystem();
 		this.prevMonthProductionSystem();
+		this.selectedGraph = 'current';
+		this.previous24GraphConsumption(this.powerUsageListPrev24hConsumption, this.timestampListPrev24hConsumption, this.powerUsageListPrev24hProduction);
+		this.next24GraphConsumption(this.powerUsageListNext24hConsumption, this.timestampListNext24hConsumption);
 	}
 	
 	ngOnDestroy(): void {
@@ -68,7 +91,12 @@ export class HomeComponent implements OnInit, AfterViewInit{
   @ViewChild('prevMonthProductionSYS') prevMonthProductionSYS!:ElementRef;
   @ViewChild('nextMonthProductionSYS') nextMonthProductionSYS!:ElementRef;
   @ViewChild('consumptionProduction') consumptionProduction!:ElementRef;
-	
+  @ViewChild('previous24ConsumptionGraph') previous24ConsumptionGraph!:ElementRef;
+  @ViewChild('consumptionPrev7daysGraph') consumptionPrev7daysGraph!:ElementRef;
+  @ViewChild('consumptionPrevMonthGraph') consumptionPrevMonthGraph!:ElementRef;
+  @ViewChild('consumptionNext24hGraph')consumptionNext24hGraph!:ElementRef;
+  @ViewChild('consumptionNext7daysGraph') consumptionNext7daysGraph!:ElementRef;
+  @ViewChild('consumptionNextMonthGraph') consumptionNextMonthGraph!:ElementRef;
 // users
 	totalUsers!: number;
 	User! : User[];
@@ -90,7 +118,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 	labStorages!:string[];
 	
 // consumption 
-	currentConsumptionSys!:any;
+	public currentConsumptionSys!:any;
 	prevMonthConsumptionSys!:any;
 	nextMonthConsumptionSys!:any;
 	prevMonthEachDeviceConsumption!: eachDevice[];
@@ -135,23 +163,46 @@ export class HomeComponent implements OnInit, AfterViewInit{
 	subscription!: Subscription;
 	
 	
+	openDialog1(){
+		const dialogRef = this.dialog.open(ModalTableComponent,{
+			width:'200px',
+			data:{title: 'Current Consumption', items: this.currentDataC}
+		});
+
+		dialogRef.afterClosed().subscribe(
+			(result)=>{
+				console.log("The dialog was closed");
+			}
+		)
+	}
+
+	openDialog2(): void {
+		const dialogRef = this.dialog.open(ModalTableComponent, {
+		  width: '250px',
+		  data: { title: 'Current Consumption', items: this.currentDataC },
+		});
+	
+		dialogRef.afterClosed().subscribe((result) => {
+		  console.log('The dialog was closed');
+		});
+	  }
+	
 	getDate(){
-		this.today = new Date();
-		this.dateForWeater = this.today.toLocaleString('en-US',{ hour: 'numeric', minute: 'numeric', day:'numeric', month:'numeric', year:'numeric' });
-		this.currHour = this.today.getHours();
-		this.MonthPrev = new Date(this.today.getFullYear(), this.today.getMonth() - 1);
-		this.month = this.MonthPrev.toLocaleString('default', { month: 'long', year: 'numeric' });
-		
-		this.MonthNext = new Date(this.today.getFullYear(), this.today.getMonth() + 1);
-		this.next =  this.MonthNext.toLocaleString('default', { month: 'long', year: 'numeric' });
+		this.currentDate = timer(0,1000).pipe(
+			map(()=>{
+			  return new Date();
+			})
+		  )
 	}
 //  --- weater ---	
 	giveMeWeather(){
+		this.spinner.show();
+		this.weatherLoader = true;
 		this.auth.getWeather().subscribe(
 			(response :any)=>{
 				this.weather = response;
-				console.log(this.weather);
-				
+				this.spinner.hide();
+				this.weatherLoader = false;
 			}
 		)
 	}
@@ -269,11 +320,24 @@ export class HomeComponent implements OnInit, AfterViewInit{
 	
 	
 // CONSUMPTION 
+		consumptionCurrentLoader:boolean = false;
 		getConsumptionCurrent(){
+			this.spinner.show();
+			this.consumptionCurrentLoader = true;
 			this.auth.currentConsumptionSystem().subscribe(
-				(response:any)=>{
-					this.currentConsumptionSys = response.toFixed(2);
-					this.halfDoughnutConsumtionSys(this.currentConsumptionSys);
+				{
+					next:(response:any)=>{
+						
+						this.currentConsumptionSys = (response).toFixed(2);
+						this.currentConsumptionDay();
+						this.halfDoughnutConsumtionSys(this.currentConsumptionSys);
+						this.spinner.hide();
+						this.consumptionCurrentLoader = false;
+					},
+					error:(error:any)=>{
+						this.spinner.hide();
+						this.consumptionCurrentLoader = false;
+					}
 				}
 			)
 		}
@@ -281,13 +345,21 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		
 		halfDoughnutConsumtionSys(usage: any){
 		  const d = usage;
+			let selectColor = this.backgroundColorsGraphs[0];
+			if(d < 350){
+				selectColor = this.backgroundColorsGraphs[0];
+			}else if(d > 350 && d < 700){
+				selectColor = this.backgroundColorsGraphs[1];
+			}else if(d > 700) {
+				selectColor = this.backgroundColorsGraphs[2];
+			}
 		  const data = {
 			labels: ['Energy consumption'],
 			datasets: [
 			  {
 				label: 'Energy consumption',
 				data: [d, 1000-d],
-				backgroundColor: ['#FF8811', '#ECEFF1'],
+				backgroundColor: [selectColor, '#ECEFF1'],
 			  },
 			],
 		  };
@@ -305,26 +377,31 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		  });
 		}
 
-
+		consumptionPrevMonthLoader:boolean = false;;
 		getConsumtionPrevMonth(){
+			this.spinner.show();
+			this.consumptionPrevMonthLoader = true;
 			this.auth.prevMonthConsumptionSystem().subscribe(
+				
 				(response : any) => {
-					this.prevMonthConsumptionSys = response.toFixed(2);
+					
+					this.prevMonthConsumptionSys = (response/1000).toFixed(2);
 					this.halfDoughnutPrevMonthConsumtionSys(this.prevMonthConsumptionSys);
+					this.spinner.hide();
+					this.consumptionPrevMonthLoader = false;
 				}
 			)
 		}
 // prevMonthConsumptionSYS
 		halfDoughnutPrevMonthConsumtionSys(usage: any){
-			const d = usage / 1000;
-			const backgroundColor = ['#3bc14a', '#2de1fc', '#D00000'];
-			let selectColor = '#3bc14a';
-			if(d/1000 < 350){
-				selectColor = '#3bc14a';
-			}else if(d/1000 > 350){
-				selectColor = '#2de1fc';
-			}else{
-				selectColor = '#D00000';
+			const d = usage;
+			let selectColor = this.backgroundColorsGraphs[0];
+			if(d < 350){
+				selectColor = this.backgroundColorsGraphs[0];
+			}else if(d > 350 && d < 700){
+				selectColor = this.backgroundColorsGraphs[1];
+			}else if(d > 700) {
+				selectColor = this.backgroundColorsGraphs[2];
 			}
 			
 			const data = {
@@ -332,7 +409,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			datasets: [
 				{
 				label : 'Energy Consumption',
-				data: [d, 1000 -d ],
+				data: [d, 1000 - d ],
 				backgroundColor: [selectColor, '#ECEFF1'],
 				},
 			],
@@ -350,25 +427,39 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			options: options,
 			});
 		}
-
+		consumptionNextMonthLoader:boolean = false;
 		getConsumtionNextMonth(){
+			this.spinner.show();
+			this.consumptionNextMonthLoader = true;
 			this.auth.nextMonthConsumtionSystem().subscribe(
 				(response : any) => {
-					this.nextMonthConsumptionSys = response.toFixed(2);
+					this.nextMonthConsumptionSys = (response/1000).toFixed(2);
 					this.halfDoughnutNextMonthConsumtionSys(this.nextMonthConsumptionSys);
+					this.spinner.hide();
+					this.consumptionNextMonthLoader = false;
 				}
 			)
 		}
 // prevMonthConsumptionSYS
 		halfDoughnutNextMonthConsumtionSys(usage: any){
 			const d = usage;
+		  	
+			let selectColor = this.backgroundColorsGraphs[0];
+			if(d < 350){
+				selectColor = this.backgroundColorsGraphs[0];
+			}else if(d > 350 && d < 700){
+				selectColor = this.backgroundColorsGraphs[1];
+			}else if(d > 700) {
+				selectColor = this.backgroundColorsGraphs[2];
+			}
+			
 			const data = {
 			labels: ['Energy consumption'],
 			datasets: [
 				{
 				label: 'Energy consumption',
 				data: [d, 1000-d],
-				backgroundColor: ['#FF8811', '#ECEFF1'],
+				backgroundColor: [selectColor, '#ECEFF1'],
 				},
 			],
 			};
@@ -387,24 +478,41 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		}
 // PRODUCTION 
 // currentProductionSYS
+		productionPrevMonthLoader:boolean = false;
 		prevMonthProductionSystem(){
-			this.auth.currentProcustionSystem().subscribe(
-				(response : any) => {
-					this.prevMonthConsumptionSys = response.toFixed(2);
-					
-					
+			this.spinner.show();
+			this.productionPrevMonthLoader = true;
+			this.auth.currentProcustionSystem().subscribe({
+				next:(response : any) => {
+					this.prevMonthConsumptionSys = (response/1000).toFixed(2);
+					this.spinner.hide();
+					this.productionPrevMonthLoader = false;
+				},
+				error: (error : any) => {
+					this.prevMonthProductionSys = 0;
+					this.spinner.hide();
+					this.productionPrevMonthLoader = false;
 				}
+			}
 			)
 		}
 		halfDoughnutPrevMonthProductionSys(usage: any){
 			const d = usage;
+			let selectColor = this.backgroundColorsGraphs[0];
+			if(d < 350){
+				selectColor = this.backgroundColorsGraphs[0];
+			}else if(d > 350 && d < 700){
+				selectColor = this.backgroundColorsGraphs[1];
+			}else if(d > 700) {
+				selectColor = this.backgroundColorsGraphs[2];
+			}
 			const data = {
 			labels: ['Energy production'],
 			datasets: [
 				{
 				label: 'Energy production',
 				data: [d, 1000-d],
-				backgroundColor: ['#FF8811', '#ECEFF1'],
+				backgroundColor: [selectColor, '#ECEFF1'],
 				},
 			],
 			};
@@ -421,25 +529,44 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			options: options,
 			});
 		}
-		
+		productionCurrentLoader:boolean = false;
 		getProductionCurrent(){
+			this.spinner.show();
+			this.productionCurrentLoader = true;
 			this.auth.currentProcustionSystem().subscribe(
-				(response : any) => {
-					this.currentProductionSys = response.toFixed(2);
-					//console.log(this.currentProductionSys);
-					
+				{
+					next:(response : any) => {
+						this.currentProductionSys = response.toFixed(2);
+						this.halfDoughnutProductionSys(this.currentProductionSys);
+						this.spinner.hide();
+						this.productionCurrentLoader = false;
+					},
+					error:(err : any) => {
+						this.currentProductionSys = 0;
+						this.spinner.hide();
+						this.productionCurrentLoader = false;
+					}
 				}
 			)
 		}
 		halfDoughnutProductionSys(usage: any){
 			const d = usage;
+			let selectColor = this.backgroundColorsGraphs[0];
+			if(d < 350){
+				selectColor = this.backgroundColorsGraphs[0];
+			}else if(d > 350 && d < 700){
+				selectColor = this.backgroundColorsGraphs[1];
+			}else if(d > 700) {
+				selectColor = this.backgroundColorsGraphs[2];
+			}
+
 			const data = {
 			labels: ['Energy production'],
 			datasets: [
 				{
 				label: 'Energy production',
 				data: [d, 1000-d],
-				backgroundColor: ['#FF8811', '#ECEFF1'],
+				backgroundColor: [selectColor, '#ECEFF1'],
 				},
 			],
 			};
@@ -456,17 +583,22 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			options: options,
 			});
 		}	
-
+		nextMonthProductionLoader: boolean =false;
 		nextMonthProductionSystem(){
+			this.spinner.show();
+			this.nextMonthProductionLoader = true;
 			this.auth.nextMonthProductionSystem().subscribe(
 				{
 					next: (response : any) => {
 						this.nextMonthProductionSys = response.toFixed(2);
-						//console.log("nextMonthProductionSys:",this.nextMonthProductionSys);
 						this.halfDoughnutNextMonthProductionSys(this.nextMonthProductionSys);
+						this.spinner.hide();
+						this.nextMonthProductionLoader = false;
 					},
 					error: (err : any) => {
 						this.nextMonthProductionSys = 0;
+						this.spinner.hide();
+						this.nextMonthProductionLoader = false;
 					}
 				}
 				
@@ -474,13 +606,21 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		}
 		halfDoughnutNextMonthProductionSys(usage: any){
 			const d = usage;
+			let selectColor = this.backgroundColorsGraphs[0];
+			if(d < 350){
+				selectColor = this.backgroundColorsGraphs[0];
+			}else if(d > 350 && d < 700){
+				selectColor = this.backgroundColorsGraphs[1];
+			}else if(d > 700) {
+				selectColor = this.backgroundColorsGraphs[2];
+			}
 			const data = {
 			labels: ['Energy production'],
 			datasets: [
 				{
 				label: 'Energy production',
 				data: [d, 1000-d],
-				
+				backgroundColor: [selectColor, '#ECEFF1'],
 				},
 			],
 			};
@@ -526,13 +666,10 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		this.auth.eachDevicePrevMonthConsumption().subscribe({
 			next: (response : any) => {
 				this.prevMonthEachDeviceConsumption = response;
-				console.log(this.prevMonthEachDeviceConsumption);
 	
 				this.auth.deviceTypeInfo().subscribe(
 					(response : any) => {
 						this.deviceTypeINFO = response;
-						console.log("Join1,", this.deviceTypeINFO);
-						this.join();
 					},
 					(err : any) => {
 						console.error(err);
@@ -604,7 +741,9 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		this.selectedGraphProduction = graph;
 		switch (graph) {
 			case 'current':
+				
 				this.getProductionCurrent();
+				
 			break;
 			case 'prevMonth':
 				this.prevMonthProductionSystem();
@@ -626,80 +765,920 @@ export class HomeComponent implements OnInit, AfterViewInit{
 					break;
 			}
 		}
-
-		join(){
-			console.log("Join2",this.prevMonthEachDeviceConsumption.length);
-			console.log("Join1,",this.deviceTypeINFO.length)
-			console.log("ALL", this.all);
-		}
-		
-		Day(){
+		timeStampCurrDayC = [];
+		powerUsageCurrDayC = [];
+		stringsCurrDayC!:string[];
+		currentConsumptionDayLoader:boolean = false;
+		public text = " more then previous hour";
+		currentConsumptionDay(){
+			this.spinner.show();
+			this.currentConsumptionDayLoader = true;
 			this.auth.currentConsumptionDay().subscribe(
 				(response:any)=>{
 					this.currentDataC = response['timestampPowerPairs'];
 					this.timestamps1 = this.currentDataC.map((obj: { timestamp:any[]; }) => obj.timestamp.slice(11, 16));
 					this.powerusage1 = this.currentDataC.map((obj: { powerUsage: any[]; }) => obj.powerUsage);
-					
-					this.prevHour = response['timestampPowerPairs'][12]['powerUsage'].toFixed(2);
-					this.currentHour = response['timestampPowerPairs'][13]['powerUsage'].toFixed(2);
-					this.razlika = (((this.currentHour-this.prevHour)*100)/100).toFixed(2);
+					const length = this.currentDataC.length;
+					this.prevHour = response['timestampPowerPairs'][length-2]['powerUsage'].toFixed(2);
+					this.currentHour = response['timestampPowerPairs'][length-1]['powerUsage'].toFixed(2);
+					this.razlika = (((this.currentHour - this.prevHour)/this.prevHour)*100).toFixed(2);
+					this.text = " more then previous hour";
+					if(this.razlika < 0){
+						this.text = " less then previous hour";
+					}
+					this.makeDataForConsumptionDay(this.currentDataC);
+					this.spinner.hide();
+					this.currentConsumptionDayLoader = false;
 				}
 			)
-				this.auth.currentProductionDay().subscribe(
-					(response:any)=>{
-						this.currentDataP = response['timestampPowerPairs'];
-						this.timestamps1 = this.currentDataP.map((obj: { timestamp: any[]; }) => obj.timestamp.slice(11, 16));
-						this.powerusage2 = this.currentDataP.map((obj: { powerUsage: any[]; }) => obj.powerUsage);
-	
-						this.prevHour1 = response['timestampPowerPairs'][12]['powerUsage'].toFixed(2);
-						this.currentHour1 = response['timestampPowerPairs'][13]['powerUsage'].toFixed(2);
-						this.razlika1 = (((this.currentHour1-this.prevHour1)*100)/100).toFixed(2);
+		}
+		timeStampCurrDayP = [];
+		powerUsageCurrDayP = [];
+		stringsCurrDayP!:string[];
+		currentProductionDayLoader : boolean = false;
+		public text1 = " more then previous hour";
+		currentProductionDay(){
+			this.spinner.show();
+			this.currentProductionDayLoader = true;
+			this.auth.currentProductionDay().subscribe(
+				(response:any)=>{
+					this.currentDataP = response['timestampPowerPairs'];
+					
+					this.timestamps1 = this.currentDataP.map((obj: { timestamp:any[]; }) => obj.timestamp.slice(11, 16));
+					this.powerusage1 = this.currentDataP.map((obj: { powerUsage: any[]; }) => obj.powerUsage);
+					const length = this.currentDataP.length;
+					this.prevHour1 = response['timestampPowerPairs'][length-2]['powerUsage'].toFixed(2);
+					this.currentHour1 = response['timestampPowerPairs'][length-1]['powerUsage'].toFixed(2);
+					this.razlika1 = (((this.currentHour1 - this.prevHour1)/this.prevHour1)*100).toFixed(2);
+					this.text = " more then previous hour";
+					if(this.razlika1 < 0){
+						this.text = " less then previous hour";
 					}
-				)
+					this.makeDataForProductionDay(this.currentDataP);
+					this.spinner.hide();
+					this.currentProductionDayLoader = false;
+				}
+			)
 			
-			
+		}
 
+		makeDataForConsumptionDay(dataGraph : any){
+			for(let i = 0; i < dataGraph.length; i++){
+				this.timeStampCurrDayC.push(this.currentDataC[i]['timestamp']);
+				this.powerUsageCurrDayC.push(this.currentDataC[i]['powerUsage']);
+			  }
+		
+			  
+		}
+		makeDataForProductionDay(dataGraph:any){
+			for(let i = 0; i < dataGraph.length; i++){
+				this.timeStampCurrDayP.push(this.currentDataP[i]['timestamp']);
+				this.powerUsageCurrDayP.push(this.currentDataP[i]['powerUsage']);
+			  }
+			
+			
+		}
+
+		
+		savedEnergy(){
 			this.auth.savedEnergyConsumption().subscribe(
 				(response : any)=>{
 					this.savedC = response.toFixed(2);
 				}
 			)
-
 			this.auth.savedEnergyProduction().subscribe(
 				(response : any)=>{
 					this.savedP = response.toFixed(2);
 				}
 			)
-			this.lineChartConsumptionProduction();
-			
+			this.summarySavedEnergy = this.savedC + this.savedP;
 		}
 
+		graphProductionConsumption:any;
 		lineChartConsumptionProduction(){
-			//this.Day();
-			console.log(this.currentDataC);
-			console.log(this.currentDataP)
+			for(let i = 0; i < this.timeStampCurrDayC.length; i++){
+				const dateStringList = this.timeStampCurrDayC.toString();
+				const substrings = dateStringList.split(',');
+				this.stringsCurrDayC = substrings.map(date => date.substring(0, date.indexOf('T')));
+			}
+			const data1 = this.powerUsageCurrDayC;
+			const data2 = this.powerUsageCurrDayP;
+			if(data1 && data2){
+
+			
+			console.log("DATA1", data1);
+			console.log("DATA2", data2);
+			
 			const data = {
-				labels: ['aaa','aaa'],
+				labels: this.stringsCurrDayC,
 				datasets: [
 				  {
 					label: 'Consumtion',
-					data: [10,10,10],
+					data:data1,
+					backgroundColor: this.backgroundColorsGraphs[0],
+					borderColor: 'rgba(98, 195, 112, 20)',
+					borderWidth: 1
 				  },
 				  {
 					label: 'Production',
-					data: [14,15,74],
+					data: data2,
+					backgroundColor: this.backgroundColorsGraphs[1],
+					borderColor: 'rgba(236, 115, 87, 20)',
+					borderWidth: 1
 				  }
+				  
 				]
 			  };
-				const stackedLine = new Chart(this.consumptionProduction.nativeElement, {
+				this.graphProductionConsumption = new Chart(this.consumptionProduction.nativeElement, {
 					type: 'line',
 					data: data
-					
 				});
 			 }
+			}
+			consumptionPrev24hLoader:boolean = false;
+			consumptionPrev24hData!:any;
+			chartPrev24h!:any;
+			consumptionPrev24h(){
+			this.spinner.show();
+			this.consumptionPrev24hLoader = true;
+			this.auth.consumptionPrev24h().subscribe(
+				{
+					next:(response:any)=>{
+						this.consumptionPrev24hData = response['timestampPowerPairs'];
+						this.makeDataConsumptionPrev24h(this.consumptionPrev24hData);
+						this.previous24GraphConsumption(this.powerUsageListPrev24hConsumption, this.timestampListPrev24hConsumption, this.powerUsageListPrev24hProduction);
+						this.spinner.hide();
+						this.consumptionPrev24hLoader = false;
+					},
+					error:(err : any)=>{
+						this.consumptionPrev24hData = 0;
+						this.spinner.hide();
+						this.consumptionPrev24hLoader = false;
+					}
+				});
+			}
+			productionPrev24hLoader:boolean = false;
+			productionPrev24hData!:any;
+			
+			productionPrev24h(){
+				this.spinner.show();
+				this.productionPrev24hLoader = true;
+				this.auth.productionPrev24h().subscribe({
+					next:(response:any)=>{
+						this.productionPrev24hData = response['timestampPowerPairs'];
+						this.makeDataForProductionPrev24h(this.productionPrev24hData);
+						
+						this.spinner.hide();
+						this.productionPrev24hLoader = false;
+					},
+					error:(err : any) => {
+						this.productionPrev24hData = 0;
+						this.spinner.hide();
+						this.productionPrev24hLoader = false;
+					}
+				})
 
+			}
+			timestampListPrev24hProduction!:any[];
+			powerUsageListPrev24hProduction!:any[];
+			makeDataForProductionPrev24h(dataGraph : any){
+				this.timestampListPrev24hProduction = [];
+				this.powerUsageListPrev24hProduction = [];
+				for(let i = 0; i < dataGraph.length; i++){
+					this.timestampListPrev24hProduction.push(this.productionPrev24hData[i]['timestamp']);
+					this.powerUsageListPrev24hProduction.push(this.productionPrev24hData[i]['powerUsage']);
+				}
+				console.log("PROD",this.powerUsageListPrev24hProduction);
+				
+			}
+			timestampListPrev24hConsumption!:any[];
+			powerUsageListPrev24hConsumption!:any[];
+			makeDataConsumptionPrev24h(dataGraph:any){
+				this.timestampListPrev24hConsumption = [];
+				this.powerUsageListPrev24hConsumption = [];
+				for(let i = 0; i < dataGraph.length; i++){
+					this.timestampListPrev24hConsumption.push(this.consumptionPrev24hData[i]['timestamp']);
+					this.powerUsageListPrev24hConsumption.push(this.consumptionPrev24hData[i]['powerUsage']);
+				  }
+				  
+			  }
+			  getProduction(){
+				if(this.powerUsageListPrev24hProduction != null){
+					return this.powerUsageListPrev24hProduction;
+				}
+				return 0;
+			  }
+
+			 
+			  previous24GraphConsumption(data1 : any, label : any, data2:any){
+				const d = data1;
+				const l = label;
+				const d1 = data2;
+				console.log("D",d1);
+				if (this.previous24ConsumptionGraph){
+				  if (this.chartPrev24h) {
+					this.chartPrev24h.destroy();
+				  }
+			
+				const data = {
+				  labels: label,
+				  datasets: [{
+					label: 'Consumption For The Previous 24h',
+					data: data1,
+					fill: true,
+					borderColor: 'rgb(255, 200, 0)',
+					backgroundColor:'rgba(255, 200, 0,0.4)',
+					pointBackgroundColor: 'rgba(255, 200, 0,0.7)',
+					borderWidth: 1,
+					pointBorderColor:'rgb(255, 200, 0)'
+				  },
+				  {
+					label: 'Production For The Previous 24h',
+					data: this.powerUsageListPrev24hProduction,
+					fill: true,
+					borderColor: 'rgb(25, 200, 0)',
+					backgroundColor:'rgba(25, 200, 0,0.4)',
+					pointBackgroundColor: 'rgba(255, 200, 0,0.7)',
+					borderWidth: 1,
+					pointBorderColor:'rgb(255, 200, 0)'
+				  }
+				]
+				}
+				const options: ChartOptions = {
+				  scales: {
+					x: {
+					  title: {
+						display: true,
+						text: 'Time (hour)',
+					  },
+					  ticks: {
+						font: {
+						  size: 14,
+						},
+					  },
+					},
+					y: {
+					  title: {
+						display: true,
+						text: 'Power consumption (kW)',
+						font:{
+						  size: 10,
+						}
+					  },
+					  ticks: {
+						font: {
+						  size: 9,
+						},
+					  },
+					},
+				  },
+				};
+				this.chartPrev24h = new Chart(this.previous24ConsumptionGraph.nativeElement, {
+				  type: 'line',
+				  data: data,
+				  options: options,
+				});
+			  }
+			}
+			
+			  
+			consumptionPrev7DaysLoader:boolean = false;
+			consumptionPrev7DaysData! : any;
+			consumptionPrev7Days(){
+				this.spinner.show();
+				this.consumptionPrev7DaysLoader = true;
+				this.auth.consumptionPrev7Days().subscribe({
+					next:(response : any)=>{
+						this.consumptionPrev7DaysData = response['timestampPowerPairs'];
+						this.makeDataConsumptionPrev7Days(this.consumptionPrev7DaysData);
+						this.previous7DaysGraphConsumption(this.powerUsageListPrev7DaysConsumption, this.timestampListPrev7DaysConsumption);
+						this.spinner.hide();
+						this.consumptionPrev7DaysLoader = false;
+					},
+					error:(error : any) => {
+						this.consumptionPrev7DaysData = 0;
+						this.spinner.hide();
+						this.consumptionPrev7DaysLoader = false;
+					}
+				});
+			}
+			timestampListPrev7DaysConsumption!:any[];
+			powerUsageListPrev7DaysConsumption!:any[];
+			makeDataConsumptionPrev7Days(dataGraph:any){
+				this.timestampListPrev7DaysConsumption = [];
+				this.powerUsageListPrev7DaysConsumption = [];
+				for(let i = 0; i < dataGraph.length; i++){
+					this.timestampListPrev7DaysConsumption.push(this.consumptionPrev7DaysData[i]['timestamp']);
+					this.powerUsageListPrev7DaysConsumption.push(this.consumptionPrev7DaysData[i]['powerUsage']);
+				  }
+			
+				
+				console.log(this.timestampListPrev7DaysConsumption, this.powerUsageListPrev7DaysConsumption);
+				
+			  }
+
+			  productionPrev7DaysLoader:boolean = false;
+			  productionPrev7DaysData! : any;
+			  productionPrev7Days(){
+				this.spinner.show();
+				this. productionPrev7DaysLoader = true;
+				this.auth. productionPrev7Days().subscribe({
+					next:(response : any)=>{
+						this.productionPrev7DaysData = response['timestampPowerPairs'];
+						this.makeDataProductionPrev7Days(this. productionPrev7DaysData);
+						// this.previous7DaysGraphConsumption(this.powerUsageListPrev7DaysConsumption, this.timestampListPrev7DaysConsumption);
+						this.spinner.hide();
+						this.productionPrev7DaysLoader = false;
+					},
+					error:(error : any) => {
+						this.consumptionPrev7DaysData = 0;
+						this.spinner.hide();
+						this.productionPrev7DaysLoader = false;
+					}
+				});
+			}
+
+			timestampListPrev7DaysProduction!:any[];
+			powerUsageListPrev7DaysProduction!:any[];
+			makeDataProductionPrev7Days(dataGraph:any){
+				this.timestampListPrev7DaysProduction = [];
+				this.powerUsageListPrev7DaysProduction = [];
+				for(let i = 0; i < dataGraph.length; i++){
+					this.timestampListPrev7DaysProduction.push(this.productionPrev7DaysData[i]['timestamp']);
+					this.powerUsageListPrev7DaysProduction.push(this.productionPrev7DaysData[i]['powerUsage']);
+				  }
+			}
+
+			  previous7DaysGraphConsumption(data1 : any, label : any){
+				const d = data1;
+				const l = label;
+				console.log("DATA< LABEL",d,l);
+				if (this.consumptionPrev7daysGraph){
+				  if (this.chartPrev7days) {
+					this.chartPrev7days.destroy();
+				  }
+			
+				const data = {
+				  labels: label,
+				  datasets: [{
+					label: 'Consumption For The Previous 24h',
+					data: data1,
+					fill: true,
+					borderColor: 'rgb(255, 200, 0)',
+					backgroundColor:'rgba(255, 200, 0,0.4)',
+					pointBackgroundColor: 'rgba(255, 200, 0,0.7)',
+					borderWidth: 1,
+					pointBorderColor:'rgb(255, 200, 0)'
+				  }]
+				}
+				const options: ChartOptions = {
+				  scales: {
+					x: {
+					  title: {
+						display: true,
+						text: 'Time (hour)',
+					  },
+					  ticks: {
+						font: {
+						  size: 14,
+						},
+					  },
+					},
+					y: {
+					  title: {
+						display: true,
+						text: 'Power consumption (kW)',
+						font:{
+						  size: 10,
+						}
+					  },
+					  ticks: {
+						font: {
+						  size: 9,
+						},
+					  },
+					},
+				  },
+				};
+				this.chartPrev7days = new Chart(this.consumptionPrev7daysGraph.nativeElement, {
+				  type: 'bar',
+				  data: data,
+				  options: options,
+				});
+			  }
+			}
+			consumptionPreviousMonthData!:any;
+			consumptionPreviousMonthLoader:boolean = false;
+			consumptionPreviousMonth(){
+				this.spinner.show();
+				this.consumptionPreviousMonthLoader = true;
+
+				this.auth.consumptionPreviousMonth().subscribe({
+					next:(response : any)=>{
+						this.consumptionPreviousMonthData = response['timestampPowerPairs'];
+						console.log("consumptionPrevMonthLoader",this.consumptionPrevMonthLoader);
+						this.makeDataConsumptionPrevMonth(this.consumptionPreviousMonthData);
+						this.previousMonthGraphConsumption(this.powerUsageListPrevMonthConsumption, this.timestampListPrevMonthConsumption);
+						this.spinner.hide();
+						this.consumptionPrevMonthLoader = false;
+					},
+					error:(error : any) => {
+						this.consumptionPreviousMonthData = 0;
+						this.spinner.hide();
+						this.consumptionPrevMonthLoader = false;
+					}
+				})
+			}
+			timestampListPrevMonthConsumption!:any[];
+			powerUsageListPrevMonthConsumption!:any[];
+			makeDataConsumptionPrevMonth(dataGraph:any){
+				this.timestampListPrevMonthConsumption = [];
+				this.powerUsageListPrevMonthConsumption = [];
+				for(let i = 0; i < dataGraph.length; i++){
+					this.timestampListPrevMonthConsumption.push(this.consumptionPreviousMonthData[i]['timestamp']);
+					this.powerUsageListPrevMonthConsumption.push(this.consumptionPreviousMonthData[i]['powerUsage']);
+				  }
+			
+			  }
+
+			productionPreviousMonthData!:any;
+			productionPreviousMonthLoader:boolean = false;
+			productionPreviousMonth(){
+				this.spinner.show();
+				this.productionPreviousMonthLoader = true;
+
+				this.auth.productionPreviousMonth().subscribe({
+					next:(response : any)=>{
+						this.productionPreviousMonthData = response['timestampPowerPairs'];
+						console.log("productionPrevMonthLoader",this.productionPrevMonthLoader);
+						this.makeDataConsumptionPrevMonth(this.productionPreviousMonthData);
+						//this.previousMonthGraphConsumption(this.powerUsageListPrevMonthConsumption, this.timestampListPrevMonthConsumption);
+						this.spinner.hide();
+						this.productionPrevMonthLoader = false;
+					},
+					error:(error : any) => {
+						this.productionPreviousMonthData = 0;
+						this.spinner.hide();
+						this.productionPrevMonthLoader = false;
+					}
+				})
+			}
+			timestampListPrevMonthProduction!:any[];
+			powerUsageListPrevMonthProduction!:any[];
+			makeDataProductionPrevMonth(dataGraph:any){
+				this.timestampListPrevMonthProduction = [];
+				this.powerUsageListPrevMonthProduction = [];
+				for(let i = 0; i < dataGraph.length; i++){
+					this.timestampListPrevMonthProduction.push(this.productionPreviousMonthData[i]['timestamp']);
+					this.powerUsageListPrevMonthProduction.push(this.productionPreviousMonthData[i]['powerUsage']);
+				  }
+			
+			  }
+			  
+			  previousMonthGraphConsumption(data1 : any, label : any){
+				const d = data1;
+				const l = label;
+				console.log("DA",d);
+				console.log("l", l);
+				if (this.consumptionPrevMonthGraph){
+				  if (this.chartPrevMonth) {
+					this.chartPrevMonth.destroy();
+				  }
+			
+				const data = {
+				  labels: label,
+				  datasets: [
+					{
+					label: 'Consumption For The Previous Month',
+					data: data1,
+					fill: true,
+					borderColor: 'rgb(255, 200, 0)',
+					backgroundColor:'rgba(255, 200, 0,0.4)',
+					pointBackgroundColor: 'rgba(255, 200, 0,0.7)',
+					borderWidth: 1,
+					pointBorderColor:'rgb(255, 200, 0)'
+				  },
+				{
+					label: 'Consumption For The Previous Month',
+					data: data1,
+					fill: true,
+					borderColor: 'rgb(255, 200, 0)',
+					backgroundColor:'rgba(255, 200, 0,0.4)',
+					pointBackgroundColor: 'rgba(255, 200, 0,0.7)',
+					borderWidth: 1,
+					pointBorderColor:'rgb(255, 200, 0)'
+				}]
+				}
+				const options: ChartOptions = {
+				  scales: {
+					x: {
+					  title: {
+						display: true,
+						text: 'Time (day and month)',
+					  },
+					  ticks: {
+						font: {
+						  size: 14,
+						},
+					  },
+					},
+					y: {
+					  title: {
+						display: true,
+						text: 'Power consumption (kW)',
+						font:{
+						  size: 10,
+						}
+					  },
+					  ticks: {
+						font: {
+						  size: 9,
+						},
+					  },
+					},
+				  },
+				};
+				this.chartPrevMonth = new Chart(this.consumptionPrevMonthGraph.nativeElement, {
+				  type: 'line',
+				  data: data,
+				  options: options,
+				});
+			  }
+			}
 		
+		selectedGraphHistoryConsumption = '24h';
+		HistoryConsumption() {
+		switch (this.selectedGraphHistoryConsumption) {
+			case '24h':
+			this.consumptionPrev24h();
+			this.productionPrev24h();
+			break;
+			case '7days':
+				this.consumptionPrev7Days();
+			break;
+			case 'month':
+				this.consumptionPreviousMonth();
+			break;
+		}
+	}
+	selectedGraphFutureConsumption = '24h';
+	FutureConsumption(){
+		switch (this.selectedGraphFutureConsumption) {
+			case '24h':
+			this.consumptionNext24h();
+			break;
+			case '7days':
+				this.consumptionNext7Days();
+			break;
+			case 'month':
+				this.consumptionNextMonth();
+			break;
+		}
+	}
+	consumptionNext24hLoader:boolean = false;
+	consumptionNext24hData!:any;
+	consumptionNext24h(){
+		this.spinner.show();
+		this.consumptionNext24hLoader = true;
+		this.auth.consumptionNext24h().subscribe({
+			next:(response : any)=>{
+				this.consumptionNext24hData = response['timestampPowerPairs'];
+				this.makeDataConsumptionNext24h(this.consumptionNext24hData);
+				this.next24GraphConsumption(this.powerUsageListNext24hConsumption, this.timestampListNext24hConsumption);
+				this.spinner.hide();
+				this.consumptionNext24hLoader = false;
+			},
+			error: (err : any) => {
+				console.log("this.consumptionNext24hData error");
+				this.spinner.hide();
+				this.consumptionNext24hLoader = false;
+			}
+		})
+	}
+
+	timestampListNext24hConsumption!:any[];
+	powerUsageListNext24hConsumption!:any[];
+	makeDataConsumptionNext24h(dataGraph : any){
+			this.timestampListNext24hConsumption = [];
+			this.powerUsageListNext24hConsumption = [];
+			for(let i = 0; i < dataGraph.length; i++){
+				this.timestampListNext24hConsumption.push(this.consumptionNext24hData[i]['timestamp']);
+				this.powerUsageListNext24hConsumption.push(this.consumptionNext24hData[i]['powerUsage']);
+			  }
+	}
+	
+	chartNext24h!:any;
+	next24GraphConsumption(data1 : any, label : any){
+		const d = data1;
+		const l = label;
+		console.log("DA",d);
+		console.log("l", l);
+		if (this.consumptionNext24hGraph){
+		  if (this.chartNext24h) {
+			this.chartNext24h.destroy();
+		  }
+	
+		const data = {
+		  labels: label,
+		  datasets: [
+			{
+			label: 'Consumption For The Next 24h',
+			data: data1,
+			fill: true,
+			borderColor: 'rgb(255, 200, 0)',
+			backgroundColor:'rgba(255, 200, 0,0.4)',
+			pointBackgroundColor: 'rgba(255, 200, 0,0.7)',
+			borderWidth: 1,
+			pointBorderColor:'rgb(255, 200, 0)'
+		  },
+		{
+			label: 'Production For The Next 24h',
+			data: data1,
+			fill: true,
+			borderColor: 'rgb(255, 200, 0)',
+			backgroundColor:'rgba(255, 200, 0,0.4)',
+			pointBackgroundColor: 'rgba(255, 200, 0,0.7)',
+			borderWidth: 1,
+			pointBorderColor:'rgb(255, 200, 0)'
+		}]
+		}
+		const options: ChartOptions = {
+		  scales: {
+			x: {
+			  title: {
+				display: true,
+				text: 'Time (hours)',
+			  },
+			  ticks: {
+				font: {
+				  size: 14,
+				},
+			  },
+			},
+			y: {
+			  title: {
+				display: true,
+				text: 'Power consumption (kW)',
+				font:{
+				  size: 10,
+				}
+			  },
+			  ticks: {
+				font: {
+				  size: 9,
+				},
+			  },
+			},
+		  },
+		};
+		this.chartNext24h = new Chart(this.consumptionNext24hGraph.nativeElement, {
+		  type: 'line',
+		  data: data,
+		  options: options,
+		});
+	  }
+	}
+
+	consumptionNext7DaysLoader = false;
+	consumptionNext7DaysData!:any;
+	consumptionNext7Days(){
+		this.spinner.show();
+		this.consumptionNext7DaysLoader = true;
+		this.auth.consumptionNext7Days().subscribe({
+			next:(response : any)=>{
+				this.consumptionNext7DaysData = response['timestampPowerPairs'];
+				this.makeDataForConsumptionNext7Days(this.consumptionNext7DaysData);
+				this.next7DaysGraphConsumption(this.powerUsageListNext7daysConsumption, this.timestampListNext7daysConsumption);
+				this.spinner.hide();
+				this.consumptionNext7DaysLoader = false;
+			},
+			error: (err : any) => {
+				console.log("this.consumptionNext7DaysData error");
+				this.spinner.hide();
+				this.consumptionNext7DaysLoader = false;
+			}
+		})
+	}
+	chartNext7daysC!:any;
+	next7DaysGraphConsumption(data1 : any, label : any){
+		const d = data1;
+		const l = label;
+		if (this.consumptionNext7daysGraph){
+		  if (this.chartNext7daysC) {
+			this.chartNext7daysC.destroy();
+		  }
+	
+		const data = {
+		  labels: label,
+		  datasets: [{
+			label: 'Consumption For The Previous 7 days',
+			data: data1,
+			fill: true,
+			borderColor: 'rgb(255, 200, 0)',
+			backgroundColor:'rgba(255, 200, 0,0.4)',
+			pointBackgroundColor: 'rgba(255, 200, 0,0.7)',
+			borderWidth: 1,
+			pointBorderColor:'rgb(255, 200, 0)'
+		  }]
+		}
+		const options: ChartOptions = {
+		  scales: {
+			x: {
+			  title: {
+				display: true,
+				text: 'Time (month and day)',
+			  },
+			  ticks: {
+				font: {
+				  size: 14,
+				},
+			  },
+			},
+			y: {
+			  title: {
+				display: true,
+				text: 'Power consumption (kW)',
+				font:{
+				  size: 10,
+				}
+			  },
+			  ticks: {
+				font: {
+				  size: 9,
+				},
+			  },
+			},
+		  },
+		};
+		this.chartNext7daysC = new Chart(this.consumptionNext7daysGraph.nativeElement, {
+		  type: 'bar',
+		  data: data,
+		  options: options,
+		});
+	  }
+	}
+	timestampListNext7daysConsumption!:any[];
+	powerUsageListNext7daysConsumption!:any[];
+	makeDataForConsumptionNext7Days(dataGraph:any){
+		this.timestampListNext7daysConsumption = [];
+		this.powerUsageListNext7daysConsumption = [];
+		for(let i = 0; i < dataGraph.length; i++){
+			this.timestampListNext7daysConsumption.push(this.consumptionNext7DaysData[i]['timestamp']);
+			this.powerUsageListNext7daysConsumption.push(this.consumptionNext7DaysData[i]['powerUsage']);
+		}
+	}
+	
+
+	ConsumptionNextMonthLoader = false;
+	consumptionNextMonthData!:any;
+	consumptionNextMonth(){
+		this.spinner.show();
+		this.ConsumptionNextMonthLoader = true;
+		this.auth.consumptionNexxtMonth().subscribe({
+			next:(response : any)=>{
+				this.consumptionNextMonthData = response['timestampPowerPairs'];
+				this.makeDataForConsumptionNextMonth(this.consumptionNextMonthData);
+				this.nextMonthGraphConsumption(this.powerUsageListNextMonthConsumption,this.timestampListNextMonthConsumption);
+				this.spinner.hide();
+				this.ConsumptionNextMonthLoader = false;
+			},
+			error: (err : any) => {
+				console.log("consumptionNextMonth error");
+				this.spinner.hide();
+				this.ConsumptionNextMonthLoader = false;
+			}
+		})
+	}
+	timestampListNextMonthConsumption!:any[];
+	powerUsageListNextMonthConsumption!:any[];
+	makeDataForConsumptionNextMonth(dataGraph:any){
+		this.timestampListNextMonthConsumption = [];
+		this.powerUsageListNextMonthConsumption = [];
+		for(let i = 0; i < dataGraph.length; i++){
+			this.timestampListNextMonthConsumption.push(this.consumptionNextMonthData[i]['timestamp']);
+			this.powerUsageListNextMonthConsumption.push(this.consumptionNextMonthData[i]['powerUsage']);
+		}
+	}
+	chartNextMonth!:any;
+	nextMonthGraphConsumption(data1 : any, label : any){
+		const d = data1;
+		const l = label;
+		console.log("DA",d);
+		console.log("l", l);
+		if (this.consumptionNextMonthGraph){
+		  if (this.chartNextMonth) {
+			this.chartNextMonth.destroy();
+		  }
+	
+		const data = {
+		  labels: label,
+		  datasets: [
+			{
+			label: 'Consumption For The Next Month',
+			data: data1,
+			fill: true,
+			borderColor: 'rgb(255, 200, 0)',
+			backgroundColor:'rgba(255, 200, 0,0.4)',
+			pointBackgroundColor: 'rgba(255, 200, 0,0.7)',
+			borderWidth: 1,
+			pointBorderColor:'rgb(255, 200, 0)'
+		  },
+		]
+		}
+		const options: ChartOptions = {
+		  scales: {
+			x: {
+			  title: {
+				display: true,
+				text: 'Time (day and month)',
+			  },
+			  ticks: {
+				font: {
+				  size: 14,
+				},
+			  },
+			},
+			y: {
+			  title: {
+				display: true,
+				text: 'Power consumption (kW)',
+				font:{
+				  size: 10,
+				}
+			  },
+			  ticks: {
+				font: {
+				  size: 9,
+				},
+			  },
+			},
+		  },
+		};
+		this.chartNextMonth = new Chart(this.consumptionNextMonthGraph.nativeElement, {
+		  type: 'line',
+		  data: data,
+		  options: options,
+		});
+	  }
+	}
+	productionNext24hLoader = false;
+	productionNext24hData!:any;
+	productionNext24h(){
+		this.spinner.show();
+		this.productionNext24hLoader = true;
+		this.auth.productionNext24h().subscribe({
+			next:(response : any)=>{
+				this.productionNext24hData = response['timestampPowerPairs'];
+				this.spinner.hide();
+				this.productionNext24hLoader = false;
+			},
+			error: (err : any) => {
+				console.log("productionNext24hData error");
+				this.spinner.hide();
+				this.productionNext24hLoader = false;
+			}
+		})
+	}
+	productionNext7DaysLoader = false;
+	productionNext7DaysData!:any;
+	productionNext7Days(){
+		this.spinner.show();
+		this.productionNext7DaysLoader = true;
+		this.auth.productionNext7Days().subscribe({
+			next:(response : any)=>{
+				this.productionNext7DaysData = response['timestampPowerPairs'];
+				this.spinner.hide();
+				this.productionNext7DaysLoader = false;
+			},
+			error: (err : any) => {
+				console.log("productionNext7Days error");
+				this.spinner.hide();
+				this.productionNext7DaysLoader = false;
+			}
+		})
+	}
+	productionNextMonthLoader = false;
+	productionNextMonthData!:any;
+	productionNextMonth(){
+		this.spinner.show();
+		this.productionNextMonthLoader = true;
+		this.auth.productionNextMonth().subscribe({
+			next:(response : any)=>{
+				this.productionNextMonthData = response['timestampPowerPairs'];
+				this.spinner.hide();
+				this.productionNextMonthLoader = false;
+			},
+			error: (err : any) => {
+				console.log("productionNextMonth error");
+				this.spinner.hide();
+				this.productionNextMonthLoader = false;
+			}
+		})
+	}
+
 }
+	
+
 
 
                
