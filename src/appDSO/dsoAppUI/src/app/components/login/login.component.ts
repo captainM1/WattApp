@@ -12,12 +12,14 @@ import { NgxSpinnerService } from 'ngx-spinner';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit{
+  
   submitted = false;
   type: string = "password";
   eyeIcon: string = "fa-eye-slash";
   isText: boolean = false;
   loginForm!: FormGroup;
   showsignin!:boolean;
+  
   constructor(
     private fb: FormBuilder, 
     private router : Router,
@@ -69,12 +71,16 @@ export class LoginComponent implements OnInit{
           if (error.status === 400) {
             this.messageService.add({ severity: 'error', summary: 'Invalid credentials', detail: error.error });  
             this.router.navigate(['signin'])
+            this.spinner.hide();
+            this.showsignin = false;
           }
         }
       );
     }else{
       this.messageService.add({ severity: 'error', summary: 'Invalid credentials', detail: 'Invalid data format' });  
       this.router.navigate(['signin'])
+      this.spinner.hide();
+            this.showsignin = false;
     }
   }
 
@@ -92,8 +98,12 @@ export class LoginComponent implements OnInit{
       })
     }
 
-
+    signOut(){
+      this.auth.signOut();
+      this.router.navigate(['/signin']);
     }
+
+}
 
 
 

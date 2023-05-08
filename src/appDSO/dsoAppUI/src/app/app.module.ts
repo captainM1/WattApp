@@ -15,6 +15,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { GoogleMapsModule } from '@angular/google-maps';
 
+import { ConfirmationService } from 'primeng/api';
+
 import { NgChartsModule } from 'ng2-charts';
 import * as CanvasJSAngularChart from '../assets/canvasjs.angular.component';
 import { NavComponent } from './components/nav/nav.component';
@@ -30,9 +32,11 @@ import { WelcomeComponent } from './components/welcome/welcome.component';
 import { MessageService } from 'primeng/api';
 import { TokenInterceptor } from './interceptors/interceptor';
 import { ToastModule } from 'primeng/toast';
-import { NgxUiLoaderHttpModule, NgxUiLoaderModule  } from 'ngx-ui-loader';
+import { ModalTableComponent } from './components/modal-table/modal-table.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ErrorPageComponent } from './components/error-page/error-page.component';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TableModule } from 'primeng/table';
-
 var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
 
 
@@ -48,6 +52,8 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     RequirementsComponent,
     FilterPipe,
     WelcomeComponent,
+    ModalTableComponent,
+    ErrorPageComponent,
 
 ],
   imports: [
@@ -66,16 +72,14 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     MatTableModule,
     PaginatorModule,
     NgxSpinnerModule,
-    NgxUiLoaderModule,
+    ToastModule,
     TableModule,
-    NgxUiLoaderHttpModule.forRoot({
-      showForeground: true
-    }),
-    ToastModule
+    MatDialogModule,
+    ConfirmDialogModule
     
    
   ],
-  providers: [MessageService,{provide:HTTP_INTERCEPTORS,useClass:TokenInterceptor,multi:true}],
+  providers: [MessageService,{provide:HTTP_INTERCEPTORS,useClass:TokenInterceptor,multi:true}, MatDialog, ConfirmationService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

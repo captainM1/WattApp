@@ -159,10 +159,7 @@ public class UserRepository : IUserRepository
         user.PhoneNumber = userUpdateDto.PhoneNumber;
         user.dsoHasControl = userUpdateDto.dsoHasControl;
         user.sharesDataWithDso = user.sharesDataWithDso;
-
-        await this.UpdatePassword(id, userUpdateDto.Password);
         
-
         _dbContext.Users.Update(user);
         await _dbContext.SaveChangesAsync();
 
@@ -257,6 +254,18 @@ public class UserRepository : IUserRepository
         return true;
     }
 
+    public async Task<User> DisconnectFromDso(Guid id)
+    {
+        var user = await _dbContext.Users.FindAsync(id);
+        user.Role = "UnapprovedUser";
+        user.dsoHasControl = false;
+        user.sharesDataWithDso = false;
+
+        _dbContext.Users.Update(user);
+        await _dbContext.SaveChangesAsync();
+        return user;
+    }
+
     public async Task<int> GetNumberOfUsers()
     {
         return await _dbContext.Users.CountAsync();
@@ -301,6 +310,32 @@ public class UserRepository : IUserRepository
 
         return sharesWithDSO;
 
+    }
+    public async Task<Boolean> UpdateUserDataSharing(Guid id, Boolean sharesDataWithDso)
+    {
+        var user = await _dbContext.Users.FindAsync(id);
+        if (user.Role != "RegularUser")
+        {
+            return false;
+        }
+        user.sharesDataWithDso = sharesDataWithDso;
+
+        _dbContext.Users.Update(user);
+        await _dbContext.SaveChangesAsync();
+        return true;
+    }
+    public async Task<Boolean> UpdateUserDsoControl(Guid id, Boolean dsoHasControl)
+    {
+        var user = await _dbContext.Users.FindAsync(id);
+        if(user.Role != "RegularUser")
+        {
+            return false;
+        }
+        user.dsoHasControl = dsoHasControl;
+
+        _dbContext.Users.Update(user);
+        await _dbContext.SaveChangesAsync();
+        return true;
     }
 
 }

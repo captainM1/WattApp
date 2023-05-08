@@ -4,7 +4,8 @@ import { environment } from 'app/environments/environment';
 import { Info } from 'models/User';
 import { Observable } from 'rxjs';
 import { CookieService } from "ngx-cookie-service"
-
+import { ConfirmationService, MessageService, ConfirmEventType } from 'primeng/api';
+import { Router } from '@angular/router';
 @Injectable({
   providedIn: 'root'
 })
@@ -12,7 +13,10 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
-    private cookie:CookieService
+    private router:Router,
+    private cookie:CookieService,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService
   ) { }
 
   getCoords():Observable<any>{
@@ -39,6 +43,29 @@ export class AuthService {
     const jwtToken = this.cookie.get('jwtToken');
     return jwtToken;
   }
+
+  signOut() {
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to log out?',
+      header: 'Confirmation',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.cookie.delete('jwtToken');
+        this.router.navigate(['/signin']);
+      },
+      reject: (type: any) => {
+        switch (type) {
+          case ConfirmEventType.REJECT:
+            this.messageService.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected' });
+            break;
+          case ConfirmEventType.CANCEL:
+            this.messageService.add({ severity: 'warn', summary: 'Cancelled', detail: 'You have cancelled' });
+            break;
+        }
+      }
+    });
+  }
+  
   getPagination(pageNumber : number, pageSize : number) : Observable<any>{
     return this.http.get<any>(environment.apiUrl + "/api/User/users", {
       params: {
@@ -88,6 +115,8 @@ export class AuthService {
     return this.http.get<any>(environment.apiUrl + "/api/Device/groups/"+groupID);
   }
   
+
+
 // USERS
   getAllUserInfo(){
     return this.http.get(environment.apiUrl + '/api/User/allUserInfo')
@@ -153,7 +182,7 @@ export class AuthService {
     return this.http.get(environment.apiUrl + "/api/Device/groups");
   }
 
-  // table
+  // table - USER ID pozivi
   UserConsumptionSummary(id : any):Observable<any>{
     return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/currentUsageUser/consumption-summary/"+id);
   }
@@ -221,19 +250,25 @@ export class AuthService {
 
 
   
-// energy saved
+// SAVED ENERGY
   savedEnergyConsumption():Observable<any>{
     return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/saved-energy/consumer/system");
   }
   savedEnergyProduction():Observable<any>{
     return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/saved-energy/producer/system");
   }
+  savedEnergyConsumptionUser(userID : any) : Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/user-usage-saved-energy-month/consumer/"+userID);
+  }
+  savedEnergyProductionUser(userID : any) : Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/user-usage-saved-energy-month/production/"+userID);
+  }
 
   getDeviceConsumption(deviceID : any):Observable<any>{
     return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/today/currentPowerUsage/" +deviceID);
   }
 
-// getAllDispechers
+
   getAllDispechers():Observable<any>{
     return this.http.get(environment.apiUrl + "/api/Dispatcher/get-all-dispatchers");
   }
@@ -245,6 +280,55 @@ export class AuthService {
   currentProductionDay():Observable<any>{
     return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/currentDay/production/system");
   }
+
+  consumptionPrev24h():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/previous24h/consumption/every-hour-usage/system");
+  }
+
+  consumptionPrev7Days():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/previousWeek/consumption/every-day-usage/system");
+
+  }
+  consumptionPreviousMonth():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/previousMonth/consumption/every-day-usage/system");
+  }
+
+  productionPrev24h():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/previous24h/production/every-hour-usage/system");
+  }
+
+  productionPrev7Days():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/previousWeek/production/every-day-usage/system");
+
+  }
+  productionPreviousMonth():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/previousMonth/production/every-day-usage/system");
+  }
+
+  consumptionNext24h():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/next24h/consumption/every-hour-usage/system");
+  }
+
+  consumptionNext7Days():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/nextWeek/consumption/every-day-usage/system");
+
+  }
+  consumptionNexxtMonth():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/nextMonth/consumption/every-day-usage/system");
+  }
+
+  productionNext24h():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/next24h/production/every-hour-usage/system");
+  }
+
+  productionNext7Days():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/nextWeek/production/every-day-usage/system");
+
+  }
+  productionNextMonth():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/nextMonth/production/every-day-usage/system");
+  }
+
 
   
 }

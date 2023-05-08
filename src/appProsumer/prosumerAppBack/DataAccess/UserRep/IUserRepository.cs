@@ -20,4 +20,7 @@ public interface IUserRepository
     Task ResetPasswordToken(string token);
     public bool SharesWhidDSO(Guid userID);
     public bool DSOHasControl(Guid userID);
+    Task<User> DisconnectFromDso(Guid id);
+    Task<Boolean> UpdateUserDataSharing(Guid id, Boolean sharesDataWithDso);
+    Task<Boolean> UpdateUserDsoControl(Guid id, Boolean dsoHasControl);
 }
