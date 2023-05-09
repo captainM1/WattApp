@@ -235,4 +235,9 @@ public class DeviceService:IDeviceService
             throw new Exception("Failed to update device state: " + ex.Message);
         }
     }
+
+    public Boolean IsDeviceTurnedOn(Guid deviceID)
+    {
+        return _repository.IsDeviceTurnedOn(deviceID);
+    }
 }
