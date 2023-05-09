@@ -995,7 +995,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         {
             TimestampPowerPair tsp = new TimestampPowerPair();
             var date = DateTime.Now.AddHours(direction * i);
-            tsp.Timestamp = date;
+            tsp.Timestamp = date.AddMinutes(date.Minute * -1).AddSeconds(date.Second * -1);
             var dateplus1 = date.AddHours(1);
             foreach (var deviceType in deviceTypeIds)
             {
@@ -1045,7 +1045,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         {
             TimestampPowerPair tsp = new TimestampPowerPair();
             var date = DateTime.Now.AddHours(direction * i);
-            tsp.Timestamp = date;
+            tsp.Timestamp = date.AddMinutes(date.Minute * -1).AddSeconds(date.Second * -1);
             var dateplus1 = date.AddHours(1);
             foreach (var deviceType in deviceTypeIds)
             {
