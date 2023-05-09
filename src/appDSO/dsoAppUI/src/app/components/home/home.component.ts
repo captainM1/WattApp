@@ -18,9 +18,6 @@ import * as bootstrap from 'bootstrap';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit, AfterViewInit{
-
-	
-	
 	// zelena, narandzasta, crvena, deep sky blue, zuta
 	backgroundColorsGraphs =  ['#62C370', '#EC7357', '#e3170a', '#30C5FF', '#ffc800'];
 	backgroundColorsRGB = ['rgb(98, 195, 112)','rgb(236, 115, 87)','rgb(227, 23, 10)', 'rgb(48, 197, 255)', 'rgb(255, 200, 0)'];
@@ -1350,8 +1347,8 @@ export class HomeComponent implements OnInit, AfterViewInit{
 				  for (let i = 0; i < this.timestampListPrevMonthConsumption.length; i++) {
 					const pair = {
 						timestamp: this.timestampListPrevMonthConsumption[i],
-						powerUsage: this.powerUsageListPrevMonthConsumption[i],
-						powerUsage1: this.powerUsageListPrevMonthProduction[i]
+						powerUsage: this.powerUsageListPrevMonthConsumption[i].toFixed(2),
+						powerUsage1: this.powerUsageListPrevMonthProduction[i].toFixed(2)
 					};
 					this.dataMonthHistory.push(pair);
 				}
@@ -1530,8 +1527,8 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			for (let i = 0; i < this.timestampListNext24hConsumption.length; i++) {
 					const pair = {
 						timestamp: this.timestampListNext24hConsumption[i],
-						powerUsage: this.powerUsageListNext24hConsumption[i],
-						powerUsage1: this.powerusageProductionNext24h[i]
+						powerUsage: this.powerUsageListNext24hConsumption[i].toFixed(2),
+						powerUsage1: this.powerusageProductionNext24h[i].toFixed(2)
 					};
 				this.data24Future.push(pair);
 			}
@@ -1718,8 +1715,8 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		for (let i = 0; i < this.timestampListNext7daysConsumption.length; i++) {
 			const pair = {
 				timestamp: this.timestampListNext7daysConsumption[i],
-				powerUsage: this.powerUsageListNext7daysConsumption[i],
-				powerUsage1: this.powerusageProductionNext7days[i]
+				powerUsage: this.powerUsageListNext7daysConsumption[i].toFixed(2),
+				powerUsage1: this.powerusageProductionNext7days[i].toFixed(2)
 			};
 			this.data7daysFuture.push(pair);
 		}
@@ -1763,8 +1760,8 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		  for (let i = 0; i < this.timestampListNextMonthConsumption.length; i++) {
 			const pair = {
 				timestamp: this.timestampListNextMonthConsumption[i],
-				powerUsage: this.powerUsageListNextMonthConsumption[i],
-				powerUsage1: this.powerusageNextMonthProduction[i]
+				powerUsage: this.powerUsageListNextMonthConsumption[i].toFixed(2),
+				powerUsage1: this.powerusageNextMonthProduction[i].toFixed(2)
 			};
 			this.dataMonthFuture.push(pair);
 		}
@@ -1857,7 +1854,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			}
 		})
 	}
-	powerusageProductionNext24h = [];
+	powerusageProductionNext24h!:any[];
 	makeDataProductionNext24h(dataGraph : any){
 		this.powerusageProductionNext24h = [];
 		for(let i = 0; i < dataGraph.length; i++){
@@ -1883,7 +1880,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			}
 		})
 	}
-	powerusageProductionNext7days = [];
+	powerusageProductionNext7days!:any[];
 	makeDataProductionNext7days(dataGraph : any){
 		this.powerusageProductionNext7days = [];
 		for(let i = 0; i < dataGraph.length; i++){

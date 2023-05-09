@@ -272,13 +272,22 @@
           <div class="modal-content">
             <div class="modal-header">
               <p class="modal-title" id="exampleModalLabel">
-                <span *ngIf="selectedGraphFutureConsumption === '24h'" style="color: #026670; font-size: 20px; font-weight: 700;"> Consumption For The Previous 24h </span>
+                <span *ngIf="selectedGraphFutureConsumption === '24h'" style="color: #026670; font-size: 20px; font-weight: 700;"> Consumption For The Next 24h </span>
+                <span *ngIf="selectedGraphFutureConsumption === '7days'" style="color: #026670; font-size: 20px; font-weight: 700;"> Consumption and Production For Next 7 days </span>
+                <span *ngIf="selectedGraphFutureConsumption === 'month'" style="color: #026670; font-size: 20px; font-weight: 700;"> Consumption and Production For The Next Month</span>
+               
               </p>
               <button type="button" id="closeBtn" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-              <div *ngIf="selectedGraphFutureConsumption === '24h'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
-                <app-modal-table #ModalTableComponent [data]="data24Future" [type]="'Consumption'" [message]="'Consumption and Production For Next 24h'" [time]="'Hour'"></app-modal-table>
-              </div>
+            <div *ngIf="selectedGraphFutureConsumption === '24h'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
+              <app-modal-table #ModalTableComponent [data]="data24Future" [type]="'Consumption'" [message]="'Consumption and Production For Previous 24h'" [time]="'Hour'"></app-modal-table>
+            </div>
+            <div *ngIf="selectedGraphFutureConsumption === '7days'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
+              <app-modal-table #ModalTableComponent [data]="data7daysFuture" [type]="'Consumption'" [message]="'Consumption and production For The Previous 7 days'" [time]="'Day'"></app-modal-table>
+            </div>
+            <div *ngIf="selectedGraphFutureConsumption === 'month'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
+              <app-modal-table #ModalTableComponent [data]="dataMonthFuture" [type]="'Consumption'" [message]="'Consumption and Production For Previous Month'" [time]="'Day'"></app-modal-table>
+            </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-primary">EXPORT DATA</button>
         </div>
@@ -286,24 +295,7 @@
       </div>
       </div>
 
-      <div class="modal fade " id="consumptionProduction" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" >
-          <div class="modal-content">
-            <div class="modal-header">
-              <p class="modal-title" id="exampleModalLabel">
-                <span  style="color: #026670; font-size: 20px; font-weight: 700;"> Consumption & Production For The Next 12h </span>
-              </p>
-              <button type="button" id="closeBtn" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-              <div  class="modal-body" style="overflow-y: auto; overflow-x: hidden">
-                <app-modal-table #ModalTableComponent [data]="dataConsumptionProduction" [type]="'Consumption'" [message]="' Consumption & Production For The Next 12h'" [time]="'Hour'"></app-modal-table>
-              </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-primary">EXPORT DATA</button>
-        </div>
-        </div>
-      </div>
-      </div>
+      
     </div>
 
         
