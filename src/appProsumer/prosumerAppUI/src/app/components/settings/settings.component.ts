@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfirmPasswordValidator } from 'src/app/helpers/confirm-password.validator';
 import { AuthService } from 'src/app/services/auth.service';
@@ -9,7 +9,7 @@ import { SettingsService } from 'src/app/services/settings.service';
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.css']
 })
-export class SettingsComponent implements OnInit {
+export class SettingsComponent implements OnInit, AfterViewInit {
   allowAccess = false;
   allowControl = false;
   type: string = "password";
@@ -25,6 +25,9 @@ export class SettingsComponent implements OnInit {
   submitted = false;
 
   constructor(private apiService: SettingsService, private auth: AuthService, private fb: FormBuilder,) { }
+
+  @ViewChild('exampleModal') exampleModal!: ElementRef;
+
   ngOnInit(): void {
     this.resetForm = this.fb.group({
       currentPassword: ['', [Validators.required, Validators.minLength(6)]],
@@ -34,6 +37,12 @@ export class SettingsComponent implements OnInit {
       validator: ConfirmPasswordValidator("password","confirmPassword")
     }
     )
+  }
+
+  ngAfterViewInit(): void {
+    this.exampleModal.nativeElement.addEventListener('hidden.bs.modal', () => {
+      this.reset();
+    });
   }
 
   hideShowPass(){

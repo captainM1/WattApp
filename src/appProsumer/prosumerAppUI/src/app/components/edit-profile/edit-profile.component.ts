@@ -11,7 +11,7 @@ import { ConfirmPasswordValidator } from 'src/app/helpers/confirm-password.valid
   templateUrl: './edit-profile.component.html',
   styleUrls: ['./edit-profile.component.css']
 })
-export class EditProfileComponent implements OnInit, AfterViewInit{
+export class EditProfileComponent implements OnInit{
 
   allUsers!: any[];
   userID!: User;
@@ -44,11 +44,6 @@ export class EditProfileComponent implements OnInit, AfterViewInit{
     private fb: FormBuilder,
     private messageService:MessageService
   ){}
-  ngAfterViewInit(): void {
-    this.exampleModal.nativeElement.addEventListener('hidden.bs.modal', () => {
-      this.reset();
-    });
-  }
 
   ngOnInit(): void {
     this.getToken();
