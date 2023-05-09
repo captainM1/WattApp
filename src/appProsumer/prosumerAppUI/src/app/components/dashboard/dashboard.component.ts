@@ -34,8 +34,8 @@ export class DashboardComponent implements OnInit, AfterViewInit{
   powerUsageListNext24h!:any[];
   graph24prev!:any;
   graph24next!:any;
-  extractedDatesPrev7Days!:string[];
-  extractedDatesNext7Days!:string[];
+  extractedDatesPrev7Days:string[]  = [];
+  extractedDatesNext7Days:string[]  = [];
   id!:any;
   chartPrevMonth!:any;
   chartNextMonth!:any;
@@ -55,7 +55,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
   timeStrampProductionPrev7days = [];
   powerUsageProductionPrev7days = [];
   chartPrev7daysProduction!:any;
-  extractedDatesProductionPrev7Days!:string[];
+  extractedDatesProductionPrev7Days:string[]  = [];
   prodPrev7Days = [];
   timestampListProductionNext24h!:any[];
   powerUsageListProductionNext24h!:any[];
@@ -64,7 +64,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
   timeStrampProductionNext7days = [];
   powerUsageProductionNext7days = [];
   chartNext7daysProduction!:any;
-  extractedDatesProductionNext7Days!:string[];
+  extractedDatesProductionNext7Days:string[] = [];
   prodNext7Days = [];
   extractedDatesProductionNextMonth:string[] = [];
   productionNextMonthUser!:[];
@@ -668,9 +668,10 @@ export class DashboardComponent implements OnInit, AfterViewInit{
 
   chartConsumptionPrev7Days(){
     for(let i = 0; i < this.timeStrampConsumptionPrev7days.length; i++){
-      const dateStringList = this.timeStrampConsumptionPrev7days.toString();
-      const substrings = dateStringList.split(',');
-     this.extractedDatesPrev7Days = substrings.map(date => date.substring(0, date.indexOf('T')));
+     const date = new Date(this.timeStrampConsumptionPrev7days[i]);
+     const day = date.toLocaleString("default", { weekday: "long" });
+     const dateString = `${day}`;
+     this.extractedDatesPrev7Days.push(dateString);
 
     }
     console.log(this.extractedDatesPrev7Days);
@@ -713,12 +714,6 @@ export class DashboardComponent implements OnInit, AfterViewInit{
         data: data,
         options: {
           scales: {
-            x: {
-              title: {
-                display: true,
-                text: 'Date'
-              }
-            },
             y: {
               title: {
                 display: true,
@@ -765,9 +760,10 @@ export class DashboardComponent implements OnInit, AfterViewInit{
 
   chartConsumptionNext7Days(){
     for(let i = 0; i < this.timeStrampConsumptionNext7days.length; i++){
-      const dateStringList = this.timeStrampConsumptionNext7days.toString();
-      const substrings = dateStringList.split(',');
-     this.extractedDatesNext7Days = substrings.map(date => date.substring(0, date.indexOf('T')));
+      const date = new Date(this.timeStrampConsumptionNext7days[i]);
+      const day = date.toLocaleString("default", { weekday: "long" });
+      const dateString = `${day}`;
+      this.extractedDatesNext7Days.push(dateString);
 
     }
     console.log(this.extractedDatesNext7Days);
@@ -810,12 +806,6 @@ export class DashboardComponent implements OnInit, AfterViewInit{
         data: data,
         options: {
           scales: {
-            x: {
-              title: {
-                display: true,
-                text: 'Date'
-              }
-            },
             y: {
               title: {
                 display: true,
@@ -1069,9 +1059,10 @@ makeDataGraphPrev7DaysProduction(dataGraph : any){
 
 chartProductionPrev7Days(){
   for(let i = 0; i < this.timeStrampProductionPrev7days.length; i++){
-    const dateStringList = this.timeStrampProductionPrev7days.toString();
-    const substrings = dateStringList.split(',');
-   this.extractedDatesProductionPrev7Days = substrings.map(date => date.substring(0, date.indexOf('T')));
+    const date = new Date(this.timeStrampProductionPrev7days[i]);
+    const day = date.toLocaleString("default", { weekday: "long" });
+    const dateString = `${day}`;
+    this.extractedDatesProductionPrev7Days.push(dateString);
 
   }
   console.log(this.extractedDatesProductionPrev7Days);
@@ -1114,12 +1105,6 @@ chartProductionPrev7Days(){
       data: data,
       options: {
         scales: {
-          x: {
-            title: {
-              display: true,
-              text: 'Date'
-            }
-          },
           y: {
             title: {
               display: true,
@@ -1265,9 +1250,10 @@ makeDataGraphNext7DaysProduction(dataGraph : any){
 
 chartProductionNext7Days(){
   for(let i = 0; i < this.timeStrampProductionNext7days.length; i++){
-    const dateStringList = this.timeStrampProductionNext7days.toString();
-    const substrings = dateStringList.split(',');
-   this.extractedDatesProductionNext7Days = substrings.map(date => date.substring(0, date.indexOf('T')));
+    const date = new Date(this.timeStrampProductionNext7days[i]);
+    const day = date.toLocaleString("default", { weekday: "long" });
+    const dateString = `${day}`;
+    this.extractedDatesProductionNext7Days.push(dateString);
 
   }
   console.log(this.extractedDatesProductionNext7Days);
@@ -1311,12 +1297,6 @@ chartProductionNext7Days(){
       data: data,
       options: {
         scales: {
-          x: {
-            title: {
-              display: true,
-              text: 'Date'
-            }
-          },
           y: {
             title: {
               display: true,
