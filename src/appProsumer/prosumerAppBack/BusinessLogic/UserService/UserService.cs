@@ -305,6 +305,13 @@ public class UserService:IUserService
         return true;
     }
 
+    public async Task<List<UsersRequestedToDso>> GetUsersAppliedToDso()
+    {
+        var users = await _repository.GetUsersAppliedToDso();
+        
+        return users;
+    }
+
     public async Task CreatePasswordResetToken(string email)
     {
         await _repository.CreatePasswordResetToken(email);        

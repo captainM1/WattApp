@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MongoDB.Driver;
 using prosumerAppBack.BusinessLogic;
+using prosumerAppBack.BusinessLogic.PowerUsageService;
 using prosumerAppBack.Models;
 using prosumerAppBack.Models.Device;
 
@@ -49,6 +50,7 @@ namespace prosumerAppBack.DataAccess
                 { 
                     d.ID,
                     d.MacAdress,
+                    d.DeviceName,
                     DeviceTypeName = d.DeviceType.Name, 
                     ManufacturerID = d.DeviceType.ManufacturerID,
                 })
@@ -57,10 +59,13 @@ namespace prosumerAppBack.DataAccess
                     DeviceId = joined.ID,
                     joined.MacAdress,
                     joined.DeviceTypeName,
+                    joined.DeviceName,
                     ManufacturerName = _dbContext.DeviceManufacturers.FirstOrDefault(m => m.ID == joined.ManufacturerID).Name
                 })
                 .ToArray();
         }
+
+        
 
         public IEnumerable<DeviceGroup> GetDeviceGroups()
         {
