@@ -166,7 +166,41 @@ public class UserRepository : IUserRepository
         return 2; // sve je proslo kako treba
     }
 
-    public async Task<Boolean> UpdatePassword(Guid id, string newPassword)
+    public async Task<Boolean> UpdatePassword(Guid id, string oldPassword, string newPassword)
+    {
+        var user = await this.GetUserByIdAsync(id);
+
+        if (user == null)
+        {
+            return false;
+        }
+
+        var isUserRight = _passwordHasher.VerifyPassword(oldPassword, user.Salt, user.PasswordHash);
+        if (isUserRight == false)
+            return false;
+
+        string token = _tokenMaker.GenerateToken(user);
+
+        bool result = _tokenMaker.ValidateJwtToken(token);
+
+        if (result == false)
+        {
+            return false;
+        }
+
+        byte[] salt;
+        byte[] hash;
+        (salt, hash) = _passwordHasher.HashPassword(newPassword);
+
+        user.Salt = salt;
+        user.PasswordHash = hash;
+
+        await _dbContext.SaveChangesAsync();
+
+        return true;
+    }
+
+    public async Task<Boolean> ResetPassword(Guid id, string newPassword)
     {
         var user = await this.GetUserByIdAsync(id);
 
@@ -195,6 +229,7 @@ public class UserRepository : IUserRepository
 
         return true;
     }
+
     public async Task<Boolean> CreateUserRequestToDso(User user)
     {
         var newUser = new UsersRequestedToDso

@@ -115,9 +115,9 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("update-password/{userID}")]
-    public async Task<IActionResult> UpdatePassword(Guid userID, string newPassword)
+    public async Task<IActionResult> UpdatePassword(Guid userID, string oldPassword, string newPassword)
     {
-        await _userService.UpdatePassword(userID, newPassword);
+        await _userService.UpdatePassword(userID, oldPassword, newPassword);
 
         return Ok(new { message = "password changed successfully" });
     }
@@ -154,7 +154,7 @@ public class UserController : ControllerBase
             return BadRequest("Invalid email address");
         }*/
        
-        var action = _userRepository.UpdatePassword(user.Result.ID, resetPasswordDto.Password).GetAwaiter().GetResult();
+        var action = _userRepository.ResetPassword(user.Result.ID, resetPasswordDto.Password).GetAwaiter().GetResult();
 
         if (!action)
         {
