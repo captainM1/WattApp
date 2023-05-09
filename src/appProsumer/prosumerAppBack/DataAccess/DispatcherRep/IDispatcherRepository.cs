@@ -13,4 +13,5 @@ public interface IDispatcherRepository
     Task<Dispatcher> GetDispatcherByEmailAsync(string email);
     Task<List<Dispatcher>> GetAllDispatchersAsync();
     Task<Boolean> DeleteDispatcher(Guid dispatcherID);
+    Task<Boolean> UpdateDispatcher(Guid id, DispatcherUpdateDto dispatcherUpdateDto);
 }

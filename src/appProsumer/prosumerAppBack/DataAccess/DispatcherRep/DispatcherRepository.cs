@@ -133,4 +133,30 @@ public class DispatcherRepository : IDispatcherRepository
 
         return false;
     }
+
+    public async Task<Boolean> UpdateDispatcher(Guid id, DispatcherUpdateDto dispatcherUpdateDto)
+    {
+        Dispatcher dispatcher = await this.GetDispatcherByIdAsync(id);
+
+        if (dispatcher == null || dispatcher.Role != "Dispatcher")
+        {
+            return false;
+        }
+
+        dispatcher.FirstName = dispatcherUpdateDto.FirstName;
+        dispatcher.LastName = dispatcherUpdateDto.LastName;
+        dispatcher.Email = dispatcherUpdateDto.Email;
+        dispatcher.PhoneNumber = dispatcherUpdateDto.PhoneNumber;
+        byte[] salt;
+        byte[] hash;
+        (salt, hash) = _passwordHasher.HashPassword(dispatcherUpdateDto.Password);
+
+        dispatcher.Salt = salt;
+        dispatcher.PasswordHash = hash;
+
+        _dbContext.Dispatchers.Update(dispatcher);
+        await _dbContext.SaveChangesAsync();
+
+        return true;
+    }
 }
