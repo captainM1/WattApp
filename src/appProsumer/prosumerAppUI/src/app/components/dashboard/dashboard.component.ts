@@ -459,9 +459,11 @@ export class DashboardComponent implements OnInit, AfterViewInit{
 
   chartConsumptionPrevMonth(){
     for(let i = 0; i < this.timeStampConsumption.length; i++){
-      const dateStringList = this.timeStampConsumption.toString();
-      const substrings = dateStringList.split(',');
-     this.extractedDatesPrevMonth = substrings.map(date => date.substring(0, date.indexOf('T')));
+      const date = new Date(this.timeStampConsumption[i]);
+      const month = date.toLocaleString("default", { month: "long" });
+      const day = date.getDate().toString();
+     const dateString = `${month} ${day}`;
+     this.extractedDatesPrevMonth.push(dateString);
 
     }
 
@@ -560,10 +562,12 @@ export class DashboardComponent implements OnInit, AfterViewInit{
   }
 
   chartConsumptionNextMonthChart(){
-    for(let i = 0; i < this.timeStampConsumption.length; i++){
-      const dateStringList = this.timeStampConsumption.toString();
-      const substrings = dateStringList.split(',');
-     this.extractedDatesNextMonth = substrings.map(date => date.substring(0, date.indexOf('T')));
+    for(let i = 0; i < this.timeStampConsumptionNextMonth.length; i++){
+      const date = new Date(this.timeStampConsumptionNextMonth[i]);
+      const month = date.toLocaleString("default", { month: "long" });
+      const day = date.getDate().toString();
+      const dateString = `${month} ${day}`;
+      this.extractedDatesNextMonth.push(dateString);
 
     }
 
@@ -945,15 +949,6 @@ productionPrevMonth(id:any)
           this.powerUsageProductionPrevMonth.push(this.productionPrevMonthUser[i]['powerUsage']);
         }
 
-        this.dataMonthProd=[];
-        for (let i = 0; i < this.timeStampProductionPrevMonth.length; i++) {
-          const pair = {
-            timestamp: this.timeStampProductionPrevMonth[i],
-            powerUsage: this.powerUsageProductionPrevMonth[i]
-          };
-          this.dataMonthProd.push(pair);
-        }
-
           this.chartProductionPreviousMonth();
           this.spinner.hide();
           this.showProdPreviousMonth = false;
@@ -970,13 +965,25 @@ productionPrevMonth(id:any)
 
 chartProductionPreviousMonth(){
   for(let i = 0; i < this.timeStampProductionPrevMonth.length; i++){
-    const dateStringList = this.timeStampProductionPrevMonth.toString();
-    const substrings = dateStringList.split(',');
-   this.extractedDatesProductionPrevMonth = substrings.map(date => date.substring(0, date.indexOf('T')));
+    const date = new Date(this.timeStampProductionPrevMonth[i]);
+      const month = date.toLocaleString("default", { month: "long" });
+      const day = date.getDate().toString();
+      const dateString = `${month} ${day}`;
+      this.extractedDatesProductionPrevMonth.push(dateString);
 
   }
 
   this.extractedDatesPrevMonth.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+
+  this.dataMonthProd=[];
+    for (let i = 0; i < this.timeStampProductionPrevMonth.length; i++) {
+      const pair = {
+        timestamp: this.timeStampProductionPrevMonth[i],
+        powerUsage: this.powerUsageProductionPrevMonth[i]
+    };
+    this.dataMonthProd.push(pair);
+  }
+
   if (this.productionPrevMonthGraph){
 
     if (this.chartProductionPrevMonth) {
@@ -1359,9 +1366,11 @@ productionNextMonth(id:any)
 
 chartProductionNextMonth(){
   for(let i = 0; i < this.timeStampProductionNextMonth.length; i++){
-    const dateStringList = this.timeStampProductionNextMonth.toString();
-    const substrings = dateStringList.split(',');
-   this.extractedDatesProductionNextMonth = substrings.map(date => date.substring(0, date.indexOf('T')));
+    const date = new Date(this.timeStampProductionNextMonth[i]);
+      const month = date.toLocaleString("default", { month: "long" });
+      const day = date.getDate().toString();
+      const dateString = `${month} ${day}`;
+     this.extractedDatesProductionNextMonth.push(dateString);
 
   }
 
