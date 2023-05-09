@@ -3,6 +3,7 @@
     src: url(/assets/fonts/Inter-Regular.ttf);
  }
 
+
 @media(max-width: 480px) {
     .mobile{
         display: contents;
@@ -14,7 +15,7 @@
         display: none;
     }
   }
-  
+
 @media(min-width: 481px){
     .mobile{
         display: none;
@@ -24,9 +25,9 @@
     }
   }
 
-  
+
 @media (max-width: 280px) /*Fold*/
-{ 
+{
     .container{
         width: 98%;
         background-color: white;
@@ -37,8 +38,8 @@
         margin-bottom: 10%;
         margin-top:15px;
     }
-    
-    button{       
+
+    button{
         font-size: 14px;
         height: 40px;
         text-align: left;
@@ -75,7 +76,7 @@
         font-size: 22px;
     }
 
-    
+
 }
 
 @media (min-width: 281px) and (max-width: 480px) /*Phones*/
@@ -91,7 +92,7 @@
         margin-top:30px;
     }
 
-    button{       
+    button{
         font-size: 14px;
         height: 40px;
         text-align: left;
@@ -115,8 +116,9 @@
         padding: 10px 15px;
     }
 
-    span{
-        font-size: 15px;
+    span
+    {
+      font-size: 13px;
     }
 
     h4{
@@ -129,7 +131,7 @@
     }
 
 }
- 
+
 @media (min-width: 481px) and (max-width: 1023px)  /*Tablet*/
 {
     .container{
@@ -143,7 +145,7 @@
         margin-top:30px;
     }
 
-    button{       
+    button{
         font-size: 20px;
         height: 40px;
         text-align: left;
@@ -168,9 +170,7 @@
         padding: 10px 15px;
     }
 
-    span{
-        font-size: 20px;
-    }
+
 
     h4{
         font-size:20px;
@@ -195,7 +195,7 @@
         margin-top:70px;
     }
 
-    button{       
+    button{
         font-size: 20px;
         height: 40px;
         text-align: left;
@@ -220,10 +220,6 @@
         padding: 10px 15px;
     }
 
-    span{
-        font-size: 20px;
-    }
-
     h4{
         font-size:20px;
     }
@@ -232,7 +228,7 @@
         color:white;
         font-size: 22px;
     }
-    
+
 }
 
 mat-toolbar {
@@ -265,10 +261,6 @@ h4{
     font-weight: bolder;
 }
 
-span{
-    font-weight: bold;
-}
-
 button{
     background-color: #026670;
     color:white;
@@ -279,6 +271,7 @@ button{
 
 button:hover {
     background-color: #227982;
+    color:white;
 }
 button:active {
     background-color: #026670;
@@ -349,4 +342,105 @@ body {
 .toggle-label {
   position: relative;
   top: 2px;
+}
+
+
+
+#closeBtn, #closeBtn:active
+{
+  background-color: transparent !important;
+  border: transparent !important;
+}
+
+#closeBtn
+{
+  width: 40px;
+  height: 40px;
+  font-size: 15px;
+  position: relative;
+  right:10px;
+  background-color: #026670 !important;
+}
+
+.input-group
+{
+  background-color: #fff;
+}
+
+.modal-content
+{
+  border-radius: 17px !important;
+}
+
+.inputChange{
+  border:2px solid #026670;
+  border-radius: 5px;
+  font-style: italic;
+  font-size: 12px;
+  height: 40px !important;
+  width: 80% !important;
+  border-right: none !important;
+  background-color: #fff;
+  box-shadow: none !important;
+}
+
+.inputChange::placeholder{
+  color:rgba(2, 102, 112, 0.5);
+}
+
+
+.addon-icon {
+  display: flex;
+  align-items: center !important;
+  justify-content: center !important;
+  background-color: #fff;
+  padding-top: 5px;
+  padding-right: 5px;
+  margin-left: -1px;
+  border: 2px solid #026670;
+  border-left: none !important;
+  transition: all 0.2s ease-in-out;
+  border-radius:0 5px 5px 0 !important;
+  height: 40px;
+}
+
+.addon-icon i {
+  color: #6c757d;
+  margin-top: -10px;
+}
+
+.form-control {
+  position:relative;
+  transition: all 0.2s ease-in-out;
+  border-right: none !important;
+  padding-right: 20px;
+}
+
+.form-control::before {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+.form-control:focus {
+  border:2px solid #026670;
+  border-right: none;
+  box-shadow: none;
+}
+.form-control:focus + .addon-icon {
+  border:2px solid #026670;
+  border-left:none;
+  border-radius: 5px;
+}
+
+.invalid-input {
+  border: 2px solid #dc3545 !important;
+  border-right: none !important;
+}
+
+.invalid-icon {
+  border: 2px solid #dc3545 !important;
+  border-left: none !important;
+  border-color: #dc3545 !important;
 }
