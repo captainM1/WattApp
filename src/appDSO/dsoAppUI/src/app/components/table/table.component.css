@@ -1,7 +1,7 @@
 .card {
     width: 100%;
     border-radius: 10px;
-    margin-top: 50px;
+    margin-top: 25px;
     margin-left: 20px;
     border: 2px solid #026670;
 }
@@ -28,7 +28,7 @@
 }
 
 #map{
-  margin-top: 120px;
+  margin-top: 115px;
   margin-left: 20px;
 }
 .fa{
@@ -271,4 +271,24 @@ label{
   margin-left: 25px;
   margin-bottom: 10px;
   border: 0px;
+}
+.active-column {
+  background-color:rgba(73, 190, 170,0.2);
+  border: 2px solid rgb(73,190,170);
+  color: black;
+  font-weight: 500;
+}
+.style-info{
+  margin-top: 2px;
+  color: #7e828b;
+  font-size: 12px;
+  display: block;
+  text-align: center;
+
+}
+.info{
+  display: inline-block;
+  padding: 2px;
+  padding-top: 0px;
+
 }

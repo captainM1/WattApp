@@ -1,12 +1,4 @@
-<!-- <ngx-ui-loader
-  fgsColor="#fff"
-  pbColor="#fff"
-  text="Please wait..."
-  textColor="#fff"
->
-</ngx-ui-loader> -->
 <app-nav></app-nav>
-
 <div class="row" id = "row-page" style="margin-top: 100px;" id = "myBack">
   <div class="col-lg-7">
     <div class="input-div">
@@ -35,8 +27,8 @@
                   
                 </tr>
               </thead>
-              <tr *ngFor="let user of allUsers | filterName : _searchByName: _searchByAddress" (click) = "showMeOnMap(user.id)">
-                  <td *ngIf="user"><input [(ngModel)]="exportSelected"  type = "checkbox" style="width: 20px;" (click) = "toggleExportSelected()"></td>  
+              <tr *ngFor="let user of allUsers | filterName : _searchByName: _searchByAddress;  let i = index;" (click) = "showMeOnMap(user.id); selectedColumn1 = i;"[class.active-column]="selectedColumn1 === i">
+                  <td *ngIf="user"><input [(ngModel)]="user.selected"  type = "checkbox" style="width: 20px;" (click) = "toggleExportSelected(user)"></td>  
                   <td >{{user.firstName}}</td> 
                   <td>{{user.lastName}}</td>
                   <td>{{user.address}}, {{user.city}}, {{user.country}}</td>
@@ -44,9 +36,7 @@
                   <td>{{user.consumption}} kWh</td>
                   <td><button class="btn" (click)="openModel()">Show me profile</button></td>
               </tr>
-              <tr>
-                
-              </tr>
+             
           </table>
           <div class="col">
             <tr style="width: 100%; display: flex; justify-content: center; text-align: center;">
@@ -61,7 +51,17 @@
     <div class="col">
         <div id = "map" style="width: 550px; height: 400px;" >
       </div>
-      
+      <div class="style-info">
+        <li class = "info">
+          <i class="fa fa-square" aria-hidden="true" style="color:#62C370"></i> Green zone (up to 350 kWh)
+        </li>
+        <li class = "info" >
+          <i class="fa fa-square" aria-hidden="true" style="color:#EC7357"></i> Orange zone (from 350kWh to 700kWh)
+        </li>
+        <li class = "info">
+          <i class="fa fa-square" aria-hidden="true" style="color:#F42C04"></i> Red zone (over 700kWh)
+        </li>
+</div>
     </div>
  </div>
  <!-- <ngx-spinner></ngx-spinner> -->
@@ -99,7 +99,7 @@
           <div class="card" id = "card-popUp">
             <h3 class="card-title" id = "card-title-popUp">Saved Energy:</h3>
             <div class="card-body" id = "card-body-popUp">
-              {{savedEnergyUser}} kWh
+              {{savedEnergyUser}} %
             </div>
           </div>
         </div>
@@ -135,30 +135,36 @@
                   <table class="tableDevices">
                     <thead>
                       <tr >
-                        <th>Device name</th>
-                        <th>Device manifacture</th>
-                        <th>Mac Address</th>
-                        <th>Type of Device</th>
-                        <th>Current</th>
+                        <th >Device name</th>
+                        <th >Device manifacture</th>
+                        <th >Mac Address</th>
+                        <th >Type of Device</th>
+                        <th >Current</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr *ngFor="let device of allUserDevices" [(ngModel)]="selectedDevice" (click)="displayGraph(device)">
-                        <td>{{device.deviceTypeName}}</td>
-                        <td>{{device.manufacturerName}}</td>
-                        <td>{{device.macAdress}}</td>
-                        <td>{{device.typeOfDevice}}</td>
-                        <td>{{device.powerusage}} kw/h</td>
+                      <tr *ngFor="let device of allUserDevices; let i = index;" [(ngModel)]="selectedDevice" (click)="displayGraph(device); selectedColumn = i;" [class.active-column]="selectedColumn === i">
+                        <td >{{device.deviceTypeName}}</td>
+                        <td >{{device.manufacturerName}}</td>
+                        <td >{{device.macAdress}}</td>
+                        <td >{{device.typeOfDevice}}</td>
+                        <td >{{device.powerusage}} kw/h</td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
-                <div class="col">
+                <div class="col" *ngIf = "selectedDevice && !allDevices">
                   <div >
-                    <!-- graphDeviceLoader -->
+                   
                     <ngx-spinner bdColor = "rgba(0, 0, 0, 0.5)" size = "medium" color = "#fff" type = "ball-spin" [showSpinner]="graphDeviceLoader " [fullScreen]="false" *ngIf="graphDeviceLoader"><p style="color: #fff; margin-top:60px;"> Please wait... </p></ngx-spinner>
                    <canvas #prev24DeviceID></canvas>
                   </div>
+                  
+                </div>
+                <div class="col" *ngIf="!selectedDevice && allDevices">
+                  <div>
+                    <canvas #allDevicesUserGraph></canvas>
+                   </div>
                 </div>
               </div>
               
@@ -295,7 +301,7 @@
                       <div class="card-body">
                           <div>
                               <ngx-spinner bdColor = "rgba(0, 0, 0, 0.5)" size = "medium" color = "#fff" type = "ball-spin" [showSpinner]="productionNextMonthLoader " [fullScreen]="false" *ngIf="productionNextMonthLoader"><p style="color: #fff; margin-top:60px;"> Please wait... </p></ngx-spinner>
-                              <canvas  #productionNextMonthGraph></canvas>
+                              <canvas  #productionNextMonthUSER></canvas>
                           </div>
                       </div>
                     </div>
