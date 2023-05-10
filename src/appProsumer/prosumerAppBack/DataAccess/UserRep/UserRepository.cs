@@ -351,4 +351,14 @@ public class UserRepository : IUserRepository
         return users;
     }
 
+    public async Task<Boolean> UserAllreadyAppliedToDso(Guid id)
+    {
+        var user = await _dbContext.UsersAppliedToDSO.FindAsync(id);
+        if (user == null)
+        {
+            return false;
+        }
+        
+        return true;
+    }
 }

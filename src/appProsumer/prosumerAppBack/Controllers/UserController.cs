@@ -376,4 +376,19 @@ public class UserController : ControllerBase
             return StatusCode(500, ex.Message);
         }
     }
+
+    [HttpGet("user-allready-applied-to-DSO/{userID}")]
+    public async Task<IActionResult> UserAllreadyAppliedToDso(Guid userID)
+    {
+        try
+        {
+            var result = await _userService.UserAllreadyAppliedToDso(userID);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
 }

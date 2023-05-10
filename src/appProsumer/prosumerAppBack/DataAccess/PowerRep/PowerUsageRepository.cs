@@ -9,7 +9,6 @@ using MongoDB.Driver;
 using prosumerAppBack.BusinessLogic;
 using prosumerAppBack.Models;
 using prosumerAppBack.Models.Device;
-using System.Security.Cryptography;
 
 namespace prosumerAppBack.DataAccess;
 
