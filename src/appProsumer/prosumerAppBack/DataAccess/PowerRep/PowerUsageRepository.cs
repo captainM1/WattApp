@@ -2426,15 +2426,12 @@ public class PowerUsageRepository : IPowerUsageRepository
         }
         return ((currentConsumption - sum) / sum) * 100;
     }
-}
-
-
     public double electricityBillLastMonth(Guid userID, double electricityRate)
     {
         bool DSOshare = _dataContext.Users
-                       .Where(u => u.ID == userID)
-                       .Select(sh => sh.sharesDataWithDso)
-                       .FirstOrDefault();
+            .Where(u => u.ID == userID)
+            .Select(sh => sh.sharesDataWithDso)
+            .FirstOrDefault();
 
         if (DSOshare == false)
             return 0;
@@ -2447,9 +2444,9 @@ public class PowerUsageRepository : IPowerUsageRepository
     public double electricityBill2MonthsAgo(Guid userID, double electricityRate)
     {
         bool DSOshare = _dataContext.Users
-                       .Where(u => u.ID == userID)
-                       .Select(sh => sh.sharesDataWithDso)
-                       .FirstOrDefault();
+            .Where(u => u.ID == userID)
+            .Select(sh => sh.sharesDataWithDso)
+            .FirstOrDefault();
 
         if (DSOshare == false)
             return 0;
@@ -2462,9 +2459,9 @@ public class PowerUsageRepository : IPowerUsageRepository
     public double electricityEarningsLastMonth(Guid userID, double electricityRate)
     {
         bool DSOshare = _dataContext.Users
-                       .Where(u => u.ID == userID)
-                       .Select(sh => sh.sharesDataWithDso)
-                       .FirstOrDefault();
+            .Where(u => u.ID == userID)
+            .Select(sh => sh.sharesDataWithDso)
+            .FirstOrDefault();
 
         if (DSOshare == false)
             return 0;
@@ -2477,9 +2474,9 @@ public class PowerUsageRepository : IPowerUsageRepository
     public double electricityEarnings2MonthsAgo(Guid userID, double electricityRate)
     {
         bool DSOshare = _dataContext.Users
-                       .Where(u => u.ID == userID)
-                       .Select(sh => sh.sharesDataWithDso)
-                       .FirstOrDefault();
+            .Where(u => u.ID == userID)
+            .Select(sh => sh.sharesDataWithDso)
+            .FirstOrDefault();
 
         if (DSOshare == false)
             return 0;
@@ -2488,5 +2485,4 @@ public class PowerUsageRepository : IPowerUsageRepository
 
         return consumes * electricityRate;
     }
-
 }
