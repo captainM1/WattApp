@@ -32,7 +32,7 @@ export class MyDevicesComponent implements OnInit {
               this.deviceToday[device.deviceId] = data;
             },
             error => {
-              console.error('Error fetching device today:', error);
+              this.deviceToday[device.deviceId] = 0;
             });
         });
       },
