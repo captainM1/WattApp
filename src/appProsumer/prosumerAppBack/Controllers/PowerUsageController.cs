@@ -13,7 +13,7 @@ namespace prosumerAppBack.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
+//[Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
 public class PowerUsageController : ControllerBase
 {
     private readonly IPowerUsageService _powerUsageService;
@@ -529,6 +529,20 @@ public class PowerUsageController : ControllerBase
     public ActionResult<double> savedEnergyForUserConsumer(Guid userID)
     {
         var powerUsage = _powerUsageService.savedEnergyForUserConsumer(userID);
+        return Ok(powerUsage);
+    }
+
+    [HttpGet("power-usage/percentage-difference-for-previous-week/consumption/{userId}")]
+    public ActionResult<double> percentPowerUsageDifferenceForPreviousWeekConsumption(Guid userId)
+    {
+        var powerUsage = _powerUsageService.percentPowerUsageDifferenceForPreviousWeekConsumption(userId);
+        return Ok(powerUsage);
+    }
+
+    [HttpGet("power-usage/percentage-difference-for-previous-week/production/{userId}")]
+    public ActionResult<double> percentPowerUsageDifferenceForPreviousWeekProduction(Guid userId)
+    {
+        var powerUsage = _powerUsageService.percentPowerUsageDifferenceForPreviousWeekProduction(userId);
         return Ok(powerUsage);
     }
 }
