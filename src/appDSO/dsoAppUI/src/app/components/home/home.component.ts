@@ -12,6 +12,9 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { ModalTableComponent } from '../modal-table/modal-table.component';
 import { MatDialog } from '@angular/material/dialog';
 import * as bootstrap from 'bootstrap';
+import { TableExport } from 'tableexport';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -190,7 +193,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
   @ViewChild('myChartUsers') myChartUsers!:ElementRef;
   @ViewChild('myChartForEveryTypeOfDevice') myChartForEveryTypeOfDevice!: ElementRef;
   @ViewChild('hourlyTemp') hourlyTemp!: ElementRef;
-
+  @ViewChild('tableTable') myTable!: ElementRef;
   @ViewChild('currentConsumptionSYS') currentConsumptionSYS!:ElementRef;
   @ViewChild('prevMonthConsumptionSYS') prevMonthConsumptionSYS!:ElementRef;
   @ViewChild('nextMonthConsumptionSYS') nextMonthConsumptionSYS!:ElementRef;
@@ -202,10 +205,19 @@ export class HomeComponent implements OnInit, AfterViewInit{
   @ViewChild('previous24ConsumptionGraph') previous24ConsumptionGraph!:ElementRef;
   @ViewChild('consumptionPrev7daysGraph') consumptionPrev7daysGraph!:ElementRef;
   @ViewChild('consumptionPrevMonthGraph') consumptionPrevMonthGraph!:ElementRef;
-  @ViewChild('consumptionNext24hGraph')consumptionNext24hGraph!:ElementRef;
+  @ViewChild('consumptionNext24hGraph') consumptionNext24hGraph!:ElementRef;
   @ViewChild('consumptionNext7daysGraph') consumptionNext7daysGraph!:ElementRef;
   @ViewChild('consumptionNextMonthGraph') consumptionNextMonthGraph!:ElementRef;
-
+ 
+ 
+  exportToExcel(): void {
+    const worksheet = XLSX.utils.table_to_sheet(document.querySelector('#tableTable'));
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+    const fileBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([fileBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    saveAs(blob, 'table-data.xlsx');
+  }
 
 	getDate(){
 		this.currentDate = timer(0,1000).pipe(
@@ -414,6 +426,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 				powerUsage1: this.powerusageCurrentDayProduction[i].toFixed(2)
 			};
 			this.dataConsumptionProduction.push(pair);
+			console.log("ConsumptionProduction Data", this.dataConsumptionProduction);
 		}
 	}
 		

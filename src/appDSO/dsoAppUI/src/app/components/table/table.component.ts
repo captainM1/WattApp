@@ -18,7 +18,7 @@ import { Subscription } from 'rxjs';
 import { canvas } from 'chart.js/dist/helpers/helpers.canvas';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgxUiLoaderModule,NgxUiLoaderHttpModule, NgxUiLoaderService } from 'ngx-ui-loader';
-
+import { ModalTableProfileComponent } from '../modal-table-profile/modal-table-profile.component';
 
 
 @Component({
@@ -131,7 +131,7 @@ export class TableComponent implements OnInit, AfterViewInit {
  powerUsageConsumption = [];
 
  timeStrampConsumptionNextMonth!:any;
- powerUsageConsumptionNextMonth = [];
+ powerUsageConsumptionNextMonth!:any;
 
  timeStrampProductionPrev7days = [];
  powerUsageProductionPrev7days = [];
@@ -739,7 +739,7 @@ export class TableComponent implements OnInit, AfterViewInit {
 				  for (let i = 0; i < this.timeStrampConsumptionNextMonth.length; i++) {
 					const pair = {
 						timestamp: this.timeStrampConsumptionNextMonth[i],
-						powerUsage: this.powerUsageConsumptionNextMonth[i],
+						powerUsage: this.powerUsageConsumptionNextMonth[i].toFixed(2),
 					};
 					this.dataconsumptionNextMonth.push(pair);
 				}
@@ -789,7 +789,7 @@ export class TableComponent implements OnInit, AfterViewInit {
 				  for (let i = 0; i < this.timeStampConsumptionPrevMonth.length; i++) {
 					const pair = {
 						timestamp: this.timeStampConsumptionPrevMonth[i],
-						powerUsage: this.powerUsageConsumptionPrevMonth[i],
+						powerUsage: this.powerUsageConsumptionPrevMonth[i].toFixed(2),
 					};
 					this.dataConsumptionPrevMonth.push(pair);
 				}
@@ -964,7 +964,7 @@ productionPreviousMonthUser(id : any){
       for (let i = 0; i < this.timestampListNextMonthProduction.length; i++) {
       const pair = {
         timestamp: this.timestampListNextMonthProduction[i],
-        powerUsage: this.powerUsageListNextMonthProduction[i],
+        powerUsage: this.powerUsageListNextMonthProduction[i].toFixed(2),
       };
       this.dataProductionNextMonth.push(pair);
     }
@@ -1162,7 +1162,7 @@ productionPreviousMonthUser(id : any){
 		for (let i = 0; i < this.timeStrampConsumptionNext7days.length; i++) {
 			const pair = {
 				timestamp: this.timeStrampConsumptionNext7days[i],
-				powerUsage: this.powerUsageConsumptionNext7days[i],
+				powerUsage: this.powerUsageConsumptionNext7days[i].toFixed(2),
 			};
 			this.dataConsumption7daysFuture.push(pair);
 		}
@@ -1392,11 +1392,11 @@ consumptionNext24hGraph(){
       label: 'Consumption For The Next 24h',
       data: this.powerusageConsumptionNext24h,
       fill:true,
-        borderColor: this.backgroundColorsGraphs[1],
-        backgroundColor:this.backgroundColorsRGBA4[1],
-        pointBackgroundColor: this.backgroundColorsRGBA7[1],
+        borderColor: this.backgroundColorsGraphs[0],
+        backgroundColor:this.backgroundColorsRGBA4[0],
+        pointBackgroundColor: this.backgroundColorsRGBA7[0],
         borderWidth: 1,
-        pointBorderColor:this.backgroundColorsRGB[1],
+        pointBorderColor:this.backgroundColorsRGB[0],
         pointStyle: 'circle',
 				pointRadius: 3,
 				pointHoverRadius: 5,
@@ -1485,7 +1485,6 @@ selectedGraphHistoryProduction = '24h';
        );
     }
     dataProduction24hPrevious:any[] = [];
-
     makeDataProductionPrevious24h(dataGraph:any){
       this.timestampListProductionPrev24h=[];
       this.powerUsageListProductionPrev24h=[];
@@ -1502,7 +1501,7 @@ selectedGraphHistoryProduction = '24h';
 			for (let i = 0; i < this.timestampListProductionPrev24h.length; i++) {
 					const pair = {
 						timestamp: this.timestampListProductionPrev24h[i],
-						powerUsage: this.powerUsageListProductionPrev24h[i],
+						powerUsage: this.powerUsageListProductionPrev24h[i].toFixed(2),
 					};
 				this.dataProduction24hPrevious.push(pair);
 			}
@@ -1608,12 +1607,10 @@ selectedGraphHistoryProduction = '24h';
         for (let i = 0; i < this.timeStampProductionPrevMonth.length; i++) {
         const pair = {
           timestamp: this.timeStampProductionPrevMonth[i],
-          powerUsage: this.powerUsageProductionPrevMonth[i],
+          powerUsage: this.powerUsageProductionPrevMonth[i].toFixed(2),
         };
         this.dataproductionPreviousMonth.push(pair);
-      
       }
-     
     }
 
     chartProductionPrevMonth!:any;
@@ -1732,10 +1729,12 @@ selectedGraphHistoryProduction = '24h';
           data: this.powerUsageListPrev7DaysProduction,
           fill: true,
           borderColor: this.backgroundColorsGraphs[3],
-			backgroundColor:this.backgroundColorsRGBA4[3],
-			pointBackgroundColor: this.backgroundColorsRGBA7[3],
-			borderWidth: 1,
-			pointBorderColor: this.backgroundColorsGraphs[3],
+          backgroundColor:this.backgroundColorsRGBA4[3],
+          pointBackgroundColor: this.backgroundColorsRGBA7[3],
+          borderWidth: 1,
+          pointBorderColor: this.backgroundColorsGraphs[3],
+          borderRadius: 5,
+      		borderSkipped: false,
     
         }]
       }
@@ -1799,7 +1798,7 @@ selectedGraphHistoryProduction = '24h';
 			for (let i = 0; i < this.timestampListNext24hProduction.length; i++) {
 					const pair = {
 						timestamp: this.timestampListNext24hProduction[i],
-						powerUsage: this.powerUsageListNext24hProduction[i],
+						powerUsage: this.powerUsageListNext24hProduction[i].toFixed(2),
 					};
 				this.data24FutureProduction.push(pair);
 			}
@@ -1923,7 +1922,8 @@ selectedGraphHistoryProduction = '24h';
           pointBackgroundColor: this.backgroundColorsRGBA7[4],
           borderWidth: 1,
           pointBorderColor: this.backgroundColorsGraphs[4],
-    
+          borderRadius: 5,
+      		borderSkipped: false,
         }]
       }
         this.chartNext7daysProduction= new Chart(this.productionNext7daysGraph.nativeElement, {

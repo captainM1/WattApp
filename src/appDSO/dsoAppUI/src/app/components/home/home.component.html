@@ -259,7 +259,7 @@
                 <app-modal-table #ModalTableComponent [data]="dataMonthHistory" [type]="'Consumption'" [message]="'Consumption and Production For Previous Month'" [time]="'Day'"></app-modal-table>
               </div>
               <div class="modal-footer">
-                  <button type="button" class="btn btn-primary">EXPORT DATA</button>
+                <button type="button" class="btn btn-primary" (click) = "exportToExcel()">Export Data</button>
               </div>
         </div>
       </div>
@@ -289,12 +289,31 @@
               <app-modal-table #ModalTableComponent [data]="dataMonthFuture" [type]="'Consumption'" [message]="'Consumption and Production For Previous Month'" [time]="'Day'"></app-modal-table>
             </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-primary">EXPORT DATA</button>
+          <button type="button" class="btn btn-primary" (click) = "exportToExcel()">Export Data</button>
         </div>
         </div>
       </div>
       </div>
 
+      <div class="modal fade " id="consumptionProduction" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" >
+          <div class="modal-content">
+            <div class="modal-header">
+              <p class="modal-title" id="exampleModalLabel">
+                <span  style="color: #026670; font-size: 20px; font-weight: 700;"> Consumption nad Production For The Next 12h </span>
+              </p>
+              <button type="button" id="closeBtn" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div *ngIf="selectedGraphFutureConsumption === '24h'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
+              <app-modal-table #ModalTableComponent [data]="dataConsumptionProduction" [type]="'Consumption'" [message]="'Consumption and Production For The Next 12h'" [time]="'Hour'"></app-modal-table>
+            </div>
+           
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" (click) = "exportToExcel()">Export Data</button>
+        </div>
+        </div>
+      </div>
+      </div>
       
     </div>
 
