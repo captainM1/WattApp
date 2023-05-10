@@ -315,10 +315,7 @@ public class UserController : ControllerBase
     {
         var has = _userService.DSOHasControl(userID);
 
-        if (has == false)
-            return BadRequest("DSO has not control");
-
-        return Ok("DSO has control over users devices");
+        return has;
     }
 
     [HttpGet("user-shares-with-DSO/{userID}")]
@@ -326,10 +323,7 @@ public class UserController : ControllerBase
     {
         bool has = _userService.SharesWhidDSO(userID);
 
-        if (has == false)
-            return BadRequest("user is not sharing informations with DSO");
-
-        return Ok("user is sharing informations with DSO");
+        return has;
     }
 
     [HttpPost("update-user-data-sharing-permission/{id}")]
