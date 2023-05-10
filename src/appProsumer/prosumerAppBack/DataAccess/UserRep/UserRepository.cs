@@ -158,7 +158,8 @@ public class UserRepository : IUserRepository
         user.Email = userUpdateDto.Email;
         user.PhoneNumber = userUpdateDto.PhoneNumber;
         user.dsoHasControl = userUpdateDto.dsoHasControl;
-        user.sharesDataWithDso = user.sharesDataWithDso;
+        user.sharesDataWithDso = userUpdateDto.sharesDataWithDso;
+        user.City = userUpdateDto.City;
         
         _dbContext.Users.Update(user);
         await _dbContext.SaveChangesAsync();
