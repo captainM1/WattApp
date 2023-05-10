@@ -282,6 +282,16 @@ namespace prosumerAppBack.DataAccess
             return true;
 
         }
+
+        public Boolean IsDeviceTurnedOn(Guid deviceID)
+        {
+            var isOn = _dbContext.Devices
+                            .Where(d => d.ID == deviceID)
+                            .Select(ison => ison.IsOn)
+                            .FirstOrDefault();
+
+            return isOn;
+        }
     }
 
     public class DeviceInfo
