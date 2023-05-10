@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild , OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfirmPasswordValidator } from 'src/app/helpers/confirm-password.validator';
@@ -24,6 +24,7 @@ export class SettingsComponent implements OnInit, AfterViewInit {
   isText3: boolean = false;
   resetForm!: FormGroup;
   submitted = false;
+  requestSent: boolean = false;
 
   constructor(private apiService: SettingsService, private auth: AuthService, private fb: FormBuilder,) { }
 
