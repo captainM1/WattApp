@@ -30,10 +30,12 @@ export class DashboardComponent implements OnInit, AfterViewInit{
   powerUsageConsumptionNext7days = [];
   timestampListPrev24h!:any[];
   powerUsageListPrev24h!:any[];
+  extractedDatesPrev24h:string[]  = [];
   timestampListNext24h!:any[];
   powerUsageListNext24h!:any[];
-  graph24prev!:any;
-  graph24next!:any;
+  extractedDatesNext24h:string[]  = [];
+  consumption24prev!:any;
+  consumption24next!:any;
   extractedDatesPrev7Days:string[]  = [];
   extractedDatesNext7Days:string[]  = [];
   id!:any;
@@ -116,9 +118,16 @@ export class DashboardComponent implements OnInit, AfterViewInit{
   @ViewChild('next24ProductionGraph') next24ProductionGraph!:ElementRef;
   @ViewChild('productionNextMonthGraph') productionNextMonthGraph!:ElementRef;
   @ViewChild('productionNext7daysGraph')  productionNext7daysGraph!:ElementRef;
-
   @ViewChild('myTable') myTable!: ElementRef;
   @ViewChild('ModalTableComponent') modalTableComponent!: ModalTableComponent;
+
+
+ // zelena, narandzasta, crvena, deep sky blue, zuta
+ backgroundColorsGraphs =  ['#62C370', '#EC7357', '#e3170a', '#30C5FF', '#ffc800'];
+ backgroundColorsRGB = ['rgb(98, 195, 112)','rgb(236, 115, 87)','rgb(227, 23, 10)', 'rgb(48, 197, 255)', 'rgb(255, 200, 0)'];
+ backgroundColorsRGBA4 = ['rgba(98, 195, 112,0.4)','rgba(236, 115, 87,0.4)','rgba(227, 23, 10,0.4)', 'rgba(48, 197, 255,0.4)', 'rgba(255, 200, 0,0.4)'];
+ backgroundColorsRGBA7 = ['rgba(98, 195, 112,0.7)','rgba(236, 115, 87,0.7)','rgba(227, 23, 10,0.7)', 'rgba(48, 197, 255,0.7)', 'rgba(255, 200, 0,0.7)'];
+
 
   ngAfterViewInit(): void {
   }
@@ -229,9 +238,10 @@ export class DashboardComponent implements OnInit, AfterViewInit{
     this.showPrevious24h = true;
     this.auth1.getConsumptionPrevious24Hours(id).subscribe(
       (response : any) => {
-        this.graph24prev = response;
+        this.consumption24prev = response[0]['timestampPowerPairs'];
         console.log(response);
-        this.makeData(this.graph24prev);
+        this.makeData(this.consumption24prev);
+        this.previous24Graph();
         this.spinner.hide();
         this.showPrevious24h = false;
       }
@@ -239,13 +249,17 @@ export class DashboardComponent implements OnInit, AfterViewInit{
   }
 
   makeData(dataGraph:any){
-    dataGraph.forEach((obj:any) => {
-      obj.timestampPowerPairs.forEach((pair:any) => {
-        const time = pair.timestamp.split('T')[1].split(':')[0];
-        this.timestampListPrev24h.push(time);
-        this.powerUsageListPrev24h.push(pair.powerUsage);
-      });
-    });
+    this.timestampListPrev24h = [];
+    this.powerUsageListPrev24h = [];
+
+    for(let i = 0; i < dataGraph.length; i++){
+      const date = new Date(this.consumption24prev[i]['timestamp']);
+      const hour = date.getUTCHours().toString().padStart(2,"0");
+      const minute = date.getUTCMinutes().toString().padStart(2, "0");
+      const stringHourMinute = hour+":"+minute;
+      this.timestampListPrev24h.push(stringHourMinute);
+      this.powerUsageListPrev24h.push(this.consumption24prev[i]['powerUsage']);
+      }
 
     this.timestampListPrev24h.sort((a: string, b: string) => {
       return parseInt(a) - parseInt(b);
@@ -261,10 +275,10 @@ export class DashboardComponent implements OnInit, AfterViewInit{
       this.data24h.push(pair);
     }
 
-    this.previous24Graph(this.timestampListPrev24h, this.powerUsageListPrev24h);
+
   }
 
-  previous24Graph(list:any, valueList:any){
+  previous24Graph(){
     if (this.previous24ConsumptionGraph){
 
       if (this.chartPrev24h) {
@@ -272,16 +286,19 @@ export class DashboardComponent implements OnInit, AfterViewInit{
       }
 
     const data = {
-      labels: list,
+      labels: this.timestampListPrev24h,
       datasets: [{
         label: 'Consumption For The Previous 24h',
-        data: valueList,
+        data: this.powerUsageListPrev24h,
         fill: true,
-        borderColor: 'rgb(255, 200, 0)',
-        backgroundColor:'rgba(255, 200, 0,0.4)',
-        pointBackgroundColor: 'rgba(255, 200, 0,0.7)',
+        borderColor: this.backgroundColorsGraphs[1],
+        backgroundColor:this.backgroundColorsRGBA4[1],
+        pointBackgroundColor: this.backgroundColorsRGBA7[1],
         borderWidth: 1,
-        pointBorderColor:'rgb(255, 200, 0)'
+        pointBorderColor:this.backgroundColorsRGB[1],
+        pointStyle: 'circle',
+				pointRadius: 3,
+				pointHoverRadius: 5
       }]
     }
     const options: ChartOptions = {
@@ -293,7 +310,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
           },
           ticks: {
             font: {
-              size: 14,
+              size: 12,
             },
           },
         },
@@ -328,9 +345,9 @@ export class DashboardComponent implements OnInit, AfterViewInit{
     this.showNext24h = true;
     this.auth1.getConsumptionNext24Hours(id).subscribe(
       (response : any) => {
-        this.graph24next = response;
+        this.consumption24next = response[0]['timestampPowerPairs'];
         console.log(response);
-        this.makeDataNext24h(this.graph24next);
+        this.makeDataNext24h(this.consumption24next);
         this.spinner.hide();
         this.showNext24h = false;
       }
@@ -340,13 +357,15 @@ export class DashboardComponent implements OnInit, AfterViewInit{
   makeDataNext24h(dataGraph:any){
     this.timestampListNext24h=[];
     this.powerUsageListNext24h=[];
-    dataGraph.forEach((obj:any) => {
-      obj.timestampPowerPairs.forEach((pair:any) => {
-        const time = pair.timestamp.split('T')[1].split(':')[0];
-        this.timestampListNext24h.push(time);
-        this.powerUsageListNext24h.push(pair.powerUsage);
-      });
-    });
+    for(let i = 0; i < dataGraph.length; i++){
+      const date = new Date(this.consumption24next[i]['timestamp']);
+      const hour = date.getUTCHours().toString().padStart(2,"0");
+      const minute = date.getUTCMinutes().toString().padStart(2, "0");
+      const stringHourMinute = hour+":"+minute;
+      this.timestampListNext24h.push(stringHourMinute);
+      this.powerUsageListNext24h.push(this.consumption24next[i]['powerUsage']);
+      }
+
 
     this.timestampListNext24h.sort((a: string, b: string) => {
       return parseInt(a) - parseInt(b);
@@ -376,12 +395,15 @@ export class DashboardComponent implements OnInit, AfterViewInit{
       datasets: [{
         label: 'Consumption For The Next 24h',
         data: valueList,
-        fill: true,
-        borderColor: 'rgb(59, 193, 74)',
-        backgroundColor:'rgba(59, 193, 74,0.4)',
-        pointBackgroundColor: 'rgba(59, 193, 74,0.7)',
+        fill:true,
+        borderColor: this.backgroundColorsGraphs[3],
+        backgroundColor:this.backgroundColorsRGBA4[3],
+        pointBackgroundColor: this.backgroundColorsRGBA7[3],
         borderWidth: 1,
-        pointBorderColor:'rgb(59, 193, 74)'
+        pointBorderColor:this.backgroundColorsRGB[3],
+        pointStyle: 'circle',
+				pointRadius: 3,
+				pointHoverRadius: 5,
       }]
     }
     const options: ChartOptions = {
@@ -393,7 +415,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
           },
           ticks: {
             font: {
-              size: 14,
+              size: 12,
             },
           },
         },
@@ -458,6 +480,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
   }
 
   chartConsumptionPrevMonth(){
+    this.extractedDatesPrevMonth = [];
     for(let i = 0; i < this.timeStampConsumption.length; i++){
       const date = new Date(this.timeStampConsumption[i]);
       const month = date.toLocaleString("default", { month: "long" });
@@ -489,12 +512,15 @@ export class DashboardComponent implements OnInit, AfterViewInit{
       datasets: [{
         label: 'Consumption For The Previous Month',
         data: this.powerUsageConsumption,
-        fill: true,
-        borderColor: 'rgb(255, 200, 0)',
-        backgroundColor:'rgba(255, 200, 0,0.4)',
-        pointBackgroundColor: 'rgba(255, 200, 0,0.7)',
+        fill:true,
+        borderColor: this.backgroundColorsGraphs[1],
+        backgroundColor:this.backgroundColorsRGBA4[1],
+        pointBackgroundColor: this.backgroundColorsRGBA7[1],
         borderWidth: 1,
-        pointBorderColor:'rgb(255, 200, 0)'
+        pointBorderColor:this.backgroundColorsRGB[1],
+        pointStyle: 'circle',
+				pointRadius: 3,
+				pointHoverRadius: 5
       }]
     }
     const options: ChartOptions = {
@@ -562,13 +588,13 @@ export class DashboardComponent implements OnInit, AfterViewInit{
   }
 
   chartConsumptionNextMonthChart(){
+    this.extractedDatesNextMonth = [];
     for(let i = 0; i < this.timeStampConsumptionNextMonth.length; i++){
       const date = new Date(this.timeStampConsumptionNextMonth[i]);
       const month = date.toLocaleString("default", { month: "long" });
       const day = date.getDate().toString();
-      const dateString = `${month} ${day}`;
+      const dateString = ''+ month + ' ' + day;
       this.extractedDatesNextMonth.push(dateString);
-
     }
 
     this.extractedDatesNextMonth.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
@@ -593,12 +619,15 @@ export class DashboardComponent implements OnInit, AfterViewInit{
       datasets: [{
         label: 'Consumption For The Next Month',
         data: this.powerUsageConsumptionNextMonth,
-        fill: true,
-					borderColor: 'rgb(59, 193, 74)',
-					backgroundColor:'rgba(59, 193, 74,0.4)',
-					pointBackgroundColor: 'rgba(59, 193, 74,0.7)',
-					borderWidth: 1,
-					pointBorderColor:'rgb(59, 193, 74)'
+        fill:true,
+        borderColor: this.backgroundColorsGraphs[3],
+        backgroundColor:this.backgroundColorsRGBA4[3],
+        pointBackgroundColor: this.backgroundColorsRGBA7[3],
+        borderWidth: 1,
+        pointBorderColor:this.backgroundColorsRGB[3],
+        pointStyle: 'circle',
+				pointRadius: 3,
+				pointHoverRadius: 5,
       }]
     }
     const options: ChartOptions = {
@@ -667,6 +696,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
   }
 
   chartConsumptionPrev7Days(){
+    this.extractedDatesPrev7Days = [];
     for(let i = 0; i < this.timeStrampConsumptionPrev7days.length; i++){
      const date = new Date(this.timeStrampConsumptionPrev7days[i]);
      const day = date.toLocaleString("default", { weekday: "long" });
@@ -700,11 +730,13 @@ export class DashboardComponent implements OnInit, AfterViewInit{
         label: 'Consumption For The Previous 7 days',
         data: this.powerUsageConsumptionPrev7days,
         fill: true,
-        borderColor: 'rgb(255, 200, 0)',
-        backgroundColor:'rgba(255, 200, 0,0.4)',
-        pointBackgroundColor: 'rgba(255, 200, 0,0.7)',
-        borderWidth: 1,
-        pointBorderColor:'rgb(255, 200, 0)'
+        borderColor: this.backgroundColorsGraphs[1],
+        backgroundColor: this.backgroundColorsRGBA4[1],
+        pointBackgroundColor: 	this.backgroundColorsRGBA7[1],
+        borderWidth: 2,
+        pointBorderColor:this.backgroundColorsGraphs[1],
+        borderRadius: 5,
+        borderSkipped: false
 
       }]
     }
@@ -759,6 +791,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
   }
 
   chartConsumptionNext7Days(){
+    this.extractedDatesNext7Days = [];
     for(let i = 0; i < this.timeStrampConsumptionNext7days.length; i++){
       const date = new Date(this.timeStrampConsumptionNext7days[i]);
       const day = date.toLocaleString("default", { weekday: "long" });
@@ -791,11 +824,13 @@ export class DashboardComponent implements OnInit, AfterViewInit{
         label: 'Consumption For The Next 7 days',
         data: this.powerUsageConsumptionNext7days,
         fill: true,
-        borderColor: 'rgb(59, 193, 74)',
-					backgroundColor:'rgba(59, 193, 74,0.4)',
-					pointBackgroundColor: 'rgba(59, 193, 74,0.7)',
-					borderWidth: 1,
-					pointBorderColor:'rgb(59, 193, 74)'
+        borderColor: this.backgroundColorsGraphs[3],
+        backgroundColor: this.backgroundColorsRGBA4[3],
+        pointBackgroundColor: 	this.backgroundColorsRGBA7[3],
+        borderWidth: 2,
+        pointBorderColor:this.backgroundColorsGraphs[3],
+        borderRadius: 5,
+        borderSkipped: false
 
       }]
     }
@@ -830,7 +865,7 @@ productionPrevious24h(id:any)
   this.showProdPrevious24h = true;
   this.auth1.getProductionPrevious24Hours(id).subscribe(
     (response : any) => {
-      this.graphProduction24prev = response;
+      this.graphProduction24prev = response[0]['timestampPowerPairs'];;
       console.log(response);
       this.makeDataProduction24(this.graphProduction24prev);
       this.spinner.hide();
@@ -840,13 +875,14 @@ productionPrevious24h(id:any)
 }
 
 makeDataProduction24(dataGraph:any){
-  dataGraph.forEach((obj:any) => {
-    obj.timestampPowerPairs.forEach((pair:any) => {
-      const time = pair.timestamp.split('T')[1].split(':')[0];
-      this.timestampListProductionPrev24h.push(time);
-      this.powerUsageListProductionPrev24h.push(pair.powerUsage);
-    });
-  });
+  for(let i = 0; i < dataGraph.length; i++){
+    const date = new Date(this.graphProduction24prev[i]['timestamp']);
+    const hour = date.getUTCHours().toString().padStart(2,"0");
+    const minute = date.getUTCMinutes().toString().padStart(2, "0");
+    const stringHourMinute = hour+":"+minute;
+    this.timestampListProductionPrev24h.push(stringHourMinute);
+    this.powerUsageListProductionPrev24h.push(this.graphProduction24prev[i]['powerUsage']);
+    }
 
   this.timestampListProductionPrev24h.sort((a: string, b: string) => {
     return parseInt(a) - parseInt(b);
@@ -877,11 +913,14 @@ previousProduction24Graph(list:any, valueList:any){
       label: 'Production For The Previous 24h',
       data: valueList,
       fill: true,
-      borderColor: 'rgb(255, 200, 0)',
-      backgroundColor:'rgba(255, 200, 0,0.4)',
-      pointBackgroundColor: 'rgba(255, 200, 0,0.7)',
+      borderColor: this.backgroundColorsGraphs[4],
+      backgroundColor: this.backgroundColorsRGBA4[4],
+      pointBackgroundColor: 	this.backgroundColorsRGBA7[4],
       borderWidth: 1,
-      pointBorderColor:'rgb(255, 200, 0)'
+      pointBorderColor:this.backgroundColorsGraphs[4],
+      pointStyle: 'circle',
+      pointRadius: 3,
+      pointHoverRadius: 5
     }]
   }
   const options: ChartOptions = {
@@ -893,7 +932,7 @@ previousProduction24Graph(list:any, valueList:any){
         },
         ticks: {
           font: {
-            size: 14,
+            size: 12,
           },
         },
       },
@@ -954,6 +993,7 @@ productionPrevMonth(id:any)
 }
 
 chartProductionPreviousMonth(){
+  this.extractedDatesProductionPrevMonth = [];
   for(let i = 0; i < this.timeStampProductionPrevMonth.length; i++){
     const date = new Date(this.timeStampProductionPrevMonth[i]);
       const month = date.toLocaleString("default", { month: "long" });
@@ -986,11 +1026,14 @@ chartProductionPreviousMonth(){
       label: 'Production For The Previous Month',
       data: this.powerUsageProductionPrevMonth,
       fill: true,
-      borderColor: 'rgb(255, 200, 0)',
-      backgroundColor:'rgba(255, 200, 0,0.4)',
-      pointBackgroundColor: 'rgba(255, 200, 0,0.7)',
+      borderColor: this.backgroundColorsGraphs[4],
+      backgroundColor: this.backgroundColorsRGBA4[4],
+      pointBackgroundColor: 	this.backgroundColorsRGBA7[4],
       borderWidth: 1,
-      pointBorderColor:'rgb(255, 200, 0)'
+      pointBorderColor:this.backgroundColorsGraphs[4],
+      pointStyle: 'circle',
+      pointRadius: 3,
+      pointHoverRadius: 5
     }]
   }
   const options: ChartOptions = {
@@ -1058,6 +1101,7 @@ makeDataGraphPrev7DaysProduction(dataGraph : any){
 }
 
 chartProductionPrev7Days(){
+  this.extractedDatesProductionPrev7Days = [];
   for(let i = 0; i < this.timeStrampProductionPrev7days.length; i++){
     const date = new Date(this.timeStrampProductionPrev7days[i]);
     const day = date.toLocaleString("default", { weekday: "long" });
@@ -1086,16 +1130,18 @@ chartProductionPrev7Days(){
     }
 
   const data = {
-    labels: this.extractedDatesProductionPrev7Days,
-    datasets: [{
+      labels: this.extractedDatesProductionPrev7Days,
+      datasets: [{
       label: 'Production For The Previous 7 days',
       data: this.powerUsageProductionPrev7days,
       fill: true,
-      borderColor: 'rgb(255, 200, 0)',
-      backgroundColor:'rgba(255, 200, 0,0.4)',
-      pointBackgroundColor: 'rgba(255, 200, 0,0.7)',
-      borderWidth: 1,
-      pointBorderColor:'rgb(255, 200, 0)'
+      borderColor: this.backgroundColorsGraphs[4],
+      backgroundColor: this.backgroundColorsRGBA4[4],
+      pointBackgroundColor: 	this.backgroundColorsRGBA7[4],
+      borderWidth: 2,
+      pointBorderColor:this.backgroundColorsGraphs[4],
+      borderRadius: 5,
+      borderSkipped: false,
 
     }]
   }
@@ -1122,13 +1168,11 @@ chartProductionPrev7Days(){
 
 productionNext24h(id:any)
 {
-  this.timestampListProductionNext24h=[];
-  this.powerUsageListProductionNext24h=[];
   this.spinner.show();
   this.showProdNext24h = true;
   this.auth1.getProductionNext24Hours(id).subscribe(
     (response : any) => {
-      this.graphProduction24next = response;
+      this.graphProduction24next = response[0]['timestampPowerPairs'];;
       console.log(response);
       this.makeDataProductionNext24(this.graphProduction24next);
       this.spinner.hide();
@@ -1138,13 +1182,16 @@ productionNext24h(id:any)
 }
 
 makeDataProductionNext24(dataGraph:any){
-  dataGraph.forEach((obj:any) => {
-    obj.timestampPowerPairs.forEach((pair:any) => {
-      const time = pair.timestamp.split('T')[1].split(':')[0];
-      this.timestampListProductionNext24h.push(time);
-      this.powerUsageListProductionNext24h.push(pair.powerUsage);
-    });
-  });
+  this.timestampListProductionNext24h=[];
+  this.powerUsageListProductionNext24h=[];
+  for(let i = 0; i < dataGraph.length; i++){
+    const date = new Date(this.graphProduction24next[i]['timestamp']);
+    const hour = date.getUTCHours().toString().padStart(2,"0");
+    const minute = date.getUTCMinutes().toString().padStart(2, "0");
+    const stringHourMinute = hour+":"+minute;
+    this.timestampListProductionNext24h.push(stringHourMinute);
+    this.powerUsageListProductionNext24h.push(this.graphProduction24next[i]['powerUsage']);
+    }
 
   this.timestampListProductionNext24h.sort((a: string, b: string) => {
     return parseInt(a) - parseInt(b);
@@ -1176,11 +1223,14 @@ nextProduction24Graph(list:any, valueList:any){
       label: 'Production For The Next 24h',
       data: valueList,
       fill: true,
-      borderColor: 'rgb(59, 193, 74)',
-      backgroundColor:'rgba(59, 193, 74,0.4)',
-      pointBackgroundColor: 'rgba(59, 193, 74,0.7)',
+      borderColor: this.backgroundColorsGraphs[0],
+      backgroundColor: this.backgroundColorsRGBA4[0],
+      pointBackgroundColor: 	this.backgroundColorsRGBA7[0],
       borderWidth: 1,
-      pointBorderColor:'rgb(59, 193, 74)'
+      pointBorderColor:this.backgroundColorsGraphs[0],
+      pointStyle: 'circle',
+      pointRadius: 3,
+      pointHoverRadius: 5
     }]
   }
   const options: ChartOptions = {
@@ -1192,7 +1242,7 @@ nextProduction24Graph(list:any, valueList:any){
         },
         ticks: {
           font: {
-            size: 14,
+            size: 12,
           },
         },
       },
@@ -1249,6 +1299,7 @@ makeDataGraphNext7DaysProduction(dataGraph : any){
 }
 
 chartProductionNext7Days(){
+  this.extractedDatesProductionNext7Days = [];
   for(let i = 0; i < this.timeStrampProductionNext7days.length; i++){
     const date = new Date(this.timeStrampProductionNext7days[i]);
     const day = date.toLocaleString("default", { weekday: "long" });
@@ -1283,11 +1334,13 @@ chartProductionNext7Days(){
       label: 'Production For The Next 7 days',
       data: this.powerUsageProductionNext7days,
       fill: true,
-      borderColor: 'rgb(59, 193, 74)',
-      backgroundColor:'rgba(59, 193, 74,0.4)',
-      pointBackgroundColor: 'rgba(59, 193, 74,0.7)',
-      borderWidth: 1,
-      pointBorderColor:'rgb(59, 193, 74)'
+      borderColor: this.backgroundColorsGraphs[0],
+      backgroundColor: this.backgroundColorsRGBA4[0],
+      pointBackgroundColor: 	this.backgroundColorsRGBA7[0],
+      borderWidth: 2,
+      pointBorderColor:this.backgroundColorsGraphs[0],
+      borderRadius: 5,
+      borderSkipped: false
 
     }]
   }
@@ -1345,6 +1398,7 @@ productionNextMonth(id:any)
 }
 
 chartProductionNextMonth(){
+  this.extractedDatesProductionNextMonth = [];
   for(let i = 0; i < this.timeStampProductionNextMonth.length; i++){
     const date = new Date(this.timeStampProductionNextMonth[i]);
       const month = date.toLocaleString("default", { month: "long" });
@@ -1377,11 +1431,14 @@ chartProductionNextMonth(){
       label: 'Production For The Next Month',
       data: this.powerUsageProductionNextMonth,
       fill: true,
-      borderColor: 'rgb(59, 193, 74)',
-      backgroundColor:'rgba(59, 193, 74,0.4)',
-      pointBackgroundColor: 'rgba(59, 193, 74,0.7)',
+      borderColor: this.backgroundColorsGraphs[0],
+      backgroundColor: this.backgroundColorsRGBA4[0],
+      pointBackgroundColor: 	this.backgroundColorsRGBA7[0],
       borderWidth: 1,
-      pointBorderColor:'rgb(59, 193, 74)'
+      pointBorderColor:this.backgroundColorsGraphs[0],
+      pointStyle: 'circle',
+      pointRadius: 3,
+      pointHoverRadius: 5
     }]
   }
   const options: ChartOptions = {

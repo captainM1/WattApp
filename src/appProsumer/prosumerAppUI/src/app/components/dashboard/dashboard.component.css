@@ -259,3 +259,8 @@ button:hover {
   background-color: #fff;
   color: #026670;
 }
+
+span
+{
+  font-style: italic;
+}
