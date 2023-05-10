@@ -342,5 +342,10 @@ public class UserService:IUserService
         return _repository.DSOHasControl(userID);
     }
 
+    public async Task<Boolean> UserAllreadyAppliedToDso(Guid id)
+    {
+        return await _repository.UserAllreadyAppliedToDso(id);
+    }
+
 
 }
