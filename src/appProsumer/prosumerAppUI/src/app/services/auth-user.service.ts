@@ -100,4 +100,8 @@ export class AuthUserService {
     return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/nextMonth/production/user-every-day-device-usage/" + userID, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
   }
 
+  getConsumptionSavedEnergyMonth(userID: any):Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/user-usage-saved-energy-month/consumer/" + userID, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
+  }
+
 }

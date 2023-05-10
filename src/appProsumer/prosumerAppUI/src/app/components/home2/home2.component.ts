@@ -31,6 +31,7 @@ export class Home2Component implements OnInit, AfterViewInit {
   numberOfStorage:number = 0;
   allUserDevices!: Info[];
   currentDate!: Observable<Date>;
+  savedEnergyMonthConsumption!: number;
 
   isSunny!: boolean;
   isCloudy!: boolean;
@@ -76,6 +77,39 @@ export class Home2Component implements OnInit, AfterViewInit {
       console.log(this.number);
     }
     );
+  }
+
+
+  getToken(){
+    this.token = this.auth.getToken();
+    this.auth1.getThisUser(this.token).subscribe(
+      (response :any)=>{
+       this.userID = response.id;
+       console.log(this.userID);
+       this.getConsumptionSevedEnergyMonth(this.userID);
+       this.currentUsageUser(this.userID);
+       this.currentProductionUser(this.userID);
+       this.currentMostConsumes(this.userID);
+       this.currentMostProduces(this.userID);
+       this.auth1.getConsumptionPrevious24Hours(this.userID).subscribe(
+        (response : any) => {
+          this.graph24prev = response;
+          console.log(response);
+          this.makeData(this.graph24prev);
+        }
+       );
+       this.showMeDevices(this.userID);
+      }
+    )
+  }
+
+  getConsumptionSevedEnergyMonth(id:any)
+  {
+    this.auth1.getConsumptionSavedEnergyMonth(id).subscribe(
+      (response:any)=>{
+        this.savedEnergyMonthConsumption = response.toFixed(2);
+      }
+    )
   }
 
   currentMostProduces(id:any)
@@ -126,31 +160,6 @@ export class Home2Component implements OnInit, AfterViewInit {
       }
     )
   }
-
-
-
-  getToken(){
-    this.token = this.auth.getToken();
-    this.auth1.getThisUser(this.token).subscribe(
-      (response :any)=>{
-       this.userID = response.id;
-       console.log(this.userID);
-       this.currentUsageUser(this.userID);
-       this.currentProductionUser(this.userID);
-       this.currentMostConsumes(this.userID);
-       this.currentMostProduces(this.userID);
-       this.auth1.getConsumptionPrevious24Hours(this.userID).subscribe(
-        (response : any) => {
-          this.graph24prev = response;
-          console.log(response);
-          this.makeData(this.graph24prev);
-        }
-       );
-       this.showMeDevices(this.userID);
-      }
-    )
-  }
-
 
 
 halfDoughnut(usage: any){
@@ -270,83 +279,18 @@ halfDoughnutMostProduces(usage: any){
   });
 }
 
-showDetails: boolean = true;
+
 showWeatherDetails()
 {
-
-  this.showDetails = !this.showDetails;
-
   this.auth.getWeather().subscribe(
     (response: any) => {
       this.weather = response;
-      this.isSunny = this.weather.daily.temperature_2m_max[0] > 20 &&  this.weather.hourly.relativehumidity_2m[0]< 60 && this.weather.current_weather.windspeed >= 10 && this.weather.current_weather.windspeed <= 20;
-      this.isCloudy = this.weather.current_weather.temperature <= 15;
-      this.isRainy = this.weather.daily.temperature_2m_max[0] < 15 && this.weather.hourly.relativehumidity_2m[0] >= 60;
-      this.isSnowy = this.weather.daily.temperature_2m_max[0] <= 0;
+      this.isSunny = this.weather.current_weather.temperature > 15 && this.weather.hourly.relativehumidity_2m[0]< 30;
+      this.isCloudy = this.weather.current_weather.temperature <= 15 && (this.weather.hourly.relativehumidity_2m[0] >= 30 && this.weather.hourly.relativehumidity_2m[0] < 90)
+      this.isRainy =  this.weather.hourly.relativehumidity_2m[0] >= 90;
+      this.isSnowy = this.weather.current_weather.temperature <= 0;
       console.log(this.isCloudy);
-      const timeSlice = this.weather.hourly.time.slice(0, 24);
-      const time = timeSlice.map((time) => {
-        const date = new Date(time);
-        const hours = date.getHours().toString().padStart(2, "0");
-        const minutes = date.getMinutes().toString().padStart(2, "0");
-        return hours + ":" + minutes;
       });
-
-      const labels = time;
-      const data = {
-        labels: labels,
-        datasets: [
-          {
-            label: "Temperature hourly",
-            data: this.weather.hourly.temperature_2m,
-            fill: true,
-            borderColor: "#026670",
-            backgroundColor: "#31a0ac",
-            tension: 0.1,
-          },
-        ],
-      };
-      const options: ChartOptions = {
-        scales: {
-          x: {
-            title: {
-              display: true,
-              text: "Temperature in celsius and x hourly",
-            },
-            ticks: {
-              font: {
-                size: 14,
-              },
-            },
-          },
-          y: {
-            title: {
-              display: true,
-              text: "Temperature (°C)",
-            },
-            ticks: {
-              font: {
-                size: 14,
-              },
-            },
-          },
-        },
-      };
-
-
-        const stackedLine = new Chart(
-          this.hourlyTemp.nativeElement,
-          {
-            type: "line",
-            data: data,
-            options: options,
-          }
-        );
-
-    }
-  );
-
-
 }
 
 

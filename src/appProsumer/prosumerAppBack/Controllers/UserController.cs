@@ -15,7 +15,7 @@ namespace prosumerAppBack.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-//[Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
+[Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
 public class UserController : ControllerBase
 {
     private readonly IUserRepository _userRepository;
@@ -347,6 +347,21 @@ public class UserController : ControllerBase
         try
         {
             var result = await _userService.UpdateUserDsoControl(id, dsoHasControl);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpGet("get-users-that-applied-to-dso")]
+    public async Task<IActionResult> GetUsersAppliedToDso()
+    {
+        try
+        {
+            var result = await _userService.GetUsersAppliedToDso();
 
             return Ok(result);
         }

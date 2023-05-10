@@ -360,6 +360,7 @@ public class UserRepository : IUserRepository
         await _dbContext.SaveChangesAsync();
         return true;
     }
+
     public async Task<Boolean> UpdateUserDsoControl(Guid id, Boolean dsoHasControl)
     {
         var user = await _dbContext.Users.FindAsync(id);
@@ -372,6 +373,18 @@ public class UserRepository : IUserRepository
         _dbContext.Users.Update(user);
         await _dbContext.SaveChangesAsync();
         return true;
+    }
+
+    public async Task<List<UsersRequestedToDso>> GetUsersAppliedToDso()
+    {
+        var users = await _dbContext.UsersAppliedToDSO.ToListAsync();
+
+        if (users == null)
+        {
+            return null;
+        }
+
+        return users;
     }
 
 }

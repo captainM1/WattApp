@@ -14,27 +14,27 @@
                     </h3>
                     <div class="panel-body">
                         <form [formGroup] = "loginForm" (ngSubmit)="onSubmit()">
-                            <div class="input-group form-group pt-4">   
-                                <input class = "form-control"  [ngClass] = "{'is-invalid' : submitted && fields['email'].errors}" formControlName = "email" type="text" placeholder="Email">
-                                <span class="input-group-addon addon-icon"><i class="fa fa-user"></i></span>
+                            <div class="input-group form-group pt-4">
+                                <input class = "form-control"  [ngClass] = "{'is-invalid invalid-input' : submitted && fields['email'].errors}" formControlName = "email" type="text" placeholder="Email">
+                                <span class="input-group-addon addon-icon" [ngClass] = "{'is-invalid invalid-icon' : submitted && fields['password'].errors}"><i class="fa fa-user"></i></span>
                                     <div class="invalid-feedback">
                                         <span class= "text-danger" *ngIf="submitted && fields['email'].errors?.['required']">*Email is required!</span>
                                         <span class = "text-danger" *ngIf="fields['email'].errors?.['email']">*Please provide a valid email address</span>
                                     </div>
                                 </div>
-                                
-                            
+
+
                             <div class="input-group form-group pt-4 mb-1">
-                                <input class = "form-control" [ngClass] = "{'is-invalid' : submitted && fields['password'].errors}" formControlName = "password" [type]="type" placeholder="Password">
-                                <span  class="input-group-addon addon-icon"><i (click) = "hideShowPass()" class="fa {{eyeIcon}}"></i></span>
+                                <input class = "form-control" [ngClass] = "{'is-invalid invalid-input' : submitted && fields['password'].errors}" formControlName = "password" [type]="type" placeholder="Password">
+                                <span  class="input-group-addon addon-icon" [ngClass] = "{'is-invalid invalid-icon' : submitted && fields['password'].errors}" ><i style="cursor:pointer"  (click) = "hideShowPass()" class="fa {{eyeIcon}}"></i></span>
                                 <div class="invalid-feedback">
                                     <span class= "text-danger" *ngIf="submitted && fields['password'].errors?.['required']">*Password is required!</span>
-                                    <span class = "text-danger" *ngIf="fields['password'].errors?.['minLength']">*Please provide a valid password!</span>
+                                    <span class = "text-danger" *ngIf="fields['password'].errors?.['minlength']">*Please provide a valid password!</span>
                                 </div>
                             </div>
-                           
+
                             <button type="submit" class="btn btn-primary btn-lock mt-4 mb-4 w-50 text-center" routerLinkActive="router-link-active">Login</button>
-                            
+
                         </form>
                     </div>
                 </div>
