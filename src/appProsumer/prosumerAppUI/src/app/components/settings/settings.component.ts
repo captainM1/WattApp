@@ -1,4 +1,5 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfirmPasswordValidator } from 'src/app/helpers/confirm-password.validator';
 import { AuthService } from 'src/app/services/auth.service';
@@ -23,6 +24,7 @@ export class SettingsComponent implements OnInit, AfterViewInit {
   isText3: boolean = false;
   resetForm!: FormGroup;
   submitted = false;
+  requestSent: boolean = false;
 
   constructor(private apiService: SettingsService, private auth: AuthService, private fb: FormBuilder,) { }
 
@@ -91,9 +93,17 @@ export class SettingsComponent implements OnInit, AfterViewInit {
 
 
   toggleAccess() {
-    this.allowAccess = !this.allowAccess;
-    console.log(this.allowAccess);
-    this.apiService.allowAccessToInformation(this.allowAccess).subscribe();
+    if(!this.allowAccess){
+      this.allowAccess = true;
+      this.apiService.sendRequest().subscribe(
+        (info) => {
+          console.log("Success");
+          this.requestSent = true;
+        },
+        (error) => {
+          console.log(error);
+        });
+    }
   }
 
   toggleControl() {

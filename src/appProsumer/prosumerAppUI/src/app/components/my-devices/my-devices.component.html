@@ -16,9 +16,10 @@
       <div class="card" [routerLink]="['/device-details', device.deviceId]">
         <img [src]="'/assets/icons-devices/' + device.deviceTypeName.toLowerCase().trim() + '.png'" class="card-img-top" alt="{{ device.deviceTypeName }}">
         <div class="card-body">
-          <h5 class="card-title">{{ device.deviceTypeName }}</h5>
+          <h5 class="card-title">{{ device.deviceName }}</h5>
           <p class="card-text manufacturer" ><span style="font-weight: bold;">Manufacturer:</span><br> {{ device.manufacturerName }}</p>
           <p class="card-text mac-address"><span style="font-weight: bold;">MAC Address:</span><br> {{ device.macAdress }}</p>
+          <p class="card-text current"><span style="font-weight: bold;">Current consumption:</span><br> {{ deviceToday[device.deviceId]?.current }}</p>
         </div>
       </div>
     </div>

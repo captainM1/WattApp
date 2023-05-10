@@ -23,6 +23,7 @@ public interface IUserRepository
     Task<User> DisconnectFromDso(Guid id);
     Task<Boolean> UpdateUserDataSharing(Guid id, Boolean sharesDataWithDso);
     Task<Boolean> UpdateUserDsoControl(Guid id, Boolean dsoHasControl);
+    Task<List<UsersRequestedToDso>> GetUsersAppliedToDso();
     public Task<Boolean> ResetPassword(Guid id, string newPassword);
     Task<List<UsersRequestedToDso>> GetUsersAppliedToDso();
 }
