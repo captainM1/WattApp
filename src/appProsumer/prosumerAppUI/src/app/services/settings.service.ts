@@ -13,7 +13,15 @@ export class SettingsService {
   userId: any = this.auth.getToken();
 
   getShareInfo(){
+    return this.http.get<any>(`${environment.apiUrl}/api/User/user-shares-with-DSO/${this.userId}`, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
+  }
+
+  getRuleInfo(){
     return this.http.get<any>(`${environment.apiUrl}/api/User/DSO-has-control/${this.userId}`, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
+  }
+
+  sendRequest(){
+    return this.http.post<any>(`${environment.apiUrl}/api/User/send-request-to-dso/${this.userId}`, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
   }
 
   allowAccessToInformation(allowAccess: boolean) {

@@ -11,25 +11,47 @@ import { SettingsService } from 'src/app/services/settings.service';
 export class SettingsComponent implements OnInit {
   allowAccess = false;
   allowControl = false;
+  requestSent = false;
 
   constructor(private apiService: SettingsService, private auth: AuthService, private cookie: CookieService) { }
 
   ngOnInit(): void {
     this.apiService.getShareInfo().subscribe(
       (info) => {
-        console.log(info);
         this.allowAccess = info;
+        
+        if(info){ 
+          this.apiService.getRuleInfo().subscribe(
+            (info) => {
+              this.allowControl = info;
+          },
+          (error) => {
+            console.log(error);
+          });
+
+
+        }
     },
     (error) => {
       console.log(error);
     });
     console.log(this.cookie.get('jwtToken'));
+
+    
   }
 
   toggleAccess() {
-    this.allowAccess = !this.allowAccess;
-    console.log(this.allowAccess);
-    this.apiService.allowAccessToInformation(this.allowAccess).subscribe();
+    if(!this.allowAccess){
+      this.allowAccess = true;
+      this.apiService.sendRequest().subscribe(
+        (info) => {
+          console.log("Success");
+          this.requestSent = true;
+        },
+        (error) => {
+          console.log(error);
+        });
+    }
   }
 
   toggleControl() {
