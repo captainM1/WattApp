@@ -25,4 +25,5 @@ public interface IUserRepository
     Task<Boolean> UpdateUserDsoControl(Guid id, Boolean dsoHasControl);
     Task<List<UsersRequestedToDso>> GetUsersAppliedToDso();
     public Task<Boolean> ResetPassword(Guid id, string newPassword);
+    Task<List<UsersRequestedToDso>> GetUsersAppliedToDso();
 }

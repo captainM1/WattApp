@@ -42,15 +42,15 @@ export class LoginComponent implements OnInit{
       password: ['', [Validators.required, Validators.minLength(6)]],
       rememberMe: [false]
     })
-    
+
     const loginInfo = JSON.parse(this.cookie.get('loginInfo') || '{}');
-    
+
     this.loginForm.setValue({
       email: loginInfo.email || '',
       password: loginInfo.password || '',
       rememberMe: loginInfo.rememberMe || false
     });
-    
+
     }
 
   hideShowPass(){
@@ -83,13 +83,15 @@ export class LoginComponent implements OnInit{
             this.cookie.delete('loginInfo');
           }
           setTimeout(() => {
-            this.spinner.show();
-            this.show = true;
+            this.spinner.hide();
+            this.show = false;
             this.router.navigate(['home'])
           }, 1000);
         },
         (error) => {
           if (error.status === 400) {
+            this.spinner.hide();
+            this.show = false;
             this.messageService.add({ severity: 'error', summary: 'Invalid credentials', detail: error.error });
             this.router.navigate(['signin'])
           }

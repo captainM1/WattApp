@@ -81,7 +81,7 @@
 
   h2
   {
-    font-size: 20px;
+    font-size: 25px;
   }
 
   .col-sm
@@ -258,4 +258,9 @@ button{
 button:hover {
   background-color: #fff;
   color: #026670;
+}
+
+span
+{
+  font-style: italic;
 }
