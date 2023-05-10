@@ -7,7 +7,7 @@ public interface IUserRepository
     Task<User> GetUserByEmailAndPasswordAsync(string email, string password);
     Task<User> CreateUser(UserRegisterDto userRegisterDto);
     Task<User> GetUserByEmailAsync(string email);    
-    Task<Boolean> UpdatePassword(Guid id, string newPassword);
+    Task<Boolean> UpdatePassword(Guid id, string oldPassword, string newPassword);
     Task<int> UpdateUser(Guid id, UserUpdateDto userUpdateDto);
     Task<List<UserDto>> GetAllUsersAsync(int pageNumber, int pageSize);
     Task<Boolean> CreateUserRequestToDso(User user);
@@ -25,4 +25,6 @@ public interface IUserRepository
     Task<Boolean> UpdateUserDsoControl(Guid id, Boolean dsoHasControl);
     Task<List<UsersRequestedToDso>> GetUsersAppliedToDso();
     Task<Boolean> UserAllreadyAppliedToDso(Guid id);
+    public Task<Boolean> ResetPassword(Guid id, string newPassword);
+    Task<List<UsersRequestedToDso>> GetUsersAppliedToDso();
 }

@@ -37,6 +37,7 @@
     "primeicons": "^6.0.1",
     "primeng": "^15.4.1",
     "rxjs": "~7.8.0",
+    "tableexport": "^5.2.0",
     "xlsx": "^0.18.5",
     "zone.js": "~0.12.0"
   },

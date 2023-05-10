@@ -115,9 +115,9 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("update-password/{userID}")]
-    public async Task<IActionResult> UpdatePassword(Guid userID, string newPassword)
+    public async Task<IActionResult> UpdatePassword(Guid userID, string oldPassword, string newPassword)
     {
-        await _userService.UpdatePassword(userID, newPassword);
+        await _userService.UpdatePassword(userID, oldPassword, newPassword);
 
         return Ok(new { message = "password changed successfully" });
     }
@@ -154,7 +154,7 @@ public class UserController : ControllerBase
             return BadRequest("Invalid email address");
         }*/
        
-        var action = _userRepository.UpdatePassword(user.Result.ID, resetPasswordDto.Password).GetAwaiter().GetResult();
+        var action = _userRepository.ResetPassword(user.Result.ID, resetPasswordDto.Password).GetAwaiter().GetResult();
 
         if (!action)
         {
@@ -315,10 +315,7 @@ public class UserController : ControllerBase
     {
         var has = _userService.DSOHasControl(userID);
 
-        if (has == false)
-            return BadRequest("DSO has not control");
-
-        return Ok("DSO has control over users devices");
+        return has;
     }
 
     [HttpGet("user-shares-with-DSO/{userID}")]
@@ -326,10 +323,7 @@ public class UserController : ControllerBase
     {
         bool has = _userService.SharesWhidDSO(userID);
 
-        if (has == false)
-            return BadRequest("user is not sharing informations with DSO");
-
-        return Ok("user is sharing informations with DSO");
+        return has;
     }
 
     [HttpPost("update-user-data-sharing-permission/{id}")]

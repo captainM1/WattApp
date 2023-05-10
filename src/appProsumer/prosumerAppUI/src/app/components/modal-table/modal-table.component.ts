@@ -1,4 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 @Component({
   selector: 'app-modal-table',
   templateUrl: './modal-table.component.html',
@@ -14,13 +16,16 @@ export class ModalTableComponent {
   @Input() time!: string;
   @Input() type!: string;
 
-  showModal = false;
+  @ViewChild('myTable') myTable!: ElementRef;
 
-  open() {
-    this.showModal = true;
+
+  exportToExcel(): void {
+    const worksheet = XLSX.utils.table_to_sheet(this.myTable.nativeElement);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+    const fileBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([fileBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    saveAs(blob, 'table-data.xlsx');
   }
 
-  close() {
-    this.showModal = false;
-  }
 }

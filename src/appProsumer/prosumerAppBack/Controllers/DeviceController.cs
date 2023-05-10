@@ -11,22 +11,22 @@ using prosumerAppBack.Models.Device;
 
 namespace prosumerAppBack.Controllers
 {
-	[ApiController]
-	[Route("api/[controller]")]
+    [ApiController]
+    [Route("api/[controller]")]
     [Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
     public class DeviceController : ControllerBase
-	{
+    {
         private readonly IDeviceService _deviceService;
-		private readonly IUserService _userService;
+        private readonly IUserService _userService;
         public DeviceController(IDeviceService deviceService, IUserService userService)
-		{
-			_deviceService = deviceService;
-			_userService = userService;
+        {
+            _deviceService = deviceService;
+            _userService = userService;
         }
 
         [HttpPost("update/{id}")]
-       // [Authorize(Roles = "UnapprovedUser,RegularUser")]
-        public async Task<IActionResult> UpdateDevice(Guid id,[FromBody] UpdateDeviceDto updateDeviceDto)
+        // [Authorize(Roles = "UnapprovedUser,RegularUser")]
+        public async Task<IActionResult> UpdateDevice(Guid id, [FromBody] UpdateDeviceDto updateDeviceDto)
         {
             try
             {
@@ -37,10 +37,10 @@ namespace prosumerAppBack.Controllers
             catch (ArgumentNullException ex)
             {
                 throw new ArgumentException(ex.Message);
-            }            
+            }
         }
         [HttpPost("devices/add-new")]
-       // [Authorize(Roles = "UnapprovedUser,RegularUser")]
+        // [Authorize(Roles = "UnapprovedUser,RegularUser")]
         public async Task<IActionResult> AddDevice([FromBody] AddDeviceDto addDeviceDto)
         {
             try
@@ -55,7 +55,7 @@ namespace prosumerAppBack.Controllers
             }
         }
         [HttpGet("devices/{userID}")]
-       // [Authorize(Roles = "Dispatcher,Admin")]
+        // [Authorize(Roles = "Dispatcher,Admin")]
         public IActionResult GetDevicesForUser(Guid userID)
         {
             try
@@ -70,7 +70,7 @@ namespace prosumerAppBack.Controllers
             }
         }
         [HttpGet("devices/info")]
-       // [Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
+        // [Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
         public IActionResult GetDevicesInfoForUser()
         {
             try
@@ -84,7 +84,7 @@ namespace prosumerAppBack.Controllers
                 throw new ArgumentException(ex.Message);
             }
         }
-        
+
         [HttpGet("devices/deviceType-info")]
         // [Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
         public IActionResult GetDeviceInfoForAllDevice()
@@ -101,7 +101,7 @@ namespace prosumerAppBack.Controllers
         }
 
         [HttpGet("devices/info/user/{userID}")]
-       // [Authorize(Roles = "Dispatcher,Admin")]
+        // [Authorize(Roles = "Dispatcher,Admin")]
         public IActionResult GetDevicesInfoForUser(Guid userID)
         {
             try
@@ -114,9 +114,9 @@ namespace prosumerAppBack.Controllers
                 throw new ArgumentException(ex.Message);
             }
         }
-        
+
         [HttpGet("devices/info/{deviceID}")]
-       // [Authorize(Roles = "Dispatcher,Admin")]
+        // [Authorize(Roles = "Dispatcher,Admin")]
         public IActionResult GetDevicesInfo(Guid deviceID)
         {
             try
@@ -128,11 +128,11 @@ namespace prosumerAppBack.Controllers
             {
                 throw new ArgumentException(ex.Message);
             }
-            
+
         }
-        
+
         [HttpGet("groups")]
-       // [Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
+        // [Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
         public IActionResult GetGroups()
         {
             try
@@ -147,9 +147,9 @@ namespace prosumerAppBack.Controllers
             }
         }
         [HttpGet("manufacturers")]
-       // [Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
+        // [Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
         public IActionResult GetManufacturers()
-        {	        
+        {
             try
             {
                 var manufacturers = _deviceService.GetDeviceManufacturers();
@@ -161,9 +161,9 @@ namespace prosumerAppBack.Controllers
                 throw new ArgumentException(ex.Message);
             }
         }
-        
+
         [HttpGet("manufacturers/{groupID}")]
-       // [Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
+        // [Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
         public IActionResult GetDeviceManufacturersBasedOnGroup(Guid groupID)
         {
             try
@@ -177,9 +177,9 @@ namespace prosumerAppBack.Controllers
                 throw new ArgumentException(ex.Message);
             }
         }
-        
+
         [HttpGet("manufacturer/{manID}")]
-       // [Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
+        // [Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
         public IActionResult GetDevicesBasedOnManufacturer(Guid manID)
         {
             try
@@ -193,9 +193,9 @@ namespace prosumerAppBack.Controllers
                 throw new ArgumentException(ex.Message);
             }
         }
-        
+
         [HttpGet("groups/{groupID}")]
-       // [Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
+        // [Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
         public IActionResult GetDeviceTypesGroup(Guid groupID)
         {
             try
@@ -209,10 +209,10 @@ namespace prosumerAppBack.Controllers
                 throw new ArgumentException(ex.Message);
             }
         }
-        
+
         [HttpGet("{groupID}/{manufID}")]
-       // [Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
-        public IActionResult GetDeviceTypesGroup(Guid groupID,Guid manufID)
+        // [Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
+        public IActionResult GetDeviceTypesGroup(Guid groupID, Guid manufID)
         {
             try
             {
@@ -226,20 +226,20 @@ namespace prosumerAppBack.Controllers
             }
         }
         [HttpDelete("delete-device/{deviceID}")]
-       // [Authorize(Roles = "UnapprovedUser,RegularUser")]
+        // [Authorize(Roles = "UnapprovedUser,RegularUser")]
         public async Task<IActionResult> DeleteDevice(Guid deviceID)
         {
             var action = await _deviceService.DeleteDevice(deviceID);
-            if(!action)
+            if (!action)
             {
                 return BadRequest("device cannot be deleted");
             }
 
-            return Ok(new {Message = "device deleted successfully" });
+            return Ok(new { Message = "device deleted successfully" });
         }
-        
+
         [HttpPost("add-rule/{id}")]
-      //  [Authorize(Roles = "UnapprovedUser,RegularUser")]
+        //  [Authorize(Roles = "UnapprovedUser,RegularUser")]
         public async Task<IActionResult> AddDeviceRule(Guid id, [FromBody] DeviceRuleDto deviceRuleDto)
         {
             try
@@ -255,7 +255,7 @@ namespace prosumerAppBack.Controllers
         }
 
         [HttpPost("update-rule/{id}")]
-      //  [Authorize(Roles = "UnapprovedUser,RegularUser")]
+        //  [Authorize(Roles = "UnapprovedUser,RegularUser")]
         public async Task<IActionResult> UpdateDeviceRule(Guid id, [FromBody] DeviceRuleDto deviceRuleDto)
         {
             try
@@ -271,7 +271,7 @@ namespace prosumerAppBack.Controllers
         }
 
         [HttpPost("add-requirement/{id}")]
-       // [Authorize(Roles = "UnapprovedUser,RegularUser")]
+        // [Authorize(Roles = "UnapprovedUser,RegularUser")]
         public async Task<IActionResult> AddDeviceRequirement(Guid id, [FromBody] DeviceRequirementDto deviceRequirementDto)
         {
             try
@@ -287,7 +287,7 @@ namespace prosumerAppBack.Controllers
         }
 
         [HttpPost("update-requirement/{id}")]
-       // [Authorize(Roles = "UnapprovedUser,RegularUser")]
+        // [Authorize(Roles = "UnapprovedUser,RegularUser")]
         public async Task<IActionResult> UpdateDeviceRequirement(Guid id, [FromBody] DeviceRequirementDto deviceRequirementDto)
         {
             try
@@ -316,6 +316,16 @@ namespace prosumerAppBack.Controllers
             {
                 throw new ArgumentException(ex.Message);
             }
+        }
+
+        [HttpGet("is-turned-on/{deviceID}")]
+        // [Authorize(Roles = "UnapprovedUser,RegularUser")]
+        public ActionResult<Boolean> IsDeviceTurnedOn(Guid deviceID)
+        {
+            var isIt = _deviceService.IsDeviceTurnedOn(deviceID);
+            if (isIt == false)
+                return BadRequest("Device is turned off");
+            return Ok("Device is turned on");
         }
     }
 }

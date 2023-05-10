@@ -1,14 +1,13 @@
 import { Component, Input, ViewChild } from '@angular/core';
-import { Defaults } from 'chart.js/dist/core/core.defaults';
 import { TableExport } from 'tableexport';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 @Component({
-  selector: 'app-modal-table',
-  templateUrl: './modal-table.component.html',
-  styleUrls: ['./modal-table.component.css']
+  selector: 'app-modal-table-profile',
+  templateUrl: './modal-table-profile.component.html',
+  styleUrls: ['./modal-table-profile.component.css']
 })
-export class ModalTableComponent {
+export class ModalTableProfileComponent {
   @ViewChild('tableTable')
   table!: TableExport;
   constructor(

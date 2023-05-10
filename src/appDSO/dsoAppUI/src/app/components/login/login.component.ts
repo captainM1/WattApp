@@ -70,17 +70,19 @@ export class LoginComponent implements OnInit{
           this.showsignin = false;
           if (error.status === 400) {
             this.messageService.add({ severity: 'error', summary: 'Invalid credentials', detail: error.error });
-            this.router.navigate(['signin'])
             this.spinner.hide();
             this.showsignin = false;
+            this.router.navigate(['signin'])
+            
           }
         }
       );
     }else{
       this.messageService.add({ severity: 'error', summary: 'Invalid credentials', detail: 'Invalid data format' });
-      this.router.navigate(['signin'])
       this.spinner.hide();
-            this.showsignin = false;
+      this.showsignin = false;
+      this.router.navigate(['signin'])
+     
     }
   }
 
