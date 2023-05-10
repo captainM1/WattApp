@@ -56,4 +56,8 @@ public interface IPowerUsageService
     public PowerUsage GetPowerUsagesForEachDayConsumptionWeek(int direction);
     public PowerUsage GetPowerUsagesForEachDayConsumption24h(int direction);
     public PowerUsage GetPowerUsagesForEachDayProduction24h(int direction);
+    public double electricityBillLastMonth(Guid userID, double electricityRate);
+    public double electricityBill2MonthsAgo(Guid userID, double electricityRate);
+    public double electricityEarnings2MonthsAgo(Guid userID, double electricityRate);
+    public double electricityEarningsLastMonth(Guid userID, double electricityRate);
 }

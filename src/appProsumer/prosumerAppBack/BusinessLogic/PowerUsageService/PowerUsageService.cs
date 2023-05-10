@@ -54,6 +54,10 @@ public class PowerUsageService:IPowerUsageService
         {
             throw new NotFoundException();
         }
+        if (powerUsages == 1)
+        {
+            throw new NullReferenceException("User does not share data with DSO");
+        }
         return powerUsages;
     }
 
@@ -64,6 +68,12 @@ public class PowerUsageService:IPowerUsageService
         {
             return 0;
         }
+
+        if(powerUsages == 1)
+        {
+            throw new NullReferenceException("User does not share data with DSO");
+        }
+
         return powerUsages;
     }
 
@@ -208,7 +218,7 @@ public class PowerUsageService:IPowerUsageService
         var powerUsages = _repository.GetPowerUsageForDevicesProduction(userID, direction);
         if (!powerUsages.Any())
         {
-            throw new NotFoundException();
+            throw new NotFoundException("Uses does not share data with DSO");
         }
         return powerUsages;
     }
@@ -218,7 +228,7 @@ public class PowerUsageService:IPowerUsageService
         var powerUsages = _repository.GetPowerUsageForDevicesConsumption(userID, direction);
         if (!powerUsages.Any())
         {
-            throw new NotFoundException();
+            throw new NotFoundException("Uses does not share data with DSO");
         }
         return powerUsages;
     }
@@ -227,7 +237,7 @@ public class PowerUsageService:IPowerUsageService
         var powerUsages = _repository.GetPowerUsageForDevicesConsumptionFor7Days(userID, direction);
         if (!powerUsages.Any())
         {
-            throw new NotFoundException();
+            throw new NotFoundException("Uses does not share data with DSO");
         }
         return powerUsages;
     }
@@ -236,7 +246,7 @@ public class PowerUsageService:IPowerUsageService
         var powerUsages = _repository.GetPowerUsageForDevicesProductionFor7Days(userID, direction);
         if (!powerUsages.Any())
         {
-            throw new NotFoundException();
+            throw new NotFoundException("Uses does not share data with DSO");
         }
         return powerUsages;
     }
@@ -245,7 +255,7 @@ public class PowerUsageService:IPowerUsageService
         var powerUsages = _repository.GetPowerUsageForDevicesConsumptionFor24Hours(userID, direction);
         if (!powerUsages.Any())
         {
-            throw new NotFoundException();
+            throw new NotFoundException("Uses does not share data with DSO");
         }
         return powerUsages;
     }
@@ -254,7 +264,7 @@ public class PowerUsageService:IPowerUsageService
         var powerUsages = _repository.GetPowerUsageForDevicesProductionFor24Hours(userID, direction);
         if (!powerUsages.Any())
         {
-            throw new NotFoundException();
+            throw new NotFoundException("Uses does not share data with DSO");
         }
         return powerUsages;
     }
@@ -330,48 +340,80 @@ public class PowerUsageService:IPowerUsageService
     public PowerUsage GetMaxUsagePast24HoursConsumption(Guid userID)
     {
         PowerUsage result = _repository.GetDeviceWithMaxPowerUsage24Consumption(userID);
+        if (result == null)
+        {
+            throw new NullReferenceException("User does not share data with DSO");
+        }
         return result;
     }
 
     public PowerUsage GetMaxUsagePast24HoursProduction(Guid userID)
     {
         PowerUsage result = _repository.GetDeviceWithMaxPowerUsage24Production(userID);
+        if(result == null)
+        {
+            throw new NullReferenceException("User does not share data with DSO");
+        }
         return result;
     }
 
     public PowerUsage GetMaxUsagePreviousWeekConsumption(Guid userID)
     {
         PowerUsage result = _repository.GetDeviceWithMaxPowerUsagePreviousWeekConsumption(userID);
+        if (result == null)
+        {
+            throw new NullReferenceException("User does not share data with DSO");
+        }
         return result;
     }
 
     public PowerUsage GetMaxUsagePreviousMonthConsumption(Guid userID, int direction)
     {
         PowerUsage result = _repository.GetDeviceWithMaxPowerUsagePreviousMonthConsumption(userID, direction);
+        if (result == null)
+        {
+            throw new NullReferenceException("User does not share data with DSO");
+        }
         return result;
     }
 
     public PowerUsage GetMaxUsagePreviousCurrentConsumption(Guid userID)
     {
         PowerUsage result = _repository.GetDeviceWithMaxPowerUsageCurrentConsumption(userID);
+        if (result == null)
+        {
+            throw new NullReferenceException("User does not share data with DSO");
+        }
         return result;
     }
 
     public PowerUsage GetMaxUsagePreviousWeekProductoin(Guid userID)
     {
         PowerUsage result = _repository.GetDeviceWithMaxPowerUsagePreviousWeekProduction(userID);
+        if (result == null)
+        {
+            throw new NullReferenceException("User does not share data with DSO");
+        }
         return result;
     }
 
     public PowerUsage GetMaxUsagePreviousMonthProduction(Guid userID, int direction)
     {
         PowerUsage result = _repository.GetDeviceWithMaxPowerUsagePreviousMonthProduction(userID, direction);
+        if (result == null)
+        {
+            throw new NullReferenceException("User does not share data with DSO");
+        }
         return result;
     }
 
     public PowerUsage GetMaxUsagePreviousCurrentProduction(Guid userID)
     {
         PowerUsage result = _repository.GetDeviceWithMaxPowerUsageCurrentProduction(userID);
+        if (result == null)
+        {
+            throw new NullReferenceException("User does not share data with DSO");
+        }
         return result;
     }
 
@@ -400,7 +442,7 @@ public class PowerUsageService:IPowerUsageService
         var powerUsages = _repository.GetHowMuchUserIsConsuming(userID);
         if (powerUsages == 0)
         {
-            throw new NotFoundException();
+            throw new NotFoundException("User doesnt share data with DSO");
         }
         return powerUsages;
     }
@@ -432,13 +474,61 @@ public class PowerUsageService:IPowerUsageService
     public double savedEnergyForUserProducer(Guid userID)
     {
         var powerUsage = _repository.savedEnergyForUserProducer(userID);
+        if(powerUsage == 0)
+        {
+            throw new NullReferenceException("User doesnt share data with DSO");
+        }
         return powerUsage;
     }
 
     public double savedEnergyForUserConsumer(Guid userID)
     {
         var powerUsage = _repository.savedEnergyForUserConsumer(userID);
+        if (powerUsage == 0)
+        {
+            throw new NullReferenceException("User doesnt share data with DSO");
+        }
         return powerUsage;
+    }
+
+    public double electricityBill2MonthsAgo(Guid userID, double electricityRate)
+    {
+        var price = _repository.electricityBill2MonthsAgo(userID, electricityRate);
+        if (price == 0)
+        {
+            throw new NullReferenceException("User doesnt share data with DSO");
+        }
+        return price;
+    }
+
+    public double electricityBillLastMonth(Guid userID, double electricityRate)
+    {
+        var price = _repository.electricityBillLastMonth(userID, electricityRate);
+        if (price == 0)
+        {
+            throw new NullReferenceException("User doesnt share data with DSO");
+        }
+        return price;
+    }
+
+    public double electricityEarnings2MonthsAgo(Guid userID, double electricityRate)
+    {
+        var price = _repository.electricityEarnings2MonthsAgo(userID, electricityRate);
+        if (price == 0)
+        {
+            throw new NullReferenceException("User doesnt share data with DSO");
+        }
+        return price;
+    }
+
+    public double electricityEarningsLastMonth(Guid userID, double electricityRate)
+    {
+        var price = _repository.electricityEarningsLastMonth(userID, electricityRate);
+        if (price == 0)
+        {
+            throw new NullReferenceException("User doesnt share data with DSO");
+        }
+        return price;
     }
 
 }
