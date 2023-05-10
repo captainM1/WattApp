@@ -140,7 +140,7 @@
             <app-modal-table #ModalTableComponent [data]="dataMonth" [type]="'Consumption'" [message]="'Consumption For Previous Month'" [time]="'Date'"></app-modal-table>
           </div>
           <div *ngIf="selectedGraphHistoryConsumption === '7days'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
-            <app-modal-table #ModalTableComponent [data]="data7days" [type]="'Consumption'" [message]="'Consumption For Previous 7 days'" [time]="'Date'"></app-modal-table>
+            <app-modal-table #ModalTableComponent [data]="data7days" [type]="'Consumption'" [message]="'Consumption For Previous 7 days'" [time]="'Day'"></app-modal-table>
           </div>
 
       <div class="modal-footer">
@@ -169,7 +169,7 @@
             <app-modal-table #ModalTableComponent [data]="dataNextMonth" [type]="'Consumption'" [message]="'Consumption For Next Month'" [time]="'Date'"></app-modal-table>
          </div>
           <div *ngIf="selectedGraphFutureConsumption === '7days'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
-            <app-modal-table #ModalTableComponent [data]="dataNext7days" [type]="'Consumption'" [message]="'Consumption For Next 7 days'" [time]="'Date'"></app-modal-table>
+            <app-modal-table #ModalTableComponent [data]="dataNext7days" [type]="'Consumption'" [message]="'Consumption For Next 7 days'" [time]="'Day'"></app-modal-table>
           </div>
 
       <div class="modal-footer">
@@ -197,7 +197,7 @@
             <app-modal-table #ModalTableComponent [data]="dataMonthProd" [type]="'Production'" [message]="'Production For Previous Month'" [time]="'Date'"></app-modal-table>
          </div>
           <div *ngIf="selectedGraphHistoryProduction === '7days'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
-            <app-modal-table #ModalTableComponent [data]="data7daysProd" [type]="'Production'" [message]="'Production For Previous 7 days'" [time]="'Date'"></app-modal-table>
+            <app-modal-table #ModalTableComponent [data]="data7daysProd" [type]="'Production'" [message]="'Production For Previous 7 days'" [time]="'Day'"></app-modal-table>
           </div>
 
       <div class="modal-footer">
@@ -225,7 +225,7 @@
             <app-modal-table #ModalTableComponent [data]="dataNextMonthProd" [type]="'Production'" [message]="'Production For Next Month'" [time]="'Date'"></app-modal-table>
          </div>
           <div *ngIf="selectedGraphFutureProduction === '7days'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
-            <app-modal-table #ModalTableComponent [data]="dataNext7daysProd" [type]="'Production'" [message]="'Production For Next 7 days'" [time]="'Date'"></app-modal-table>
+            <app-modal-table #ModalTableComponent [data]="dataNext7daysProd" [type]="'Production'" [message]="'Production For Next 7 days'" [time]="'Day'"></app-modal-table>
           </div>
 
       <div class="modal-footer">

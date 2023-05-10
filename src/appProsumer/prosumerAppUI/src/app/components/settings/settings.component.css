@@ -444,3 +444,8 @@ body {
   border-left: none !important;
   border-color: #dc3545 !important;
 }
+
+.toggle-label
+{
+  font-weight: bold;
+}
