@@ -77,7 +77,9 @@ namespace prosumerAppBack.DataAccess
             {
                 ID = new Guid("6BCE51EA-9824-4393-B9A5-732B5A9B7F53"),
                 Role = "Admin",
-                Email = "admin@gmail.com"
+                Email = "admin@gmail.com",
+                FirstName = "Adminovic",
+                LastName = "Adminovski"
             };
             
             var password = "admin123";

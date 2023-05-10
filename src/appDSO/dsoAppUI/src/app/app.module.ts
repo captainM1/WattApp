@@ -37,6 +37,8 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ErrorPageComponent } from './components/error-page/error-page.component';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TableModule } from 'primeng/table';
+import { ProfileComponent } from './components/profile/profile.component';
+
 var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
 
 
@@ -54,7 +56,7 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     WelcomeComponent,
     ModalTableComponent,
     ErrorPageComponent,
-
+    ProfileComponent
 ],
   imports: [
     BrowserModule,

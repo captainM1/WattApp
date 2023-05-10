@@ -150,6 +150,9 @@
                         <td>{{device.typeOfDevice}}</td>
                         <td>{{device.powerusage}} kw/h</td>
                       </tr>
+                      <tr style="width: 100%; display: flex; justify-content: center; text-align: center;">
+                        <p-paginator class="w-100" [rows]="pageSize" [totalRecords]="lengthOfUsers" [rowsPerPageOptions]="pageSizeOptions" (onPageChange)="onPageChange($event)"></p-paginator>
+                      </tr>
                     </tbody>
                   </table>
                 </div>

@@ -8,13 +8,13 @@ import { RequirementsComponent } from './components/requirements/requirements.co
 import { SignupComponent } from './components/signup/signup.component';
 import { WelcomeComponent } from './components/welcome/welcome.component';
 import { ErrorPageComponent } from './components/error-page/error-page.component';
+import { ProfileComponent } from './components/profile/profile.component';
 
 
 const routes: Routes = [
   {
     path: 'signin', component: LoginComponent
   },
-  
   {
     path:'nav',component:NavComponent
   },
@@ -31,6 +31,9 @@ const routes: Routes = [
     path: 'requirements', component: RequirementsComponent
   },
   {
+    path:'profile', component:ProfileComponent
+  },
+  {
     path:'', component:WelcomeComponent
   },
   {
@@ -39,7 +42,6 @@ const routes: Routes = [
   {
     path:'error-page', component:ErrorPageComponent
   }
-
 ]
 
 

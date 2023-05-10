@@ -476,9 +476,11 @@ namespace prosumerAppBack.Migrations
                         {
                             ID = new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f53"),
                             Email = "admin@gmail.com",
-                            PasswordHash = new byte[] { 233, 223, 167, 59, 47, 123, 84, 92, 126, 251, 90, 249, 75, 248, 92, 11, 206, 32, 112, 232, 3, 42, 86, 35, 120, 211, 200, 93, 253, 249, 189, 164 },
+                            FirstName = "Adminovi",
+                            LastName = "Adminovski",
+                            PasswordHash = new byte[] { 19, 218, 52, 219, 183, 194, 111, 101, 188, 14, 216, 42, 179, 10, 61, 170, 213, 136, 177, 241, 77, 49, 189, 114, 225, 154, 246, 190, 76, 29, 136, 30 },
                             Role = "Admin",
-                            Salt = new byte[] { 214, 213, 70, 101, 181, 188, 79, 249, 139, 201, 92, 215, 77, 225, 123, 246 }
+                            Salt = new byte[] { 175, 248, 185, 99, 205, 41, 72, 239, 243, 157, 238, 190, 82, 90, 34, 135 }
                         });
                 });
 
@@ -546,10 +548,10 @@ namespace prosumerAppBack.Migrations
                             Email = "petarsimic@gmail.com",
                             FirstName = "Petar",
                             LastName = "Simic",
-                            PasswordHash = new byte[] { 186, 219, 45, 32, 89, 104, 49, 124, 245, 218, 156, 24, 246, 103, 240, 112, 207, 189, 53, 207, 193, 168, 28, 117, 125, 179, 85, 196, 46, 190, 153, 196 },
+                            PasswordHash = new byte[] { 16, 59, 32, 154, 201, 78, 124, 155, 202, 77, 123, 83, 229, 195, 48, 198, 174, 28, 233, 35, 66, 72, 90, 130, 232, 207, 45, 13, 205, 88, 208, 232 },
                             PhoneNumber = "064-316-15-81",
                             Role = "RegularUser",
-                            Salt = new byte[] { 30, 195, 168, 63, 174, 168, 211, 80, 237, 89, 105, 31, 220, 235, 33, 62 },
+                            Salt = new byte[] { 20, 26, 169, 99, 104, 155, 146, 113, 120, 14, 206, 159, 192, 168, 239, 80 },
                             dsoHasControl = false,
                             sharesDataWithDso = false
                         });
