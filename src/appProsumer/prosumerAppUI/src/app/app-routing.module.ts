@@ -26,7 +26,7 @@ import { SettingsComponent } from './components/settings/settings.component';
 
 const routes: Routes = [
   {
-    path: 'signin', component: LoginComponent, canActivate:[NotauthGuard]
+    path: 'signin', component: LoginComponent //canActivate:[NotauthGuard] ne radi dobro
   },
   {
     path:'signup', component: SignupComponent

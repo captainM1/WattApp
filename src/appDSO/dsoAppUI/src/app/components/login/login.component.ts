@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit{
   isText: boolean = false;
   loginForm!: FormGroup;
   showsignin!:boolean;
-  
+
   constructor(
     private fb: FormBuilder, 
     private router : Router,
@@ -28,13 +28,13 @@ export class LoginComponent implements OnInit{
     private messageService: MessageService,
     private spinner: NgxSpinnerService,
    ){}
-  
+
   ngOnInit(): void {
     this.loginForm = this.fb.group({
       email : ['', [Validators.required, Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     })
-    
+
   }
 
   hideShowPass(){
@@ -46,7 +46,7 @@ export class LoginComponent implements OnInit{
   get fields(){
     return this.loginForm.controls;
   }
-  
+
   onSubmit(){
     this.submitted = true;
     this.spinner.show();
@@ -69,7 +69,7 @@ export class LoginComponent implements OnInit{
           this.spinner.hide();
           this.showsignin = false;
           if (error.status === 400) {
-            this.messageService.add({ severity: 'error', summary: 'Invalid credentials', detail: error.error });  
+            this.messageService.add({ severity: 'error', summary: 'Invalid credentials', detail: error.error });
             this.spinner.hide();
             this.showsignin = false;
             this.router.navigate(['signin'])
@@ -78,7 +78,7 @@ export class LoginComponent implements OnInit{
         }
       );
     }else{
-      this.messageService.add({ severity: 'error', summary: 'Invalid credentials', detail: 'Invalid data format' });  
+      this.messageService.add({ severity: 'error', summary: 'Invalid credentials', detail: 'Invalid data format' });
       this.spinner.hide();
       this.showsignin = false;
       this.router.navigate(['signin'])
@@ -92,7 +92,7 @@ export class LoginComponent implements OnInit{
         const control = formGroup.get(field);
         if(control instanceof FormControl){
           console.log(control.value);
-          
+
           control?.markAsDirty({onlySelf: true})
         }else if(control instanceof FormGroup){
           this.validateAllFormFields(control);

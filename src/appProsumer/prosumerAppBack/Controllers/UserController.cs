@@ -15,7 +15,7 @@ namespace prosumerAppBack.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-//[Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
+[Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
 public class UserController : ControllerBase
 {
     private readonly IUserRepository _userRepository;
@@ -112,6 +112,14 @@ public class UserController : ControllerBase
         await _userService.UpdateUser(id, userUpdateDto);
 
         return Ok(new { message = "user updated successfully" });
+    }
+
+    [HttpPost("update-password/{userID}")]
+    public async Task<IActionResult> UpdatePassword(Guid userID, string newPassword)
+    {
+        await _userService.UpdatePassword(userID, newPassword);
+
+        return Ok(new { message = "password changed successfully" });
     }
 
     [HttpPost("forgot-password")]
@@ -345,6 +353,21 @@ public class UserController : ControllerBase
         try
         {
             var result = await _userService.UpdateUserDsoControl(id, dsoHasControl);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpGet("get-users-that-applied-to-dso")]
+    public async Task<IActionResult> GetUsersAppliedToDso()
+    {
+        try
+        {
+            var result = await _userService.GetUsersAppliedToDso();
 
             return Ok(result);
         }
