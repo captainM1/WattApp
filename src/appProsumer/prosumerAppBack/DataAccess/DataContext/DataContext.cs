@@ -56,7 +56,7 @@ namespace prosumerAppBack.DataAccess
                 Address = "Radoja Domanovica 6",
                 City = "Kragujevac",
                 Country = "Serbia",
-                Role = "RegularUser",
+                Role = "UnapprovedUser",
                 Email = "petarsimic@gmail.com",
                 PasswordResetToken = null,
                 PasswordResetTokenExpires = null

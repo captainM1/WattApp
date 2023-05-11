@@ -353,7 +353,9 @@ public class UserRepository : IUserRepository
 
     public async Task<List<UsersRequestedToDso>> GetUsersAppliedToDso()
     {
-        var users = await _dbContext.UsersAppliedToDSO.ToListAsync();
+        var users = await _dbContext.UsersAppliedToDSO
+            .Where(u => u.Approved == false)
+            .ToListAsync();
 
         if (users == null)
         {

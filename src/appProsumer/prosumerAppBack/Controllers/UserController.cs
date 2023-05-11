@@ -181,7 +181,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("send-request-to-dso/{id}")]
-    [Authorize(Roles = "UnapprovedUser")]
+    //[Authorize(Roles = "UnapprovedUser")]
     public async Task<IActionResult> CreateRequestForDso(Guid id)
     {
         try

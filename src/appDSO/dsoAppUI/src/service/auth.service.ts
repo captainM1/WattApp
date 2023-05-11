@@ -341,4 +341,12 @@ export class AuthService {
      const decoded :any = jwt_decode(jwtToken);
      return decoded.unique_name;
   }
+
+  getAllRequests():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/User/get-users-that-applied-to-dso");
+  }
+
+  acceptReq(reqID: any):Observable<any> {
+    return this.http.post<string>(environment.apiUrl + "/api/User/approve-request-to-dso/"+reqID,{});
+  }
 }

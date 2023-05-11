@@ -27,11 +27,9 @@ export class ProfileComponent implements OnInit{
   
   getToken(){
     this.token = this.serv.getToken();
-    console.log(this.token)
     this.serv.getDispecher(this.token).subscribe(
       (response :any)=>{
        this.userID = response;
-       console.log(this.userID);
        this.firstName = response.firstName;
        this.firstName = response.firstName;
        this.lastName = response.lastName;
@@ -40,7 +38,6 @@ export class ProfileComponent implements OnInit{
        this.city = response.city;
        this.country = response.country;
        this.email = response.email;
-
       }
     )
   }

@@ -221,12 +221,12 @@ namespace prosumerAppBack.Migrations
             migrationBuilder.InsertData(
                 table: "Dispatchers",
                 columns: new[] { "ID", "Email", "FirstName", "LastName", "PasswordHash", "PhoneNumber", "Role", "Salt" },
-                values: new object[] { new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f53"), "admin@gmail.com", "Adminovic", "Adminovski", new byte[] { 63, 101, 40, 217, 201, 211, 237, 88, 89, 175, 217, 203, 59, 168, 111, 33, 162, 46, 245, 137, 82, 63, 247, 105, 139, 179, 210, 26, 59, 128, 220, 254 }, null, "Admin", new byte[] { 77, 133, 247, 20, 99, 19, 200, 52, 236, 8, 47, 99, 165, 190, 9, 151 } });
+                values: new object[] { new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f53"), "admin@gmail.com", "Adminovic", "Adminovski", new byte[] { 11, 222, 18, 39, 242, 161, 84, 65, 216, 7, 167, 238, 226, 80, 239, 56, 253, 48, 195, 223, 71, 30, 28, 37, 125, 86, 119, 207, 92, 49, 215, 127 }, null, "Admin", new byte[] { 83, 53, 215, 205, 73, 196, 238, 53, 85, 207, 182, 115, 3, 28, 240, 14 } });
 
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "ID", "Address", "City", "Country", "Email", "FirstName", "LastName", "PasswordHash", "PasswordResetToken", "PasswordResetTokenExpires", "PhoneNumber", "Role", "Salt", "dsoHasControl", "sharesDataWithDso" },
-                values: new object[] { new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f52"), "Radoja Domanovica 6", "Kragujevac", "Serbia", "petarsimic@gmail.com", "Petar", "Simic", new byte[] { 5, 242, 235, 105, 110, 24, 212, 117, 218, 167, 46, 79, 20, 65, 122, 88, 67, 128, 228, 227, 241, 148, 42, 246, 67, 85, 150, 64, 139, 58, 47, 89 }, null, null, "064-316-15-81", "RegularUser", new byte[] { 89, 227, 228, 113, 137, 24, 249, 138, 140, 253, 13, 176, 57, 185, 135, 186 }, false, false });
+                values: new object[] { new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f52"), "Radoja Domanovica 6", "Kragujevac", "Serbia", "petarsimic@gmail.com", "Petar", "Simic", new byte[] { 247, 116, 101, 117, 172, 44, 107, 166, 15, 106, 96, 78, 110, 9, 28, 246, 252, 39, 61, 138, 16, 16, 102, 9, 10, 192, 98, 226, 247, 8, 38, 33 }, null, null, "064-316-15-81", "UnapprovedUser", new byte[] { 65, 62, 95, 6, 177, 112, 219, 133, 87, 101, 56, 208, 150, 84, 16, 209 }, false, false });
 
             migrationBuilder.InsertData(
                 table: "DeviceTypes",

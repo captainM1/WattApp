@@ -4,11 +4,11 @@
     <div class="input-div">
       <div>
         <p>Search user by name:</p>
-        <input type="text" [(ngModel)]="_searchByName" placeholder="John Cena" (input)="applyFilters()">
+        <input type="text" [(ngModel)]="_searchByName" placeholder="Filip Filipovic" (input)="applyFilters()">
       </div>
       <div>
         <p>Search user by address:</p>
-        <input type="text" [(ngModel)]="_searchByAddress" placeholder="Addres NN" (input)="applyFilters()">
+        <input type="text" [(ngModel)]="_searchByAddress" placeholder="Bulevar Kraljice Marije" (input)="applyFilters()">
       </div>
       <button (click)="exportToExcel()">Export all</button>
       <button (click)="exportSelectedData()">Export selected</button>

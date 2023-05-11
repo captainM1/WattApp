@@ -57,7 +57,8 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     WelcomeComponent,
     ModalTableComponent,
     ErrorPageComponent,
-    ProfileComponent    ModalTableProfileComponent,
+    ProfileComponent,
+    ModalTableProfileComponent
 
 ],
   imports: [
