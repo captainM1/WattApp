@@ -14,7 +14,7 @@ public interface IUserService
     Task<List<UserDto>> GetAllUsersAsync(int pageNumber, int pageSize);
     Task<int> UpdateUser(Guid id, UserUpdateDto userUpdateDto);
     Task<Boolean> UpdatePassword(Guid id, string newPassword);
-    Task<Boolean> CreateUserRequestToDso(User user);
+    Task<Boolean> CreateUserRequestToDso(Guid userID);
     Task<User> CheckEmail(string email);
     Task<object> GetCoordinatesForUser(Guid id);
     Task<int> GetNumberOfUsers();

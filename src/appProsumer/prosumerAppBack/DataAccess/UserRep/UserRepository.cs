@@ -195,22 +195,13 @@ public class UserRepository : IUserRepository
 
         return true;
     }
-    public async Task<Boolean> CreateUserRequestToDso(User user)
+    public async Task<Boolean> CreateUserRequestToDso(Guid userID)
     {
         var newUser = new UsersRequestedToDso
         {
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            PhoneNumber = user.PhoneNumber,
-            Email = user.Email,
-            Address = user.Address,
-            City = user.City,
-            Country = user.Country,
-            Salt = user.Salt,
-            PasswordHash = user.PasswordHash,
-            ID = user.ID,
-            sharesDataWithDso = user.sharesDataWithDso,
-            dsoHasControl = user.dsoHasControl,
+            ID = Guid.NewGuid(),
+            UserID = userID,
+            Approved = false
         };
         _dbContext.UsersAppliedToDSO.Add(newUser);
         await _dbContext.SaveChangesAsync();
@@ -220,27 +211,13 @@ public class UserRepository : IUserRepository
     {
         var newUser = await _dbContext.UsersAppliedToDSO.FindAsync(id);
 
-        var approvedUser = new User
-        {
-            ID = newUser.ID,
-            FirstName = newUser.FirstName,
-            LastName = newUser.LastName,           
-            PhoneNumber = newUser.PhoneNumber,
-            Email = newUser.Email,
-            Address = newUser.Address,
-            City = newUser.City,
-            Country = newUser.Country,
-            Salt = newUser.Salt,
-            PasswordHash = newUser.PasswordHash,
-            Role= "RegularUser",
-        };
-
-        _dbContext.Users.Update(approvedUser);
+        var approvedUser = _dbContext.Users.FindAsync(newUser.UserID);
+        approvedUser.Result.sharesDataWithDso = true;
+        approvedUser.Result.Role = "RegularUser";
+        _dbContext.Users.Update(approvedUser.Result);
         await _dbContext.SaveChangesAsync();
 
-        var user = await _dbContext.UsersAppliedToDSO.FindAsync(id);
-
-        _dbContext.UsersAppliedToDSO.Remove(user);
+        _dbContext.UsersAppliedToDSO.Remove(newUser);
         await _dbContext.SaveChangesAsync();
         return true;
     }
