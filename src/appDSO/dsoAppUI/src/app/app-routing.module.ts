@@ -10,6 +10,7 @@ import { WelcomeComponent } from './components/welcome/welcome.component';
 import { NotauthGuard } from './guards/notauth.guard';
 import { AuthGuard } from './guards/auth.guard';
 import { ErrorPageComponent } from './components/error-page/error-page.component';
+import { ProfileComponent } from './components/profile/profile.component';
 
 
 const routes: Routes = [
@@ -32,6 +33,9 @@ const routes: Routes = [
     path: 'requirements', component: RequirementsComponent, canActivate:[AuthGuard]
   },
   {
+    path:'profile', component:ProfileComponent
+  },
+  {
     path:'', component:WelcomeComponent
   },
   {
@@ -40,7 +44,6 @@ const routes: Routes = [
   {
     path:'error-page', component:ErrorPageComponent
   }
-
 ]
 
 

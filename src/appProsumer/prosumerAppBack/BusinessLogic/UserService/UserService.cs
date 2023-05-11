@@ -208,9 +208,9 @@ public class UserService:IUserService
         return true;
     }
 
-    public async Task<Boolean> CreateUserRequestToDso(User user)
+    public async Task<Boolean> CreateUserRequestToDso(Guid userID)
     {
-        var action = await _repository.CreateUserRequestToDso(user);
+        var action = await _repository.CreateUserRequestToDso(userID);
         if (!action)
         {
             throw new NullReferenceException("Action failed");

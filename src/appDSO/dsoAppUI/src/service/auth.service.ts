@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { CookieService } from "ngx-cookie-service"
 import { ConfirmationService, MessageService, ConfirmEventType } from 'primeng/api';
 import { Router } from '@angular/router';
+import jwt_decode from 'jwt-decode';
 @Injectable({
   providedIn: 'root'
 })
@@ -269,6 +270,14 @@ export class AuthService {
   }
 
 
+  getAllDispechers():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/Dispatcher/get-all-dispatchers");
+  }
+
+  
+  getDispecher(id:any):Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/Dispatcher/get-single/"+id);
+  }
 
 // HOME
   currentConsumptionDay():Observable<any>{
@@ -326,6 +335,10 @@ export class AuthService {
     return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/nextMonth/production/every-day-usage/system");
   }
 
+  getToken() {
 
-  
+    const jwtToken = this.cookie.get('jwtToken');
+     const decoded :any = jwt_decode(jwtToken);
+     return decoded.unique_name;
+  }
 }

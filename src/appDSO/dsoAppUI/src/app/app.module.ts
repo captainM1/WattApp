@@ -36,6 +36,8 @@ import { ModalTableComponent } from './components/modal-table/modal-table.compon
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ErrorPageComponent } from './components/error-page/error-page.component';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { TableModule } from 'primeng/table';
+import { ProfileComponent } from './components/profile/profile.component';
 import { ModalTableProfileComponent } from './components/modal-table-profile/modal-table-profile.component';
 import { TableExport } from 'tableexport'
 var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
@@ -55,7 +57,7 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     WelcomeComponent,
     ModalTableComponent,
     ErrorPageComponent,
-    ModalTableProfileComponent,
+    ProfileComponent    ModalTableProfileComponent,
 
 ],
   imports: [
@@ -75,6 +77,7 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     PaginatorModule,
     NgxSpinnerModule,
     ToastModule,
+    TableModule,
     MatDialogModule,
     ConfirmDialogModule,
     

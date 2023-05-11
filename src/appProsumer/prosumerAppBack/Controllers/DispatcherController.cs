@@ -99,6 +99,20 @@ public class DispatcherController : ControllerBase
 
         return Ok(new { Message = "dispathcher deleted successfully" });
     }
+    [HttpGet("get-single/{id}")]
+    public async Task<IActionResult> UserInfo(Guid id)
+    {
+        try
+        {
+            var results = await _dispatcherService.GetDispatcher(id);
+
+            return Ok(results);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
 
     [HttpPost("update-dispatcher/{id}")]
     // [Authorize(Roles = "Admin")]

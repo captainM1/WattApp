@@ -1,3 +1,4 @@
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css");
 @font-face {
   font-family: font1;
   src: url(/assets/fonts/Chivo-Regular.ttf);
@@ -127,6 +128,11 @@ p{
 }
 
 .centriranje{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.centriranjegore{
   display: flex;
   justify-content: center;
   align-items: center;

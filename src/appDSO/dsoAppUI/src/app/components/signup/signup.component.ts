@@ -20,7 +20,7 @@ export class SignupComponent implements OnInit {
   isText: boolean = false;
   isText2: boolean = false;
   signupForm!: FormGroup;
-
+  allWorkers: any;
   constructor(
     private fb: FormBuilder,
     private router : Router,
@@ -40,7 +40,11 @@ export class SignupComponent implements OnInit {
         validator: ConfirmPasswordValidator("password","confirmPassword")
       }
       )
-
+      this.auth.getAllDispechers().subscribe(
+        (response) => {
+          this.allWorkers = response
+        }
+      )
     }
 
     get fields(){

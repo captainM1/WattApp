@@ -4,7 +4,7 @@
 <div class="outer" style="position: fixed; top: 40px; left: 0px; width: 100%; height: 100%;">
   <div class="container-fluid h-100">
     <div class="row justify-content-center h-100">
-      <div class="col-sm centriranje " style=" background:#EDEAE5;">
+      <div class="col-6 centriranje " style=" background:#EDEAE5;">
         <div class=" forma panel border" >
             <h3 class="font-weight-bold">
                 Add New Employee
@@ -70,6 +70,29 @@
                   </form>
               </div>
             </div>
+        </div>
+            
+        <div class="col-6 centriranjegore">
+            <p-table [value]="allWorkers" styleClass="p-datatable-gridlines" [tableStyle]="{ 'min-width': '50rem' }" style="height:65%;width: 100%;border-radius: 10px;padding: 50px;padding-top: 0px;"> 
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Name</th>
+                        <th>Surename</th>
+                        <th>Role</th>
+                        <th>Email</th>
+                        <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-worker>
+                    <tr>
+                        <td>{{ worker.firstName }}</td>
+                        <td>{{ worker.lastName }}</td>
+                        <td>{{ worker.role }}</td>
+                        <td>{{ worker.email }}</td>
+                        <td><button style="width: 100%;"><i class="bi bi-x-lg" style="color:white"></i></button></td>
+                    </tr>
+                </ng-template>
+            </p-table>
         </div>
     </div>
   </div>

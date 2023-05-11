@@ -185,10 +185,8 @@ public class UserController : ControllerBase
     public async Task<IActionResult> CreateRequestForDso(Guid id)
     {
         try
-        {            
-            var user = await _userService.GetUserByIdAsync(id);
-            
-            var result = await _userService.CreateUserRequestToDso(user);
+        {
+            var result = await _userService.CreateUserRequestToDso(id);
 
             return Ok(result);
         }
