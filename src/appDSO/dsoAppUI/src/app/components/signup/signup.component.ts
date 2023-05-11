@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AuthService } from 'service/auth.service';
 import { MessageService } from 'primeng/api';
 import { CookieService } from "ngx-cookie-service";
+import { ConfirmPasswordValidator } from 'app/helpers/confirm-password.validator';
 
 @Component({
   selector: 'app-signup',
@@ -13,8 +14,11 @@ import { CookieService } from "ngx-cookie-service";
 export class SignupComponent implements OnInit {
   submitted = false;
   type: string = "password";
+  type2: string = "password";
   eyeIcon: string = "fa-eye-slash";
+  eyeIcon2: string = "fa-eye-slash";
   isText: boolean = false;
+  isText2: boolean = false;
   signupForm!: FormGroup;
   allWorkers: any;
   constructor(
@@ -30,8 +34,12 @@ export class SignupComponent implements OnInit {
         lastName: ['', Validators.required],
         email : ['', [Validators.required, Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
         phonenumber: ['', Validators.required],
-        password: ['', [Validators.required, Validators.minLength(6)]]
-      })
+        password: ['', [Validators.required, Validators.minLength(6)]],
+        confirmPassword: ['', [Validators.required, Validators.minLength(6)]]
+      },{
+        validator: ConfirmPasswordValidator("password","confirmPassword")
+      }
+      )
       this.auth.getAllDispechers().subscribe(
         (response) => {
           this.allWorkers = response
@@ -49,10 +57,16 @@ export class SignupComponent implements OnInit {
       this.isText ? this.type = "text" : this.type = "password";
     }
 
+    hideShowPass2(){
+      this.isText2 = !this.isText2;
+      this.isText2 ? this.eyeIcon2 = "fa-eye" : this.eyeIcon2 = "fa-eye-slash";
+      this.isText2 ? this.type2 = "text" : this.type2 = "password";
+    }
+
     onSubmit(){
       this.submitted = true;
       if(this.signupForm.invalid){
-  
+
         this.messageService.add({ severity: 'error', summary: 'Invalid data', detail: 'Invalid data format', life:1000 });
         this.router.navigate(['signup']);
         return;

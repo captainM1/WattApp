@@ -13,7 +13,7 @@ public interface IUserService
     Task<User> GetUserByIdAsync(Guid id);
     Task<List<UserDto>> GetAllUsersAsync(int pageNumber, int pageSize);
     Task<int> UpdateUser(Guid id, UserUpdateDto userUpdateDto);
-    Task<Boolean> UpdatePassword(Guid id, string newPassword);
+    Task<Boolean> UpdatePassword(Guid id, string oldPassword, string newPassword);
     Task<Boolean> CreateUserRequestToDso(Guid userID);
     Task<User> CheckEmail(string email);
     Task<object> GetCoordinatesForUser(Guid id);
@@ -29,4 +29,6 @@ public interface IUserService
     Task<User> DisconnectFromDso(Guid id);
     Task<Boolean> UpdateUserDataSharing(Guid id, Boolean sharesDataWithDso);
     Task<Boolean> UpdateUserDsoControl(Guid id, Boolean dsoHasControl);
+    Task<List<UsersRequestedToDso>> GetUsersAppliedToDso();
+    Task<Boolean> UserAllreadyAppliedToDso(Guid id);
 }

@@ -12,8 +12,8 @@
   background-color: #F6F5F3;
   border-radius: 17px;
   filter: drop-shadow(0px 13px 26px rgba(0,0,0,0.25));
-  padding: 50px;
-  width: 50%;
+  padding: 22px 40px;
+  width: 30%;
   text-align: center;
   font-family: font1;
 }
@@ -23,7 +23,7 @@ input{
   border-radius: 5px;
   font-style: italic;
   font-size: 12px;
-  height: 50px;
+  height: 40px;
 
 }
 
@@ -63,7 +63,7 @@ a{
 }
 
 h3{
-  font-size: 37px;
+  font-size: 25px;
   color: #026670;
   font-family: font1;
   font-weight: bold;

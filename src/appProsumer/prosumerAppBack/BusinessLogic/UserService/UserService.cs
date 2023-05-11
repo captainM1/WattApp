@@ -187,10 +187,20 @@ public class UserService:IUserService
 
         return user;
     }
-
-    public async Task<Boolean> UpdatePassword(Guid id, string newPassword)
+    
+    public async Task<Boolean> UpdatePassword(Guid id, string oldPassword, string newPassword)
     {
-        var action = await _repository.UpdatePassword(id, newPassword);
+        var action = await _repository.UpdatePassword(id, oldPassword, newPassword);
+        if (!action)
+        {
+            throw new NullReferenceException("Action failed");
+        }
+        return true;
+    }
+
+    public async Task<Boolean> ResetPassword(Guid id, string newPassword)
+    {
+        var action = await _repository.ResetPassword(id, newPassword);
         if (!action)
         {
             throw new NullReferenceException("Action failed");
@@ -305,6 +315,13 @@ public class UserService:IUserService
         return true;
     }
 
+    public async Task<List<UsersRequestedToDso>> GetUsersAppliedToDso()
+    {
+        var users = await _repository.GetUsersAppliedToDso();
+        
+        return users;
+    }
+
     public async Task CreatePasswordResetToken(string email)
     {
         await _repository.CreatePasswordResetToken(email);        
@@ -323,6 +340,11 @@ public class UserService:IUserService
     public bool DSOHasControl(Guid userID)
     {
         return _repository.DSOHasControl(userID);
+    }
+
+    public async Task<Boolean> UserAllreadyAppliedToDso(Guid id)
+    {
+        return await _repository.UserAllreadyAppliedToDso(id);
     }
 
 

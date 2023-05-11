@@ -1,15 +1,17 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NavComponent } from '../nav/nav.component';
 import { AuthUserService } from 'src/app/services/auth-user.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { User } from 'src/app/models/user';
-
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MessageService } from 'primeng/api';
+import { ConfirmPasswordValidator } from 'src/app/helpers/confirm-password.validator';
 @Component({
   selector: 'app-edit-profile',
   templateUrl: './edit-profile.component.html',
   styleUrls: ['./edit-profile.component.css']
 })
-export class EditProfileComponent {
+export class EditProfileComponent implements OnInit{
 
   allUsers!: any[];
   userID!: User;
@@ -21,12 +23,17 @@ export class EditProfileComponent {
   city!: string;
   country!: string;
   email!: string;
+  resetForm!: FormGroup;
+  submitted = false;
 
 
+  @ViewChild('exampleModal') exampleModal!: ElementRef;
 
   constructor(
     private auth : AuthUserService,
-    private serv : AuthService
+    private serv : AuthService,
+    private fb: FormBuilder,
+    private messageService:MessageService
   ){}
 
   ngOnInit(): void {
@@ -50,4 +57,21 @@ export class EditProfileComponent {
       }
     )
   }
+
+  get fields(){
+    return this.resetForm.controls;
+  }
+
+  onReset()
+  {
+    this.submitted = true;
+    if(this.resetForm.valid){
+      this.messageService.add({ severity: 'error', summary: 'Success', detail: 'Password reset successfully!' });
+      this.resetForm.reset();
+      return;
+    }else{
+      this.messageService.add({ severity: 'error', summary: 'Error reseting password', detail: 'Try again' });
+    }
+  }
+
 }

@@ -9,6 +9,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { ModalTableComponent } from './components/modal-table/modal-table.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+
 
 //import {NgToastModule} from 'ng-angular-popup'
 import { ToastModule } from 'primeng/toast';
@@ -82,6 +85,7 @@ import { SettingsComponent } from './components/settings/settings.component';
     WelcomeComponent,
     DashboardComponent,
     DeviceEditPopupComponent,
+    ModalTableComponent,
     SettingsComponent
   ],
   imports: [
@@ -94,6 +98,7 @@ import { SettingsComponent } from './components/settings/settings.component';
     MatInputModule,
     MatButtonModule,
     MatIconModule,
+    MatDialogModule,
     FormsModule,
     BrowserAnimationsModule,
     ToastModule,
@@ -103,9 +108,9 @@ import { SettingsComponent } from './components/settings/settings.component';
     Ng2SearchPipeModule,
     [MatProgressSpinnerModule],
     MatSnackBarModule,
-    NgxSpinnerModule
+    NgxSpinnerModule    
   ],
-  providers: [MessageService,ConfirmationService, {provide:HTTP_INTERCEPTORS,useClass:TokenInterceptor,multi:true}],
+  providers: [MessageService,ConfirmationService, {provide:HTTP_INTERCEPTORS,useClass:TokenInterceptor,multi:true}, MatDialog],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

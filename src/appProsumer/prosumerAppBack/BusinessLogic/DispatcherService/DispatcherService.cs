@@ -119,5 +119,16 @@ namespace prosumerAppBack.BusinessLogic.DispatcherService
 
             return action;
         }
+
+        public async Task<Boolean> UpdateDispatcher(Guid id, DispatcherUpdateDto dispatcherUpdateDto)
+        {
+            var action = await _repository.UpdateDispatcher(id, dispatcherUpdateDto);
+            if (!action)
+            {
+                throw new BadRequestException("no dispatchers with that ID found");
+            }
+
+            return action;
+        }
     }
 }

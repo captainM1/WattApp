@@ -14,5 +14,6 @@ namespace prosumerAppBack.BusinessLogic.DispatcherService
         Task<List<Dispatcher>> GetAllDispatchersAsync();
         Task<Boolean> DeleteDispatcher(Guid dispatcherID);
         Task<Dispatcher> GetDispatcher(Guid id);
+        Task<Boolean> UpdateDispatcher(Guid id, DispatcherUpdateDto dispatcherUpdateDto);
     }
 }

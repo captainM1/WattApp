@@ -13,7 +13,7 @@ namespace prosumerAppBack.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
+//[Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
 public class PowerUsageController : ControllerBase
 {
     private readonly IPowerUsageService _powerUsageService;
@@ -529,6 +529,48 @@ public class PowerUsageController : ControllerBase
     public ActionResult<double> savedEnergyForUserConsumer(Guid userID)
     {
         var powerUsage = _powerUsageService.savedEnergyForUserConsumer(userID);
+        return Ok(powerUsage);
+    }
+
+    [HttpGet("power-usage/percentage-difference-for-previous-week/consumption/{userId}")]
+    public ActionResult<double> percentPowerUsageDifferenceForPreviousWeekConsumption(Guid userId)
+    {
+        var powerUsage = _powerUsageService.percentPowerUsageDifferenceForPreviousWeekConsumption(userId);
+        return Ok(powerUsage);
+    }
+
+    [HttpGet("power-usage/percentage-difference-for-previous-week/production/{userId}")]
+    public ActionResult<double> percentPowerUsageDifferenceForPreviousWeekProduction(Guid userId)
+    {
+        var powerUsage = _powerUsageService.percentPowerUsageDifferenceForPreviousWeekProduction(userId);
+        return Ok(powerUsage);
+    }
+
+    [HttpGet("power-usage/electricityBill/LastMonth/{userID}")]
+    public ActionResult<double> electricityBill1(Guid userID, double electricityRate)
+    {
+        var powerUsage = _powerUsageService.electricityBillLastMonth(userID, electricityRate);
+        return Ok(powerUsage);
+    }
+
+    [HttpGet("power-usage/electricityBill/LastTwoMonth/{userID}")]
+    public ActionResult<double> electricityBill2(Guid userID, double electricityRate)
+    {
+        var powerUsage = _powerUsageService.electricityBill2MonthsAgo(userID, electricityRate);
+        return Ok(powerUsage);
+    }
+
+    [HttpGet("power-usage/electricityEarnings/LastMonth/{userID}")]
+    public ActionResult<double> electricityEarnings1(Guid userID, double electricityRate)
+    {
+        var powerUsage = _powerUsageService.electricityEarningsLastMonth(userID, electricityRate);
+        return Ok(powerUsage);
+    }
+
+    [HttpGet("power-usage/electricityEarnings/LastTwoMonth/{userID}")]
+    public ActionResult<double> electricityEarnings2(Guid userID, double electricityRate)
+    {
+        var powerUsage = _powerUsageService.electricityEarnings2MonthsAgo(userID, electricityRate);
         return Ok(powerUsage);
     }
 }

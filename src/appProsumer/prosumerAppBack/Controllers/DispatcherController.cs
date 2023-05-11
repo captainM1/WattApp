@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using prosumerAppBack.BusinessLogic.DispatcherService;
 using prosumerAppBack.Helper;
+using prosumerAppBack.Models;
 using prosumerAppBack.Models.Dispatcher;
 using System.Data;
 using System.Text.Json;
@@ -111,6 +112,15 @@ public class DispatcherController : ControllerBase
         {
             return StatusCode(500, ex.Message);
         }
+    }
+
+    [HttpPost("update-dispatcher/{id}")]
+    // [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> UpdateUser(Guid id, [FromBody] DispatcherUpdateDto dispatcherUpdateDto)
+    {
+        await _dispatcherService.UpdateDispatcher(id, dispatcherUpdateDto);
+
+        return Ok(new { message = "dispatcher updated successfully" });
     }
 }
 
