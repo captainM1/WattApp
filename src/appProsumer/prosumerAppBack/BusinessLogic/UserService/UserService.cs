@@ -286,6 +286,15 @@ public class UserService:IUserService
         }
         return true;
     }
+    public async Task<Boolean> RemoveUserRequestToDso(Guid id)
+    {
+        var action = await _repository.RemoveUserRequestToDso(id);
+        if (!action)
+        {
+            throw new NullReferenceException("Action failed");
+        }
+        return true;
+    }
 
     public async Task<User> DisconnectFromDso(Guid id)
     {

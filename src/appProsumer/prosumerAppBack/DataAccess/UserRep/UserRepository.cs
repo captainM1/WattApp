@@ -232,11 +232,17 @@ public class UserRepository : IUserRepository
     }
     public async Task<Boolean> CreateUserRequestToDso(Guid userID)
     {
+        var user = _dbContext.UsersAppliedToDSO.FirstOrDefault(x => x.UserID == userID && x.Approved == null);
+        if(user != null)
+        {
+            return false;
+        }
         var newUser = new UsersRequestedToDso
         {
             ID = Guid.NewGuid(),
             UserID = userID,
-            Approved = false
+            Approved = null,
+            Date = null
         };
         _dbContext.UsersAppliedToDSO.Add(newUser);
         await _dbContext.SaveChangesAsync();
@@ -244,24 +250,37 @@ public class UserRepository : IUserRepository
     }
     public async Task<Boolean> ApproveUserRequestToDso(Guid id)
     {
-        var newUser = await _dbContext.UsersAppliedToDSO.FindAsync(id);
+        var newUser = await _dbContext.UsersAppliedToDSO.FirstOrDefaultAsync(x => x.UserID == id && x.Approved == null);
+        if(newUser == null)
+        {
+            return false;
+        }
+        newUser.Approved = true;
+        newUser.Date = DateTime.Now;
 
-        var approvedUser = _dbContext.Users.FindAsync(newUser.UserID);
+        var approvedUser = _dbContext.Users.FirstOrDefaultAsync(u => u.ID == newUser.UserID);
         approvedUser.Result.sharesDataWithDso = true;
         approvedUser.Result.Role = "RegularUser";
         _dbContext.Users.Update(approvedUser.Result);
         await _dbContext.SaveChangesAsync();
 
-        _dbContext.UsersAppliedToDSO.Remove(newUser);
+        _dbContext.UsersAppliedToDSO.Update(newUser);
         await _dbContext.SaveChangesAsync();
         return true;
     }
 
     public async Task<Boolean> DeclineUserRequestToDso(Guid id)
     {
-        var user = await _dbContext.UsersAppliedToDSO.FindAsync(id);
+        var user = await _dbContext.UsersAppliedToDSO.FirstOrDefaultAsync(x => x.UserID == id && x.Approved == null);
+        if (user == null)
+        {
+            return false;
+        }
+        user.Approved = false;
+        user.Date = DateTime.Now;
 
-        _dbContext.UsersAppliedToDSO.Remove(user);
+
+        _dbContext.UsersAppliedToDSO.Update(user);
         await _dbContext.SaveChangesAsync();
         return true;
     }
@@ -355,7 +374,7 @@ public class UserRepository : IUserRepository
     public async Task<List<UsersRequestedToDso>> GetUsersAppliedToDso()
     {
         var users = await _dbContext.UsersAppliedToDSO
-            .Where(u => u.Approved == false)
+            .Where(u => u.Approved == null)
             .ToListAsync();
 
         if (users == null)
@@ -368,12 +387,21 @@ public class UserRepository : IUserRepository
 
     public async Task<Boolean> UserAllreadyAppliedToDso(Guid id)
     {
-        var user = await _dbContext.UsersAppliedToDSO.FindAsync(id);
+        var user = await _dbContext.UsersAppliedToDSO.FirstOrDefaultAsync(u => u.UserID == id && u.Approved == null);
         if (user == null)
         {
             return false;
         }
         
+        return true;
+    }
+
+    public async Task<Boolean> RemoveUserRequestToDso(Guid id)
+    {
+        var user = await _dbContext.UsersAppliedToDSO.FirstOrDefaultAsync(x => x.UserID == id && x.Approved == null);
+
+        _dbContext.UsersAppliedToDSO.Remove(user);
+        await _dbContext.SaveChangesAsync();
         return true;
     }
 }
