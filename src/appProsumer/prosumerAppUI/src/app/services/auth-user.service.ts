@@ -113,5 +113,12 @@ export class AuthUserService {
     return this.http.post(environment.apiUrl + `/api/User/update-user/${userID}`, profileData,{ headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
   }
 
+  getDsoHasControl(userID: any):Observable<any>{
+    return this.http.get(environment.apiUrl + `/api/User/DSO-has-control/${userID}`, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
+  }
+
+  getUserSharesWithDSO(userID: any):Observable<any>{
+    return this.http.get(environment.apiUrl + `/api/User/user-shares-with-DSO/${userID}`, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
+  }
 
 }

@@ -25,6 +25,8 @@ export class EditProfileComponent implements OnInit{
   email!: string;
   resetForm!: FormGroup;
   submitted = false;
+  dsoHasControl !: boolean;
+  sharesDataWithDSO !: boolean;
 
 
   @ViewChild('exampleModal') exampleModal!: ElementRef;
@@ -55,6 +57,8 @@ export class EditProfileComponent implements OnInit{
         this.country = response.country;
         this.email = response.email;
 
+        this.sharesData(this.userID);
+        this.hasControl(this.userID);
 
       }
     )
@@ -64,7 +68,19 @@ export class EditProfileComponent implements OnInit{
     return this.resetForm.controls;
   }
 
+  sharesData(id:any)
+  {
+    this.auth.getUserSharesWithDSO(id).subscribe((response)=>{
+      this.sharesDataWithDSO = response;
+    })
+  }
 
+  hasControl(id:any)
+  {
+    this.auth.getDsoHasControl(id).subscribe((response)=>{
+      this.dsoHasControl = response;
+    })
+  }
 
 
   onSubmit() {
@@ -75,8 +91,8 @@ export class EditProfileComponent implements OnInit{
       country: this.country,
       firstName: this.firstName,
       lastName: this.lastName,
-      sharesDataWithDso: true,
-      dsoHasControl: true,
+      sharesDataWithDso: this.sharesDataWithDSO,
+      dsoHasControl: this.dsoHasControl,
       city: this.city
     };
 
