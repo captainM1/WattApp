@@ -27,6 +27,7 @@ export interface Info{
     macAdress: string;
     manufacturerName: string;
     typeOfDevice: string;
+    statusOfDevice:string;
  
 }
 

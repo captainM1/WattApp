@@ -88,13 +88,7 @@ export class TableComponent implements OnInit, AfterViewInit {
  lengthOfUsers!: number;
  allUsers!: User[];
 
- // buttons - popUP
- showDevicePage = true;
- showSystemPage = false;
- showMeGeneral = false;
- showMeConsumptionProduction = false;
- showMeConsumption = true;
- showMeProduction = false;
+
 
 
   
@@ -262,7 +256,7 @@ export class TableComponent implements OnInit, AfterViewInit {
       this.allUsers = this.productionSortedUsers;
     }
   }
-  selectedUsers: any[] = [];
+    selectedUsers: any[] = [];
     toggleExportSelected(user:any): void {
       this.exportSelected = !this.exportSelected;
       user.selected = !user.selected;
@@ -309,8 +303,21 @@ export class TableComponent implements OnInit, AfterViewInit {
       saveAs(blob, 'selected-data.xlsx');
     }
   }
- 
- 
+  selectedColumn:any = null;
+  selectedColumn1:any = null;
+  selectedUsersTable: any[] = [];
+  toggleSelection(user:User, index : number){
+    if(user.selected){
+      this.selectedUsersTable.push(user);
+    }else{
+      const selectedIndex = this.selectedUsersTable.findIndex((selectedUsersTable) => selectedUsersTable.id === user.id)
+      if(selectedIndex !== -1){
+        this.selectedUsersTable.splice(selectedIndex, 1);
+      }
+    }
+    this.selectedColumn = index;
+  }
+  
   public showMeUsers(page:any, pageSize:any){ 
     this.auth.getPagination(this.page, this.pageSize).subscribe(
       (response : any)=> {
@@ -396,6 +403,7 @@ export class TableComponent implements OnInit, AfterViewInit {
       });
       
   }
+
   urlRED = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAACCElEQVR4nO2Wy2pUQRCGK+k6Y7LxtjTGbAIyp+pkkGyylPgIStZe9sGlqHmcmE2IASEovoFBFEUICFHQjRh0PF0zySLS0nEmE8J0d82FceMPDWfR1V9XdfV/GuC/AqrncFE4u2sJN4XMjiUUP1rfT4WzO/UCLsCw5BZgUggfCeMvYXTRQVgXwoc+ZiBo4ypcsmxeJYGnhmXzppnDlf6gBVy2hF97hR7DCb80ajDVE9QtwKQl87pfaAdutt0MTKjBrTONlBL3LWdzyg08UEH/dm+ikQhXjzaoARPWVd0ulN1LljA3i2qwH0V2Owk+uqfxc9t1AOO9gC3hRjpjNh8TpXvcmavMmMyOAoxlZOeHTYLpbnElVaoReJkuNeNBBLwViitzcysS19SAP4cW8IsH4wi3In3xKQ0m3AiCqVLtFuPL748hUup1RcbjS9qmaccI40psXknmZhLsZuGMMH7Xgv3V8lcscgu+uRwqSbDWRNpgW5gbA5tHWw5gTAhfasDC+CTYVIzP/VrHC2vk/VXYfIiB7VzG/ocRMI33P2twHvpRowZTQuadttk6mZq3/hEBg+jHPJyzjM/UUMLNvVk4C8OQAxizhPeDZW25k2Vc7vlMNfIG4l2oizPthsxlaGoU2bxl/H0i00OpZtdgFBLGtdOvkZHI5mbxRJmvjwzsfLMxvujLIP61/gAUUjTlemPA2QAAAABJRU5ErkJggg==';
   urlGREEN = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAACDklEQVR4nO2Wz0tUURTHry1KN/1aarYPIoj+gbA/IceNoHPPiCAy75znptBi/hp1IyUIkrgY5x57RBFFFgiBCrqRNiZRLZSRM+Q46Lx7z/xg3PSFC2/xzvnce873nveM+a8U5ZL4NjACMC5aR5vA+EuWPFum19bFdoInbpl2KZPEPdbhDDj6CUxl37KMB+BoWmJagsL6ZC84eh8CXliOPo1zdLcp6Fgxfwcc7jUMrZ6edkeSuK8haCaJe4DxY7PQKtzhh9FioVsNrvTUmxT/5Fz0QHny5ypoxb0BI1mHs/KuDowHKrdbjnKhZNkSDWjBlVXCbBAs9zRQuq1CuXClIbDDV5r+fg/098XZJrUmo00N+NCT5ChbmuqvF5dbw3seTxyGwUx/00tGy+kbpkFPqX9rTrzjKdlgWpxsylOp7SBYjJCWQMpZL0bKL23wGHIhfGKmIa1pamJe+q9T9DQIzi/nr1nGH1qwXC25Yp7+7me+Fq4GwdohcgoGFz1peXhUVTZdwLiqAjPNed55I7nOEisk8xWYvnnhb6P78sFIuQEbo0W8aZrRSBL3AeMXrdlq+vpZfiJMKxpffXYDmJb0YFwcfpe/btqisumyjJRW1tPpZB1GDfdUo3/zeLvOgNhKGy5t0xhHj6zD4xrwEaxNPTSdkGWcP/830hFlSzRQnd+MjzsGNmI2hytNDYjL1gkX7ekz5cmu0gAAAABJRU5ErkJggg=='; 
   urlORANGE = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAACB0lEQVR4nO2Wz0tUURTHry20Nlku09oLIYT/QOimnYu85zxy0a+1ju9cS0lj/ppqEyoIYvQfFFEUwVCgom7qnhlHkWphPLna2FBz7z3zZpg2feHu3rmf+Z5z3neeUv/lUTXVfUz6HhMsM2GJCQ5ODpbY4BIbuFudu3VRtUtbqT7HhPPWwB4bzELHElaZ8JGraQlqHySXmPBVDPjXIXxbmdVXckH54cSANbjTNPTUPWxzqvvztPdNXujvA683irfPyt0SzodbCd8rM8mQzDnOiaBue6OLRPDk+AfKwFXRtrPB+9HLTDIiBf9atjuCNsNyxMF6ViyeaQZsCRYljj9HFmah7lmp45LAMe77W4yHZcLLDesKOBgA70sc/wi0bNVfl4wHXH+Lgi3Bpv+CZDxQt+rvFGxIwItecAEHG9W49rsxBEb0PAouGw3SpanVMOHj4LMp3IyCP03e6LEGrBTsXi33ivkXC75kRd0dBUtDpAa2hKMth0dNmVJdlvClBMwGnwZmu+buOr1YIpevlvBjCFw2cNX9YTR+9fDDbmHsgsojTnW/Nfheumx1Tt+5jwjViiqzupcNrIjBLusnJ86rdihTqotnYNrX1lo6sUmmmp6pRC5AXAo1mOe6L1zaJmv0sCX4WTfPw6+UXFOdEBM++/NrpCOyJhmpc3y9Y+DsOGDgRa6A+Nc6AulDHXQUoZSqAAAAAElFTkSuQmCC';
@@ -416,33 +424,51 @@ export class TableComponent implements OnInit, AfterViewInit {
         iconUrl: this.urlRED
       });
 
-  
+      if (this.selectedUsersTable.length > 0) {
+        // Select all users on the map
+        for (const user of this.selectedUsersTable) {
+          this.auth.getCoordsByUserID(user.id).subscribe((response: any) => {
+            const latlng = L.latLng(JSON.parse(response['coordinates']));
+            let power = user.consumption;
+            let marker= L.marker(latlng, { icon: greenIcon }).addTo(this.map);
+      
+             if (power > 350 && power <= 750) {
+              marker = L.marker(latlng, { icon: orangeIcon }).addTo(this.map);
+            } else if (power > 750) {
+              marker = L.marker(latlng, { icon: redIcon }).addTo(this.map);
+            }
+      
+            marker.bindPopup(`<b>${user.firstName} ${user.lastName} <br>${user.address}`).openPopup();
+            this.markers.push(marker);
+            this.map.setView(latlng, 8);
+          });
+        }
+      } else {
     
-    this.auth.getCoordsByUserID(id).subscribe(
-      (response: any) => {
-        const latlng = L.latLng(JSON.parse(response['coordinates']));
-        const user = this.allUsers.find(u => u.id === id);
-        let power = 0;
-        if(user)
-          power = user.consumption;
-        
-          if(power <= 300){
-            this.marker1  = L.marker(latlng, {icon : greenIcon}).addTo(this.map);
-          }else if(power > 300 && power <= 750){
-            this.marker1 = L.marker(latlng, {icon : orangeIcon}).addTo(this.map);
-          }else if(power > 750){
-            this.marker1  = L.marker(latlng, {icon : redIcon}).addTo(this.map);
-           
+        this.auth.getCoordsByUserID(id).subscribe(
+          (response: any) => {
+            const latlng = L.latLng(JSON.parse(response['coordinates']));
+            const user = this.allUsers.find(u => u.id === id);
+            let power = 0;
+            if(user)
+              power = user.consumption;
+              if(power <= 300){
+                this.marker1  = L.marker(latlng, {icon : greenIcon}).addTo(this.map);
+              }else if(power > 300 && power <= 750){
+                this.marker1 = L.marker(latlng, {icon : orangeIcon}).addTo(this.map);
+              }else if(power > 750){
+                this.marker1  = L.marker(latlng, {icon : redIcon}).addTo(this.map);
+              
+              }
+            this.marker1.bindPopup(`<b>${user?.firstName} ${user?.lastName} <br>${user?.address}`).openPopup();
+            this.markers.push(this.marker1);
+            this.map.setView(latlng, 15); 
           }
-        
-        this.marker1.bindPopup(`<b>${user?.firstName} ${user?.lastName} <br>${user?.address}`).openPopup();
-        this.markers.push(this.marker1);
-        this.map.setView(latlng, 15); 
+        );
       }
-    );
-     // poziv funkcije za svih uredjaja
+     
      this.showMeDevices(id);
-    // // poziv informacija o user-u za pop-up
+    
     this.id = id;
     this.popUp(id);
   }  
@@ -452,7 +478,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   numberOfConsumers:number = 0;
   numberOfStorage:number = 0;
   devices!:Info;
-  
+  public status!:any;
   showMeDevices(id : string){
     this.showDevGraph = !this.showDevGraph;
     this.getDeviceGroup();
@@ -461,15 +487,20 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.auth.getDeviceInfoUserByID(id).subscribe(
       (response : any) => {
         this.allUserDevices = response;
+        console.log("All user devices",this.allUserDevices);
         for(let us of this.allUserDevices){
           this.auth.currentPowerUsageDeviceID(us.deviceId).subscribe(
             {
               next:(response : any)=>{
                 this.todayPowerUsageDevice = (response);
                 us.powerusage = response.toFixed(2);
+                us.statusOfDevice = "ON";
+                this.status = 1;
               },
               error:(error : any)=>{
-                us.powerusage = "Device is turned off";
+                us.powerusage = 0;
+                us.statusOfDevice = "OFF"
+                this.status = 0;
               }
             }
           )
@@ -526,6 +557,8 @@ export class TableComponent implements OnInit, AfterViewInit {
   }
 // pop-up
   openModel(){
+    this.selectedUsersTable = [];
+    this.selectedColumn = null;
     const modelDiv = document.getElementById('myModal');
     const background = document.getElementById('myBack');
     if(modelDiv!=null){
@@ -593,27 +626,61 @@ export class TableComponent implements OnInit, AfterViewInit {
   
   isActiveProsumer = false;
   isActioveConsumer = true;
-  
-  toggleActiveCP(button: string) {
+   // buttons - popUP
+ showDevicePage = true;
+ showSystemPage = false;
+ showMeGeneral = false;
+
+ showMeConsumptionProduction = false;
+ 
+ public showMeConsumption = true;
+ public showMeProduction = false;
+ 
+ toggleActiveCP(button: string) {
     this.isActiveProsumer = button === 'prosumer';
     this.isActioveConsumer = button === 'consumer';
+    if(this.isActiveProsumer){
+      this.showMeProduction = true;
+      this.showMeConsumption = false;
+      console.log("p. c.", this.showMeProduction, this.showMeConsumption);
+    }else{
+      this.showMeProduction = false;
+      this.showMeConsumption = true;
+      console.log("p. c.", this.showMeProduction, this.showMeConsumption);
+    }
   }
   
   toggleActive(button: string) {
     this.isActiveUser = button === 'user';
     this.isActiveDevice = button === 'device';
     this.isActiveSystem = button === 'system';
+    if(this.isActiveUser){
+      this.showDevicePage = false;
+      this.showSystemPage = false;
+      this.showMeGeneral = true;
+      console.log("devoce. sus. general.", this.showDevicePage, this.showSystemPage, this.showMeGeneral);
+    }else if(this.isActiveSystem){
+      this.showDevicePage = false;
+      this.showSystemPage = true;
+      this.showMeGeneral = false;
+      console.log("devoce. sus. general.", this.showDevicePage, this.showSystemPage, this.showMeGeneral);
+    }else if(this.isActiveDevice){
+      this.showDevicePage = true;
+      this.showSystemPage = false;
+      this.showMeGeneral = false;
+      console.log("devoce. sus. general.", this.showDevicePage, this.showSystemPage, this.showMeGeneral);
+    }
+    
   }
 
-  selectedColumn: any = null;
-  selectedColumn1:any = null;
+ 
+ 
   graph24prev!:any[];
   selectDevice = false;
-  allDevices = true;
+  
   graphDeviceLoader = false;
   displayGraph(device: Device) {
     this.selectDevice = true;
-    this.allDevices = false;
     this.selectedDevice = device;
     if (this.chartInstance) {
       this.chartInstance.destroy();

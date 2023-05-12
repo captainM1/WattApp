@@ -73,7 +73,25 @@
         </div>
             
         <div class="col-6 centriranjegore">
-            <p-table [value]="allWorkers" styleClass="p-datatable-gridlines" [tableStyle]="{ 'min-width': '50rem' }" style="height:65%;width: 100%;border-radius: 10px;padding: 50px;padding-top: 0px;"> 
+            <table *ngFor = "let worker of allWorkers">
+                
+                <tr>
+                    <th>Name</th>
+                    <th>Surename</th>
+                    <th>Role</th>
+                    <th>Email</th>
+                    <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                </tr>
+                
+                <tr>
+                    <td>{{ worker.firstName }}</td>
+                    <td>{{ worker.lastName }}</td>
+                    <td>{{ worker.role }}</td>
+                    <td>{{ worker.email }}</td>
+                    <td style="width:5%"><button id = "deleteBtn" style="width: 30%; height: 30px;">X</button></td>
+                </tr>
+            </table>
+            <!-- <p-table [value]="allWorkers" styleClass="p-datatable-gridlines" [tableStyle]="{ 'min-width': '50rem' }" style="height:65%;width: 100%;border-radius: 10px;padding: 50px;padding-top: 0px;"> 
                 <ng-template pTemplate="header">
                     <tr>
                         <th>Name</th>
@@ -92,7 +110,7 @@
                         <td><button style="width: 100%;"><i class="bi bi-x-lg" style="color:white"></i></button></td>
                     </tr>
                 </ng-template>
-            </p-table>
+            </p-table> -->
         </div>
     </div>
   </div>

@@ -27,14 +27,14 @@
                   
                 </tr>
               </thead>
-              <tr *ngFor="let user of allUsers | filterName : _searchByName: _searchByAddress;  let i = index;" (click) = "showMeOnMap(user.id); selectedColumn1 = i;"[class.active-column]="selectedColumn1 === i">
-                  <td *ngIf="user"><input [(ngModel)]="user.selected"  type = "checkbox" style="width: 20px;" (click) = "toggleExportSelected(user)"></td>  
+              <tr *ngFor="let user of allUsers | filterName: _searchByName: _searchByAddress; let i = index;" (click)="showMeOnMap(user.id); selectedColumn1 = i;" [class.active-column]="selectedColumn1 === i || selectedUsers.includes(user)">
+                  <td *ngIf="user"><input [(ngModel)]="user.selected"  type = "checkbox" style="width: 20px;" (click) = "toggleExportSelected(user); toggleSelection(user, i)"></td>  
                   <td >{{user.firstName}}</td> 
                   <td>{{user.lastName}}</td>
                   <td>{{user.address}}, {{user.city}}, {{user.country}}</td>
                   <td>{{user.production}} kWh</td>
                   <td>{{user.consumption}} kWh</td>
-                  <td><button class="btn" (click)="openModel()">Show me profile</button></td>
+                  <td><button class="btn" (click)="openModel(); ">Show me profile</button></td>
               </tr>
              
           </table>
@@ -106,9 +106,9 @@
         <div class="row">
           <div class="col">
             <div class="id-button-popUp" >
-              <button class = "my-button active"[class.active]="isActiveUser" (click)="toggleActive('user'); showMeGeneral = true; showDevicePage = false; showSystemPage = false; showMeProduction = false">About User</button>
-              <button  class = "my-button active" [class.active]="isActiveDevice" (click)="toggleActive('device'); showDevicePage = true; showSystemPage = false; showMeGeneral = false; showMeProduction = false">Devices</button>
-              <button  class = "my-button active" [class.active]="isActiveSystem" (click)="toggleActive('system'); showDevicePage = false; showSystemPage = true; showMeGeneral = false; showMeProduction = false">System</button>
+              <button class = "my-button active"[class.active]="isActiveUser" (click)="toggleActive('user');" >About User</button>
+              <button  class = "my-button active" [class.active]="isActiveDevice" (click)="toggleActive('device');">Devices</button>
+              <button  class = "my-button active" [class.active]="isActiveSystem" (click)="toggleActive('system');">System</button>
             </div>
             <div class="row" *ngIf="showMeGeneral" style="margin-left: 10px;">
               <div class="col-sm" id = "userInfo">
@@ -130,54 +130,51 @@
             
             <div *ngIf="showDevicePage">
               <div class="row" id = "table">
-                <div class="col">
+                <div class="col-sm-6" style = "width: 62%;">
                   <table class="tableDevices">
                     <thead>
-                      <tr >
-                        <th >Device name</th>
-                        <th >Device manifacture</th>
-                        <th >Mac Address</th>
-                        <th >Type of Device</th>
-                        <th >Current</th>
+                      <tr>
+                        <th>Device name</th>
+                        <th>Device manifacture</th>
+                        <th>Mac Address</th>
+                        <th>Type of Device</th>
+                        <th>Device Status</th>
+                        <th>Power Usage</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr *ngFor="let device of allUserDevices; let i = index;" [(ngModel)]="selectedDevice" (click)="displayGraph(device); selectedColumn = i;" [class.active-column]="selectedColumn === i">
+                      <tr *ngFor="let device of allUserDevices; let i = index;" [(ngModel)]="selectedDevice" (click)="displayGraph(device); selectedColumn1 = i;" [class.active-column]="selectedColumn1 === i">
                         <td >{{device.deviceTypeName}}</td>
                         <td >{{device.manufacturerName}}</td>
                         <td >{{device.macAdress}}</td>
                         <td >{{device.typeOfDevice}}</td>
+                        <td [ngClass]="{'green': status === 1, 'red': status === 0}">{{device.statusOfDevice}}</td>
                         <td >{{device.powerusage}} kw/h</td>
                       </tr>
-                      <tr style="width: 100%; display: flex; justify-content: center; text-align: center;">
-                        <p-paginator class="w-100" [rows]="pageSize" [totalRecords]="lengthOfUsers" [rowsPerPageOptions]="pageSizeOptions" (onPageChange)="onPageChange($event)"></p-paginator>
-                      </tr>
+                        
                     </tbody>
+                    <tfoot>
+                      <div  class="paginator-container">
+                          <p-paginator [rows]="pageSize" [totalRecords]="lengthOfUsers" [rowsPerPageOptions]="pageSizeOptions" (onPageChange)="onPageChange($event)"></p-paginator>
+                        </div>
+                     
+                    </tfoot>
+                      
                   </table>
                 </div>
-                <div class="col" *ngIf = "selectedDevice && !allDevices">
-                  <div >
-                   
-                    <ngx-spinner bdColor = "rgba(0, 0, 0, 0.5)" size = "medium" color = "#fff" type = "ball-spin" [showSpinner]="graphDeviceLoader " [fullScreen]="false" *ngIf="graphDeviceLoader"><p style="color: #fff; margin-top:60px;"> Please wait... </p></ngx-spinner>
-                   <canvas #prev24DeviceID></canvas>
-                  </div>
-                  
-                </div>
-                <div class="col" *ngIf="!selectedDevice && allDevices">
+                <div class="col" >
                   <div>
-                    <canvas #allDevicesUserGraph></canvas>
-                   </div>
+                    <ngx-spinner bdColor = "rgba(0, 0, 0, 0.5)" size = "medium" color = "#fff" type = "ball-spin" [showSpinner]="graphDeviceLoader " [fullScreen]="false" *ngIf="graphDeviceLoader"><p style="color: #fff; margin-top:60px;"> Please wait... </p></ngx-spinner>
+                    <canvas #prev24DeviceID></canvas>
+                  </div>
                 </div>
-              </div>
-              
             </div>
             <div *ngIf="showSystemPage">
               <div class="row">
-                  <div class="id-button-popUp" >
-                    <button class = "my-button active"[class.active]="isActioveConsumer" (click)="toggleActiveCP('consumer'); showMeConsumption = true; showMeProduction = false;">Consumption</button>
-                    <button  class = "my-button active" [class.active]="isActiveProsumer" (click)="toggleActiveCP('prosumer'); showMeConsumption = false; showMeProduction = true;">Production</button>
-                  </div>
-                
+                <div class="id-button-popUp" >
+                  <button class = "my-button active"[class.active]="isActioveConsumer" (click)="toggleActiveCP('consumer'); showMeConsumption = true; showMeProduction = false; ">Consumption</button>
+                  <button  class = "my-button active" [class.active]="isActiveProsumer" (click)="toggleActiveCP('prosumer');showMeConsumption = false; showMeProduction = true; ">Production</button>
+                </div>
                 
                 <div class="row" id="graph-position" *ngIf="showMeConsumption">
                   <div class="col" id="graph" >

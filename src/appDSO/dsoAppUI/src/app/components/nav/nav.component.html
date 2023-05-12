@@ -5,13 +5,13 @@
       <div class="row">
         <div class="col-md-5 d-flex justify-content-center justify-content-md-start align-items-center d-none d-lg-flex">
           <a class="text-reset me-3">
-            <i class="fa fa-home"  routerLink="/home" routerLinkActive #rld ="routerLinkActive" [routerLinkActive]="'active'"></i><br>
+            <p  routerLink="/home" routerLinkActive #rld ="routerLinkActive" [routerLinkActive]="'active'">Home</p><br>
           </a>
           <a class="text-reset me-3">
-            <i class="fa fa-columns me-1"  routerLink = "/table" routerLinkActive #rlt ="routerLinkActive" [routerLinkActive]="'active'"></i><br>
+            <p routerLink = "/table" routerLinkActive #rlt ="routerLinkActive" [routerLinkActive]="'active'">Prosumers</p><br>
           </a>
           <a class="text-reset me-3">
-            <i class="fa fa-plus me-1"  routerLink = "/signup" routerLinkActive #rlw ="routerLinkActive" [routerLinkActive]="'active'"></i><br>
+            <p  routerLink = "/signup" routerLinkActive #rlw ="routerLinkActive" [routerLinkActive]="'active'">Employee</p><br>
           </a>
 
         </div>
@@ -21,22 +21,22 @@
             <img src="../../../assets/icons/white no-background.png" height="32px">
           </a>
 
-          <span *ngIf="rld.isActive">Home</span>
-          <span *ngIf="rlt.isActive">Tables</span>
-          <span *ngIf="rlw.isActive">Add Employee</span>
-          <span *ngIf="rln.isActive">Notifications</span>
-          <span *ngIf="rlp.isActive">Profile</span>
+          <span *ngIf="rld.isActive"></span>
+          <span *ngIf="rlt.isActive"></span>
+          <span *ngIf="rlw.isActive"> </span>
+          <span *ngIf="rln.isActive"></span>
+          <span *ngIf="rlp.isActive"></span>
         </div>
 
         <div class="col-lg-5 d-flex justify-content-center justify-content-md-end align-items-center">
           <a class="text-reset me-3">
-              <i class="fa fa-bell" routerLink = "/requirements" routerLinkActive #rln ="routerLinkActive" [routerLinkActive]="'active'"></i><br>
+              <p  routerLink = "/requirements" routerLinkActive #rln ="routerLinkActive" [routerLinkActive]="'active'">Requests</p><br>
           </a>
             <a class="text-reset me-3" >
-              <i class="fa fa-user-circle" routerLink = "/profile" routerLinkActive #rlp ="routerLinkActive" [routerLinkActive]="'active'"></i><br>
+              <p  routerLink = "/profile" routerLinkActive #rlp ="routerLinkActive" [routerLinkActive]="'active'">Profile</p><br>
             </a>
             <a class="text-reset me-3" >
-              <i class="fa fa-sign-out" [routerLinkActive]="'active'" (click)="signOut()"></i><br>
+              <p [routerLinkActive]="'active'" (click)="signOut()">Sign Out</p><br>
               <p-confirmDialog></p-confirmDialog>
             </a>
           </div>

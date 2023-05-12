@@ -9,7 +9,7 @@
 }
 
 .forma{
-  background-color: #F6F5F3;
+  background-color: #fff;
   border-radius: 17px;
   filter: drop-shadow(0px 13px 26px rgba(0,0,0,0.25));
   padding: 22px 40px;
@@ -41,6 +41,7 @@ button{
   border-radius: 8px;
   filter:drop-shadow(0px 8px 4px rgba(0,0,0,0.25));
   height: 40px;
+  color: white;
 }
 
 button:hover {
@@ -133,7 +134,35 @@ p{
   align-items: center;
 }
 .centriranjegore{
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: row;
+  align-content: flex-start;
+  margin-top: 110px;
+  padding-right: 60px;
+}
+table{
+  width: 100%;
+  border-radius: 8px;
+  overflow-y: visible;
+}
+table {
+  background-color: #026670;
+  color: white;
+}
+th{
+  padding: 10px;
+  width: 10%;
+  text-align: center;
+  font-size: 13px;
+  border-bottom: 1px solid #026670;
+
+}
+
+
+tr td{
+  padding: 10px;
+  text-align: center;
+  border-bottom: 1px solid #026670;
+  background-color: white;
+  color: #026670;
+
 }

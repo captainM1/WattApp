@@ -2,16 +2,7 @@
     font-family: regular;
     src: url(../../../assets/fonts/Inter-Regular.ttf);
   }
-  @media(max-width: 480px) {
-    .mobile{
-        display: contents;
-    }
-    .desktop{
-        display: none;
-    }
-    br{
-        display: none;
-    }
+
     /*
     - background
      background-color: #FCFBFB;
@@ -22,21 +13,18 @@
   *{
     overflow-x: none;
   }
-    .continer{
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-color: #FCFBFB;
 
-
+    .container-fluid{
+      width: 30%;
+      height: 100%;
 
     }
     .col{
       margin-top: 10px;
-      background-color: #FCFBFB;
-
+      background-color: #026670;
+      color: white;
+      margin-left: 0px;
+      margin-right: 0px;
     }
 
     #edit-profile{
@@ -44,25 +32,31 @@
       border-radius: 5px;
       background-color: #FFFFFF;
       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-      margin-left: 0;
-      margin-right: 0;
-      padding-left: 0;
-      padding-right: 0;
+      margin: 0;
+      background-color: #026670;
+    }
+    #top{
+      display: block;
+      justify-content: center;
+      text-align: center;
+      width: 100%;
+      padding: 20px;
     }
     #main-form{
-      margin-left: 0;
-      margin-right: 0;
-      padding-left: 0;
-      padding-right: 0;
-      margin-bottom: 100px;
+      display: flex;
+      justify-content: center;
+      text-align: center;
+      margin-left: 0px;
+      margin-right: 0px;
       border-top-right-radius: 0;
-  border-top-left-radius: 0;
+      border-top-left-radius: 0;
+      background-color: #026670;
     }
     h1{
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #026670;
+      color: white;
       font-weight: 600;
     }
 
@@ -117,12 +111,13 @@
 
     #form-user-enter{
       width: 100%;
-      background-color: FCFBFB ;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-      border-radius: 10px;
-      margin-top: 10px;
-      margin-bottom: 10px;
+      background: #EDEAE5;
+      border-radius: 7px;
+      margin-bottom: 20px;
+      margin-top: 20px;
+      align-items: center;
     }
+   
 
 
 
@@ -135,11 +130,12 @@
       display: flex;
       align-content: center;
       justify-content: center;
-      background-color: FCFBFB ;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-      border-radius: 10px;
+      background-color: #EDEAE5;
       margin: 0;
-      margin-top: 15px;
+        margin-top: 0px;
+      margin-top: 6px;
+      padding-top: 14px;
+      padding-bottom: 10px;
 
     }
 
@@ -147,6 +143,7 @@
       display: flex;
       align-content: center;
       justify-content: center;
+      background-color: #EDEAE5;
 
     }
 
@@ -220,191 +217,12 @@
 
 
 
+  @media(max-width:740px){
+    .container-fluid{
+      width: 100%;
+      height: 100%;
+    }
+    app-nav{
+      width: 100%;
+    }
   }
-    /* desktop */
-  @media(min-width: 481px){
-    .mobile{
-        display: none;
-    }
-    .desktop{
-        display: contents;
-    }
-
-    .continer{
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-color: #026670;
-      width: 100%;
-    }
-
-    .col-sm-6{
-      margin-top: 10px;
-      background-color: #026670;
-    }
-
-    h1{
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 20px;
-      font-weight: 600;
-
-    }
-
-    i{
-      float: left;
-      padding-top: 20px;
-    }
-
-    .row{
-      background: #026670;
-      border-radius: 8px;
-      color: white;
-      font-family: regular;
-    }
-
-    #main-form{
-      border-top-right-radius: 0;
-      border-top-left-radius: 0;
-    }
-
-    #edit-profile{
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
-
-      padding-left: 20px;
-      padding-right: 20px;
-    }
-
-    form{
-      width: 100%;
-    }
-
-    .form-group{
-      width: 100%;
-
-      margin-left: 5px;
-      margin-right: 5px;
-      background-color: #EDEAE5;
-      margin-bottom: 6px;
-    }
-
-    .form-group label{
-      font-size: 13px;
-        font-weight: 600;
-      color: black;
-      padding-bottom: 5px;
-    }
-
-    .form-group input{
-      border-radius: 5px;
-      background-color: #FFFFFF;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-      width: 430px;
-      height: fit-content;
-      text-align: center;
-      color: black;
-      font-style: italic;
-      font-size: 14px;
-      opacity: 0.8;
-    }
-
-    #form-user-enter{
-      width: 100%;
-      background: #EDEAE5;
-      border-radius: 7px;
-      margin-bottom: 20px;
-      margin-top: 20px;
-    }
-    #change-pass{
-      display: flex;
-      align-content: center;
-      justify-content: center;
-      padding-top: 35px;
-    }
-
-    img{
-      border-radius: 8px;
-      border: 2px solid white;
-
-    }
-    #img-btn{
-      display: flex;
-      align-content: center;
-      justify-content: center;
-      background-color: #EDEAE5;
-      margin: 0;
-      margin-top: 30px;
-      padding-top:20px;
-      padding-bottom: 10px;
-    }
-    #col-img-btn{
-      display: flex;
-      align-content: center;
-      justify-content: center;
-      background-color: #EDEAE5;
-
-    }
-
-    #col-img-btn-main{
-      display: flex;
-      align-content: center;
-      justify-content: center;
-      background-color: #026670;
-    }
-
-    #row-img-btn{
-      display: flex;
-      align-content: center;
-      justify-content: center;
-      background-color: #EDEAE5;
-      padding-bottom: 10px;
-      margin-top: 10px;
-    }
-
-    button{
-      width: 35%;
-      color: #026670;
-      background-color: #FFFFFF;
-      padding-top: 8px;
-      padding-bottom: 8px;
-      border-radius: 15px;
-      border: none;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
-      font-family: regular;
-      font-weight: 600;
-      text-transform: uppercase;
-    }
-    button:hover{
-      background-color: #026670;
-      color: #FCFBFB;
-      transition: background-color 0.3s;
-      border: 1px solid white;
-    }
-
-    #btn-save{
-      display: flex;
-      align-content: center;
-      justify-content: center;
-      padding-bottom: 15px;
-
-    }
-    #top{
-      margin-top: -10px;
-      margin-left: 50px;
-    }
-
-    #btn-edit-div{
-      margin-top: 10px;
-      margin-bottom:10px
-    }
-
-    input:focus {
-      outline: none;
-      box-shadow: 0 0 2px 1px #026670;
-      border-color: #026670;
-  }
-  }
-
