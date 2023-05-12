@@ -31,4 +31,5 @@ public interface IUserService
     Task<Boolean> UpdateUserDsoControl(Guid id, Boolean dsoHasControl);
     Task<List<UsersRequestedToDso>> GetUsersAppliedToDso();
     Task<Boolean> UserAllreadyAppliedToDso(Guid id);
+    Task<Boolean> RemoveUserRequestToDso(Guid id);
 }
