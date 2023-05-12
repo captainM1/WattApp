@@ -12,7 +12,6 @@ import { SettingsService } from 'src/app/services/settings.service';
 })
 export class SettingsComponent implements OnInit, AfterViewInit {
   allowAccess = false;
-  allowControl = false;
   type: string = "password";
   type2: string = "password";
   type3: string = "password";
@@ -24,7 +23,9 @@ export class SettingsComponent implements OnInit, AfterViewInit {
   isText3: boolean = false;
   resetForm!: FormGroup;
   submitted = false;
-  requestSent: boolean = false;
+  requestSend: boolean = true;
+  requestApproved: boolean = false;
+  requestPending: boolean = false;
 
   constructor(private apiService: SettingsService, private auth: AuthService, private fb: FormBuilder,) { }
 
@@ -39,6 +40,14 @@ export class SettingsComponent implements OnInit, AfterViewInit {
       validator: ConfirmPasswordValidator("password","confirmPassword")
     }
     )
+
+    if(this.apiService.getRole() == 'RegularUser'){
+      this.requestSend = false;
+      this.requestApproved = true;
+    }
+
+    this.userAlreadyApplied();
+    console.log(this.auth.getFullToken());
   }
 
   ngAfterViewInit(): void {
@@ -98,7 +107,6 @@ export class SettingsComponent implements OnInit, AfterViewInit {
       this.apiService.sendRequest().subscribe(
         (info) => {
           console.log("Success");
-          this.requestSent = true;
         },
         (error) => {
           console.log(error);
@@ -106,10 +114,57 @@ export class SettingsComponent implements OnInit, AfterViewInit {
     }
   }
 
-  toggleControl() {
-    this.allowControl = !this.allowControl;
-    this.apiService.allowControlConsumptionTime(this.allowControl).subscribe();
+  sendRequest(){
+    this.apiService.sendRequest().subscribe(
+      (info) => {
+        console.log("Success");
+        this.requestPending = true;
+        this.requestSend = false;
+      },
+      (error) => {
+        console.log(error);
+      });
   }
+
+  userAlreadyApplied(){
+    this.apiService.userAlreadyApplied().subscribe(
+      (info) => {
+        if(info){
+          this.requestPending = true;
+          this.requestSend = false;
+        }
+      },
+      (error) => {
+        console.log(error);
+      });
+  }
+
+  cancelRequest(){
+    this.apiService.cancelRequest().subscribe(
+      (info) => {
+        console.log(info);
+        this.requestPending = false;
+        this.requestSend = true;
+      },
+      (error) => {
+        console.log(error);
+      });
+  }
+
+  disconnect(){
+
+  }
+
+  public buttonText: string = 'Request approved';
+
+  public onButtonHover(): void {
+    this.buttonText = 'Disconnect from DSO';
+  }
+
+  public onButtonLeave(): void {
+    this.buttonText = 'Request approved';
+  }
+
 
   signOut(){
     this.auth.signOut();

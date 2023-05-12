@@ -72,6 +72,13 @@ export class AuthService {
      return decoded.unique_name;
   }
 
+  getRole() {
+
+    const jwtToken = this.cookie.get('jwtToken');
+     const decoded :any = jwt_decode(jwtToken);
+     return decoded.role;
+  }
+
   getFullToken() {
     const jwtToken = this.cookie.get('jwtToken');
     return jwtToken;
