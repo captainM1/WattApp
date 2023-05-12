@@ -104,4 +104,14 @@ export class AuthUserService {
     return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/user-usage-saved-energy-month/consumer/" + userID, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
   }
 
+  getElectricityBill(userID: any, electricityRate: number):Observable<any>{
+    return this.http.get(environment.apiUrl + `/api/PowerUsage/power-usage/electricityBill/LastMonth/${userID}?electricityRate=${electricityRate}`, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
+  }
+
+
+  putUpdateUser(userID: any, profileData:any):Observable<any>{
+    return this.http.post(environment.apiUrl + `/api/User/update-user/${userID}`, profileData,{ headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
+  }
+
+
 }
