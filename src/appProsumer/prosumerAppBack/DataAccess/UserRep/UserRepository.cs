@@ -286,6 +286,7 @@ public class UserRepository : IUserRepository
     public async Task<List<UserDto>> GetAllUsersAsync()
     {
         var users = await _dbContext.Users
+            .Where(r => r.Role == "RegularUser")
             .Select(u => new UserDto {
                 ID = u.ID,
                 FirstName = u.FirstName,

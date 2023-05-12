@@ -229,8 +229,8 @@ public class PowerUsageRepository : IPowerUsageRepository
                         .Select(sh => sh.sharesDataWithDso)
                         .FirstOrDefault();
 
-        if (DSOshare == false)
-            return 1;
+       // if (DSOshare == false)
+          //  return 0;
 
         double sum = 0;
         DateTime currentHourTimestamp = DateTime.Now.Date.AddHours(DateTime.Now.Hour);
@@ -272,8 +272,8 @@ public class PowerUsageRepository : IPowerUsageRepository
                         .Select(sh => sh.sharesDataWithDso)
                         .FirstOrDefault();
 
-        if (DSOshare == false)
-            return 1;
+      //  if (DSOshare == false)
+        //    return 0;
 
         double sum = 0;
         DateTime currentHourTimestamp = DateTime.Now.Date.AddHours(DateTime.Now.Hour);
@@ -2353,12 +2353,12 @@ public class PowerUsageRepository : IPowerUsageRepository
         return (previopusHourDeviceUsage / previousHourSystemUsage) * 100;
     }
 
-    public double percentPowerUsageDifferenceForPreviousWeekConsumption(Guid userId)
+    public double percentPowerUsageDifferenceForPreviousHourConsumption(Guid userId)
     {
         double currentConsumption = this.CurrentSumPowerUsageConsumption(userId);
 
         double sum = 0;
-        DateTime currentHourTimestamp = DateTime.Now.Date.AddHours(DateTime.Now.Hour).AddDays(-7);
+        DateTime currentHourTimestamp = DateTime.Now.Date.AddHours(DateTime.Now.Hour).AddHours(-1);
 
         var devicesTypes = _deviceRepository.GetDevicesForUser(userId);
         foreach (var device in devicesTypes)
@@ -2376,7 +2376,7 @@ public class PowerUsageRepository : IPowerUsageRepository
                 .Select(g => g.Name)
                 .FirstOrDefault();
 
-            if (deviceGroupName == "Consumer" && device.IsOn == true)
+            if (deviceGroupName == "Consumer")
             {
                 var powerUsageData = mongoCollection.AsQueryable()
                     .Where(p => p.ID.ToString().ToUpper() == deviceTypeID.ToString().ToUpper())
@@ -2390,12 +2390,12 @@ public class PowerUsageRepository : IPowerUsageRepository
         return ((currentConsumption - sum) / sum) * 100;
     }
 
-    public double percentPowerUsageDifferenceForPreviousWeekProduction(Guid userId)
+    public double percentPowerUsageDifferenceForPreviousHourProduction(Guid userId)
     {
         double currentConsumption = this.CurrentSumPowerUsageProduction(userId);
 
         double sum = 0;
-        DateTime currentHourTimestamp = DateTime.Now.Date.AddHours(DateTime.Now.Hour).AddDays(-7);
+        DateTime currentHourTimestamp = DateTime.Now.Date.AddHours(DateTime.Now.Hour).AddHours(-1);
 
         var devicesTypes = _deviceRepository.GetDevicesForUser(userId);
         foreach (var device in devicesTypes)
@@ -2413,7 +2413,7 @@ public class PowerUsageRepository : IPowerUsageRepository
                 .Select(g => g.Name)
                 .FirstOrDefault();
 
-            if (deviceGroupName == "Producer" && device.IsOn == true)
+            if (deviceGroupName == "Producer")
             {
                 var powerUsageData = mongoCollection.AsQueryable()
                     .Where(p => p.ID.ToString().ToUpper() == deviceTypeID.ToString().ToUpper())

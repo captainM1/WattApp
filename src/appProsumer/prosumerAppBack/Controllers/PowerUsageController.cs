@@ -13,7 +13,7 @@ namespace prosumerAppBack.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-//[Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
+[Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
 public class PowerUsageController : ControllerBase
 {
     private readonly IPowerUsageService _powerUsageService;
@@ -532,17 +532,17 @@ public class PowerUsageController : ControllerBase
         return Ok(powerUsage);
     }
 
-    [HttpGet("power-usage/percentage-difference-for-previous-week/consumption/{userId}")]
-    public ActionResult<double> percentPowerUsageDifferenceForPreviousWeekConsumption(Guid userId)
+    [HttpGet("power-usage/percentage-difference-for-previous-hour/consumption/{userId}")]
+    public ActionResult<double> percentPowerUsageDifferenceForPreviousHourConsumption(Guid userId)
     {
-        var powerUsage = _powerUsageService.percentPowerUsageDifferenceForPreviousWeekConsumption(userId);
+        var powerUsage = _powerUsageService.percentPowerUsageDifferenceForPreviousHourConsumption(userId);
         return Ok(powerUsage);
     }
 
-    [HttpGet("power-usage/percentage-difference-for-previous-week/production/{userId}")]
-    public ActionResult<double> percentPowerUsageDifferenceForPreviousWeekProduction(Guid userId)
+    [HttpGet("power-usage/percentage-difference-for-previous-hour/production/{userId}")]
+    public ActionResult<double> percentPowerUsageDifferenceForPreviousHourProduction(Guid userId)
     {
-        var powerUsage = _powerUsageService.percentPowerUsageDifferenceForPreviousWeekProduction(userId);
+        var powerUsage = _powerUsageService.percentPowerUsageDifferenceForPreviousHourProduction(userId);
         return Ok(powerUsage);
     }
 

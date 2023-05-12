@@ -56,8 +56,8 @@ namespace prosumerAppBack.BusinessLogic
         public PowerUsage GetPowerUsagesForEachDayConsumptionWeek(int direction);
         public PowerUsage GetPowerUsagesForEachDayProduction24h(int direction);
         public PowerUsage GetPowerUsagesForEachDayConsumption24h(int direction);
-        public double percentPowerUsageDifferenceForPreviousWeekConsumption(Guid userId);
-        public double percentPowerUsageDifferenceForPreviousWeekProduction(Guid userId);
+        public double percentPowerUsageDifferenceForPreviousHourConsumption(Guid userId);
+        public double percentPowerUsageDifferenceForPreviousHourProduction(Guid userId);
         public double electricityBillLastMonth(Guid userID, double electricityRate);
         public double electricityBill2MonthsAgo(Guid userID, double electricityRate);
         public double electricityEarningsLastMonth(Guid userID, double electricityRate);
