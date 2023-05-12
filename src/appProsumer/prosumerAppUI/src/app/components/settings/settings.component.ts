@@ -24,7 +24,7 @@ export class SettingsComponent implements OnInit, AfterViewInit {
   isText3: boolean = false;
   resetForm!: FormGroup;
   submitted = false;
-  requestSent: boolean = false;
+  requestStatus: string = 'no';
 
   constructor(private apiService: SettingsService, private auth: AuthService, private fb: FormBuilder,) { }
 
@@ -90,20 +90,40 @@ export class SettingsComponent implements OnInit, AfterViewInit {
     this.eyeIcon3 = "fa-eye-slash";
   }
 
+  toggleAccess(){
 
+  }
 
-  toggleAccess() {
-    if(!this.allowAccess){
-      this.allowAccess = true;
-      this.apiService.sendRequest().subscribe(
-        (info) => {
-          console.log("Success");
-          this.requestSent = true;
-        },
-        (error) => {
-          console.log(error);
-        });
-    }
+  sendReq() {
+    this.apiService.sendRequest().subscribe(
+      (info) => {
+        console.log("Success");
+      },
+      (error) => {
+        console.log(error);
+      });
+    this.requestStatus = 'pending'
+  }
+  cancelReq(){
+    this.apiService.cancelRequest().subscribe(
+      (info) => {
+        console.log("Success");
+      },
+      (error) => {
+        console.log(error);
+      });
+      this.requestStatus = 'no'
+  }
+
+  disconnectDSO(){
+    this.apiService.disconnectDSO().subscribe(
+      (info) => {
+        console.log("Success");
+      },
+      (error) => {
+        console.log(error);
+      });
+      this.requestStatus = 'no'
   }
 
   toggleControl() {

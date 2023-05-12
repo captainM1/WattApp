@@ -259,7 +259,7 @@ public class UserRepository : IUserRepository
 
     public async Task<Boolean> DeclineUserRequestToDso(Guid id)
     {
-        var user = await _dbContext.UsersAppliedToDSO.FindAsync(id);
+        var user = await _dbContext.UsersAppliedToDSO.FirstOrDefaultAsync(u => u.UserID.ToString().ToUpper() == id.ToString().ToUpper());
 
         _dbContext.UsersAppliedToDSO.Remove(user);
         await _dbContext.SaveChangesAsync();

@@ -23,7 +23,12 @@ export class SettingsService {
   sendRequest(){
     return this.http.post<any>(`${environment.apiUrl}/api/User/send-request-to-dso/${this.userId}`, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
   }
-
+  cancelRequest(){
+    return this.http.post<any>(`${environment.apiUrl}/api/User/remove-request-to-dso/${this.userId}`,{});
+  }
+  disconnectDSO(){
+    return this.http.post<any>(`${environment.apiUrl}/api/User/disconnect-from-dso/${this.userId}`,{});
+  }
   allowAccessToInformation(allowAccess: boolean) {
     const body = { allowAccess };
     return this.http.post(`${environment.apiUrl}/allowAccessToInformation`, body);
