@@ -34,9 +34,12 @@ export class DeviceDetailsComponent implements OnInit {
   hours: any = [];
   hourly: any = [];
   data: any = [];
+  data1: any = [];
   formattedLabels: any = [];
-  deviceToday: any;
+  deviceToday: any = 0;
   chart:any;
+  label1: string = '';
+  label2: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -55,6 +58,7 @@ export class DeviceDetailsComponent implements OnInit {
     this.http.get<any[]>(`${environment.apiUrl}/api/Device/devices/info/${this.deviceId}`)
       .subscribe(data => {
         this.device = data;
+        console.log(data);
         this.groupName = this.device.groupName;
       },
       error => {
@@ -65,6 +69,15 @@ export class DeviceDetailsComponent implements OnInit {
         .subscribe((data:any) => {
           this.deviceHistoryWeekDate = data.timestampPowerPairs.map((time:any) => time.timestamp);
           this.deviceHistoryWeekPower = data.timestampPowerPairs.map((time:any) => time.powerUsage);
+          this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/7daysFuture/device/${this.deviceId}`)
+            .subscribe((data:any) => {
+              this.deviceFutureWeekDate = data.timestampPowerPairs.map((time:any) => time.timestamp);
+              this.deviceFutureWeekPower = data.timestampPowerPairs.map((time:any) => time.powerUsage);
+              this.onOptionSelect();
+            },
+            error => {
+              console.error('Error fetching device future:', error);
+            })
         },
         error => {
           console.error('Error fetching device history:', error);
@@ -79,17 +92,8 @@ export class DeviceDetailsComponent implements OnInit {
           console.error('Error fetching device today:', error);
         })
       
-      this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/7daysFuture/device/${this.deviceId}`)
-        .subscribe((data:any) => {
-          this.deviceFutureWeekDate = data.timestampPowerPairs.map((time:any) => time.timestamp);
-          this.deviceFutureWeekPower = data.timestampPowerPairs.map((time:any) => time.powerUsage);
-          this.onOptionSelect();
-        },
-        error => {
-          console.error('Error fetching device future:', error);
-        })
       
-      this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/Next24h/device-usage_per_hour_v2/${this.deviceId}`)
+      this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/Next24h/device-usage_per_hour/${this.deviceId}`)
       .subscribe((data:any) =>{
         this.next24HoursDate = data.timestampPowerPairs.map((item: any) => item.timestamp);
         this.next24HoursPower = data.timestampPowerPairs.map((item: any) => item.powerUsage);
@@ -98,7 +102,7 @@ export class DeviceDetailsComponent implements OnInit {
          console.error('Error fetching todays info:', error);
       })
 
-      this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/Previous24h/device-usage_per_hour_v2/${this.deviceId}`)
+      this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/Previous24h/device-usage_per_hour/${this.deviceId}`)
       .subscribe((data:any) =>{
         console.log(data);
         this.last24HoursDate = data.timestampPowerPairs.map((item: any) => item.timestamp);
@@ -182,23 +186,17 @@ export class DeviceDetailsComponent implements OnInit {
   selectedOption: string = 'Week';
 
   onOptionSelect() {
-  if (this.selectedOption === 'Yesterday') {
+  if (this.selectedOption === 'Today') {
     this.data = this.last24HoursPower;
+    this.data1 = this.next24HoursPower;
     this.formattedLabels = this.last24HoursDate.map((date:any) => {
       const parsedDate = new Date(date);
       const hours = parsedDate.getHours() + 1;
       const minutes = parsedDate.getMinutes();
       return `${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}`;
     });
-  }
-  else if (this.selectedOption === 'Tomorrow'){
-    this.data = this.next24HoursPower;
-    this.formattedLabels = this.next24HoursDate.map((date:any) => {
-      const parsedDate = new Date(date);
-      const hours = parsedDate.getHours() + 1;
-      const minutes = parsedDate.getMinutes();
-      return `${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}`;
-    });
+    this.label1 = "Today's history";
+    this.label2 = "Tomorrow's prediction";
   } 
   else if (this.selectedOption === 'Week') { 
     this.formattedLabels = [...this.deviceHistoryWeekDate, new Date(), ...this.deviceFutureWeekDate];
@@ -208,7 +206,10 @@ export class DeviceDetailsComponent implements OnInit {
       const day = parsedDate.getDate();
       return `${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
     });
-    this.data = [...this.deviceHistoryWeekPower, this.deviceToday, ...this.deviceFutureWeekPower];
+    this.data = [...this.deviceHistoryWeekPower, this.deviceToday, null, null, null, null, null, null];
+    this.data1 = [null, null, null, null, null, null, null, this.deviceToday, ...this.deviceFutureWeekPower];
+    this.label1 = "Last Week's History";
+    this.label2 = "Next Week's Prediction";
   }
   else if (this.selectedOption === 'Last Month'){
     this.formattedLabels = this.deviceHistoryMonthDate.map((date:any) => {
@@ -247,10 +248,17 @@ export class DeviceDetailsComponent implements OnInit {
         data: {
           labels: this.formattedLabels,
           datasets: [{
-            label: 'Power Usage',
+            label: this.label1,
             data: this.data,
             fill: true,
-            borderColor: gradient,
+            borderColor: 'rgba(255, 136, 17, 0.91)',
+            tension: 0.1
+          },
+          {
+            label: this.label2,
+            data: this.data1,
+            fill: true,
+            borderColor: 'rgba(2, 102, 112, 1)',
             tension: 0.1
           }]
         },

@@ -9,7 +9,7 @@
                 </button>
             </div>
             <div class="col centriranje pb-3">
-                <h3>{{ device?.deviceTypeName }}</h3>
+                <h3>{{ device?.deviceName }}</h3>
             </div>
             <div class="col align-center">
                 <p-confirmDialog></p-confirmDialog>
@@ -33,12 +33,13 @@
             </div>
         </div>
         <div class="row" *ngIf="showDetails">
-            <div class="col-8">
+            <div class="col-12">
+            <p><span>Device:</span> {{device?.deviceTypeName}}</p>
             <p><span>Manufacturer:</span> {{device?.manufacturerName}}</p>
             <p><span>Wattage:</span> {{device?.deviceWattage}}</p>
             <p><span>Mac Address:</span> {{device?.macAdress}}</p>
             </div>
-            <div class="col-4 centriranje" >
+            <div class="col-4 centriranje" hidden >
             <button mat-icon-button class="simple edit align-center">
                 <mat-icon>edit</mat-icon>
             </button>
@@ -48,14 +49,13 @@
             <div class="row">
                 <div class="col hide-on-mobile"></div>
                 <div class="col">
-                  <h5 *ngIf="groupName === 'Consumer'">Daily Consumption</h5>
-                  <h5 *ngIf="groupName === 'Producer'">Daily Production</h5>
-                  <h5 *ngIf="groupName === 'Storage'">Daily Storage</h5>
+                  <h5 *ngIf="groupName === 'Consumer'">Consumption</h5>
+                  <h5 *ngIf="groupName === 'Producer'">Production</h5>
+                  <h5 *ngIf="groupName === 'Storage'">Storage</h5>
                 </div>
                 <div class="col centriranje">
                     <select [(ngModel)]="selectedOption" (ngModelChange)="onOptionSelect()">
-                        <option value="Yesterday">Yesterday</option>
-                        <option value="Tomorrow">Tomorrow</option>
+                        <option value="Today">Today</option>
                         <option value="Week">Week</option>
                         <option value="Last Month">Last Month</option>
                         <option value="Next Month">Next Month</option>
