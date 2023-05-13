@@ -1,6 +1,10 @@
 <div class="container">
   <div class="row pt-4 px-3">
-    <h1>My Devices</h1>
+    <h1>My Devices
+    <button class="buttonOpenModal" style="margin-left: 20px; width:40px;" mat-button data-bs-target="#myDevices" data-bs-toggle="modal">
+      <i class="fa fa-table" aria-hidden="true"></i>
+    </button>
+    </h1>
     <input type="text" [(ngModel)]="searchName" placeholder="Search device by name">
   </div>
 
@@ -29,4 +33,41 @@
     <button type="submit" class="btn btn-primary btn-lock mt-4 mb-4" routerLink="/add-device">Add New Devices</button>
   </div>
 
+</div>
+
+
+<div class="modal fade " id="myDevices" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" >
+    <div class="modal-content">
+      <div class="modal-header">
+        <p class="modal-title" id="exampleModalLabel">
+          <span style="color: #026670; font-size: 20px; font-weight: 700; font-style: italic;"> My Devices </span>
+        </p>
+        <button type="button" id="closeBtn" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table >
+          <tr>
+              <th></th>
+              <th>Device name</th>
+              <th>Manufacturer</th>
+              <th>MAC Address</th>
+              <th>Current consumption</th>
+              <th> Activity </th>
+          </tr>
+          <tr *ngFor="let device of devices">
+              <td><img [src]="'/assets/icons-devices/' + device.deviceTypeName.toLowerCase().trim() + '.png'" class="img-tabela" alt="{{ device.deviceTypeName }}"></td>
+              <td> {{ device.deviceName }} </td>
+              <td> {{ device.manufacturerName }}</td>
+              <td> {{ device.macAdress }}</td>
+              <td> kWh </td>
+              <td> On </td>
+          </tr>
+        </table>
+      </div>
+    <div class="modal-footer">
+      <button type="button" style="width:150px"  class="btn btn-primary" >EXPORT DATA</button>
+    </div>
+  </div>
+</div>
 </div>
