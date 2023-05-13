@@ -24,11 +24,12 @@
             <div *ngIf="requestStatus == 'no'" class="d-flex justify-content-center">
               <button (click)="sendReq()">Send request</button>
             </div>
-            <div *ngIf="requestStatus == 'pending'" class="d-flex justify-content-center">
+            <div *ngIf="requestStatus == 'pending'" class="d-flex justify-content-center flex-column align-items-center">
               <h3>Your request is pending</h3>
               <button (click)="cancelReq()">Cancel request</button>
             </div>
-            <div *ngIf="requestStatus == 'approved'" class="d-flex justify-content-center">
+            <div *ngIf="requestStatus == 'accepted'" class="d-flex justify-content-center flex-column align-items-center">
+              <h3>You are connected to DSO</h3>
               <button (click)="disconnectDSO()">Dissconect from DSO</button>
             </div>
         </div>

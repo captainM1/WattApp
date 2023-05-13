@@ -252,15 +252,17 @@ public class UserRepository : IUserRepository
         _dbContext.Users.Update(approvedUser.Result);
         await _dbContext.SaveChangesAsync();
 
-        _dbContext.UsersAppliedToDSO.Remove(newUser);
+        newUser.Approved = true;
+        _dbContext.UsersAppliedToDSO.Update(newUser);
         await _dbContext.SaveChangesAsync();
         return true;
     }
 
     public async Task<Boolean> DeclineUserRequestToDso(Guid id)
     {
-        var user = await _dbContext.UsersAppliedToDSO.FirstOrDefaultAsync(u => u.UserID.ToString().ToUpper() == id.ToString().ToUpper());
+        var user = await _dbContext.UsersAppliedToDSO.FindAsync(id);
 
+        user.Approved = -1;
         _dbContext.UsersAppliedToDSO.Remove(user);
         await _dbContext.SaveChangesAsync();
         return true;
@@ -274,7 +276,12 @@ public class UserRepository : IUserRepository
         user.sharesDataWithDso = false;
 
         _dbContext.Users.Update(user);
+
+        var forDelete = _dbContext.UsersAppliedToDSO.FirstOrDefaultAsync(u => u.UserID.ToString().ToUpper() == id.ToString().ToUpper());
+
+        _dbContext.UsersAppliedToDSO.Remove(forDelete.Result);
         await _dbContext.SaveChangesAsync();
+        
         return user;
     }
 
@@ -365,9 +372,23 @@ public class UserRepository : IUserRepository
         return users;
     }
 
+    public async Task<bool> UserStatusAppliedToDso(Guid userId)
+    {
+        var status = await _dbContext.UsersAppliedToDSO.FirstOrDefaultAsync(u =>
+            u.UserID.ToString().ToUpper() == userId.ToString().ToUpper());
+
+        if (status == null)
+            return false;
+        if (status.Approved == false)
+            return false;
+        
+        return true;
+    }
+
+
     public async Task<Boolean> UserAllreadyAppliedToDso(Guid id)
     {
-        var user = await _dbContext.UsersAppliedToDSO.FindAsync(id);
+        var user = await _dbContext.UsersAppliedToDSO.FirstOrDefaultAsync(u => u.UserID.ToString().ToUpper() == id.ToString().ToUpper());
         if (user == null)
         {
             return false;

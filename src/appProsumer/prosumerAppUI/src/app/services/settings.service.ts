@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthService } from './auth.service';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -38,7 +39,13 @@ export class SettingsService {
     const body = { allowControl };
     return this.http.post(`${environment.apiUrl}/allowControlConsumptionTime`, body);
   }
+  alreadyHasReq(){
+    return this.http.get(`${environment.apiUrl}/api/User/user-allready-applied-to-DSO/${this.userId}`);
+  }
 
+  statusOfReq():Observable<any>{
+    return this.http.get<any>(`${environment.apiUrl}/api/User/status-of-application/${this.userId}`);
+  }
   
 
 }

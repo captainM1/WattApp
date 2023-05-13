@@ -347,5 +347,8 @@ public class UserService:IUserService
         return await _repository.UserAllreadyAppliedToDso(id);
     }
 
-
+    public async Task<bool> UserStatusAppliedToDso(Guid userId)
+    {
+        return await _repository.UserStatusAppliedToDso(userId);
+    }
 }

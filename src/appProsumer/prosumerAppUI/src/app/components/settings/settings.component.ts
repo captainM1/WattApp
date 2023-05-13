@@ -4,13 +4,13 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfirmPasswordValidator } from 'src/app/helpers/confirm-password.validator';
 import { AuthService } from 'src/app/services/auth.service';
 import { SettingsService } from 'src/app/services/settings.service';
-
+import { BackgroundService } from 'src/app/services/background.service';
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.css']
 })
-export class SettingsComponent implements OnInit, AfterViewInit {
+export class SettingsComponent implements OnInit, AfterViewInit{
   allowAccess = false;
   allowControl = false;
   type: string = "password";
@@ -26,7 +26,7 @@ export class SettingsComponent implements OnInit, AfterViewInit {
   submitted = false;
   requestStatus: string = 'no';
 
-  constructor(private apiService: SettingsService, private auth: AuthService, private fb: FormBuilder,) { }
+  constructor(private apiService: SettingsService, private auth: AuthService, private fb: FormBuilder,private backgroundService:BackgroundService) { }
 
   @ViewChild('exampleModal') exampleModal!: ElementRef;
 
@@ -39,6 +39,31 @@ export class SettingsComponent implements OnInit, AfterViewInit {
       validator: ConfirmPasswordValidator("password","confirmPassword")
     }
     )
+
+    this.apiService.alreadyHasReq().subscribe(
+      (response) => {
+        if(response == true)
+          this.requestStatus = 'pending'
+      }
+    )
+    this.apiService.statusOfReq().subscribe(
+      response => {
+        console.log(response)
+        if (response == true) {
+          this.requestStatus = 'accepted'
+          this.backgroundService.ngOnDestroy();
+        }
+      }
+    )
+
+    this.backgroundService.startBackgroundProcess();
+    this.backgroundService.subscribeToStatusUpdate().subscribe(status => {
+      this.requestStatus = status;
+    });
+  }
+
+  ngOnDestroy() {
+    this.backgroundService.ngOnDestroy();
   }
 
   ngAfterViewInit(): void {

@@ -349,4 +349,7 @@ export class AuthService {
   acceptReq(reqID: any):Observable<any> {
     return this.http.post<string>(environment.apiUrl + "/api/User/approve-request-to-dso/"+reqID,{});
   }
+  declineRequest(reqID:any):Observable<any> {
+    return this.http.post<string>(environment.apiUrl + "/api/User/decline-request-to-dso/"+reqID,{});
+  }
 }
