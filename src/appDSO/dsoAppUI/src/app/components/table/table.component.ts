@@ -3,7 +3,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import * as L from 'leaflet';
-import { Device, Info, Root, Root2, User } from 'models/User';
+import { Device, ExportSelected, Info, Root, Root2, User } from 'models/User';
 import { AuthService } from 'service/auth.service';
 import {PageEvent} from '@angular/material/paginator';
 import { FormsModule } from '@angular/forms';
@@ -83,15 +83,10 @@ export class TableComponent implements OnInit, AfterViewInit {
 // pagination
  public page = 1;
  public pageSize = 5;
- 
  showAllUsersOnMap : boolean = true;
  lengthOfUsers!: number;
  allUsers!: User[];
 
-
-
-
-  
  private userCoords!: any[];
 
  public toggleTable: boolean = false;
@@ -150,7 +145,7 @@ export class TableComponent implements OnInit, AfterViewInit {
  
  id!:any;
 
- selectedDevice!: Device;
+ selectedDevice!: Device | any;
  device24h!:any[];
  valueDevice24h!:any[];
 
@@ -174,15 +169,18 @@ export class TableComponent implements OnInit, AfterViewInit {
     
 
   ){}
-
+  selectedGraphHistoryConsumption = '24h';
+  selectedGraphHistoryProduction = '24h'; 
+  selectedGraphFutureProduction = '24h';
+  selectedGraphFutureConsumption = '24h'; 
   ngAfterViewInit(): void {
     this.showMeUsers(this.page,this.pageSize);
     this.popUp(this.id);
     this.displayGraph(this.selectedDevice);
-    this.HistoryConsumption();
-    this.HistoryProduction();
-    this.FutureConsumption();
-    this.FutureProduction();
+    this.HistoryConsumption(this.selectedGraphHistoryConsumption);
+    this.HistoryProduction(this.selectedGraphHistoryProduction);
+    this.FutureConsumption(this.selectedGraphFutureConsumption);
+    this.FutureProduction(this.selectedGraphFutureProduction);
    
   }
   
@@ -190,12 +188,11 @@ export class TableComponent implements OnInit, AfterViewInit {
     
     if (changes) {
       const currentValue = changes.toString();
-      this.HistoryConsumption();
+      this.HistoryConsumption(this.selectedGraphHistoryConsumption);
     }
   }
 
-  selectedGraphHistoryConsumption = '24h';
-
+  
   ngOnInit(): void {
     this.spinner.show();
     setTimeout(() => {
@@ -256,7 +253,8 @@ export class TableComponent implements OnInit, AfterViewInit {
       this.allUsers = this.productionSortedUsers;
     }
   }
-    selectedUsers: any[] = [];
+    exportedUsers: ExportSelected[] = [];
+    selectedUsers: User[] = [];
     toggleExportSelected(user:any): void {
       this.exportSelected = !this.exportSelected;
       user.selected = !user.selected;
@@ -268,9 +266,68 @@ export class TableComponent implements OnInit, AfterViewInit {
           this.selectedUsers.splice(index, 1);
         }
       }
+      this.makeDataForExportSelectedUsers(this.selectedUsers);
+      console.log("Selected",this.selectedUsers);
     }
+    
+    makeDataForExportSelectedUsers(users: User[]){
+      this.exportedUsers = users.map(user => {
+        const exportUser: ExportSelected = {
+          firstName: user.firstName,
+          lastName: user.lastName,
+          address: user.address,
+          consumption: user.consumption,
+          production: user.production,
+          city: user.city,
+          country: user.country,
+          email: user.email
+        };
+        return exportUser;
+      });
+    }
+    SystemUsers!:User[];
+    allUsersExport!:ExportSelected[];
+    // consUser!:any;
+    // proUser!:any;
+    makeDataForExportAllUsers(){
+      // this.auth.getAllUserInfo().subscribe({
+      //   next: (response  : any)=>{
+      //     this.SystemUsers = response;
+      //   },
+      //   error:(err : any)=>{
+      //     console.log("Error get all users");
+      //   }
+      // });
+      // if(this.SystemUsers.length != 0){
+      // this.allUsersExport = this.SystemUsers.map(user => {
+      //   let consumption = 0;
+      //   this.auth.UserConsumptionSummary(user.id).subscribe(
+      //     (response :any)=>{
+      //       this.consUser =  response.toFixed(2);
+      //     }
+      //   )
+      //   let production = 0;
+      //   this.auth.UserProductionSummary(user.id).subscribe(
+      //     (response:any)=>{
+      //       this.proUser = response.toFixed(2);
+      //     }
+      //   )
+      this.allUsersExport = this.allUsers.map(user => {
+          const exportUser: ExportSelected = {
+          firstName: user.firstName,
+          lastName: user.lastName,
+          address: user.address,
+          consumption:  user.consumption,
+          production: user.production,
+          city: user.city,
+          country: user.country,
+          email: user.email
+        };
+        return exportUser;
+      });
+    
+  }
     activeColIndex: number = -1;
-
     setActiveCol(index: number): void {
       this.activeColIndex = index;
     }
@@ -283,26 +340,30 @@ export class TableComponent implements OnInit, AfterViewInit {
     }
 
   exportToExcel(): void {
-    const worksheet = XLSX.utils.table_to_sheet(document.querySelector('#myTable'));
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-    const fileBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-    const blob = new Blob([fileBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    saveAs(blob, 'table-data.xlsx');
+    this.makeDataForExportAllUsers();
+    if (this.allUsersExport && this.allUsersExport.length > 0) {
+      const worksheet = XLSX.utils.json_to_sheet(this.allUsersExport);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Exported Data');
+
+      const fileBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+      const blob = new Blob([fileBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      saveAs(blob, 'exported-data.xlsx');
+    }
   }
 
   exportSelectedData(): void {
-    if (this.selectedUsers && this.selectedUsers.length > 0) {
-      const selectedRows = this.selectedUsers.filter(user => user.selected);
-      const worksheet = XLSX.utils.json_to_sheet(selectedRows);
+    if (this.exportedUsers && this.exportedUsers.length > 0) {
+      const worksheet = XLSX.utils.json_to_sheet(this.exportedUsers);
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, 'Selected Data');
-    
+  
       const fileBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
       const blob = new Blob([fileBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
       saveAs(blob, 'selected-data.xlsx');
     }
   }
+
   selectedColumn:any = null;
   selectedColumn1:any = null;
   selectedUsersTable: any[] = [];
@@ -317,6 +378,10 @@ export class TableComponent implements OnInit, AfterViewInit {
     }
     this.selectedColumn = index;
   }
+  deselectUsers() {
+    this.selectedUsersTable = [];
+    this.selectedColumn = -1;
+  }
   
   public showMeUsers(page:any, pageSize:any){ 
     this.auth.getPagination(this.page, this.pageSize).subscribe(
@@ -327,7 +392,6 @@ export class TableComponent implements OnInit, AfterViewInit {
           this.auth.UserConsumptionSummary(user.id).subscribe({
             next : (response:any) => {
               user.consumption = response.toFixed(2);
-            
             },
             error: (err:any)=>{
               user.consumption = 0;
@@ -576,8 +640,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     }
   }
   
-  showDevices:boolean = false;
-  showSystem:boolean = false;
+  
   powerUsagePopUp!: number;
  
   productionNextMonthUserLoader = false;
@@ -606,10 +669,10 @@ export class TableComponent implements OnInit, AfterViewInit {
         });
 
       this.savedEnergy(id);
-      this.HistoryConsumption();
-      this.HistoryProduction();
-      this.FutureConsumption();
-      this.FutureProduction();
+      this.HistoryConsumption(this.selectedGraphHistoryConsumption);
+      this.HistoryProduction(this.selectedGraphHistoryProduction);
+      this.FutureConsumption(this.selectedGraphFutureConsumption);
+      this.FutureProduction(this.selectedGraphFutureProduction);
       this.productionNextMonth(this.userPopUp.id);
       this.productionPrevMonth(this.userPopUp.id);
       }
@@ -642,42 +705,52 @@ export class TableComponent implements OnInit, AfterViewInit {
     if(this.isActiveProsumer){
       this.showMeProduction = true;
       this.showMeConsumption = false;
-      console.log("p. c.", this.showMeProduction, this.showMeConsumption);
-    }else{
+      this.HistoryProduction(this.selectedGraphHistoryProduction);
+      this.FutureProduction(this.selectedGraphFutureProduction);
+      
+    }else if(this.isActioveConsumer){
       this.showMeProduction = false;
       this.showMeConsumption = true;
-      console.log("p. c.", this.showMeProduction, this.showMeConsumption);
+      this.FutureConsumption(this.selectedGraphFutureConsumption);
+      this.HistoryConsumption(this.selectedGraphHistoryConsumption);
+    }else{
+      this.showMeProduction = false;
+      this.showMeConsumption = false;
     }
   }
   
   toggleActive(button: string) {
-    this.isActiveUser = button === 'user';
-    this.isActiveDevice = button === 'device';
-    this.isActiveSystem = button === 'system';
-    if(this.isActiveUser){
+    if (button === 'user') {
+      this.isActiveUser = true;
+      this.isActiveDevice = false;
+      this.isActiveSystem = false;
       this.showDevicePage = false;
       this.showSystemPage = false;
       this.showMeGeneral = true;
-      console.log("devoce. sus. general.", this.showDevicePage, this.showSystemPage, this.showMeGeneral);
-    }else if(this.isActiveSystem){
-      this.showDevicePage = false;
-      this.showSystemPage = true;
-      this.showMeGeneral = false;
-      console.log("devoce. sus. general.", this.showDevicePage, this.showSystemPage, this.showMeGeneral);
-    }else if(this.isActiveDevice){
+    
+    } else if (button === 'device') {
+      this.isActiveUser = false;
+      this.isActiveDevice = true;
+      this.isActiveSystem = false;
       this.showDevicePage = true;
       this.showSystemPage = false;
       this.showMeGeneral = false;
-      console.log("devoce. sus. general.", this.showDevicePage, this.showSystemPage, this.showMeGeneral);
-    }
     
+    } else if (button === 'system') {
+      this.isActiveUser = false;
+      this.isActiveDevice = false;
+      this.isActiveSystem = true;
+      this.showDevicePage = false;
+      this.showSystemPage = true;
+      this.showMeGeneral = false;
+    
+    }
   }
+  
+  
 
- 
- 
   graph24prev!:any[];
   selectDevice = false;
-  
   graphDeviceLoader = false;
   displayGraph(device: Device) {
     this.selectDevice = true;
@@ -697,7 +770,9 @@ export class TableComponent implements OnInit, AfterViewInit {
       }
     )
   }
-  
+  deselectDevice() {
+    this.selectedDevice = null;
+  }
   timeStampDevice24h!:any[];
   powerUsageDevice24h!:any[];
   makeDataGraph12(dataGraph:any){
@@ -1282,9 +1357,9 @@ productionPreviousMonthUser(id : any){
     }}
     
   
-       // set default graph
-       HistoryConsumption() {
-        switch (this.selectedGraphHistoryConsumption) {
+       
+       HistoryConsumption(graph:any) {
+        switch (graph) {
           case '24h':
             this.consumptionPrevious24h(this.id);
             break;
@@ -1299,9 +1374,9 @@ productionPreviousMonthUser(id : any){
       }
 
     
-      selectedGraphFutureConsumption = '24h'; 
-      FutureConsumption() {
-        switch (this.selectedGraphFutureConsumption) {
+      
+      FutureConsumption(graph : any) {
+        switch (graph) {
           case 'month':
             this.consumptionNextMonth(this.id);
           break;
@@ -1506,9 +1581,9 @@ consumptionNext24hGraph(){
 }
 }
 
-selectedGraphHistoryProduction = '24h'; 
-    HistoryProduction() {
-    switch (this.selectedGraphHistoryProduction) {
+
+    HistoryProduction(graph : any) {
+    switch (graph) {
       case 'month':
           this.productionPrevMonth(this.id);
       break;
@@ -1521,10 +1596,10 @@ selectedGraphHistoryProduction = '24h';
     }
   }
 
-  selectedGraphFutureProduction = '24h';
-      FutureProduction() {
+  
+      FutureProduction(graph:any) {
      
-      switch (this.selectedGraphFutureProduction) {
+      switch (graph) {
         case 'month':
           this.productionNextMonth(this.id);
         break;

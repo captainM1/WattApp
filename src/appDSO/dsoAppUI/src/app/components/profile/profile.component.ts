@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from 'service/auth.service';
 @Component({
   selector: 'app-profile',
@@ -16,7 +16,7 @@ export class ProfileComponent implements OnInit{
   city!: string;
   country!: string;
   email!: string;
-
+  @ViewChild('profile') profile!:ElementRef; 
   constructor(
     private serv : AuthService
   ){}

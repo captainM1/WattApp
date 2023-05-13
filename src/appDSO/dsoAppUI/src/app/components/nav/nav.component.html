@@ -25,7 +25,7 @@
           <span *ngIf="rlt.isActive"></span>
           <span *ngIf="rlw.isActive"> </span>
           <span *ngIf="rln.isActive"></span>
-          <span *ngIf="rlp.isActive"></span>
+          <span *ngIf="rlo.isActive"></span>
         </div>
 
         <div class="col-lg-5 d-flex justify-content-center justify-content-md-end align-items-center">
@@ -36,7 +36,7 @@
               <p  routerLink = "/profile" routerLinkActive #rlp ="routerLinkActive" [routerLinkActive]="'active'">Profile</p><br>
             </a>
             <a class="text-reset me-3" >
-              <p [routerLinkActive]="'active'" (click)="signOut()">Sign Out</p><br>
+              <p [routerLinkActive]="'active'" routerLinkActive #rlo ="routerLinkActive"  routerLink="/signin" (click)="signOut()">Sign Out</p><br>
               <p-confirmDialog></p-confirmDialog>
             </a>
           </div>

@@ -15,7 +15,6 @@ export class NavComponent {
     private router : Router){}
 
   signOut(){
-    this.auth.signOut();
-    this.router.navigate(['/signin']);
+      this.auth.signOut();
   }
 }
