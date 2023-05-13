@@ -262,7 +262,7 @@ public class UserRepository : IUserRepository
     {
         var user = await _dbContext.UsersAppliedToDSO.FindAsync(id);
 
-        user.Approved = -1;
+        //user.Approved = -1;
         _dbContext.UsersAppliedToDSO.Remove(user);
         await _dbContext.SaveChangesAsync();
         return true;

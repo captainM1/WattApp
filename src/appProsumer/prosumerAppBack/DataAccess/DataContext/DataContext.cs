@@ -168,7 +168,10 @@ namespace prosumerAppBack.DataAccess
             new DeviceType{ID=new Guid("696E9069-6BAC-47E4-A7C2-8C4779ED33BB"), Name="Wind Turbine", GroupID=new Guid("18F30035-59DE-474F-B9DB-987476DE551F"), ManufacturerID=new Guid("4D4D4D4D-4D4D-4D4D-4D4D-4D4D4D4D4D50"), Wattage=2000},
             new DeviceType{ID=new Guid("696E9069-6BAC-47E4-A7C2-8C4779ED33BA"), Name="Wind Turbine", GroupID=new Guid("18F30035-59DE-474F-B9DB-987476DE551F"), ManufacturerID=new Guid("4D4D4D4D-4D4D-4D4D-4D4D-4D4D4D4D4D4F"), Wattage=1000},
             new DeviceType{ID=new Guid("A2D2D5EC-B064-4F72-9E0E-84C1171CC14F"), Name="Solar Panel", GroupID=new Guid("18F30035-59DE-474F-B9DB-987476DE551F"), ManufacturerID=new Guid("4D4D4D4D-4D4D-4D4D-4D4D-4D4D4D4D4D54"), Wattage=6000},
-            new DeviceType{ID=new Guid("A2D2D5EC-B064-4F72-9E0E-84C1171CC14D"), Name="Solar Panel", GroupID=new Guid("18F30035-59DE-474F-B9DB-987476DE551F"), ManufacturerID=new Guid("4D4D4D4D-4D4D-4D4D-4D4D-4D4D4D4D4D63"), Wattage=4000}
+            new DeviceType{ID=new Guid("A2D2D5EC-B064-4F72-9E0E-84C1171CC14D"), Name="Solar Panel", GroupID=new Guid("18F30035-59DE-474F-B9DB-987476DE551F"), ManufacturerID=new Guid("4D4D4D4D-4D4D-4D4D-4D4D-4D4D4D4D4D63"), Wattage=4000}, 
+                new DeviceType{ID=new Guid("9D3D39B2-56D8-44E7-8AD5-B64EFC6784F2"), Name="Battery", GroupID=new Guid("B17C9155-7E6F-4D37-8A86-EA1ABB327BB2"), ManufacturerID=new Guid("4D4D4D4D-4D4D-4D4D-4D4D-4D4D4D4D4D4E"), Wattage=15000},
+            new DeviceType{ID=new Guid("9D3D39B2-56D8-44E7-8AD5-B64EFC6784F3"), Name="Battery", GroupID=new Guid("B17C9155-7E6F-4D37-8A86-EA1ABB327BB2"), ManufacturerID=new Guid("4D4D4D4D-4D4D-4D4D-4D4D-4D4D4D4D4D52"), Wattage=12000},
+            new DeviceType{ID=new Guid("9D3D39B2-56D8-44E7-8AD5-B64EFC6784F1"), Name="Battery", GroupID=new Guid("B17C9155-7E6F-4D37-8A86-EA1ABB327BB2"), ManufacturerID=new Guid("4D4D4D4D-4D4D-4D4D-4D4D-4D4D4D4D4D50"), Wattage=10000}
             );
             modelBuilder.Entity<User>().HasData(
                 AddDefaultUser()
