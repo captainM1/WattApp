@@ -1,15 +1,18 @@
 export interface User{
-    id : string,
+    id: string,
     firstName: string,
     lastName: string,
+    phoneNumber: string,
     address: string,
     city: string,
     country: string,
+    email: string,
+    sharesDataWithDso: boolean,
+    dsoHasControl: boolean,
     consumption:number,
     production:number,
     summary:number,
-    selected: boolean
-   
+    selected: boolean,
 }
 export interface Device{
     deviceId: string;
@@ -20,6 +23,14 @@ export interface Device{
     powerusage:number;
    
 }
+export interface Role{
+    email: string,
+    firstName: string,
+    id: string,
+    lastName: string,
+    phoneNumber: string,
+    role: string
+}
 export interface Info{
     powerusage: any;
     deviceId: string;
@@ -27,9 +38,19 @@ export interface Info{
     macAdress: string;
     manufacturerName: string;
     typeOfDevice: string;
+    statusOfDevice:string;
  
 }
-
+export interface ExportSelected{
+    firstName: string,
+    lastName: string,
+    address: string,
+    city: string,
+    country: string,
+    consumption:number,
+    production:number,
+    email:string
+}
 
 export interface DeviceType{
     id: string,
