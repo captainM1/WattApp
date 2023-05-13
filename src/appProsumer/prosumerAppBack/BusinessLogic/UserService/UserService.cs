@@ -314,9 +314,9 @@ public class UserService:IUserService
         }
         return true;
     }
-    public async Task<Boolean> UpdateUserDsoControl(Guid id, Boolean dsoHasControl)
+    public async Task<Boolean> UpdateUserDeviceDsoControl(Guid id, Boolean dsoHasControl)
     {
-        var action = await _repository.UpdateUserDsoControl(id, dsoHasControl);
+        var action = await _repository.UpdateUserDeviceDsoControl(id, dsoHasControl);
         if (!action)
         {
             throw new BadRequestException("User dso control consumption time permission has failed to update");
@@ -346,10 +346,10 @@ public class UserService:IUserService
         return _repository.SharesWhidDSO(userID);
     }
 
-    public bool DSOHasControl(Guid userID)
+    /*public bool DSOHasControl(Guid userID)
     {
         return _repository.DSOHasControl(userID);
-    }
+    }*/
 
     public async Task<Boolean> UserAllreadyAppliedToDso(Guid id)
     {

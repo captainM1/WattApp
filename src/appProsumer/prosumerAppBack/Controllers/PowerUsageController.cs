@@ -106,7 +106,7 @@ public class PowerUsageController : ControllerBase
     }    
 
     [HttpGet("power-usage/current-consumption/system")]
-    [Authorize(Roles = "Dispatcher,Admin")]
+    //[Authorize(Roles = "Dispatcher,Admin")]
     public ActionResult<double> GetForSystemConsumer()
     {        
             var powerUsages = _powerUsageService.CurrentSumPowerUsageSystemConsumer();
@@ -115,7 +115,7 @@ public class PowerUsageController : ControllerBase
     }
 
     [HttpGet("power-usage/current-production/system")]
-    [Authorize(Roles = "Dispatcher,Admin")]
+   // [Authorize(Roles = "Dispatcher,Admin")]
     public ActionResult<double> CurrentSumPowerUsageSystemProducer()
     {
             var powerUsages = _powerUsageService.CurrentSumPowerUsageSystemProducer();

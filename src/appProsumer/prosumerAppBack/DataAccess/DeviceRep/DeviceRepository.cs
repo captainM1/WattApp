@@ -103,6 +103,7 @@ namespace prosumerAppBack.DataAccess
                 DeviceName = addDeviceDto.DeviceName,
                 DeviceTypeID = addDeviceDto.DeviceTypeID,
                 IsOn = false,
+                dsoHasControl = false,
             };
 
             _dbContext.Devices.Add(newDevice);

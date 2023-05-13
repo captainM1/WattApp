@@ -157,7 +157,6 @@ public class UserRepository : IUserRepository
         user.Country = userUpdateDto.Country;
         user.Email = userUpdateDto.Email;
         user.PhoneNumber = userUpdateDto.PhoneNumber;
-        user.dsoHasControl = userUpdateDto.dsoHasControl;
         user.sharesDataWithDso = userUpdateDto.sharesDataWithDso;
         user.City = userUpdateDto.City;
         
@@ -289,8 +288,13 @@ public class UserRepository : IUserRepository
     {
         var user = await _dbContext.Users.FindAsync(id);
         user.Role = "UnapprovedUser";
-        user.dsoHasControl = false;
         user.sharesDataWithDso = false;
+        var devices = _dbContext.Devices.Where(u => u.OwnerID == id).ToList();
+
+        foreach (var device in devices)
+        {
+            device.dsoHasControl = false;
+        }
 
         _dbContext.Users.Update(user);
         await _dbContext.SaveChangesAsync();
@@ -333,7 +337,7 @@ public class UserRepository : IUserRepository
                             
     }
 
-    public bool DSOHasControl(Guid userID)
+   /* public bool DSOHasControl(Guid userID)
     {
         bool sharesWithDSO = _dbContext.Users
                             .Where(u => u.ID == userID)
@@ -342,7 +346,7 @@ public class UserRepository : IUserRepository
 
         return sharesWithDSO;
 
-    }
+    }*/
     public async Task<Boolean> UpdateUserDataSharing(Guid id, Boolean sharesDataWithDso)
     {
         var user = await _dbContext.Users.FindAsync(id);
@@ -357,16 +361,13 @@ public class UserRepository : IUserRepository
         return true;
     }
 
-    public async Task<Boolean> UpdateUserDsoControl(Guid id, Boolean dsoHasControl)
+    public async Task<Boolean> UpdateUserDeviceDsoControl(Guid id, Boolean dsoHasControl)
     {
-        var user = await _dbContext.Users.FindAsync(id);
-        if(user.Role != "RegularUser")
-        {
-            return false;
-        }
-        user.dsoHasControl = dsoHasControl;
+        var device = await _dbContext.Devices.FirstOrDefaultAsync(u => u.ID == id);
 
-        _dbContext.Users.Update(user);
+        device.dsoHasControl = dsoHasControl;
+
+        _dbContext.Devices.Update(device);
         await _dbContext.SaveChangesAsync();
         return true;
     }
