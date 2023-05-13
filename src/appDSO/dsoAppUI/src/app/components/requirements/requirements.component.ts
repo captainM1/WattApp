@@ -21,10 +21,25 @@ export class RequirementsComponent implements OnInit{
     this.loadReq();
   }
 
+  acceptRequest(reqID: any){
+    this.auth.acceptReq(reqID).subscribe(
+      response => {
+        this.loadReq();
+      }
+    );
+  }
+  declineRequest(reqID:any){
+    this.auth.declineRequest(reqID).subscribe(
+      response => {
+        this.loadReq();
+      }
+    );
+  }
+
   loadReq(){
     this.auth.getAllRequests().subscribe((response) => {
       this.allRequests = response;
-
+      this.allUsersRequest = []
       this.allRequests.forEach((element) => {
         let r = new Request(element.id, element.userID);
         this.auth.getUserInformation(r.UserID).subscribe((response) => {
@@ -37,10 +52,4 @@ export class RequirementsComponent implements OnInit{
       });
     });
   }
-
-  acceptRequest(reqID: any){
-    this.auth.acceptReq(reqID).subscribe(response=>console.log(response));
-    this.loadReq();
-  }
-
 }
