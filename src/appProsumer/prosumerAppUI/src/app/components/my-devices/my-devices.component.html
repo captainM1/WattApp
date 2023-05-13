@@ -46,7 +46,7 @@
         <button type="button" id="closeBtn" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <table >
+        <table tableexporter #myTable id = "myTable">
           <tr>
               <th></th>
               <th>Device name</th>
@@ -66,7 +66,7 @@
         </table>
       </div>
     <div class="modal-footer">
-      <button type="button" style="width:150px"  class="btn btn-primary" >EXPORT DATA</button>
+      <button type="button" style="width:150px" (click)="exportToExcel()" class="btn btn-primary" >EXPORT DATA</button>
     </div>
   </div>
 </div>
