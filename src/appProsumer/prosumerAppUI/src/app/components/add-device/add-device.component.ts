@@ -17,6 +17,7 @@ export class AddDeviceComponent {
   submitted: boolean = false;
   groups: any[] = [];
   selectedGroup!: string;
+  selectedGroupValue: boolean = false;
 
   manufacturers: any[] = [];
   selectedManufacturerId: any;
@@ -35,18 +36,13 @@ export class AddDeviceComponent {
 
   addDeviceForm: FormGroup = this.fb.group({
     type:['', Validators.required],
-    manufacturer: ['', Validators.required],
-    device: ['', Validators.required],
+    manufacturer: [{value:'', disabled:true}, Validators.required],
+    device: [{value:'', disabled:true}, Validators.required],
     deviceName: ['', Validators.required],
     macAddress: ['', [Validators.required, Validators.pattern(/^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/)]]
   });
 
   ngOnInit() {
-    this.http.get<any[]>(environment.apiUrl + '/api/Device/manufacturers')
-      .subscribe(data => {
-        this.manufacturers = data;
-      });
-
     this.http.get<any[]>(environment.apiUrl + '/api/Device/groups')
       .subscribe(groups => this.groups = groups);
   }
@@ -55,41 +51,32 @@ export class AddDeviceComponent {
     return this.addDeviceForm.controls;
   }
 
-
   onGroupSelected(event: any) {
+    this.addDeviceForm.get('manufacturer')?.enable();
+    this.addDeviceForm.get('device')?.disable();
+    this.selectedGroupValue = true;
     const selectElement = event.target as HTMLSelectElement;
     this.selectedGroup = selectElement.value;
     console.log(this.selectedGroup);
 
-    if (!this.selectedManufacturerId || !this.selectedGroup) {
-      console.log('No manufacturer or group selected');
-      return;
-    }
-    else{
-      this.http.get<any[]>(`${environment.apiUrl}/api/Device/${this.selectedGroup}/${this.selectedManufacturerId}`)
+      this.http.get<any[]>(`${environment.apiUrl}/api/Device/manufacturers/${this.selectedGroup}`)
       .subscribe({
         next: data => {
           console.log(data);
-          this.devices = data;
+          this.manufacturers = data;
         },
         error: err => {
           console.error(err);
         }
       });
-    }
   }
 
-
   onManufacturerChange(event: any) {
+    this.addDeviceForm.get('device')?.enable();
     const manSelect = event.target as HTMLSelectElement;
     this.selectedManufacturerId = manSelect.value;
     console.log(this.selectedManufacturerId);
 
-    if (!this.selectedManufacturerId || !this.selectedGroup) {
-      console.log('No manufacturer or group selected');
-      return;
-    }
-    else{
       this.http.get<any[]>(`${environment.apiUrl}/api/Device/${this.selectedGroup}/${this.selectedManufacturerId}`)
       .subscribe({
         next: data => {
@@ -100,7 +87,6 @@ export class AddDeviceComponent {
           console.error(err);
         }
       });
-    }
   }
 
   onDeviceChange(event: any){
@@ -132,5 +118,4 @@ export class AddDeviceComponent {
   goBack(){
     this.router.navigate(['/home']);
   }
-
 }
