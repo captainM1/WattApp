@@ -327,6 +327,14 @@ namespace prosumerAppBack.Controllers
                 return BadRequest("Device is turned off");
             return Ok("Device is turned on");
         }
+
+        [HttpGet("DSO-has-control/{deviceID}")]
+        public ActionResult<bool> DSOHasControl(Guid deviceID)
+        {
+            var has = _deviceService.DSOHasControl(deviceID);
+
+            return has;
+        }
     }
 }
 

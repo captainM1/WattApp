@@ -336,17 +336,7 @@ public class UserRepository : IUserRepository
         return sharesWithDSO;
                             
     }
-
-   /* public bool DSOHasControl(Guid userID)
-    {
-        bool sharesWithDSO = _dbContext.Users
-                            .Where(u => u.ID == userID)
-                            .Select(share => share.dsoHasControl)
-                            .FirstOrDefault();
-
-        return sharesWithDSO;
-
-    }*/
+       
     public async Task<Boolean> UpdateUserDataSharing(Guid id, Boolean sharesDataWithDso)
     {
         var user = await _dbContext.Users.FindAsync(id);

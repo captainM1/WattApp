@@ -240,4 +240,9 @@ public class DeviceService:IDeviceService
     {
         return _repository.IsDeviceTurnedOn(deviceID);
     }
+
+    public bool DSOHasControl(Guid deviceID)
+    {
+        return _repository.DSOHasControl(deviceID);
+    }
 }

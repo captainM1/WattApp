@@ -26,4 +26,5 @@ public interface IDeviceService
     Task<bool> DeleteDevice(Guid deviceID);
     Task<bool> UpdateDeviceState(DeviceStateDto deviceStateDto);
     public Boolean IsDeviceTurnedOn(Guid deviceID);
+    public bool DSOHasControl(Guid deviceID);
 }

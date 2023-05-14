@@ -308,14 +308,6 @@ public class UserController : ControllerBase
         }
     }
 
-   /* [HttpGet("DSO-has-control/{userID}")]
-    public ActionResult<bool> DSOHasControl(Guid userID)
-    {
-        var has = _userService.DSOHasControl(userID);
-
-        return has;
-    }*/
-
     [HttpGet("user-shares-with-DSO/{userID}")]
     public ActionResult<bool> SharesWhidDSO(Guid userID)
     {

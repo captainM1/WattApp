@@ -345,12 +345,7 @@ public class UserService:IUserService
     {
         return _repository.SharesWhidDSO(userID);
     }
-
-    /*public bool DSOHasControl(Guid userID)
-    {
-        return _repository.DSOHasControl(userID);
-    }*/
-
+    
     public async Task<Boolean> UserAllreadyAppliedToDso(Guid id)
     {
         return await _repository.UserAllreadyAppliedToDso(id);
