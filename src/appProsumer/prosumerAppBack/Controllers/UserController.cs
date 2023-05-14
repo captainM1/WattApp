@@ -308,14 +308,6 @@ public class UserController : ControllerBase
         }
     }
 
-    [HttpGet("DSO-has-control/{userID}")]
-    public ActionResult<bool> DSOHasControl(Guid userID)
-    {
-        var has = _userService.DSOHasControl(userID);
-
-        return has;
-    }
-
     [HttpGet("user-shares-with-DSO/{userID}")]
     public ActionResult<bool> SharesWhidDSO(Guid userID)
     {
@@ -340,11 +332,11 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("update-user-dso-control-permission/{id}")]
-    public async Task<IActionResult> UpdateUserDsoControl(Guid id, [FromBody] Boolean dsoHasControl)
+    public async Task<IActionResult> UpdateUserDeviceDsoControl(Guid id, [FromBody] Boolean dsoHasControl)
     {
         try
         {
-            var result = await _userService.UpdateUserDsoControl(id, dsoHasControl);
+            var result = await _userService.UpdateUserDeviceDsoControl(id, dsoHasControl);
 
             return Ok(result);
         }

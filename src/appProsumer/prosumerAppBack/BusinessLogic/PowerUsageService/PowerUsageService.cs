@@ -477,7 +477,7 @@ public class PowerUsageService:IPowerUsageService
         if (powerUsage == 0)
         {
             throw new NullReferenceException("User doesnt share data with DSO");
-        }
+        }*/
         return powerUsage;
     }
 
@@ -556,6 +556,13 @@ public class PowerUsageService:IPowerUsageService
         {
             throw new NullReferenceException("User doesnt share data with DSO");
         }
+        return price;
+    }
+
+    public double electricityEarningsForCurrentMonth(Guid userID, double electricityRate)
+    {
+        var price = _repository.electricityEarningsForCurrentMonth(userID, electricityRate);
+        
         return price;
     }
 

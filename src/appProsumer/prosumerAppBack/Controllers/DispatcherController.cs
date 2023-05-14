@@ -122,5 +122,20 @@ public class DispatcherController : ControllerBase
 
         return Ok(new { message = "dispatcher updated successfully" });
     }
+
+    [HttpGet("get-users-application-history")]
+    public async Task<IActionResult> GetAllUsersAplicationToDsoAsync()
+    {
+        try
+        {
+            var results = await _dispatcherService.GetAllUsersAplicationToDsoAsync();
+
+            return Ok(results);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
 }
 

@@ -103,6 +103,7 @@ namespace prosumerAppBack.DataAccess
                 DeviceName = addDeviceDto.DeviceName,
                 DeviceTypeID = addDeviceDto.DeviceTypeID,
                 IsOn = false,
+                dsoHasControl = false,
             };
 
             _dbContext.Devices.Add(newDevice);
@@ -293,6 +294,16 @@ namespace prosumerAppBack.DataAccess
 
             return isOn;
         }
+
+         public bool DSOHasControl(Guid deviceID)
+         {
+            bool sharesWithDSO = _dbContext.Devices
+                            .Where(u => u.ID == deviceID)
+                            .Select(share => share.dsoHasControl)
+                            .FirstOrDefault();
+
+            return sharesWithDSO;
+         }
     }
 
     public class DeviceInfo
