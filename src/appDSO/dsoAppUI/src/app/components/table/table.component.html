@@ -109,6 +109,7 @@
               <button class = "my-button active" [class.active]="isActiveUser" (click)="toggleActive('user');" >About User</button>
               <button  class = "my-button active" [class.active]="isActiveDevice" (click)="toggleActive('device');">Devices</button>
               <button class="my-button active" [class.active]="isActiveSystem" (click)="toggleActive('system');">System</button>
+              <ngx-spinner bdColor = "rgba(0, 0, 0, 0.5)" size = "medium" color = "#fff" type = "ball-spin" [showSpinner]="showSystemPage " [fullScreen]="false" *ngIf="showSystemPage"><p style="color: #fff; margin-top:60px;"> Please wait... </p></ngx-spinner>
             </div>
             <div class="row" *ngIf="showMeGeneral" style="margin-left: 10px;">
               <div class="col-sm" id = "userInfo">
@@ -140,6 +141,7 @@
                         <th>Type of Device</th>
                         <th>Device Status</th>
                         <th>Power Usage</th>
+                        <th>Control Device</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -150,6 +152,12 @@
                         <td >{{device.typeOfDevice}}</td>
                         <td [ngClass]="{'green': status === 1, 'red': status === 0}">{{device.statusOfDevice}}</td>
                         <td >{{device.powerusage}} kw/h</td>
+                        <td>
+                          <label class="switch">
+                            <input type="checkbox" [checked]="btnStatus" (change)="toggleDeviceStatus(selectedDevice)" [disabled]="deviceStatus === false">
+                            <span class="slider round"></span>
+                          </label>
+                        </td>
                       </tr>
                     </tbody>
                     <tfoot>
@@ -169,14 +177,17 @@
             </div>
            
             <div class="row" *ngIf="showSystemPage">
+             
               <div>
                 <div class="id-button-popUp" >
-                  <button class = "my-button active"[class.active]="isActioveConsumer" (click)="toggleActiveCP('consumer'); showMeConsumption = true; showMeProduction = false; ">Consumption</button>
-                  <button  class = "my-button active" [class.active]="isActiveProsumer" (click)="toggleActiveCP('prosumer');showMeConsumption = false; showMeProduction = true; ">Production</button>
+                  <button class = "my-button active"[class.active]="isActioveConsumer" (click)="toggleActiveCP('consumer'); ">Consumption</button>
+                  <button  class = "my-button active" [class.active]="isActiveProsumer" (click)="toggleActiveCP('prosumer'); ">Production</button>
                 </div>
                
                 <div class="row" id="graph-position" *ngIf="showMeConsumption">
+                  
                   <div class="col" id="graph" >
+                    
                     <label for="graphSelect">Select Graph:</label>
                     <div>
                       <select class = "select-modal" [(ngModel)]="selectedGraphHistoryConsumption" (ngModelChange)="HistoryConsumption(selectedGraphHistoryConsumption)">
@@ -263,6 +274,7 @@
             
              <div class="row" id="graph-position" *ngIf="showMeProduction">
                 <div class="col" id="graph">
+                 
                     <label>Select Graph:</label>
                     <div>
                       <select class = "select-modal" [(ngModel)]="selectedGraphHistoryProduction" (ngModelChange)="HistoryProduction(selectedGraphHistoryProduction)">

@@ -59,7 +59,7 @@ export class ResetComponent implements OnInit
   {
     this.submitted = true;
     if(this.resetForm.valid){
-      this.messageService.add({ severity: 'error', summary: 'Success', detail: 'Password reset successfully!' });
+      this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Password reset successfully!' });
       this.router.navigate(['signin']);
       return;
     }else{

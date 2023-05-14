@@ -4,7 +4,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfirmPasswordValidator } from 'src/app/helpers/confirm-password.validator';
 import { AuthService } from 'src/app/services/auth.service';
 import { SettingsService } from 'src/app/services/settings.service';
-import { BackgroundService } from 'src/app/services/background.service';
+import { BackgroundService } from 'src/app/services/background.service';import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
@@ -25,7 +26,7 @@ export class SettingsComponent implements OnInit, AfterViewInit{
   submitted = false;
   requestStatus: string = 'no';
 
-  constructor(private apiService: SettingsService, private auth: AuthService, private fb: FormBuilder,private backgroundService:BackgroundService) { }
+  constructor(private apiService: SettingsService, private auth: AuthService, private fb: FormBuilder,private backgroundService:BackgroundService private router : Router) { }
 
   @ViewChild('exampleModal') exampleModal!: ElementRef;
 
@@ -205,4 +206,5 @@ export class SettingsComponent implements OnInit, AfterViewInit{
   signOut(){
     this.auth.signOut();
   }
+
 }
