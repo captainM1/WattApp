@@ -8,6 +8,7 @@ import { ViewChild, ElementRef } from '@angular/core';
 import { ConfirmationService, MessageService, ConfirmEventType } from 'primeng/api';
 import { DeviceEditPopupComponent } from '../device-edit-popup/device-edit-popup.component';
 import { MatDialog } from '@angular/material/dialog';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 
 @Component({
@@ -40,6 +41,7 @@ export class DeviceDetailsComponent implements OnInit {
   chart:any;
   label1: string = '';
   label2: string = '';
+  showSpinner: boolean = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -47,11 +49,12 @@ export class DeviceDetailsComponent implements OnInit {
     private router: Router,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-    
+    private spinner: NgxSpinnerService
   )
   {}
 
   ngOnInit() {
+    this.spinner.show();
     this.deviceId = this.route.snapshot.paramMap.get('id');
     console.log(this.deviceId);
 
@@ -74,6 +77,8 @@ export class DeviceDetailsComponent implements OnInit {
               this.deviceFutureWeekDate = data.timestampPowerPairs.map((time:any) => time.timestamp);
               this.deviceFutureWeekPower = data.timestampPowerPairs.map((time:any) => time.powerUsage);
               this.onOptionSelect();
+              this.showSpinner = false;
+              this.spinner.hide();
             },
             error => {
               console.error('Error fetching device future:', error);
@@ -211,23 +216,18 @@ export class DeviceDetailsComponent implements OnInit {
     this.label1 = "Last Week's History";
     this.label2 = "Next Week's Prediction";
   }
-  else if (this.selectedOption === 'Last Month'){
-    this.formattedLabels = this.deviceHistoryMonthDate.map((date:any) => {
+  else if (this.selectedOption === 'Month'){
+    this.formattedLabels = [...this.deviceHistoryMonthDate, new Date(), ...this.deviceFutureMonthDate];
+    this.formattedLabels = this.formattedLabels.map((date:any) => {
       const parsedDate = new Date(date);
       const month = parsedDate.getMonth() + 1;
       const day = parsedDate.getDate();
       return `${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
     });
-    this.data = this.deviceHistoryMonthPower;
-  }
-  else if (this.selectedOption === 'Next Month'){
-    this.formattedLabels = this.deviceFutureMonthDate.map((date:any) => {
-      const parsedDate = new Date(date);
-      const month = parsedDate.getMonth() + 1;
-      const day = parsedDate.getDate();
-      return `${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
-    });
-    this.data = this.deviceFutureMonthPower;
+    this.data = [...this.deviceHistoryMonthPower, this.deviceToday,null, null, null, null, null,null, null, null, null, null,null, null, null, null, null,null, null, null, null, null,null, null, null, null, null,null, null, null, null, null,null];
+    this.data1 = [null, null, null, null, null,null, null, null, null, null,null, null, null, null, null,null, null, null, null, null,null, null, null, null, null,null, null, null, null, null, null, this.deviceToday, ...this.deviceFutureMonthPower];
+    this.label1 = "Last Month's History";
+    this.label2 = "Next Month's Prediction";
   }
   this.initializeChart();
   }

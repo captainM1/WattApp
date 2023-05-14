@@ -57,12 +57,12 @@
                     <select [(ngModel)]="selectedOption" (ngModelChange)="onOptionSelect()">
                         <option value="Today">Today</option>
                         <option value="Week">Week</option>
-                        <option value="Last Month">Last Month</option>
-                        <option value="Next Month">Next Month</option>
+                        <option value="Month">Month</option>
                     </select>
                 </div>
             </div>
             <div class="align-center chart">
+                <ngx-spinner bdColor = "rgba(0, 0, 0, 0.5)" size = "medium" color = "#fff" type = "ball-spin" [showSpinner]="showSpinner" [fullScreen]="false" *ngIf="showSpinner"><p style="color: #fff; margin-top: 60px;" > Please wait... </p></ngx-spinner>
                 <canvas #chart></canvas>
             </div>
         </div>
