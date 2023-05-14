@@ -375,4 +375,19 @@ public class UserController : ControllerBase
             return StatusCode(500, ex.Message);
         }
     }
+    
+    [HttpGet("status-of-application/{userID}")]
+    public async Task<IActionResult> UserStatusAppliedToDso(Guid userID)
+    {
+        try
+        {
+            var result = await _userService.UserStatusAppliedToDso(userID);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
 }

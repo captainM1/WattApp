@@ -3,7 +3,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import * as L from 'leaflet';
-import { Device, Info, Root, Root2, User } from 'models/User';
+import { Device, ExportSelected, Info, Root, Root2, User } from 'models/User';
 import { AuthService } from 'service/auth.service';
 import {PageEvent} from '@angular/material/paginator';
 import { FormsModule } from '@angular/forms';
@@ -83,21 +83,10 @@ export class TableComponent implements OnInit, AfterViewInit {
 // pagination
  public page = 1;
  public pageSize = 5;
- 
  showAllUsersOnMap : boolean = true;
  lengthOfUsers!: number;
  allUsers!: User[];
 
- // buttons - popUP
- showDevicePage = true;
- showSystemPage = false;
- showMeGeneral = false;
- showMeConsumptionProduction = false;
- showMeConsumption = true;
- showMeProduction = false;
-
-
-  
  private userCoords!: any[];
 
  public toggleTable: boolean = false;
@@ -156,7 +145,7 @@ export class TableComponent implements OnInit, AfterViewInit {
  
  id!:any;
 
- selectedDevice!: Device;
+ selectedDevice!: Device | any;
  device24h!:any[];
  valueDevice24h!:any[];
 
@@ -180,15 +169,18 @@ export class TableComponent implements OnInit, AfterViewInit {
     
 
   ){}
-
+  selectedGraphHistoryConsumption = '24h';
+  selectedGraphHistoryProduction = '24h'; 
+  selectedGraphFutureProduction = '24h';
+  selectedGraphFutureConsumption = '24h'; 
   ngAfterViewInit(): void {
     this.showMeUsers(this.page,this.pageSize);
     this.popUp(this.id);
     this.displayGraph(this.selectedDevice);
-    this.HistoryConsumption();
-    this.HistoryProduction();
-    this.FutureConsumption();
-    this.FutureProduction();
+    this.HistoryConsumption(this.selectedGraphHistoryConsumption);
+    this.HistoryProduction(this.selectedGraphHistoryProduction);
+    this.FutureConsumption(this.selectedGraphFutureConsumption);
+    this.FutureProduction(this.selectedGraphFutureProduction);
    
   }
   
@@ -196,12 +188,11 @@ export class TableComponent implements OnInit, AfterViewInit {
     
     if (changes) {
       const currentValue = changes.toString();
-      this.HistoryConsumption();
+      this.HistoryConsumption(this.selectedGraphHistoryConsumption);
     }
   }
 
-  selectedGraphHistoryConsumption = '24h';
-
+  
   ngOnInit(): void {
     this.spinner.show();
     setTimeout(() => {
@@ -262,7 +253,8 @@ export class TableComponent implements OnInit, AfterViewInit {
       this.allUsers = this.productionSortedUsers;
     }
   }
-  selectedUsers: any[] = [];
+    exportedUsers: ExportSelected[] = [];
+    selectedUsers: User[] = [];
     toggleExportSelected(user:any): void {
       this.exportSelected = !this.exportSelected;
       user.selected = !user.selected;
@@ -274,9 +266,68 @@ export class TableComponent implements OnInit, AfterViewInit {
           this.selectedUsers.splice(index, 1);
         }
       }
+      this.makeDataForExportSelectedUsers(this.selectedUsers);
+      console.log("Selected",this.selectedUsers);
     }
+    
+    makeDataForExportSelectedUsers(users: User[]){
+      this.exportedUsers = users.map(user => {
+        const exportUser: ExportSelected = {
+          firstName: user.firstName,
+          lastName: user.lastName,
+          address: user.address,
+          consumption: user.consumption,
+          production: user.production,
+          city: user.city,
+          country: user.country,
+          email: user.email
+        };
+        return exportUser;
+      });
+    }
+    SystemUsers!:User[];
+    allUsersExport!:ExportSelected[];
+    // consUser!:any;
+    // proUser!:any;
+    makeDataForExportAllUsers(){
+      // this.auth.getAllUserInfo().subscribe({
+      //   next: (response  : any)=>{
+      //     this.SystemUsers = response;
+      //   },
+      //   error:(err : any)=>{
+      //     console.log("Error get all users");
+      //   }
+      // });
+      // if(this.SystemUsers.length != 0){
+      // this.allUsersExport = this.SystemUsers.map(user => {
+      //   let consumption = 0;
+      //   this.auth.UserConsumptionSummary(user.id).subscribe(
+      //     (response :any)=>{
+      //       this.consUser =  response.toFixed(2);
+      //     }
+      //   )
+      //   let production = 0;
+      //   this.auth.UserProductionSummary(user.id).subscribe(
+      //     (response:any)=>{
+      //       this.proUser = response.toFixed(2);
+      //     }
+      //   )
+      this.allUsersExport = this.allUsers.map(user => {
+          const exportUser: ExportSelected = {
+          firstName: user.firstName,
+          lastName: user.lastName,
+          address: user.address,
+          consumption:  user.consumption,
+          production: user.production,
+          city: user.city,
+          country: user.country,
+          email: user.email
+        };
+        return exportUser;
+      });
+    
+  }
     activeColIndex: number = -1;
-
     setActiveCol(index: number): void {
       this.activeColIndex = index;
     }
@@ -289,28 +340,49 @@ export class TableComponent implements OnInit, AfterViewInit {
     }
 
   exportToExcel(): void {
-    const worksheet = XLSX.utils.table_to_sheet(document.querySelector('#myTable'));
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-    const fileBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-    const blob = new Blob([fileBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    saveAs(blob, 'table-data.xlsx');
+    this.makeDataForExportAllUsers();
+    if (this.allUsersExport && this.allUsersExport.length > 0) {
+      const worksheet = XLSX.utils.json_to_sheet(this.allUsersExport);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Exported Data');
+
+      const fileBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+      const blob = new Blob([fileBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      saveAs(blob, 'exported-data.xlsx');
+    }
   }
 
   exportSelectedData(): void {
-    if (this.selectedUsers && this.selectedUsers.length > 0) {
-      const selectedRows = this.selectedUsers.filter(user => user.selected);
-      const worksheet = XLSX.utils.json_to_sheet(selectedRows);
+    if (this.exportedUsers && this.exportedUsers.length > 0) {
+      const worksheet = XLSX.utils.json_to_sheet(this.exportedUsers);
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, 'Selected Data');
-    
+  
       const fileBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
       const blob = new Blob([fileBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
       saveAs(blob, 'selected-data.xlsx');
     }
   }
- 
- 
+
+  selectedColumn:any = null;
+  selectedColumn1:any = null;
+  selectedUsersTable: any[] = [];
+  toggleSelection(user:User, index : number){
+    if(user.selected){
+      this.selectedUsersTable.push(user);
+    }else{
+      const selectedIndex = this.selectedUsersTable.findIndex((selectedUsersTable) => selectedUsersTable.id === user.id)
+      if(selectedIndex !== -1){
+        this.selectedUsersTable.splice(selectedIndex, 1);
+      }
+    }
+    this.selectedColumn = index;
+  }
+  deselectUsers() {
+    this.selectedUsersTable = [];
+    this.selectedColumn = -1;
+  }
+  
   public showMeUsers(page:any, pageSize:any){ 
     this.auth.getPagination(this.page, this.pageSize).subscribe(
       (response : any)=> {
@@ -320,7 +392,6 @@ export class TableComponent implements OnInit, AfterViewInit {
           this.auth.UserConsumptionSummary(user.id).subscribe({
             next : (response:any) => {
               user.consumption = response.toFixed(2);
-            
             },
             error: (err:any)=>{
               user.consumption = 0;
@@ -396,6 +467,7 @@ export class TableComponent implements OnInit, AfterViewInit {
       });
       
   }
+
   urlRED = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAACCElEQVR4nO2Wy2pUQRCGK+k6Y7LxtjTGbAIyp+pkkGyylPgIStZe9sGlqHmcmE2IASEovoFBFEUICFHQjRh0PF0zySLS0nEmE8J0d82FceMPDWfR1V9XdfV/GuC/AqrncFE4u2sJN4XMjiUUP1rfT4WzO/UCLsCw5BZgUggfCeMvYXTRQVgXwoc+ZiBo4ypcsmxeJYGnhmXzppnDlf6gBVy2hF97hR7DCb80ajDVE9QtwKQl87pfaAdutt0MTKjBrTONlBL3LWdzyg08UEH/dm+ikQhXjzaoARPWVd0ulN1LljA3i2qwH0V2Owk+uqfxc9t1AOO9gC3hRjpjNh8TpXvcmavMmMyOAoxlZOeHTYLpbnElVaoReJkuNeNBBLwViitzcysS19SAP4cW8IsH4wi3In3xKQ0m3AiCqVLtFuPL748hUup1RcbjS9qmaccI40psXknmZhLsZuGMMH7Xgv3V8lcscgu+uRwqSbDWRNpgW5gbA5tHWw5gTAhfasDC+CTYVIzP/VrHC2vk/VXYfIiB7VzG/ocRMI33P2twHvpRowZTQuadttk6mZq3/hEBg+jHPJyzjM/UUMLNvVk4C8OQAxizhPeDZW25k2Vc7vlMNfIG4l2oizPthsxlaGoU2bxl/H0i00OpZtdgFBLGtdOvkZHI5mbxRJmvjwzsfLMxvujLIP61/gAUUjTlemPA2QAAAABJRU5ErkJggg==';
   urlGREEN = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAACDklEQVR4nO2Wz0tUURTHry1KN/1aarYPIoj+gbA/IceNoHPPiCAy75znptBi/hp1IyUIkrgY5x57RBFFFgiBCrqRNiZRLZSRM+Q46Lx7z/xg3PSFC2/xzvnce873nveM+a8U5ZL4NjACMC5aR5vA+EuWPFum19bFdoInbpl2KZPEPdbhDDj6CUxl37KMB+BoWmJagsL6ZC84eh8CXliOPo1zdLcp6Fgxfwcc7jUMrZ6edkeSuK8haCaJe4DxY7PQKtzhh9FioVsNrvTUmxT/5Fz0QHny5ypoxb0BI1mHs/KuDowHKrdbjnKhZNkSDWjBlVXCbBAs9zRQuq1CuXClIbDDV5r+fg/098XZJrUmo00N+NCT5ChbmuqvF5dbw3seTxyGwUx/00tGy+kbpkFPqX9rTrzjKdlgWpxsylOp7SBYjJCWQMpZL0bKL23wGHIhfGKmIa1pamJe+q9T9DQIzi/nr1nGH1qwXC25Yp7+7me+Fq4GwdohcgoGFz1peXhUVTZdwLiqAjPNed55I7nOEisk8xWYvnnhb6P78sFIuQEbo0W8aZrRSBL3AeMXrdlq+vpZfiJMKxpffXYDmJb0YFwcfpe/btqisumyjJRW1tPpZB1GDfdUo3/zeLvOgNhKGy5t0xhHj6zD4xrwEaxNPTSdkGWcP/830hFlSzRQnd+MjzsGNmI2hytNDYjL1gkX7ekz5cmu0gAAAABJRU5ErkJggg=='; 
   urlORANGE = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAACB0lEQVR4nO2Wz0tUURTHry20Nlku09oLIYT/QOimnYu85zxy0a+1ju9cS0lj/ppqEyoIYvQfFFEUwVCgom7qnhlHkWphPLna2FBz7z3zZpg2feHu3rmf+Z5z3neeUv/lUTXVfUz6HhMsM2GJCQ5ODpbY4BIbuFudu3VRtUtbqT7HhPPWwB4bzELHElaZ8JGraQlqHySXmPBVDPjXIXxbmdVXckH54cSANbjTNPTUPWxzqvvztPdNXujvA683irfPyt0SzodbCd8rM8mQzDnOiaBue6OLRPDk+AfKwFXRtrPB+9HLTDIiBf9atjuCNsNyxMF6ViyeaQZsCRYljj9HFmah7lmp45LAMe77W4yHZcLLDesKOBgA70sc/wi0bNVfl4wHXH+Lgi3Bpv+CZDxQt+rvFGxIwItecAEHG9W49rsxBEb0PAouGw3SpanVMOHj4LMp3IyCP03e6LEGrBTsXi33ivkXC75kRd0dBUtDpAa2hKMth0dNmVJdlvClBMwGnwZmu+buOr1YIpevlvBjCFw2cNX9YTR+9fDDbmHsgsojTnW/Nfheumx1Tt+5jwjViiqzupcNrIjBLusnJ86rdihTqotnYNrX1lo6sUmmmp6pRC5AXAo1mOe6L1zaJmv0sCX4WTfPw6+UXFOdEBM++/NrpCOyJhmpc3y9Y+DsOGDgRa6A+Nc6AulDHXQUoZSqAAAAAElFTkSuQmCC';
@@ -416,33 +488,51 @@ export class TableComponent implements OnInit, AfterViewInit {
         iconUrl: this.urlRED
       });
 
-  
+      if (this.selectedUsersTable.length > 0) {
+        // Select all users on the map
+        for (const user of this.selectedUsersTable) {
+          this.auth.getCoordsByUserID(user.id).subscribe((response: any) => {
+            const latlng = L.latLng(JSON.parse(response['coordinates']));
+            let power = user.consumption;
+            let marker= L.marker(latlng, { icon: greenIcon }).addTo(this.map);
+      
+             if (power > 350 && power <= 750) {
+              marker = L.marker(latlng, { icon: orangeIcon }).addTo(this.map);
+            } else if (power > 750) {
+              marker = L.marker(latlng, { icon: redIcon }).addTo(this.map);
+            }
+      
+            marker.bindPopup(`<b>${user.firstName} ${user.lastName} <br>${user.address}`).openPopup();
+            this.markers.push(marker);
+            this.map.setView(latlng, 8);
+          });
+        }
+      } else {
     
-    this.auth.getCoordsByUserID(id).subscribe(
-      (response: any) => {
-        const latlng = L.latLng(JSON.parse(response['coordinates']));
-        const user = this.allUsers.find(u => u.id === id);
-        let power = 0;
-        if(user)
-          power = user.consumption;
-        
-          if(power <= 300){
-            this.marker1  = L.marker(latlng, {icon : greenIcon}).addTo(this.map);
-          }else if(power > 300 && power <= 750){
-            this.marker1 = L.marker(latlng, {icon : orangeIcon}).addTo(this.map);
-          }else if(power > 750){
-            this.marker1  = L.marker(latlng, {icon : redIcon}).addTo(this.map);
-           
+        this.auth.getCoordsByUserID(id).subscribe(
+          (response: any) => {
+            const latlng = L.latLng(JSON.parse(response['coordinates']));
+            const user = this.allUsers.find(u => u.id === id);
+            let power = 0;
+            if(user)
+              power = user.consumption;
+              if(power <= 300){
+                this.marker1  = L.marker(latlng, {icon : greenIcon}).addTo(this.map);
+              }else if(power > 300 && power <= 750){
+                this.marker1 = L.marker(latlng, {icon : orangeIcon}).addTo(this.map);
+              }else if(power > 750){
+                this.marker1  = L.marker(latlng, {icon : redIcon}).addTo(this.map);
+              
+              }
+            this.marker1.bindPopup(`<b>${user?.firstName} ${user?.lastName} <br>${user?.address}`).openPopup();
+            this.markers.push(this.marker1);
+            this.map.setView(latlng, 15); 
           }
-        
-        this.marker1.bindPopup(`<b>${user?.firstName} ${user?.lastName} <br>${user?.address}`).openPopup();
-        this.markers.push(this.marker1);
-        this.map.setView(latlng, 15); 
+        );
       }
-    );
-     // poziv funkcije za svih uredjaja
+     
      this.showMeDevices(id);
-    // // poziv informacija o user-u za pop-up
+    
     this.id = id;
     this.popUp(id);
   }  
@@ -452,7 +542,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   numberOfConsumers:number = 0;
   numberOfStorage:number = 0;
   devices!:Info;
-  
+  public status!:any;
   showMeDevices(id : string){
     this.showDevGraph = !this.showDevGraph;
     this.getDeviceGroup();
@@ -461,15 +551,20 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.auth.getDeviceInfoUserByID(id).subscribe(
       (response : any) => {
         this.allUserDevices = response;
+        console.log("All user devices",this.allUserDevices);
         for(let us of this.allUserDevices){
           this.auth.currentPowerUsageDeviceID(us.deviceId).subscribe(
             {
               next:(response : any)=>{
                 this.todayPowerUsageDevice = (response);
                 us.powerusage = response.toFixed(2);
+                us.statusOfDevice = "ON";
+                this.status = 1;
               },
               error:(error : any)=>{
-                us.powerusage = "Device is turned off";
+                us.powerusage = 0;
+                us.statusOfDevice = "OFF"
+                this.status = 0;
               }
             }
           )
@@ -526,6 +621,8 @@ export class TableComponent implements OnInit, AfterViewInit {
   }
 // pop-up
   openModel(){
+    this.selectedUsersTable = [];
+    this.selectedColumn = null;
     const modelDiv = document.getElementById('myModal');
     const background = document.getElementById('myBack');
     if(modelDiv!=null){
@@ -543,8 +640,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     }
   }
   
-  showDevices:boolean = false;
-  showSystem:boolean = false;
+  
   powerUsagePopUp!: number;
  
   productionNextMonthUserLoader = false;
@@ -573,10 +669,10 @@ export class TableComponent implements OnInit, AfterViewInit {
         });
 
       this.savedEnergy(id);
-      this.HistoryConsumption();
-      this.HistoryProduction();
-      this.FutureConsumption();
-      this.FutureProduction();
+      this.HistoryConsumption(this.selectedGraphHistoryConsumption);
+      this.HistoryProduction(this.selectedGraphHistoryProduction);
+      this.FutureConsumption(this.selectedGraphFutureConsumption);
+      this.FutureProduction(this.selectedGraphFutureProduction);
       this.productionNextMonth(this.userPopUp.id);
       this.productionPrevMonth(this.userPopUp.id);
       }
@@ -593,27 +689,71 @@ export class TableComponent implements OnInit, AfterViewInit {
   
   isActiveProsumer = false;
   isActioveConsumer = true;
-  
-  toggleActiveCP(button: string) {
+   // buttons - popUP
+ showDevicePage = true;
+ showSystemPage = false;
+ showMeGeneral = false;
+
+ showMeConsumptionProduction = false;
+ 
+ public showMeConsumption = true;
+ public showMeProduction = false;
+ 
+ toggleActiveCP(button: string) {
     this.isActiveProsumer = button === 'prosumer';
     this.isActioveConsumer = button === 'consumer';
+    if(this.isActiveProsumer){
+      this.showMeProduction = true;
+      this.showMeConsumption = false;
+      this.HistoryProduction(this.selectedGraphHistoryProduction);
+      this.FutureProduction(this.selectedGraphFutureProduction);
+      
+    }else if(this.isActioveConsumer){
+      this.showMeProduction = false;
+      this.showMeConsumption = true;
+      this.FutureConsumption(this.selectedGraphFutureConsumption);
+      this.HistoryConsumption(this.selectedGraphHistoryConsumption);
+    }else{
+      this.showMeProduction = false;
+      this.showMeConsumption = false;
+    }
   }
   
   toggleActive(button: string) {
-    this.isActiveUser = button === 'user';
-    this.isActiveDevice = button === 'device';
-    this.isActiveSystem = button === 'system';
+    if (button === 'user') {
+      this.isActiveUser = true;
+      this.isActiveDevice = false;
+      this.isActiveSystem = false;
+      this.showDevicePage = false;
+      this.showSystemPage = false;
+      this.showMeGeneral = true;
+    
+    } else if (button === 'device') {
+      this.isActiveUser = false;
+      this.isActiveDevice = true;
+      this.isActiveSystem = false;
+      this.showDevicePage = true;
+      this.showSystemPage = false;
+      this.showMeGeneral = false;
+    
+    } else if (button === 'system') {
+      this.isActiveUser = false;
+      this.isActiveDevice = false;
+      this.isActiveSystem = true;
+      this.showDevicePage = false;
+      this.showSystemPage = true;
+      this.showMeGeneral = false;
+    
+    }
   }
+  
+  
 
-  selectedColumn: any = null;
-  selectedColumn1:any = null;
   graph24prev!:any[];
   selectDevice = false;
-  allDevices = true;
   graphDeviceLoader = false;
   displayGraph(device: Device) {
     this.selectDevice = true;
-    this.allDevices = false;
     this.selectedDevice = device;
     if (this.chartInstance) {
       this.chartInstance.destroy();
@@ -630,7 +770,9 @@ export class TableComponent implements OnInit, AfterViewInit {
       }
     )
   }
-  
+  deselectDevice() {
+    this.selectedDevice = null;
+  }
   timeStampDevice24h!:any[];
   powerUsageDevice24h!:any[];
   makeDataGraph12(dataGraph:any){
@@ -1215,9 +1357,9 @@ productionPreviousMonthUser(id : any){
     }}
     
   
-       // set default graph
-       HistoryConsumption() {
-        switch (this.selectedGraphHistoryConsumption) {
+       
+       HistoryConsumption(graph:any) {
+        switch (graph) {
           case '24h':
             this.consumptionPrevious24h(this.id);
             break;
@@ -1232,9 +1374,9 @@ productionPreviousMonthUser(id : any){
       }
 
     
-      selectedGraphFutureConsumption = '24h'; 
-      FutureConsumption() {
-        switch (this.selectedGraphFutureConsumption) {
+      
+      FutureConsumption(graph : any) {
+        switch (graph) {
           case 'month':
             this.consumptionNextMonth(this.id);
           break;
@@ -1439,9 +1581,9 @@ consumptionNext24hGraph(){
 }
 }
 
-selectedGraphHistoryProduction = '24h'; 
-    HistoryProduction() {
-    switch (this.selectedGraphHistoryProduction) {
+
+    HistoryProduction(graph : any) {
+    switch (graph) {
       case 'month':
           this.productionPrevMonth(this.id);
       break;
@@ -1454,10 +1596,10 @@ selectedGraphHistoryProduction = '24h';
     }
   }
 
-  selectedGraphFutureProduction = '24h';
-      FutureProduction() {
+  
+      FutureProduction(graph:any) {
      
-      switch (this.selectedGraphFutureProduction) {
+      switch (graph) {
         case 'month':
           this.productionNextMonth(this.id);
         break;

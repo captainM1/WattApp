@@ -213,6 +213,11 @@ button:focus{
     margin-left: 60px;
   }
 
+  table
+  {
+    font-size: 12px;
+  }
+
 }
 @media(min-width: 1024px){
   .container
@@ -484,6 +489,85 @@ input::placeholder{
 #button-1 .layer {
   transition: 0.3s ease all;
 }
+
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background-color: #026670;
+  color: #fff;
+  font-weight: 700;
+  text-align: left;
+}
+
+td,
+th {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background-color: #026670;
+  color: #fff;
+  font-weight: 700;
+  text-align: left;
+}
+
+td,
+th {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+
+.img-tabela
+{
+  width: 20px;
+  height: 20px;
+}
+
+
+#closeBtn
+{
+  width: 30px;
+  height: 20px;
+  font-size: 15px;
+  margin-left: 40px;
+}
+
+.modal-body {
+  max-height: 400px;
+  overflow-y: scroll;
+}
+
+.buttonOpenModal
+{
+  background-color: #026670 !important;
+}
+
+
+.buttonOpenModal:hover
+{
+  background-color: #38b4bf !important;
+}
+
+.fa-table
+{
+  color: #fff !important;
+}
+
+
+
 
 
 

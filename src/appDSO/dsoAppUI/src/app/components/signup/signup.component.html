@@ -73,27 +73,46 @@
         </div>
             
         <div class="col-6 centriranjegore">
-            <p-table [value]="allWorkers" styleClass="p-datatable-gridlines" [tableStyle]="{ 'min-width': '50rem' }" style="height:65%;width: 100%;border-radius: 10px;padding: 50px;padding-top: 0px;"> 
-                <ng-template pTemplate="header">
-                    <tr>
-                        <th>Name</th>
-                        <th>Surename</th>
-                        <th>Role</th>
-                        <th>Email</th>
-                        <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-worker>
-                    <tr>
-                        <td>{{ worker.firstName }}</td>
-                        <td>{{ worker.lastName }}</td>
-                        <td>{{ worker.role }}</td>
-                        <td>{{ worker.email }}</td>
-                        <td><button style="width: 100%;"><i class="bi bi-x-lg" style="color:white"></i></button></td>
-                    </tr>
-                </ng-template>
-            </p-table>
+            <table >
+                <tr >
+                    <th>Name</th>
+                    <th>Surename</th>
+                    <th>Role</th>
+                    <th>Email</th>
+                    <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                    <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;</th>
+                </tr>
+                <tr *ngFor = "let worker of allWorkers">
+                    <td>{{ worker.firstName }}</td>
+                    <td>{{ worker.lastName }}</td>
+                    <td>{{ worker.role }}</td>
+                    <td>{{ worker.email }}</td>
+                    <td><button class="modalBtn" (click) = "giveMeWorker(worker.id)"  mat-button data-bs-target="#profile" data-bs-toggle="modal">
+                        Show Profile
+                    </button>
+                    </td>
+                    <td><button id = "deleteBtn" (click)="deleteDispecher(worker.id)">Delete</button></td>
+                    
+                
+                </tr>
+            </table>
         </div>
+        
     </div>
   </div>
+</div>
+<div class="modal fade " id="profile" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" >
+      <div class="modal-content">
+        <div class="modal-header">
+          <p class="modal-title" id="profileDispacher">
+            Profile
+          </p>
+          <button type="button" id="closeBtn" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+            <div class="modal-body" style="overflow-y: auto; overflow-x: hidden; width: 100%;">
+                <app-model-profile #profileDispacher [firstName]="firstNameModal" [lastName]="lastNameModal" [email]="emailModal" [phoneNumber]="mobileModal" [role]="roleModal"></app-model-profile>
+            </div>
+        </div>
+    </div>
 </div>

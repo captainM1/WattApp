@@ -84,9 +84,7 @@ label{
   padding-top: 5px;
 }
 
-.p-paginator{
-  display: block ruby;
-}
+
 app-profile{
   position: absolute;
   width: 100%;
@@ -277,6 +275,7 @@ label{
   border: 2px solid rgb(73,190,170);
   color: black;
   font-weight: 500;
+  cursor: pointer;
 }
 .style-info{
   margin-top: 2px;
@@ -334,4 +333,29 @@ label{
   width: 50%;
   text-align: center;
   height: 25px;
+}
+.paginator-container {
+  display: inline-block;
+  width: 100%; /* Adjust the width as needed */
+}
+tfoot{
+  width: 100%;
+  display: table-caption;
+  border: 2px solid #026670;
+  border-top: 0px;
+}
+.p-paginator{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.green {
+  color: #62C370;
+  font-weight: 600;
+}
+
+.red {
+  color: #e3170a;
+  font-weight: 600;
 }

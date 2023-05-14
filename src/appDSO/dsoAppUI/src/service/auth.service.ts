@@ -349,4 +349,15 @@ export class AuthService {
   acceptReq(reqID: any):Observable<any> {
     return this.http.post<string>(environment.apiUrl + "/api/User/approve-request-to-dso/"+reqID,{});
   }
+
+  deleteDispathcer(dispatcherID : any):Observable<any>{
+    return this.http.delete<any>(environment.apiUrl + "/api/Dispatcher/delete-dispathcer/"+dispatcherID);
+  }
+
+  getDispacher(id : any):Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/Dispatcher/get-single/" + id);
+  }
+  declineRequest(reqID:any):Observable<any> {
+    return this.http.post<string>(environment.apiUrl + "/api/User/decline-request-to-dso/"+reqID,{});
+  }
 }
