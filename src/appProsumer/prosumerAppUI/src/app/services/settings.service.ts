@@ -26,7 +26,7 @@ export class SettingsService {
 
   allowAccessToInformation(allowAccess: boolean) {
     const body = { allowAccess };
-    return this.http.post(`${environment.apiUrl}/allowAccessToInformation`, body);
+    return this.http.post(`${environment.apiUrl}/api/User/update-user-data-sharing-permission/${this.userId}`, body);
   }
 
   allowControlConsumptionTime(allowControl: boolean) {
