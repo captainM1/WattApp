@@ -12,6 +12,7 @@ export class SettingsService {
 
   constructor( private http: HttpClient, private cookie: CookieService, private auth: AuthService) { }
   userId: any = this.auth.getToken();
+  role: any = this.auth.getRole();
 
   getShareInfo(){
     return this.http.get<any>(`${environment.apiUrl}/api/User/user-shares-with-DSO/${this.userId}`, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });

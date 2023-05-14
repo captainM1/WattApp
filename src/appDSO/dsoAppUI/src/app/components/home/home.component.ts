@@ -147,7 +147,8 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		private spinner: NgxSpinnerService,
 		public dialog: MatDialog
 	){}
-
+selectedGraphHistoryConsumption = '24h';
+selectedGraphFutureConsumption = '24h';
 	ngOnInit(): void {	
 		
 		this.giveMeWeather();
@@ -156,8 +157,8 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		this.getDate();
 		this.getNumberOfUsers();
 		this.getDeviceGroup();
-		this.HistoryConsumption();
-		this.FutureConsumption();
+		this.HistoryConsumption(this.selectedGraphHistoryConsumption);
+		this.FutureConsumption(this.selectedGraphFutureConsumption);
 		this.displayGraphConsumption(this.selectedGraph);
 		this.displayGraphProduction(this.selectedGraph);
 		this.currentProductionDay();
@@ -1321,7 +1322,6 @@ export class HomeComponent implements OnInit, AfterViewInit{
 
 
 			consumptionPreviousMonthData!:any;
-			
 			consumptionPreviousMonth(){
 				this.spinner.show();
 				this.consumptionPrevMonthLoader = true;
@@ -1377,7 +1377,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 				this.auth.productionPreviousMonth().subscribe({
 					next:(response : any)=>{
 						this.productionPreviousMonthData = response['timestampPowerPairs'];
-						
+						console.log
 						this.makeDataProductionPrevMonth(this.productionPreviousMonthData);
 						this.spinner.hide();
 						this.productionPrevMonthSystemLoader = false;
@@ -1471,33 +1471,36 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			  }
 			}
 		
-		selectedGraphHistoryConsumption = '24h';
-		HistoryConsumption() {
-		switch (this.selectedGraphHistoryConsumption) {
+		
+		HistoryConsumption(graph : any) {
+		switch (graph) {
 			case '24h':
 			this.consumptionPrev24h();
-			//this.productionPrev24h();
+			this.productionPrev24h();
 			break;
 			case '7days':
-				//this.productionPrev7Days();
+				this.productionPrev7Days();
 				this.consumptionPrev7Days();
 			break;
 			case 'month':
 				this.consumptionPreviousMonth();
-				//this.productionPreviousMonth();
+				this.productionPreviousMonth();
 			break;
 		}
 	}
-	selectedGraphFutureConsumption = '24h';
-	FutureConsumption(){
-		switch (this.selectedGraphFutureConsumption) {
+	
+	FutureConsumption(graph : any){
+		switch (graph) {
 			case '24h':
+				this.productionNext24h();
 				this.consumptionNext24h();
 			break;
 			case '7days':
+				this.productionNext7Days();
 				this.consumptionNext7Days();
 			break;
 			case 'month':
+				this.productionNextMonth();
 				this.consumptionNextMonth();
 			break;
 		}

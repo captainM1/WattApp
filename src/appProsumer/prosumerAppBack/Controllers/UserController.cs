@@ -202,7 +202,7 @@ public class UserController : ControllerBase
     {
         try
         {
-            var result = await _userService.DeclineUserRequestToDso(id);
+            var result = await _userService.RemoveUserRequestToDso(id);
 
             return Ok(result);
         }
@@ -293,7 +293,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("decline-request-to-dso/{id}")]
-    [Authorize(Roles = "Dispatcher,Admin")]
+    //[Authorize(Roles = "Dispatcher,Admin")]
     public async Task<IActionResult> DeclineRequestForDso(Guid id)
     {
         try

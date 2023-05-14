@@ -232,11 +232,17 @@ public class UserRepository : IUserRepository
     }
     public async Task<Boolean> CreateUserRequestToDso(Guid userID)
     {
+        var user = _dbContext.UsersAppliedToDSO.FirstOrDefault(x => x.UserID == userID && x.Approved == null);
+        if(user != null)
+        {
+            return false;
+        }
         var newUser = new UsersRequestedToDso
         {
             ID = Guid.NewGuid(),
             UserID = userID,
-            Approved = false
+            Approved = null,
+            Date = null
         };
         _dbContext.UsersAppliedToDSO.Add(newUser);
         await _dbContext.SaveChangesAsync();
@@ -244,9 +250,15 @@ public class UserRepository : IUserRepository
     }
     public async Task<Boolean> ApproveUserRequestToDso(Guid id)
     {
-        var newUser = await _dbContext.UsersAppliedToDSO.FindAsync(id);
+        var newUser = await _dbContext.UsersAppliedToDSO.FirstOrDefaultAsync(x => x.UserID == id && x.Approved == null);
+        if(newUser == null)
+        {
+            return false;
+        }
+        newUser.Approved = true;
+        newUser.Date = DateTime.Now;
 
-        var approvedUser = _dbContext.Users.FindAsync(newUser.UserID);
+        var approvedUser = _dbContext.Users.FirstOrDefaultAsync(u => u.ID == newUser.UserID);
         approvedUser.Result.sharesDataWithDso = true;
         approvedUser.Result.Role = "RegularUser";
         _dbContext.Users.Update(approvedUser.Result);
@@ -260,7 +272,14 @@ public class UserRepository : IUserRepository
 
     public async Task<Boolean> DeclineUserRequestToDso(Guid id)
     {
-        var user = await _dbContext.UsersAppliedToDSO.FindAsync(id);
+        var user = await _dbContext.UsersAppliedToDSO.FirstOrDefaultAsync(x => x.UserID == id && x.Approved == null);
+        if (user == null)
+        {
+            return false;
+        }
+        user.Approved = false;
+        user.Date = DateTime.Now;
+
 
         //user.Approved = -1;
         _dbContext.UsersAppliedToDSO.Remove(user);
@@ -293,6 +312,7 @@ public class UserRepository : IUserRepository
     public async Task<List<UserDto>> GetAllUsersAsync()
     {
         var users = await _dbContext.Users
+            .Where(r => r.Role == "RegularUser")
             .Select(u => new UserDto {
                 ID = u.ID,
                 FirstName = u.FirstName,
@@ -361,7 +381,7 @@ public class UserRepository : IUserRepository
     public async Task<List<UsersRequestedToDso>> GetUsersAppliedToDso()
     {
         var users = await _dbContext.UsersAppliedToDSO
-            .Where(u => u.Approved == false)
+            .Where(u => u.Approved == null)
             .ToListAsync();
 
         if (users == null)
@@ -394,6 +414,15 @@ public class UserRepository : IUserRepository
             return false;
         }
         
+        return true;
+    }
+
+    public async Task<Boolean> RemoveUserRequestToDso(Guid id)
+    {
+        var user = await _dbContext.UsersAppliedToDSO.FirstOrDefaultAsync(x => x.UserID == id && x.Approved == null);
+
+        _dbContext.UsersAppliedToDSO.Remove(user);
+        await _dbContext.SaveChangesAsync();
         return true;
     }
 }

@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddProducerComponent } from './add-producer.component';
+import { ModelProfileComponent } from './model-profile.component';
 
-describe('AddProducerComponent', () => {
-  let component: AddProducerComponent;
-  let fixture: ComponentFixture<AddProducerComponent>;
+describe('ModelProfileComponent', () => {
+  let component: ModelProfileComponent;
+  let fixture: ComponentFixture<ModelProfileComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AddProducerComponent ]
+      declarations: [ ModelProfileComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AddProducerComponent);
+    fixture = TestBed.createComponent(ModelProfileComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
