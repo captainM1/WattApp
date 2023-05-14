@@ -357,4 +357,12 @@ export class AuthService {
   getDispacher(id : any):Observable<any>{
     return this.http.get(environment.apiUrl + "/api/Dispatcher/get-single/" + id);
   }
+
+  userShareDataWithDSO(userID : any){
+    return this.http.get(environment.apiUrl + "/api/User/user-shares-with-DSO/" + userID);
+  }
+  
+  dsoHasControl(userID : any){
+    return this.http.get(environment.apiUrl + "/api/User/DSO-has-control/"+userID);
+  }
 }

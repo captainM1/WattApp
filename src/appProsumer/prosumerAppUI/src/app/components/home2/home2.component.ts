@@ -285,8 +285,8 @@ showWeatherDetails()
   this.auth.getWeather().subscribe(
     (response: any) => {
       this.weather = response;
-      this.isSunny = this.weather.current_weather.temperature > 15 && this.weather.hourly.relativehumidity_2m[0]< 30;
-      this.isCloudy = this.weather.current_weather.temperature <= 15 && (this.weather.hourly.relativehumidity_2m[0] >= 30 && this.weather.hourly.relativehumidity_2m[0] < 90)
+      this.isSunny = this.weather.current_weather.temperature > 15 && this.weather.hourly.relativehumidity_2m[0] < 30;
+      this.isCloudy = (this.weather.current_weather.temperature <= 15 || this.weather.current_weather.temperature > 0)  && (this.weather.hourly.relativehumidity_2m[0] >= 30 || this.weather.hourly.relativehumidity_2m[0] < 90)
       this.isRainy =  this.weather.hourly.relativehumidity_2m[0] >= 90;
       this.isSnowy = this.weather.current_weather.temperature <= 0;
       console.log(this.isCloudy);

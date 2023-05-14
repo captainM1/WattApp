@@ -56,10 +56,9 @@ export class LoginComponent implements OnInit{
       .subscribe(
         (response) => {
           this.cookie.set('jwtToken', response);
-          this.messageService.add({ severity: 'success', summary: 'Logged in', detail: 'Welcome back', life: 1000 });
+          this.messageService.add({ severity: 'success', summary: 'Logged in', detail: 'Welcome back', life: 3000 });
           
           setTimeout(() => {
-            
             this.spinner.hide();
             this.showsignin = false;
             this.router.navigate(['home']);
@@ -69,22 +68,18 @@ export class LoginComponent implements OnInit{
           this.spinner.hide();
           this.showsignin = false;
           if (error.status === 400) {
-            this.messageService.add({ severity: 'error', summary: 'Invalid credentials', detail: error.error });
+            this.messageService.add({ severity: 'error', summary: 'Invalid credentials', detail: error.error, life: 3000 });
             this.router.navigate(['/signin'])
             this.spinner.hide();
             this.showsignin = false;
-           
-            
           }
         }
       );
     }else{
-      this.messageService.add({ severity: 'error', summary: 'Invalid credentials', detail: 'Invalid data format' });
+      this.messageService.add({ severity: 'error', summary: 'Invalid credentials', detail: 'Invalid data format', life: 3000 });
       this.router.navigate(['/signin']);
       this.spinner.hide();
       this.showsignin = false;
-      
-     
     }
   }
 
