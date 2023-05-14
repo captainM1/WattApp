@@ -13,7 +13,7 @@ namespace prosumerAppBack.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-//[Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
+[Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
 public class PowerUsageController : ControllerBase
 {
     private readonly IPowerUsageService _powerUsageService;
@@ -532,17 +532,17 @@ public class PowerUsageController : ControllerBase
         return Ok(powerUsage);
     }
 
-    [HttpGet("power-usage/percentage-difference-for-previous-week/consumption/{userId}")]
-    public async Task<ActionResult<double>> percentPowerUsageDifferenceForPreviousWeekConsumption(Guid userId)
+    [HttpGet("power-usage/percentage-difference-for-previous-hour/consumption/{userId}")]
+    public async Task<ActionResult<double>> percentPowerUsageDifferenceForPreviousHourConsumption(Guid userId)
     {
-        var powerUsage = await _powerUsageService.percentPowerUsageDifferenceForPreviousWeekConsumption(userId);
+        var powerUsage = await _powerUsageService.percentPowerUsageDifferenceForPreviousHourConsumption(userId);
         return Ok(powerUsage);
     }
 
-    [HttpGet("power-usage/percentage-difference-for-previous-week/production/{userId}")]
-    public async Task<ActionResult<double>> percentPowerUsageDifferenceForPreviousWeekProduction(Guid userId)
+    [HttpGet("power-usage/percentage-difference-for-previous-hour/production/{userId}")]
+    public async Task<ActionResult<double>> percentPowerUsageDifferenceForPreviousHourProduction(Guid userId)
     {
-        var powerUsage = await _powerUsageService.percentPowerUsageDifferenceForPreviousWeekProduction(userId);
+        var powerUsage = await _powerUsageService.percentPowerUsageDifferenceForPreviousHourProduction(userId);
         return Ok(powerUsage);
     }
 

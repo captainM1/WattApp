@@ -11,6 +11,7 @@ export class SettingsService {
 
   constructor( private http: HttpClient, private cookie: CookieService, private auth: AuthService) { }
   userId: any = this.auth.getToken();
+  role: any = this.auth.getRole();
 
   getShareInfo(){
     return this.http.get<any>(`${environment.apiUrl}/api/User/user-shares-with-DSO/${this.userId}`, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
@@ -22,6 +23,18 @@ export class SettingsService {
 
   sendRequest(){
     return this.http.post<any>(`${environment.apiUrl}/api/User/send-request-to-dso/${this.userId}`, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
+  }
+
+  userAlreadyApplied(){
+    return this.http.get<any>(`${environment.apiUrl}/api/User/user-allready-applied-to-DSO/${this.userId}`, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
+  }
+
+  cancelRequest(){
+    return this.http.post<any>(`${environment.apiUrl}/api/User/remove-request-to-dso/${this.userId}`, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
+  }
+
+  getRole(){
+    return this.role;
   }
 
   allowAccessToInformation(allowAccess: boolean) {

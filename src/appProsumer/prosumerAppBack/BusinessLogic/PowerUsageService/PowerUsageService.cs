@@ -481,20 +481,28 @@ public class PowerUsageService:IPowerUsageService
         return powerUsage;
     }
 
-    public async Task<double> percentPowerUsageDifferenceForPreviousWeekConsumption(Guid userId)
+    public async Task<double> percentPowerUsageDifferenceForPreviousHourConsumption(Guid userId)
     {
-        var powerUsage = await _repository.percentPowerUsageDifferenceForPreviousWeekConsumption(userId);
+        var powerUsage = await _repository.percentPowerUsageDifferenceForPreviousHourConsumption(userId);
         if(double.IsNaN(powerUsage))
+        {
+            return 0.0;
+        }
+        if(double.IsInfinity(powerUsage))
         {
             return 0.0;
         }
         return powerUsage;
     }
 
-    public async Task<double> percentPowerUsageDifferenceForPreviousWeekProduction(Guid userId)
+    public async Task<double> percentPowerUsageDifferenceForPreviousHourProduction(Guid userId)
     {
-        var powerUsage = await _repository.percentPowerUsageDifferenceForPreviousWeekProduction(userId);
+        var powerUsage = await _repository.percentPowerUsageDifferenceForPreviousHourProduction(userId);
         if (double.IsNaN(powerUsage))
+        {
+            return 0.0;
+        }
+        if (double.IsInfinity(powerUsage))
         {
             return 0.0;
         }

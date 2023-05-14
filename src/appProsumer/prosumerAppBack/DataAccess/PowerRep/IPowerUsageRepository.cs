@@ -55,8 +55,8 @@ namespace prosumerAppBack.BusinessLogic
         public Task<PowerUsage> GetPowerUsagesForEachDayConsumptionWeek(int direction);
         public Task<PowerUsage> GetPowerUsagesForEachDayProduction24h(int direction);
         public Task<PowerUsage> GetPowerUsagesForEachDayConsumption24h(int direction);
-        public Task<double> percentPowerUsageDifferenceForPreviousWeekConsumption(Guid userId);
-        public Task<double> percentPowerUsageDifferenceForPreviousWeekProduction(Guid userId);
+        public Task<double> percentPowerUsageDifferenceForPreviousHourConsumption(Guid userId);
+        public Task<double> percentPowerUsageDifferenceForPreviousHourProduction(Guid userId);
         public Task<double> electricityBillLastMonth(Guid userID, double electricityRate);
         public Task<double> electricityBill2MonthsAgo(Guid userID, double electricityRate);
         public Task<double> electricityEarningsLastMonth(Guid userID, double electricityRate);
