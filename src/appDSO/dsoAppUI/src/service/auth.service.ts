@@ -360,4 +360,12 @@ export class AuthService {
   declineRequest(reqID:any):Observable<any> {
     return this.http.post<string>(environment.apiUrl + "/api/User/decline-request-to-dso/"+reqID,{});
   }
+
+  userShareDataWithDSO(userID : any){
+    return this.http.get(environment.apiUrl + "/api/User/user-shares-with-DSO/" + userID);
+  }
+  
+  dsoHasControl(userID : any){
+    return this.http.get(environment.apiUrl + "/api/User/DSO-has-control/"+userID);
+  }
 }

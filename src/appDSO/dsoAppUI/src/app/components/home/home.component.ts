@@ -147,8 +147,8 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		private spinner: NgxSpinnerService,
 		public dialog: MatDialog
 	){}
-selectedGraphHistoryConsumption = '24h';
-selectedGraphFutureConsumption = '24h';
+	selectedGraphHistoryConsumption = '24h';
+	selectedGraphFutureConsumption = '24h';
 	ngOnInit(): void {	
 		
 		this.giveMeWeather();
@@ -387,6 +387,7 @@ selectedGraphFutureConsumption = '24h';
 		this.auth.currentConsumptionDay().subscribe(
 		(response:any)=>{
 			this.currentDataC = response['timestampPowerPairs'];
+			console.log()
 			this.consumptionCurrentDifference(this.currentDataC);
 			this.makeDataForConsumptionDay(this.currentDataC);
 			this.lineChartConsumptionProduction(this.powerusageCurrentDayProduction, this.powerusageCurrentConsumptionDay, this.timestampCurrentConsumptionDay);
@@ -469,7 +470,7 @@ selectedGraphFutureConsumption = '24h';
 			for(let i = 0; i < dataGraph.length; i++){
 				this.powerusageCurrentDayProduction.push(this.currentDataP[i]['powerUsage']);
 			  }
-			  console.log("powerusageCurrentDayProduction",this.powerusageCurrentDayProduction)
+			  
 		}
 
 		chartCurrentConsumptionSystem!:any;
@@ -516,7 +517,7 @@ selectedGraphFutureConsumption = '24h';
 
 		graphProductionConsumption:any;
 		lineChartConsumptionProduction(data1 : any, data3: any, label : any){
-			console.log("POZVANA SAM lineChartConsumptionProduction");
+			console.log("labnel", label);
 			const d1 = data1;
 			const d2 = data3;
 			const l = label;
@@ -531,11 +532,11 @@ selectedGraphFutureConsumption = '24h';
 					{
 							label: 'Consumtion',
 							data: data1,
-							borderColor: this.backgroundColorsGraphs[1],
-							backgroundColor: this.backgroundColorsRGBA4[1],
-							pointBackgroundColor: 	this.backgroundColorsRGBA7[1],
+							borderColor: this.backgroundColorsGraphs[3],
+							backgroundColor: this.backgroundColorsRGBA4[3],
+							pointBackgroundColor: 	this.backgroundColorsRGBA7[3],
 							borderWidth: 1,
-							pointBorderColor:this.backgroundColorsGraphs[1],
+							pointBorderColor:this.backgroundColorsGraphs[3],
 							pointStyle: 'circle',
 							pointRadius: 3,
 							pointHoverRadius: 5
@@ -543,11 +544,11 @@ selectedGraphFutureConsumption = '24h';
 					{
 							label: 'Production',
 							data: data3,
-							borderColor: this.backgroundColorsGraphs[0],
-							backgroundColor: this.backgroundColorsRGBA4[0],
-							pointBackgroundColor: 	this.backgroundColorsRGBA7[0],
+							borderColor: this.backgroundColorsGraphs[4],
+							backgroundColor: this.backgroundColorsRGBA4[4],
+							pointBackgroundColor: 	this.backgroundColorsRGBA7[4],
 							borderWidth: 1,
-							pointBorderColor:this.backgroundColorsGraphs[0],
+							pointBorderColor:this.backgroundColorsGraphs[4],
 							pointStyle: 'circle',
 							pointRadius: 3,
 							pointHoverRadius: 5
@@ -555,9 +556,56 @@ selectedGraphFutureConsumption = '24h';
 						
 					]
 				};
+				const options: ChartOptions = {
+					animations: {
+						radius: {
+						  duration: 400,
+						  easing: 'linear',
+						  loop: (context) => context.active
+						}
+					  },
+						interaction: {
+						mode: 'nearest',
+						intersect: true,
+						axis: 'x'
+						},
+						plugins: {
+						tooltip: {
+							enabled: true
+						}
+						},
+					scales: {
+						x: {
+						title: {
+							display: true,
+							text: 'Time (hour)',
+						},
+						ticks: {
+							font: {
+							size: 14,
+							},
+						},
+						},
+						y: {
+						title: {
+							display: true,
+							text: 'Current power consumption and production (kW)',
+							font:{
+							size: 10,
+							}
+						},
+						ticks: {
+							font: {
+							size: 9,
+							},
+						},
+						},
+					},
+				};
 				this.graphProductionConsumption = new Chart(this.consumptionProduction.nativeElement, {
 						type: 'line',
-						data: data
+						data: data,
+						options:options
 				});
 			}
 		}
@@ -624,7 +672,7 @@ selectedGraphFutureConsumption = '24h';
 			this.consumptionNextMonthSystemLoader = true;
 			this.auth.nextMonthConsumtionSystem().subscribe(
 				(response : any) => {
-					this.nextMonthConsumptionSys = (response/1000).toFixed(2);
+					this.nextMonthConsumptionSys = (response).toFixed(2);
 					this.halfDoughnutNextMonthConsumtionSys(this.nextMonthConsumptionSys);
 					this.spinner.hide();
 					this.consumptionNextMonthSystemLoader = false;
@@ -1146,7 +1194,7 @@ selectedGraphFutureConsumption = '24h';
 						y: {
 						title: {
 							display: true,
-							text: 'Power consumption (kW)',
+							text: 'Power consumption and production (kW)',
 							font:{
 							size: 10,
 							}
@@ -1299,7 +1347,7 @@ selectedGraphFutureConsumption = '24h';
 					y: {
 					  title: {
 						display: true,
-						text: 'Power consumption (kW)',
+						text: 'Power consumption and production (kW)',
 						font:{
 						  size: 10,
 						}
@@ -1365,7 +1413,7 @@ selectedGraphFutureConsumption = '24h';
 					};
 					this.dataMonthHistory.push(pair);
 				}
-				console.log("DATA",this.dataMonthHistory);
+				
 			
 			  }
 
@@ -1439,7 +1487,7 @@ selectedGraphFutureConsumption = '24h';
 					x: {
 					  title: {
 						display: true,
-						text: 'Time (month and day)',
+						text: 'Date (month and day)',
 					  },
 					  ticks: {
 						font: {
@@ -1450,7 +1498,7 @@ selectedGraphFutureConsumption = '24h';
 					y: {
 					  title: {
 						display: true,
-						text: 'Power consumption (kW)',
+						text: 'Power consumption and production (kW)',
 						font:{
 						  size: 10,
 						}
@@ -1475,8 +1523,8 @@ selectedGraphFutureConsumption = '24h';
 		HistoryConsumption(graph : any) {
 		switch (graph) {
 			case '24h':
-			this.consumptionPrev24h();
-			this.productionPrev24h();
+				this.productionPrev24h();
+				this.consumptionPrev24h();
 			break;
 			case '7days':
 				this.productionPrev7Days();
@@ -1600,7 +1648,7 @@ selectedGraphFutureConsumption = '24h';
 			y: {
 			  title: {
 				display: true,
-				text: 'Power consumption (kW)',
+				text: 'Power consumption and production (kW)',
 				font:{
 				  size: 10,
 				}
@@ -1694,7 +1742,7 @@ selectedGraphFutureConsumption = '24h';
 			y: {
 			  title: {
 				display: true,
-				text: 'Power consumption (kW)',
+				text: 'Power consumption and production (kW)',
 				font:{
 				  size: 10,
 				}
@@ -1819,7 +1867,7 @@ selectedGraphFutureConsumption = '24h';
 			x: {
 			  title: {
 				display: true,
-				text: 'Time (day and month)',
+				text: 'Date (day and month)',
 			  },
 			  ticks: {
 				font: {
@@ -1830,7 +1878,7 @@ selectedGraphFutureConsumption = '24h';
 			y: {
 			  title: {
 				display: true,
-				text: 'Power consumption (kW)',
+				text: 'Power consumption and production (kW)',
 				font:{
 				  size: 10,
 				}

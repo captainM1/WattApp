@@ -58,6 +58,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   chartInstance!: Chart;
   subscription!: Subscription;
  
+  public deviceStatus!:boolean;
  
   consumptionNext7days: any;
  
@@ -572,12 +573,13 @@ export class TableComponent implements OnInit, AfterViewInit {
           this.numberOfProsumers = 0;
           this.numberOfStorage = 0;
         this.auth.getDevicesInfoByID(us.deviceId).subscribe({
-         
           next: (response:any)=>{
             us.typeOfDevice = response.groupName;
+            console.log("tyoe", us.typeOfDevice);
             if(response.groupName === "Consumer"){
               this.numberOfConsumers++;
-            }else if(response.groupName === "Prosumer"){
+            }else if(response.groupName === "Producer"){
+              console.log("resp", response.groupName);
               this.numberOfProsumers++;
             }else if(response.groupName === "Storage"){
               this.numberOfStorage++;
@@ -675,6 +677,7 @@ export class TableComponent implements OnInit, AfterViewInit {
       this.FutureProduction(this.selectedGraphFutureProduction);
       this.productionNextMonth(this.userPopUp.id);
       this.productionPrevMonth(this.userPopUp.id);
+      this.dsoHasControlDevice(this.userPopUp.id);
       }
     );
    }
@@ -699,25 +702,28 @@ export class TableComponent implements OnInit, AfterViewInit {
  public showMeConsumption = true;
  public showMeProduction = false;
  
+ 
  toggleActiveCP(button: string) {
     this.isActiveProsumer = button === 'prosumer';
     this.isActioveConsumer = button === 'consumer';
+    if(this.showSystemPage){
+    
     if(this.isActiveProsumer){
+  
       this.showMeProduction = true;
       this.showMeConsumption = false;
       this.HistoryProduction(this.selectedGraphHistoryProduction);
       this.FutureProduction(this.selectedGraphFutureProduction);
       
     }else if(this.isActioveConsumer){
+     
       this.showMeProduction = false;
       this.showMeConsumption = true;
       this.FutureConsumption(this.selectedGraphFutureConsumption);
       this.HistoryConsumption(this.selectedGraphHistoryConsumption);
-    }else{
-      this.showMeProduction = false;
-      this.showMeConsumption = false;
     }
   }
+}
   
   toggleActive(button: string) {
     if (button === 'user') {
@@ -2215,6 +2221,35 @@ consumptionNext24hGraph(){
           this.savedEnergyUser += 0;
         }
       })
+    }
+
+    dsoHasControlDevice(userID : any){
+      this.auth.dsoHasControl(userID).subscribe({
+        next:(response : any) => {
+          console.log(response);
+          if(response === true){
+            this.deviceStatus = true;
+          }else{
+            this.deviceStatus = false;
+          }
+        },
+        error : (err : any) => {
+          console.log("ERROR dsoHasControl...");
+        }
+      })
+    }
+    public btnStatus!:boolean;
+    toggleDeviceStatus(device : Device){
+      this.btnStatus = !this.btnStatus;
+      if(this.deviceStatus === true){
+      if(this.deviceStatus){
+        console.log("ON")
+      }else{
+        console.log("OFF");
+      }
+    }else{
+      this.btnStatus = false;
+    }
     }
 }
 

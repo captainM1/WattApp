@@ -79,9 +79,9 @@ export class DashboardComponent implements OnInit, AfterViewInit{
   dataNext24h: any[]=[];
   dataNextMonth: any[]=[];
   dataNext7days: any[]=[];
-  data24hProd: any[]=[];
-  dataMonthProd: any[]=[];
-  data7daysProd: any[]=[];
+  public data24hProd: any[]=[];
+  public dataMonthProd: any[]=[];
+  public data7daysProd: any[]=[];
   dataNext24hProd: any[]=[];
   dataNextMonthProd: any[]=[];
   dataNext7daysProd: any[]=[];
@@ -895,7 +895,9 @@ makeDataProduction24(dataGraph:any){
       powerUsage: this.powerUsageListProductionPrev24h[i]
     };
     this.data24hProd.push(pair);
+  
   }
+  console.log("this,",this.data24hProd);
 
   this.previousProduction24Graph(this.timestampListProductionPrev24h, this.powerUsageListProductionPrev24h);
 }
