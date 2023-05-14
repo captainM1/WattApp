@@ -22,7 +22,7 @@ export class TokenInterceptor implements HttpInterceptor {
   ) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    if (request.url.endsWith('/signin') || request.url.endsWith('/signup') || request.url.startsWith('https://api.open-meteo.com') || request.url.startsWith('https://maps.googleapis.com') || request.url.startsWith('https://maps.googleapis.com')) {
+    if (request.url.endsWith('/signin')  || request.url.endsWith('/signup') || request.url.startsWith('https://api.open-meteo.com') || request.url.startsWith('https://maps.googleapis.com') || request.url.startsWith('https://maps.googleapis.com')) {
       return next.handle(request);
     }
 
@@ -39,10 +39,12 @@ export class TokenInterceptor implements HttpInterceptor {
         if(err instanceof HttpErrorResponse){
           if(err.status === 401){
             this.msg.add({severity: 'Error', summary: "Error", detail: "Your token has expired"});
-            this.router.navigate(['signin']);
+            this.router.navigate(['/signin']);
+            return throwError(err);
           }
           // Log the error to the console or send it to a logging service
           console.error(`HTTP Error: ${err.message}`);
+          
         }
         return throwError(() => new Error("Some other error occurred."));
       }),

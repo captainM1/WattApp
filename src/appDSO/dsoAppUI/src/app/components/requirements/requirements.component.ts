@@ -39,7 +39,15 @@ export class RequirementsComponent implements OnInit{
   }
 
   acceptRequest(reqID: any){
-    this.auth.acceptReq(reqID).subscribe(response=>console.log(response));
+    this.auth.acceptReq(reqID).subscribe({
+      next:(response : any)=>{
+        console.log("ACC",response);
+      },
+      error:(err:any) =>{
+        console.log("ERR",err);
+      }
+    })
+    
     this.loadReq();
   }
 

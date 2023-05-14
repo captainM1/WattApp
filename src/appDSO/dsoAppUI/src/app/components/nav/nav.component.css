@@ -5,7 +5,7 @@
 }
 #logo img{
     text-align: center;
-    width: 2.3rem;
+    width: 1.8rem;
     min-width: 2rem;
     height: fit-content;
     border-radius: 0.2rem;
@@ -17,14 +17,17 @@
     background-color: #026670;
     transition: transform .7s ease-in-out;
     padding-top: 0px;
-    margin-top: 3px;
-    margin-bottom: 8px;
+    
 }
 #logo img:hover{
     transform: rotate(360deg);
 }
 #nav-style{
     background-color: #026670;
+    height: 20px;
+}
+.container-fluid{
+    height: 30px;
 }
 i{
     color: white;
@@ -33,17 +36,21 @@ i{
 
 .container{
     float: flex;
+    
 }
 ul{
     text-align: right;
 }
-
-.me-3{
+a{
+    text-decoration: none;
+}
+p{
     cursor: pointer;
     border: none;
     background-color: #026670;
     transition: transform .7s ease-in-out;
     text-decoration: none;
+    color: white;
 }
 
 @keyframes shake {
@@ -65,11 +72,7 @@ ul{
   }
 
 
-.fa{
-    font-size: 18px;
-    display: inline-block;
-    margin:2.5px;
-}
+
 small{
     color: white;
 }
@@ -80,7 +83,7 @@ small{
     background-color: whitesmoke;
     border-radius: 5px;
     padding:2.5px;
-    margin: 2.5px;
+    
     text-decoration: none;
 }
 
@@ -89,20 +92,22 @@ small{
     color: #026670;
     background-color: whitesmoke;
     border-radius: 5px;
-    padding:2.5px;
+    padding: 3px;
     text-decoration: none;
+    font-weight: 500;
 }
 .me-3:hover{
-    background-color: whitesmoke;
     animation: shake 0.5s;
     color: #026670;
-    border-radius: 5px;
-    padding:2.5px;
-    margin: 2.5px;
+   
 }
 
-.me-3 .fa:hover{
+.me-3 p:hover{
     color:#026670;
+    background-color: white;
+    border-radius: 5px;
+    padding:2.5px;
+    font-weight: 500;
 }
 
 span{

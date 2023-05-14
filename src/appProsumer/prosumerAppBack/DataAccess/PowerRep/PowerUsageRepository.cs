@@ -24,7 +24,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         _dataContext = dataContext;
         _deviceRepository = deviceRepository;
     }
-    public double GetForDevice(Guid deviceID)
+    public async Task<double> GetForDevice(Guid deviceID)
     {
         DateTime currentHourTimestamp = DateTime.Now.Date.AddHours(DateTime.Now.Hour);
 
@@ -54,7 +54,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         return -1;
     }
 
-    public double AveragePowerUsageProduction(Guid userID)
+    public async Task<double> AveragePowerUsageProduction(Guid userID)
     {
         bool DSOshare = _dataContext.Users
                         .Where(u => u.ID == userID)
@@ -92,14 +92,14 @@ public class PowerUsageRepository : IPowerUsageRepository
             {
                 foreach (var VARIABLE in devices)
                 {
-                    sum += GetForDevice(VARIABLE.ID);
+                    sum += await GetForDevice(VARIABLE.ID);
                 }
             }          
         }
         return sum / devices.Count();
     }
 
-    public double AveragePowerUsageConsumption(Guid userID)
+    public async Task<double> AveragePowerUsageConsumption(Guid userID)
     {
         bool DSOshare = _dataContext.Users
                         .Where(u => u.ID == userID)
@@ -136,13 +136,13 @@ public class PowerUsageRepository : IPowerUsageRepository
 
             if (deviceGroupName == "Consumer" && device.IsOn == true)
             {              
-                    sum += GetForDevice(device.ID);
+                    sum += await GetForDevice(device.ID);
             }
         }
         return sum / devices.Count();
     }
 
-    public double GetPowerUsageForDay(Guid deviceID, DateTime today)
+    public async Task<double> GetPowerUsageForDay(Guid deviceID, DateTime today)
     {
         Guid deviceTypeID = _dataContext.Devices
             .Where(d => d.ID == deviceID)
@@ -166,7 +166,7 @@ public class PowerUsageRepository : IPowerUsageRepository
     }
 
 
-    public PowerUsage GetPowerUsageFor7Days(Guid deviceId, int direction)
+    public async Task<PowerUsage> GetPowerUsageFor7Days(Guid deviceId, int direction)
     {
         Guid deviceTypeID = _dataContext.Devices
             .Where(d => d.ID == deviceId)
@@ -180,7 +180,7 @@ public class PowerUsageRepository : IPowerUsageRepository
             for (int i = 1; i <= 7; i++)
             {
                 var day = today.AddDays(i * direction);
-                var powerUsageD = GetPowerUsageForDay(deviceId, day);
+                var powerUsageD = await GetPowerUsageForDay(deviceId, day);
                 var ts = new TimestampPowerPair();
                 ts.PowerUsage = powerUsageD;
                 ts.Timestamp = day;
@@ -194,7 +194,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         return powerUsage;
     }
 
-    public PowerUsage GetPowerUsageForAMonth(Guid deviceId, int direction)
+    public async Task<PowerUsage> GetPowerUsageForAMonth(Guid deviceId, int direction)
     {
         Guid deviceTypeID = _dataContext.Devices
             .Where(d => d.ID == deviceId)
@@ -208,7 +208,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         for (int i = 1; i <= 31; i++)
         {
             var day = today.AddDays(i * direction);
-            var powerUsageD = GetPowerUsageForDay(deviceId, day);
+            var powerUsageD = await GetPowerUsageForDay(deviceId, day);
             var ts = new TimestampPowerPair();
             ts.PowerUsage = powerUsageD;
             ts.Timestamp = day;
@@ -222,7 +222,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         return powerUsage;
     }
 
-    public double CurrentSumPowerUsageConsumption(Guid userID)
+    public async Task<double> CurrentSumPowerUsageConsumption(Guid userID)
     {
         bool DSOshare = _dataContext.Users
                         .Where(u => u.ID == userID)
@@ -265,7 +265,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         return sum;
     }
 
-    public double CurrentSumPowerUsageProduction(Guid userID)
+    public async Task<double> CurrentSumPowerUsageProduction(Guid userID)
     {
         bool DSOshare = _dataContext.Users
                         .Where(u => u.ID == userID)
@@ -308,7 +308,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         return sum;
     }
 
-    public double CurrentSumPowerUsageSystemProducer()
+    public async Task<double> CurrentSumPowerUsageSystemProducer()
     {
         DateTime currentHourTimestamp = DateTime.Now.AddHours(-1);
         double sum = 0;
@@ -343,14 +343,14 @@ public class PowerUsageRepository : IPowerUsageRepository
 
             if (DSOshare == true && deviceGroupName == "Producer" && isOn == true)
             {
-                sum += GetCurrentPowerUsage(currentHourTimestamp, device);
+                sum += await GetCurrentPowerUsage(currentHourTimestamp, device);
             }
         }    
 
         return sum;
     }
 
-    public double CurrentSumPowerUsageSystemConsumer()
+    public async Task<double> CurrentSumPowerUsageSystemConsumer()
     {
         DateTime currentHourTimestamp = DateTime.Now.AddHours(-1);
         double sum = 0;
@@ -386,14 +386,14 @@ public class PowerUsageRepository : IPowerUsageRepository
 
             if (DSOshare == true && deviceGroupName == "Consumer" && isOn == true)
             {
-                sum += GetCurrentPowerUsage(currentHourTimestamp, device);
+                sum += await GetCurrentPowerUsage(currentHourTimestamp, device);
             }
         }
 
         return sum;
     }
 
-    public IEnumerable<TimestampPowerPair> GetForDeviceByHour(Guid deviceID)
+    public async Task<IEnumerable<TimestampPowerPair>> GetForDeviceByHour(Guid deviceID)
     {
         DateTime currentDay = DateTime.Today;
         DateTime currentHour = DateTime.Now.AddHours(-1);
@@ -412,7 +412,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         return powerUsageData;
     }
 
-    public double GetPowerUsageForAMonthSystemConsumer(int direction)
+    public async Task<double> GetPowerUsageForAMonthSystemConsumer(int direction)
     {
         var startOfMonth = DateTime.Now.AddDays(-DateTime.Now.Day + 1).AddMonths(direction); // pocetak proslog meseca (npr 04.05.)
         var endOfMonth = startOfMonth.AddMonths(1); // (04. 06.)
@@ -450,7 +450,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         return powerUsages;
     }
 
-    public double GetPowerUsageForAMonthSystemProducer(int direction)
+    public async Task<double> GetPowerUsageForAMonthSystemProducer(int direction)
     {
         var startOfMonth = DateTime.Now.AddDays(-DateTime.Now.Day + 1).AddMonths(direction); // pocetak proslog meseca (npr 04.05.)
         var endOfMonth = startOfMonth.AddMonths(1); // (04. 06.)
@@ -488,7 +488,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         return powerUsages;
     }
 
-    public List<PowerUsage> GetPowerUsageSumByDeviceConsumer(int direction)
+    public async Task<List<PowerUsage>> GetPowerUsageSumByDeviceConsumer(int direction)
     {
         var startOfMonth = DateTime.Now.AddMonths(direction);
         var endOfMonth = startOfMonth.AddMonths(1);
@@ -544,7 +544,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         return listPU;
     }
 
-    public List<PowerUsage> GetPowerUsageSumByDeviceProducer(int direction)
+    public async Task<List<PowerUsage>> GetPowerUsageSumByDeviceProducer(int direction)
     {
         var startOfMonth = DateTime.Now.AddMonths(direction);
         var endOfMonth = startOfMonth.AddMonths(1);
@@ -600,7 +600,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         return listPU;
     }
 
-    public PowerUsage GetPowerUsagesForEachDayConsumptionMonth(int direction)
+    public async Task<PowerUsage> GetPowerUsagesForEachDayConsumptionMonth(int direction)
     {
         var devices = _dataContext.Devices.Select(d => d.ID);
 
@@ -634,7 +634,7 @@ public class PowerUsageRepository : IPowerUsageRepository
             if( deviceGroupName == "Consumer" && DSOshare == true)
             {
                 double sum = 0;
-                var pu2 = GetPowerUsageForAMonth(device, direction);
+                var pu2 = await GetPowerUsageForAMonth(device, direction);
                 if (pu == null)
                 {
                     pu = pu2;
@@ -654,7 +654,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         return pu;
     }
 
-    public PowerUsage GetPowerUsagesForEachDayConsumptionWeek(int direction)
+    public async Task<PowerUsage> GetPowerUsagesForEachDayConsumptionWeek(int direction)
     {
         var devices = _dataContext.Devices.Select(d => d.ID);
 
@@ -688,7 +688,7 @@ public class PowerUsageRepository : IPowerUsageRepository
             if (deviceGroupName == "Consumer" && DSOshare == true)
             {
                 double sum = 0;
-                var pu2 = GetPowerUsageFor7Days(device, direction);
+                var pu2 = await GetPowerUsageFor7Days(device, direction);
                 if (pu == null)
                 {
                     pu = pu2;
@@ -708,7 +708,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         return pu;
     }
 
-    public PowerUsage GetPowerUsagesForEachDayProductionWeek(int direction)
+    public async Task<PowerUsage> GetPowerUsagesForEachDayProductionWeek(int direction)
     {
         var devices = _dataContext.Devices.Select(d => d.ID);
 
@@ -742,7 +742,7 @@ public class PowerUsageRepository : IPowerUsageRepository
             if (deviceGroupName == "Producer" && DSOshare == true)
             {
                 double sum = 0;
-                var pu2 = GetPowerUsageFor7Days(device, direction);
+                var pu2 = await GetPowerUsageFor7Days(device, direction);
                 if (pu == null)
                 {
                     pu = pu2;
@@ -762,7 +762,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         return pu;
     }
 
-    public PowerUsage GetPowerUsagesForEachDayProduction24h(int direction)
+    public async Task<PowerUsage> GetPowerUsagesForEachDayProduction24h(int direction)
     {
         var devices = _dataContext.Devices.Select(d => d.ID);
 
@@ -796,7 +796,7 @@ public class PowerUsageRepository : IPowerUsageRepository
             if (deviceGroupName == "Producer" && DSOshare == true)
             {
                 double sum = 0;
-                var pu2 = GetPowerUsageForDevicePast24Hours(device, direction);
+                var pu2 = await GetPowerUsageForDevicePast24Hours(device, direction);
                 if (pu == null)
                 {
                     pu = pu2;
@@ -816,7 +816,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         return pu;
     }
 
-    public PowerUsage GetPowerUsagesForEachDayConsumption24h(int direction)
+    public async Task<PowerUsage> GetPowerUsagesForEachDayConsumption24h(int direction)
     {
         var devices = _dataContext.Devices.Select(d => d.ID);
 
@@ -850,7 +850,7 @@ public class PowerUsageRepository : IPowerUsageRepository
             if (deviceGroupName == "Consumer" && DSOshare == true)
             {
                 double sum = 0;
-                var pu2 = GetPowerUsageForDevicePast24Hours(device, direction);
+                var pu2 = await GetPowerUsageForDevicePast24Hours(device, direction);
                 if (pu == null)
                 {
                     pu = pu2;
@@ -871,7 +871,7 @@ public class PowerUsageRepository : IPowerUsageRepository
     }
 
 
-    public PowerUsage GetPowerUsagesForEachDayProductionMonth(int direction)
+    public async Task<PowerUsage> GetPowerUsagesForEachDayProductionMonth(int direction)
     {
         var devices = _dataContext.Devices.Select(d => d.ID);
 
@@ -905,7 +905,7 @@ public class PowerUsageRepository : IPowerUsageRepository
             if (deviceGroupName == "Producer" && DSOshare == true)
             {
                 double sum = 0;
-                var pu2 = GetPowerUsageForAMonth(device, direction);
+                var pu2 = await GetPowerUsageForAMonth(device, direction);
                 if (pu == null)
                 {
                     pu = pu2;
@@ -926,7 +926,7 @@ public class PowerUsageRepository : IPowerUsageRepository
     }
 
 
-    public List<PowerUsage> GetPowerUsageForDevicesConsumption(Guid userID, int direction)
+    public async Task<List<PowerUsage>> GetPowerUsageForDevicesConsumption(Guid userID, int direction)
     {
         bool DSOshare = _dataContext.Users
                         .Where(u => u.ID == userID)
@@ -984,7 +984,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         return puList;
     }
 
-    public List<PowerUsage> GetPowerUsageForDevicesProduction(Guid userID, int direction)
+    public async Task<List<PowerUsage>> GetPowerUsageForDevicesProduction(Guid userID, int direction)
     {
         bool DSOshare = _dataContext.Users
                         .Where(u => u.ID == userID)
@@ -1042,7 +1042,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         return puList;
     }
 
-    public List<PowerUsage> GetPowerUsageForDevicesConsumptionFor7Days(Guid userID, int direction)
+    public async Task<List<PowerUsage>> GetPowerUsageForDevicesConsumptionFor7Days(Guid userID, int direction)
     {
         bool DSOshare = _dataContext.Users
                         .Where(u => u.ID == userID)
@@ -1100,7 +1100,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         return puList;
     }
 
-    public List<PowerUsage> GetPowerUsageForDevicesProductionFor7Days(Guid userID, int direction)
+    public async Task<List<PowerUsage>> GetPowerUsageForDevicesProductionFor7Days(Guid userID, int direction)
     {
         bool DSOshare = _dataContext.Users
                         .Where(u => u.ID == userID)
@@ -1158,7 +1158,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         return puList;
     }
 
-    public List<PowerUsage> GetPowerUsageForDevicesConsumptionFor24Hours(Guid userID, int direction)
+    public async Task<List<PowerUsage>> GetPowerUsageForDevicesConsumptionFor24Hours(Guid userID, int direction)
     {
         bool DSOshare = _dataContext.Users
                         .Where(u => u.ID == userID)
@@ -1216,7 +1216,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         puList.Add(pu);
         return puList;
     }
-    public List<PowerUsage> GetPowerUsageForDevicesProductionFor24Hours(Guid userID, int direction)
+    public async Task<List<PowerUsage>> GetPowerUsageForDevicesProductionFor24Hours(Guid userID, int direction)
     {
         bool DSOshare = _dataContext.Users
                         .Where(u => u.ID == userID)
@@ -1275,7 +1275,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         return puList;
     }
 
-    public PowerUsage GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction)
+    public async Task<PowerUsage> GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction)
     {
         var utcNow = DateTime.Now;
 
@@ -1315,7 +1315,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         return pu;
     }
 
-    public PowerUsage Get12hoursBefore12hoursAfter(Guid deviceID)
+    public async Task<PowerUsage> Get12hoursBefore12hoursAfter(Guid deviceID)
     {
         var moment = DateTime.Now;
         var endOf12 = moment.AddHours(12);
@@ -1345,7 +1345,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         while (currentDate <= endOf12)
         {
             var ts = new TimestampPowerPair();
-            var sum = GetCurrentPowerUsage(currentDate, powerUsages.ID);
+            var sum = await GetCurrentPowerUsage(currentDate, powerUsages.ID);
             ts.Timestamp = currentDate;
             ts.PowerUsage = sum;
             powerUsage.TimestampPowerPairs.Add(ts);
@@ -1356,41 +1356,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         return powerUsage;
     }
 
-    public List<PowerUsage> GetPowerUsageForDevicePast24Hoursv2(Guid deviceId, int direction)
-    {
-        var utcNow = DateTime.UtcNow;
-
-        var startOf24Period = direction > 0
-            ? utcNow
-            : utcNow.AddHours(-24);
-
-        var endOf24Period = direction > 0 
-            ? utcNow.AddHours(24) 
-            : utcNow.AddHours(-1);
-
-        Guid deviceTypeID = _dataContext.Devices
-            .Where(d => d.ID == deviceId)
-            .Select(d => d.DeviceTypeID)
-            .FirstOrDefault();
-
-        var powerUsages = mongoCollection.AsQueryable()
-            .Where(p => p.ID.ToString().ToUpper() == deviceTypeID.ToString().ToUpper())
-            .SelectMany(p => p.TimestampPowerPairs)
-            .ToList()
-            .Where(t => t.Timestamp >= startOf24Period && t.Timestamp <= endOf24Period)
-            .GroupBy(t => t.Timestamp.Date)
-            .Select(g => new PowerUsage
-            {
-                ID = deviceId,
-                TimestampPowerPairs = g.ToList()
-            })
-            .ToList();
-
-        return powerUsages;
-    }
-    
-
-    public PowerUsage GetPowerProducedForADaySystem()
+    public async Task<PowerUsage> GetPowerProducedForADaySystem()
     {
         var startOf24Period = DateTime.Today;
         var endOf24Period = DateTime.Now;
@@ -1427,7 +1393,7 @@ public class PowerUsageRepository : IPowerUsageRepository
 
                 if (deviceGroupName == "Producer" && DSOshare == true)
                 {
-                    sum += GetCurrentPowerUsage(currentDate, device);
+                    sum += await GetCurrentPowerUsage(currentDate, device);
                 }
             }
             ts.Timestamp = currentDate;
@@ -1439,7 +1405,7 @@ public class PowerUsageRepository : IPowerUsageRepository
 
         return powerUsage;
     }
-    public PowerUsage GetPowerConsumedForADaySystem()
+    public async Task<PowerUsage> GetPowerConsumedForADaySystem()
     {
         var startOf24Period = DateTime.Today;
         var endOf24Period = DateTime.Now;
@@ -1476,7 +1442,7 @@ public class PowerUsageRepository : IPowerUsageRepository
                 
                 if (deviceGroupName == "Consumer" && DSOshare == true)
                 {
-                    sum += GetCurrentPowerUsage(currentDate, device);
+                    sum += await GetCurrentPowerUsage(currentDate, device);
                 }
             }
             ts.Timestamp = currentDate;
@@ -1489,7 +1455,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         return powerUsage;
     }
 
-    public double GetCurrentPowerConsumption()
+    public async Task<double> GetCurrentPowerConsumption()
     {
         double powerUsages = 0;
         var startOfAnHour = DateTime.Now.AddHours(-1);
@@ -1527,7 +1493,7 @@ public class PowerUsageRepository : IPowerUsageRepository
 
         return powerUsages;
     }
-    public double GetCurrentPowerProduction()
+    public async Task<double> GetCurrentPowerProduction()
     {
         double powerUsages = 0;
         var startOfAnHour = DateTime.Now.AddHours(-1);
@@ -1567,7 +1533,7 @@ public class PowerUsageRepository : IPowerUsageRepository
     }
 
    
-    public double GetCurrentPowerUsage(DateTime date,Guid deviceTypeID)
+    public async Task<double> GetCurrentPowerUsage(DateTime date,Guid deviceTypeID)
     {
         var startOfAnHour = date;
         var endOfAnHour = date.AddHours(1);
@@ -1580,7 +1546,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         return powerUsages;
     }
 
-    public double GetCurrentPowerUsage(DateTime date)
+    public async Task<double> GetCurrentPowerUsage(DateTime date)
     {
         var startOfAnHour = date;
         var endOfAnHour = date.AddHours(1);
@@ -1593,7 +1559,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         return powerUsages;
     }
 
-    public PowerUsage GetDeviceWithMaxPowerUsage24Consumption(Guid userID)
+    public async Task<PowerUsage> GetDeviceWithMaxPowerUsage24Consumption(Guid userID)
     {
         bool DSOshare = _dataContext.Users
                         .Where(u => u.ID == userID)
@@ -1630,7 +1596,7 @@ public class PowerUsageRepository : IPowerUsageRepository
             {
                 while (currentTime <= endTime)
                 {
-                    double powerUsageSum = GetCurrentPowerUsage(currentTime, device);
+                    double powerUsageSum = await GetCurrentPowerUsage(currentTime, device);
                     if (powerUsageSum > maxPowerUsage)
                     {
                         maxPowerUsage = powerUsageSum;
@@ -1649,7 +1615,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         return pu;
     }
 
-    public PowerUsage GetDeviceWithMaxPowerUsage24Production(Guid userID)
+    public async Task<PowerUsage> GetDeviceWithMaxPowerUsage24Production(Guid userID)
     {
         bool DSOshare = _dataContext.Users
                         .Where(u => u.ID == userID)
@@ -1686,7 +1652,7 @@ public class PowerUsageRepository : IPowerUsageRepository
             {
                 while (currentTime <= endTime)
                 {
-                    double powerUsageSum = GetCurrentPowerUsage(currentTime, device);
+                    double powerUsageSum = await GetCurrentPowerUsage(currentTime, device);
                     if (powerUsageSum > maxPowerUsage)
                     {
                         maxPowerUsage = powerUsageSum;
@@ -1705,7 +1671,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         return pu;
     }
 
-    public PowerUsage GetDeviceWithMaxPowerUsagePreviousWeekProduction(Guid userID)
+    public async Task<PowerUsage> GetDeviceWithMaxPowerUsagePreviousWeekProduction(Guid userID)
     {
         bool DSOshare = _dataContext.Users
                        .Where(u => u.ID == userID)
@@ -1765,7 +1731,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         return pu;
     }
 
-    public PowerUsage GetDeviceWithMaxPowerUsagePreviousWeekConsumption(Guid userID)
+    public async Task<PowerUsage> GetDeviceWithMaxPowerUsagePreviousWeekConsumption(Guid userID)
     {
         bool DSOshare = _dataContext.Users
                        .Where(u => u.ID == userID)
@@ -1824,7 +1790,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         return pu;
     }
 
-    public PowerUsage GetDeviceWithMaxPowerUsagePreviousMonthConsumption(Guid userID, int direction) // ubacen direction da diktira koliko meseci ide unazad (direction => broj meseci)
+    public async Task<PowerUsage> GetDeviceWithMaxPowerUsagePreviousMonthConsumption(Guid userID, int direction) // ubacen direction da diktira koliko meseci ide unazad (direction => broj meseci)
     {
         bool DSOshare = _dataContext.Users
                        .Where(u => u.ID == userID)
@@ -1887,7 +1853,7 @@ public class PowerUsageRepository : IPowerUsageRepository
            return pu;
     }
 
-    public PowerUsage GetDeviceWithMaxPowerUsagePreviousMonthProduction(Guid userID, int direction)
+    public async Task<PowerUsage> GetDeviceWithMaxPowerUsagePreviousMonthProduction(Guid userID, int direction)
     {
         bool DSOshare = _dataContext.Users
                        .Where(u => u.ID == userID)
@@ -1946,7 +1912,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         return pu;
     }
 
-    public PowerUsage GetDeviceWithMaxPowerUsageCurrentProduction(Guid userID)
+    public async Task<PowerUsage> GetDeviceWithMaxPowerUsageCurrentProduction(Guid userID)
     {
         bool DSOshare = _dataContext.Users
                        .Where(u => u.ID == userID)
@@ -1985,7 +1951,7 @@ public class PowerUsageRepository : IPowerUsageRepository
 
             if(deviceGroupName == "Producer")
             {
-                double powerUsageSum = GetCurrentPowerUsage(startHour, deviceTypeID);
+                double powerUsageSum = await GetCurrentPowerUsage(startHour, deviceTypeID);
 
                 if (powerUsageSum > maxPowerUsage)
                 {
@@ -2003,7 +1969,7 @@ public class PowerUsageRepository : IPowerUsageRepository
 
     }
 
-    public PowerUsage GetDeviceWithMaxPowerUsageCurrentConsumption(Guid userID)
+    public async Task<PowerUsage> GetDeviceWithMaxPowerUsageCurrentConsumption(Guid userID)
     {
         bool DSOshare = _dataContext.Users
                        .Where(u => u.ID == userID)
@@ -2042,7 +2008,7 @@ public class PowerUsageRepository : IPowerUsageRepository
 
             if (deviceGroupName == "Consumer" && device.IsOn == true)
             {
-                double powerUsageSum = GetCurrentPowerUsage(startHour, deviceTypeID);
+                double powerUsageSum = await GetCurrentPowerUsage(startHour, deviceTypeID);
 
                 if (powerUsageSum > maxPowerUsage)
                 {
@@ -2059,7 +2025,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         return pu;
 
     }
-    public double GetHowMuchUserIsConsuming(Guid userId)
+    public async Task<double> GetHowMuchUserIsConsuming(Guid userId)
     {
         bool DSOshare = _dataContext.Users
                        .Where(u => u.ID == userId)
@@ -2087,14 +2053,15 @@ public class PowerUsageRepository : IPowerUsageRepository
             }
         }
 
-        var currentUserConsumption = this.CurrentSumPowerUsageConsumption(userId);
+        var currentUserConsumption = await this.CurrentSumPowerUsageConsumption(userId);
 
 
         var savedEnergy = ((maximumConsumption - currentUserConsumption) / maximumConsumption) * 100;
 
         return savedEnergy;
     }
-    public double deviceEnergySaved(Guid deviceID)
+
+    public async Task<double> deviceEnergySaved(Guid deviceID)
     {
         DateTime previousHour = DateTime.Now.AddHours(-2);
         DateTime thisHour = DateTime.Now.AddHours(-1);
@@ -2104,35 +2071,35 @@ public class PowerUsageRepository : IPowerUsageRepository
                .Select(d => d.DeviceTypeID)
                .FirstOrDefault();
 
-        double previousHourPowerUsage = GetCurrentPowerUsage(previousHour, deviceTypeID);
+        double previousHourPowerUsage = await GetCurrentPowerUsage(previousHour, deviceTypeID);
         Console.WriteLine("PROSLI SAT " + previousHourPowerUsage);
-        double thisHourPowerUsage = GetCurrentPowerUsage(thisHour, deviceTypeID);
+        double thisHourPowerUsage = await GetCurrentPowerUsage(thisHour, deviceTypeID);
         Console.WriteLine("TRENUTNI SAT " + thisHourPowerUsage);
 
         return (previousHourPowerUsage - thisHourPowerUsage) / 100;
     }
 
-    public double SavedEnergySystemProducer()
+    public async Task<double> SavedEnergySystemProducer()
     {
-        var lastMonth = this.GetPowerUsageForAMonthSystemProducer(-2);
-        var thisMonth = this.GetPowerUsageForAMonthSystemProducer(-1);
+        var lastMonth = await this.GetPowerUsageForAMonthSystemProducer(-2);
+        var thisMonth = await this.GetPowerUsageForAMonthSystemProducer(-1);
 
         var savedEnergy = ((lastMonth - thisMonth) / lastMonth) * 100;
 
         return savedEnergy;
     }
 
-    public double SavedEnergySystemConsumer()
+    public async Task<double> SavedEnergySystemConsumer()
     {
-        var lastMonth = this.GetPowerUsageForAMonthSystemConsumer(-2);
-        var thisMonth = this.GetPowerUsageForAMonthSystemConsumer(-1);
+        var lastMonth = await this.GetPowerUsageForAMonthSystemConsumer(-2);
+        var thisMonth = await this.GetPowerUsageForAMonthSystemConsumer(-1);
 
         var savedEnergy = ((lastMonth - thisMonth) / lastMonth) * 100;
 
         return savedEnergy;
     }
 
-    public double savedEnergyForUserConsumer(Guid userID, int direction)
+    public async Task<double> savedEnergyForUserConsumer(Guid userID, int direction)
     {
         bool DSOshare = _dataContext.Users
                        .Where(u => u.ID == userID)
@@ -2196,7 +2163,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         return sum;
     }
 
-    public double savedEnergyForUserProducer(Guid userID, int direction)
+    public async Task<double> savedEnergyForUserProducer(Guid userID, int direction)
     {
         bool DSOshare = _dataContext.Users
                        .Where(u => u.ID == userID)
@@ -2259,7 +2226,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         return sum;
     }
 
-    public double savedEnergyForUserConsumer(Guid userID)
+    public async Task<double> savedEnergyForUserConsumer(Guid userID)
     {
         bool DSOshare = _dataContext.Users
                        .Where(u => u.ID == userID)
@@ -2269,15 +2236,15 @@ public class PowerUsageRepository : IPowerUsageRepository
         if (DSOshare == false)
             return 0;
 
-        var previousMonth = savedEnergyForUserConsumer(userID, 2);
-        var thisMonth = savedEnergyForUserConsumer(userID, 1);
+        var previousMonth = await savedEnergyForUserConsumer(userID, 2);
+        var thisMonth = await savedEnergyForUserConsumer(userID, 1);
 
         var savedEnergy = ((previousMonth - thisMonth) / previousMonth) * 100;
 
         return savedEnergy;
     }
 
-    public double savedEnergyForUserProducer(Guid userID)
+    public async Task<double> savedEnergyForUserProducer(Guid userID)
     {
         bool DSOshare = _dataContext.Users
                        .Where(u => u.ID == userID)
@@ -2287,15 +2254,15 @@ public class PowerUsageRepository : IPowerUsageRepository
         if (DSOshare == false)
             return 0;
 
-        var previousMonth = savedEnergyForUserProducer(userID, 2);
-        var thisMonth = savedEnergyForUserProducer(userID, 1);
+        var previousMonth = await savedEnergyForUserProducer(userID, 2);
+        var thisMonth = await savedEnergyForUserProducer(userID, 1);
 
         var savedEnergy = ((previousMonth - thisMonth) / previousMonth) * 100;
 
         return savedEnergy;
     }
 
-    public PowerUsage GetPowerUsageForAMonthConsumption(Guid deviceId, int direction)
+    public async Task<PowerUsage> GetPowerUsageForAMonthConsumption(Guid deviceId, int direction)
     {
         Guid deviceTypeID = _dataContext.Devices
             .Where(d => d.ID == deviceId)
@@ -2309,7 +2276,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         for (int i = 1; i <= 31; i++)
         {
             var day = today.AddDays(i * direction);
-            var powerUsageD = GetPowerUsageForDay(deviceId, day);
+            var powerUsageD = await GetPowerUsageForDay(deviceId, day);
             var ts = new TimestampPowerPair();
             ts.PowerUsage = powerUsageD;
             ts.Timestamp = day;
@@ -2325,7 +2292,7 @@ public class PowerUsageRepository : IPowerUsageRepository
 
 
 
-    public double percentPowerUsageForPreviousHour(Guid deviceID)
+    public async Task<double> percentPowerUsageForPreviousHour(Guid deviceID)
     {
         DateTime date = DateTime.Now.AddHours(-1);
 
@@ -2335,7 +2302,7 @@ public class PowerUsageRepository : IPowerUsageRepository
                 .FirstOrDefault();
 
         double previousHourSystemUsage = 0;
-        double previopusHourDeviceUsage = this.GetCurrentPowerUsage(date, deviceTypeID);
+        double previopusHourDeviceUsage = await this.GetCurrentPowerUsage(date, deviceTypeID);
 
         string deviceGroupName = _dataContext.DeviceGroups
                 .Where(g => g.ID == _dataContext.DeviceTypes
@@ -2346,16 +2313,16 @@ public class PowerUsageRepository : IPowerUsageRepository
                 .FirstOrDefault();
 
         if(deviceGroupName == "Producer")
-            previousHourSystemUsage = this.CurrentSumPowerUsageSystemProducer();
+            previousHourSystemUsage = await this.CurrentSumPowerUsageSystemProducer();
         if (deviceGroupName == "Consumer")
-            previousHourSystemUsage = this.CurrentSumPowerUsageSystemConsumer();
+            previousHourSystemUsage = await this.CurrentSumPowerUsageSystemConsumer();
 
         return (previopusHourDeviceUsage / previousHourSystemUsage) * 100;
     }
 
-    public double percentPowerUsageDifferenceForPreviousHourConsumption(Guid userId)
+    public async Task<double> percentPowerUsageDifferenceForPreviousHourConsumption(Guid userId)
     {
-        double currentConsumption = this.CurrentSumPowerUsageConsumption(userId);
+        double currentConsumption = await this.CurrentSumPowerUsageConsumption(userId);
 
         double sum = 0;
         DateTime currentHourTimestamp = DateTime.Now.Date.AddHours(DateTime.Now.Hour).AddHours(-1);
@@ -2390,9 +2357,9 @@ public class PowerUsageRepository : IPowerUsageRepository
         return ((currentConsumption - sum) / sum) * 100;
     }
 
-    public double percentPowerUsageDifferenceForPreviousHourProduction(Guid userId)
+    public async Task<double> percentPowerUsageDifferenceForPreviousHourProduction(Guid userId)
     {
-        double currentConsumption = this.CurrentSumPowerUsageProduction(userId);
+        double currentConsumption = await this.CurrentSumPowerUsageProduction(userId);
 
         double sum = 0;
         DateTime currentHourTimestamp = DateTime.Now.Date.AddHours(DateTime.Now.Hour).AddHours(-1);
@@ -2426,7 +2393,51 @@ public class PowerUsageRepository : IPowerUsageRepository
         }
         return ((currentConsumption - sum) / sum) * 100;
     }
-    public double electricityBillLastMonth(Guid userID, double electricityRate)
+
+    public async Task<double> electricityBillCurrentMonth(Guid userID, double electricityRate) 
+    {
+        DateTime endDate = DateTime.Now;
+        DateTime startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+
+        double sum = 0;
+
+        var devices = _deviceRepository.GetDevicesForUser(userID);
+
+        foreach (var device in devices)
+        {
+            var deviceType = _dataContext.Devices
+                            .Where(d => d.ID == device.ID)
+                            .Select(dt => dt.DeviceTypeID)
+                            .FirstOrDefault();
+
+            string deviceGroupName = _dataContext.DeviceGroups
+                        .Where(g => g.ID == _dataContext.DeviceTypes
+                            .Where(dt => dt.ID == deviceType)
+                            .Select(dt => dt.GroupID)
+                            .FirstOrDefault())
+                        .Select(g => g.Name)
+                        .FirstOrDefault();
+
+            if (deviceGroupName == "Consumer")
+            {
+                var powerUsages = mongoCollection.AsQueryable()
+                    .Where(p => p.ID.ToString().ToUpper() == deviceType.ToString().ToUpper())
+                    .SelectMany(p => p.TimestampPowerPairs)
+                    .ToList()
+                    .Where(t => t.Timestamp >= startDate && t.Timestamp <= endDate)
+                    .ToList();
+
+                foreach (var powerUsage in powerUsages)
+                {
+                    sum += powerUsage.PowerUsage;
+                }
+            }
+        }
+
+        return sum * electricityRate;
+    }
+
+    public async Task<double> electricityBillLastMonth(Guid userID, double electricityRate)
     {
         bool DSOshare = _dataContext.Users
             .Where(u => u.ID == userID)
@@ -2436,12 +2447,12 @@ public class PowerUsageRepository : IPowerUsageRepository
         if (DSOshare == false)
             return 0;
 
-        var consumes = savedEnergyForUserConsumer(userID, 1);
+        var consumes = await savedEnergyForUserConsumer(userID, 1);
 
         return consumes * electricityRate;
     }
 
-    public double electricityBill2MonthsAgo(Guid userID, double electricityRate)
+    public async Task<double> electricityBill2MonthsAgo(Guid userID, double electricityRate)
     {
         bool DSOshare = _dataContext.Users
             .Where(u => u.ID == userID)
@@ -2451,12 +2462,12 @@ public class PowerUsageRepository : IPowerUsageRepository
         if (DSOshare == false)
             return 0;
 
-        var consumes = savedEnergyForUserConsumer(userID, 2);
+        var consumes = await savedEnergyForUserConsumer(userID, 2);
 
         return consumes * electricityRate;
     }
 
-    public double electricityEarningsLastMonth(Guid userID, double electricityRate)
+    public async Task<double> electricityEarningsLastMonth(Guid userID, double electricityRate)
     {
         bool DSOshare = _dataContext.Users
             .Where(u => u.ID == userID)
@@ -2466,12 +2477,12 @@ public class PowerUsageRepository : IPowerUsageRepository
         if (DSOshare == false)
             return 0;
 
-        var consumes = savedEnergyForUserProducer(userID, 1);
+        var consumes = await savedEnergyForUserProducer(userID, 1);
 
         return consumes * electricityRate;
     }
 
-    public double electricityEarnings2MonthsAgo(Guid userID, double electricityRate)
+    public async Task<double> electricityEarnings2MonthsAgo(Guid userID, double electricityRate)
     {
         bool DSOshare = _dataContext.Users
             .Where(u => u.ID == userID)
@@ -2481,7 +2492,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         if (DSOshare == false)
             return 0;
 
-        var consumes = savedEnergyForUserProducer(userID, 2);
+        var consumes = await savedEnergyForUserProducer(userID, 2);
 
         return consumes * electricityRate;
     }

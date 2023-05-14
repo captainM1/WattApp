@@ -25,6 +25,8 @@ export class EditProfileComponent implements OnInit{
   email!: string;
   resetForm!: FormGroup;
   submitted = false;
+  dsoHasControl !: boolean;
+  sharesDataWithDSO !: boolean;
 
 
   @ViewChild('exampleModal') exampleModal!: ElementRef;
@@ -45,7 +47,7 @@ export class EditProfileComponent implements OnInit{
     console.log(this.token)
     this.auth.getThisUser(this.token).subscribe(
       (response :any)=>{
-       this.userID = response;
+       this.userID = response.id;
        console.log(this.userID);
         this.firstName = response.firstName;
         this.lastName = response.lastName;
@@ -54,6 +56,10 @@ export class EditProfileComponent implements OnInit{
         this.city = response.city;
         this.country = response.country;
         this.email = response.email;
+
+        this.sharesData(this.userID);
+        this.hasControl(this.userID);
+
       }
     )
   }
@@ -62,16 +68,43 @@ export class EditProfileComponent implements OnInit{
     return this.resetForm.controls;
   }
 
-  onReset()
+  sharesData(id:any)
   {
-    this.submitted = true;
-    if(this.resetForm.valid){
-      this.messageService.add({ severity: 'error', summary: 'Success', detail: 'Password reset successfully!' });
-      this.resetForm.reset();
-      return;
-    }else{
-      this.messageService.add({ severity: 'error', summary: 'Error reseting password', detail: 'Try again' });
-    }
+    this.auth.getUserSharesWithDSO(id).subscribe((response)=>{
+      this.sharesDataWithDSO = response;
+    })
   }
+
+  hasControl(id:any)
+  {
+    this.auth.getDsoHasControl(id).subscribe((response)=>{
+      this.dsoHasControl = response;
+    })
+  }
+
+
+  onSubmit() {
+    const profileData = {
+      phoneNumber: this.phoneNumber,
+      address: this.address,
+      email: this.email,
+      country: this.country,
+      firstName: this.firstName,
+      lastName: this.lastName,
+      sharesDataWithDso: this.sharesDataWithDSO,
+      dsoHasControl: this.dsoHasControl,
+      city: this.city
+    };
+
+    this.auth.putUpdateUser(this.userID, profileData).subscribe(
+      (response) => {
+        console.log('Profile updated successfully:', response);
+      },
+      (error) => {
+        console.error('Error updating profile:', error);
+      }
+    );
+  }
+
 
 }

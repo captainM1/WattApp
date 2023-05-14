@@ -1,11 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'service/auth.service';
 import { MessageService } from 'primeng/api';
 import { CookieService } from "ngx-cookie-service";
 import { ConfirmPasswordValidator } from 'app/helpers/confirm-password.validator';
-
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ProfileComponent } from '../profile/profile.component';
+import { ModelProfileComponent } from '../model-profile/model-profile.component';
+import { Role } from 'models/User';
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
@@ -21,6 +24,14 @@ export class SignupComponent implements OnInit {
   isText2: boolean = false;
   signupForm!: FormGroup;
   allWorkers: any;
+  workers!: Role[];
+  disp!:Role;
+  public emailModal : any;
+  public firstNameModal: any;
+  public lastNameModal: any;
+  public roleModal : any;
+  public mobileModal:any;
+  @ViewChild('profileDispacher') profileDispacher!: ElementRef;
   constructor(
     private fb: FormBuilder,
     private router : Router,
@@ -42,7 +53,7 @@ export class SignupComponent implements OnInit {
       )
       this.auth.getAllDispechers().subscribe(
         (response) => {
-          this.allWorkers = response
+          this.allWorkers = response;
         }
       )
     }
@@ -81,4 +92,28 @@ export class SignupComponent implements OnInit {
         );
       }
     }
+    deleteDispecher(id : any){
+      this.auth.deleteDispathcer(id).subscribe({
+        next:(response : any) => {
+          this.messageService.add({ severity: 'success', summary: 'Register deleted'});
+          location.reload();
+        },
+        error:(err : any)=>{
+          console.log("ERRROR delete");
+        }
+      })
+    }
+    giveMeWorker(id : any){
+      this.auth.getDispacher(id).subscribe({
+        next:(response : any) => {
+          this.disp = response;
+          this.firstNameModal = this.disp.firstName;
+          this.lastNameModal = this.disp.lastName;
+          this.emailModal = this.disp.email;
+          this.mobileModal = this.disp.phoneNumber;
+          this.roleModal = this.disp.role;
+        }
+      })
+    }
+ 
 }
