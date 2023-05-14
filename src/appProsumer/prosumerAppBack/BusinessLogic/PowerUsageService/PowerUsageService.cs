@@ -547,6 +547,13 @@ public class PowerUsageService:IPowerUsageService
         return powerUsage;
     }
 
+    public double electricityBillForCurrentMonth(Guid userID, double electricityRate)
+    {
+        var price = _repository.electricityBillForCurrentMonth(userID, electricityRate);
+        
+        return price;
+    }
+
     public double electricityBill2MonthsAgo(Guid userID, double electricityRate)
     {
         var price = _repository.electricityBill2MonthsAgo(userID, electricityRate);
@@ -584,6 +591,13 @@ public class PowerUsageService:IPowerUsageService
         {
             throw new NullReferenceException("User doesnt share data with DSO");
         }
+        return price;
+    }
+
+    public double electricityEarningsForCurrentMonth(Guid userID, double electricityRate)
+    {
+        var price = _repository.electricityEarningsForCurrentMonth(userID, electricityRate);
+        
         return price;
     }
 

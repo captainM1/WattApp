@@ -2187,6 +2187,12 @@ public class PowerUsageRepository : IPowerUsageRepository
             startDate = endDate.AddMonths(-1);
         }
 
+        if (direction == 3)
+        {
+            endDate = DateTime.Now;
+            startDate = endDate.AddDays(-endDate.Day + 1).Date;
+        }
+
 
         double sum = 0;
 
@@ -2228,13 +2234,13 @@ public class PowerUsageRepository : IPowerUsageRepository
 
     public double savedEnergyForUserProducer(Guid userID, int direction)
     {
-        bool DSOshare = _dataContext.Users
+       /* bool DSOshare = _dataContext.Users
                        .Where(u => u.ID == userID)
                        .Select(sh => sh.sharesDataWithDso)
                        .FirstOrDefault();
 
         if (DSOshare == false)
-            return 0;
+            return 0;*/
 
         DateTime endDate = DateTime.Now;
         DateTime startDate = DateTime.Now;
@@ -2249,6 +2255,11 @@ public class PowerUsageRepository : IPowerUsageRepository
         {
             endDate = DateTime.Now.AddMonths(-1);
             startDate = endDate.AddMonths(-1);
+        }
+        if (direction == 3)
+        {
+            endDate = DateTime.Now;
+            startDate = endDate.AddDays(-endDate.Day + 1).Date;
         }
 
         double sum = 0;
@@ -2291,13 +2302,13 @@ public class PowerUsageRepository : IPowerUsageRepository
 
     public double savedEnergyForUserConsumer(Guid userID)
     {
-        bool DSOshare = _dataContext.Users
+       /* bool DSOshare = _dataContext.Users
                        .Where(u => u.ID == userID)
                        .Select(sh => sh.sharesDataWithDso)
                        .FirstOrDefault();
 
         if (DSOshare == false)
-            return 0;
+            return 0;*/
 
         var previousMonth = savedEnergyForUserConsumer(userID, 2);
         var thisMonth = savedEnergyForUserConsumer(userID, 1);
@@ -2309,13 +2320,13 @@ public class PowerUsageRepository : IPowerUsageRepository
 
     public double savedEnergyForUserProducer(Guid userID)
     {
-        bool DSOshare = _dataContext.Users
+       /* bool DSOshare = _dataContext.Users
                        .Where(u => u.ID == userID)
                        .Select(sh => sh.sharesDataWithDso)
                        .FirstOrDefault();
 
         if (DSOshare == false)
-            return 0;
+            return 0;*/
 
         var previousMonth = savedEnergyForUserProducer(userID, 2);
         var thisMonth = savedEnergyForUserProducer(userID, 1);
@@ -2541,6 +2552,12 @@ public class PowerUsageRepository : IPowerUsageRepository
         }        
         return ((currentConsumption - sum) / sum) * 100;
     }
+    public double electricityBillForCurrentMonth(Guid userID, double electricityRate)
+    {
+        var consumes = savedEnergyForUserConsumer(userID, 3);
+
+        return consumes * electricityRate;
+    }
     public double electricityBillLastMonth(Guid userID, double electricityRate)
     {
         bool DSOshare = _dataContext.Users
@@ -2564,6 +2581,12 @@ public class PowerUsageRepository : IPowerUsageRepository
             return 0;
 
         var consumes = savedEnergyForUserConsumer(userID, 2);
+
+        return consumes * electricityRate;
+    }
+    public double electricityEarningsForCurrentMonth(Guid userID, double electricityRate)
+    {
+        var consumes = savedEnergyForUserProducer(userID, 3);
 
         return consumes * electricityRate;
     }

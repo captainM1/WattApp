@@ -558,6 +558,13 @@ public class PowerUsageController : ControllerBase
         return Ok(powerUsage);
     }
 
+    [HttpGet("power-usage/electricityBill/CurrentMonth/{userID}")]
+    public ActionResult<double> electricityBillForCurrentMonth(Guid userID, double electricityRate)
+    {
+        var powerUsage = _powerUsageService.electricityBillForCurrentMonth(userID, electricityRate);
+        return Ok(powerUsage);
+    }
+
     [HttpGet("power-usage/electricityBill/LastMonth/{userID}")]
     public ActionResult<double> electricityBill1(Guid userID, double electricityRate)
     {
@@ -569,6 +576,13 @@ public class PowerUsageController : ControllerBase
     public ActionResult<double> electricityBill2(Guid userID, double electricityRate)
     {
         var powerUsage = _powerUsageService.electricityBill2MonthsAgo(userID, electricityRate);
+        return Ok(powerUsage);
+    }
+
+    [HttpGet("power-usage/electricityEarnings/CurrentMonth/{userID}")]
+    public ActionResult<double> electricityEarningsForCurrentMonth(Guid userID, double electricityRate)
+    {
+        var powerUsage = _powerUsageService.electricityEarningsForCurrentMonth(userID, electricityRate);
         return Ok(powerUsage);
     }
 

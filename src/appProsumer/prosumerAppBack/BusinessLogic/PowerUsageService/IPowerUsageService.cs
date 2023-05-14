@@ -60,8 +60,10 @@ public interface IPowerUsageService
     public double percentPowerUsageDifferenceForPreviousHourProduction(Guid userId);
     public double percentPowerUsageDifferenceForPreviousHourConsumptionSystem();
     public double percentPowerUsageDifferenceForPreviousHourProductionSystem();
+    public double electricityBillForCurrentMonth(Guid userID, double electricityRate);
     public double electricityBillLastMonth(Guid userID, double electricityRate);
     public double electricityBill2MonthsAgo(Guid userID, double electricityRate);
+    public double electricityEarningsForCurrentMonth(Guid userID, double electricityRate);
     public double electricityEarnings2MonthsAgo(Guid userID, double electricityRate);
     public double electricityEarningsLastMonth(Guid userID, double electricityRate);
 }
