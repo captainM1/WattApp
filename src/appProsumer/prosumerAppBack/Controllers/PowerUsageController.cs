@@ -575,9 +575,9 @@ public class PowerUsageController : ControllerBase
     }
 
     [HttpGet("power-usage/electricityBill/CurrentMonth/{userID}")]
-    public async Task<ActionResult<double>> electricityBillCurrentMonth(Guid userID, double electricityRate, int direction)
+    public async Task<ActionResult<double>> electricityBillCurrentMonth(Guid userID, double electricityRate)
     {
-        var powerUsage = await _powerUsageService.electricityBillCurrentMonth(userID, electricityRate, direction);
+        var powerUsage = await _powerUsageService.electricityBillCurrentMonth(userID, electricityRate);
         return Ok(powerUsage);
     }
 }

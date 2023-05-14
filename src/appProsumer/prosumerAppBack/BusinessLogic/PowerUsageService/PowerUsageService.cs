@@ -541,9 +541,9 @@ public class PowerUsageService:IPowerUsageService
         return price;
     }
 
-    public async Task<double> electricityBillCurrentMonth(Guid userID, double electricityRate, int direction)
+    public async Task<double> electricityBillCurrentMonth(Guid userID, double electricityRate)
     {
-        var price = await _repository.electricityBillCurrentMonth(userID, electricityRate, direction);
+        var price = await _repository.electricityBillCurrentMonth(userID, electricityRate);
         if (price == 0)
         {
             throw new NullReferenceException("User doesnt share data with DSO");

@@ -61,5 +61,5 @@ public interface IPowerUsageService
     public Task<double> electricityBill2MonthsAgo(Guid userID, double electricityRate);
     public Task<double> electricityEarnings2MonthsAgo(Guid userID, double electricityRate);
     public Task<double> electricityEarningsLastMonth(Guid userID, double electricityRate);
-    public Task<double> electricityBillCurrentMonth(Guid userID, double electricityRate, int direction);
+    public Task<double> electricityBillCurrentMonth(Guid userID, double electricityRate);
 }

@@ -2394,20 +2394,10 @@ public class PowerUsageRepository : IPowerUsageRepository
         return ((currentConsumption - sum) / sum) * 100;
     }
 
-    public async Task<double> electricityBillCurrentMonth(Guid userID, double electricityRate, int direction) // 1 ako pita DSO, 0 ako pita prosumer
+    public async Task<double> electricityBillCurrentMonth(Guid userID, double electricityRate) 
     {
-        bool DSOshare = _dataContext.Users
-            .Where(u => u.ID == userID)
-            .Select(sh => sh.sharesDataWithDso)
-            .FirstOrDefault();
-
-        if (DSOshare == false && direction == 1)
-            return 0;
-
         DateTime endDate = DateTime.Now;
         DateTime startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
-
-        Console.WriteLine("DATUM KOJI JE MESEC: " + startDate);
 
         double sum = 0;
 
