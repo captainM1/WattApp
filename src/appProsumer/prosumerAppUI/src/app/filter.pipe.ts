@@ -9,7 +9,7 @@ export class FilterPipe implements PipeTransform
   transform(devices: any, searchName: string):any {
     if(!devices || !searchName) return devices;
 
-    return devices.filter((device:any)=> device.deviceTypeName.toLocaleLowerCase().includes(searchName.toLocaleLowerCase()));
+    return devices.filter((device:any)=> device.deviceName.toLocaleLowerCase().includes(searchName.toLocaleLowerCase()));
   }
 
 }

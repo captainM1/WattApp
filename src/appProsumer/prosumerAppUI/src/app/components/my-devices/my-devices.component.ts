@@ -1,8 +1,10 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthService } from 'src/app/services/auth.service';
 import { environment } from 'src/environments/environment';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-my-devices',
@@ -12,8 +14,10 @@ import { environment } from 'src/environments/environment';
 export class MyDevicesComponent implements OnInit {
   devices: any;
   deviceToday: {[key: string]: any} = {};
-
   searchName: string = '';
+
+  @ViewChild('myTable') myTable!: ElementRef;
+
   constructor(
     private auth: AuthService,
     private cookie: CookieService,
@@ -40,5 +44,14 @@ export class MyDevicesComponent implements OnInit {
         console.log(error);
       }
     );
+  }
+
+  exportToExcel(): void {
+    const worksheet = XLSX.utils.table_to_sheet(this.myTable.nativeElement);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+    const fileBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([fileBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    saveAs(blob, 'table-data.xlsx');
   }
 }
