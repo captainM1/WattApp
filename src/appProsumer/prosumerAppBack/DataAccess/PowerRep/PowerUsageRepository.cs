@@ -2456,6 +2456,91 @@ public class PowerUsageRepository : IPowerUsageRepository
         }
         return ((currentConsumption - sum) / sum) * 100;
     }
+    public double percentPowerUsageDifferenceForPreviousHourProductionSystem()
+    {
+        double currentConsumption = this.CurrentSumPowerUsageSystemProducer();
+
+        DateTime currentHourTimestamp = DateTime.Now.AddHours(-2);
+        double sum = 0;
+
+        var powerUsageData = mongoCollection.AsQueryable()
+           .Select(d => d.ID)
+           .ToList();
+
+        foreach (var device in powerUsageData)
+        {
+            Guid userID = _dataContext.Devices
+                        .Where(d => d.DeviceTypeID.ToString().ToUpper() == device.ToString().ToUpper())
+                        .Select(u => u.OwnerID)
+                        .FirstOrDefault();
+            bool DSOshare = _dataContext.Users
+                        .Where(u => u.ID == userID)
+                        .Select(sh => sh.sharesDataWithDso)
+                        .FirstOrDefault();
+
+            string deviceGroupName = _dataContext.DeviceGroups
+           .Where(g => g.ID == _dataContext.DeviceTypes
+               .Where(dt => dt.ID == device)
+               .Select(dt => dt.GroupID)
+               .FirstOrDefault())
+           .Select(g => g.Name)
+           .FirstOrDefault();
+
+            bool isOn = _dataContext.Devices
+                    .Where(d => d.DeviceTypeID.ToString().ToUpper() == device.ToString().ToUpper())
+                    .Select(ison => ison.IsOn)
+                    .FirstOrDefault();
+
+            if (DSOshare == true && deviceGroupName == "Producer" && isOn == true)
+            {
+                sum += GetCurrentPowerUsage(currentHourTimestamp, device);
+            }
+        }
+        return ((currentConsumption - sum) / sum) * 100;
+    }
+    public double percentPowerUsageDifferenceForPreviousHourConsumptionSystem()
+    {
+        double currentConsumption = this.CurrentSumPowerUsageSystemConsumer();
+                
+        DateTime currentHourTimestamp = DateTime.Now.AddHours(-2);
+        double sum = 0;
+
+        var powerUsageData = mongoCollection.AsQueryable()
+           .Select(d => d.ID)
+           .ToList();
+
+        foreach (var device in powerUsageData)
+        {
+            var userID = _dataContext.Devices
+                       .Where(d => d.DeviceTypeID.ToString().ToUpper() == device.ToString().ToUpper())
+                       .Select(u => u.OwnerID)
+                       .FirstOrDefault();
+
+            bool DSOshare = _dataContext.Users
+                        .Where(u => u.ID == userID)
+                        .Select(sh => sh.sharesDataWithDso)
+                        .FirstOrDefault();
+
+            string deviceGroupName = _dataContext.DeviceGroups
+           .Where(g => g.ID == _dataContext.DeviceTypes
+               .Where(dt => dt.ID == device)
+               .Select(dt => dt.GroupID)
+               .FirstOrDefault())
+           .Select(g => g.Name)
+           .FirstOrDefault();
+
+            bool isOn = _dataContext.Devices
+                    .Where(d => d.DeviceTypeID.ToString().ToUpper() == device.ToString().ToUpper())
+                    .Select(ison => ison.IsOn)
+                    .FirstOrDefault();
+
+            if (DSOshare == true && deviceGroupName == "Consumer" && isOn == true)
+            {
+                sum += GetCurrentPowerUsage(currentHourTimestamp, device);
+            }
+        }        
+        return ((currentConsumption - sum) / sum) * 100;
+    }
     public double electricityBillLastMonth(Guid userID, double electricityRate)
     {
         bool DSOshare = _dataContext.Users

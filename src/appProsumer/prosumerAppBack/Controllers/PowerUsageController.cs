@@ -544,6 +544,20 @@ public class PowerUsageController : ControllerBase
         return Ok(powerUsage);
     }
 
+    [HttpGet("power-usage/percentage-difference-for-previous-hour/consumption/system")]
+    public ActionResult<double> percentPowerUsageDifferenceForPreviousHourConsumptionSystem()
+    {
+        var powerUsage = _powerUsageService.percentPowerUsageDifferenceForPreviousHourConsumptionSystem();
+        return Ok(powerUsage);
+    }
+
+    [HttpGet("power-usage/percentage-difference-for-previous-hour/production/system")]
+    public ActionResult<double> percentPowerUsageDifferenceForPreviousHourProductionSystem()
+    {
+        var powerUsage = _powerUsageService.percentPowerUsageDifferenceForPreviousHourProductionSystem();
+        return Ok(powerUsage);
+    }
+
     [HttpGet("power-usage/electricityBill/LastMonth/{userID}")]
     public ActionResult<double> electricityBill1(Guid userID, double electricityRate)
     {

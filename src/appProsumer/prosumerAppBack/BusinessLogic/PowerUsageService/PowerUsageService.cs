@@ -519,6 +519,34 @@ public class PowerUsageService:IPowerUsageService
         return powerUsage;
     }
 
+    public double percentPowerUsageDifferenceForPreviousHourConsumptionSystem()
+    {
+        var powerUsage = _repository.percentPowerUsageDifferenceForPreviousHourConsumptionSystem();
+        if (double.IsNaN(powerUsage))
+        {
+            return 0.0;
+        }
+        if (double.IsInfinity(powerUsage))
+        {
+            return 0.0;
+        }
+        return powerUsage;
+    }
+
+    public double percentPowerUsageDifferenceForPreviousHourProductionSystem()
+    {
+        var powerUsage = _repository.percentPowerUsageDifferenceForPreviousHourProductionSystem();
+        if (double.IsNaN(powerUsage))
+        {
+            return 0.0;
+        }
+        if (double.IsInfinity(powerUsage))
+        {
+            return 0.0;
+        }
+        return powerUsage;
+    }
+
     public double electricityBill2MonthsAgo(Guid userID, double electricityRate)
     {
         var price = _repository.electricityBill2MonthsAgo(userID, electricityRate);
