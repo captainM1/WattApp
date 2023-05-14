@@ -2393,6 +2393,60 @@ public class PowerUsageRepository : IPowerUsageRepository
         }
         return ((currentConsumption - sum) / sum) * 100;
     }
+
+    public async Task<double> electricityBillCurrentMonth(Guid userID, double electricityRate, int direction) // 1 ako pita DSO, 0 ako pita prosumer
+    {
+        bool DSOshare = _dataContext.Users
+            .Where(u => u.ID == userID)
+            .Select(sh => sh.sharesDataWithDso)
+            .FirstOrDefault();
+
+        if (DSOshare == false && direction == 1)
+            return 0;
+
+        DateTime endDate = DateTime.Now;
+        DateTime startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+
+        Console.WriteLine("DATUM KOJI JE MESEC: " + startDate);
+
+        double sum = 0;
+
+        var devices = _deviceRepository.GetDevicesForUser(userID);
+
+        foreach (var device in devices)
+        {
+            var deviceType = _dataContext.Devices
+                            .Where(d => d.ID == device.ID)
+                            .Select(dt => dt.DeviceTypeID)
+                            .FirstOrDefault();
+
+            string deviceGroupName = _dataContext.DeviceGroups
+                        .Where(g => g.ID == _dataContext.DeviceTypes
+                            .Where(dt => dt.ID == deviceType)
+                            .Select(dt => dt.GroupID)
+                            .FirstOrDefault())
+                        .Select(g => g.Name)
+                        .FirstOrDefault();
+
+            if (deviceGroupName == "Consumer")
+            {
+                var powerUsages = mongoCollection.AsQueryable()
+                    .Where(p => p.ID.ToString().ToUpper() == deviceType.ToString().ToUpper())
+                    .SelectMany(p => p.TimestampPowerPairs)
+                    .ToList()
+                    .Where(t => t.Timestamp >= startDate && t.Timestamp <= endDate)
+                    .ToList();
+
+                foreach (var powerUsage in powerUsages)
+                {
+                    sum += powerUsage.PowerUsage;
+                }
+            }
+        }
+
+        return sum * electricityRate;
+    }
+
     public async Task<double> electricityBillLastMonth(Guid userID, double electricityRate)
     {
         bool DSOshare = _dataContext.Users
