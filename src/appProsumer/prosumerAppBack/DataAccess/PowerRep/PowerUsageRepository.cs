@@ -926,15 +926,18 @@ public class PowerUsageRepository : IPowerUsageRepository
     }
 
 
-    public List<PowerUsage> GetPowerUsageForDevicesConsumption(Guid userID, int direction)
+    public List<PowerUsage> GetPowerUsageForDevicesConsumption(Guid userID, int direction, int shareData)
     {
         bool DSOshare = _dataContext.Users
                         .Where(u => u.ID == userID)
                         .Select(sh => sh.sharesDataWithDso)
                         .FirstOrDefault();
-
-        if (DSOshare == false)
-            return null;
+        if (shareData == 0)
+        {
+            if (DSOshare == false)
+                return null;
+        }
+        else DSOshare = true;
 
         IEnumerable<String> deviceTypeIds = _deviceRepository.GetDevicesForUser(userID).Select(d => d.DeviceTypeID.ToString().ToUpper());
 
@@ -984,15 +987,19 @@ public class PowerUsageRepository : IPowerUsageRepository
         return puList;
     }
 
-    public List<PowerUsage> GetPowerUsageForDevicesProduction(Guid userID, int direction)
+    public List<PowerUsage> GetPowerUsageForDevicesProduction(Guid userID, int direction, int shareData)
     {
         bool DSOshare = _dataContext.Users
                         .Where(u => u.ID == userID)
                         .Select(sh => sh.sharesDataWithDso)
                         .FirstOrDefault();
 
-        if (DSOshare == false)
-            return null;
+        if (shareData == 0)
+        {
+            if (DSOshare == false)
+                return null;
+        }
+        else DSOshare = true;
 
         IEnumerable<String> deviceTypeIds = _deviceRepository.GetDevicesForUser(userID).Select(d => d.DeviceTypeID.ToString().ToUpper());
 
@@ -1042,15 +1049,18 @@ public class PowerUsageRepository : IPowerUsageRepository
         return puList;
     }
 
-    public List<PowerUsage> GetPowerUsageForDevicesConsumptionFor7Days(Guid userID, int direction)
+    public List<PowerUsage> GetPowerUsageForDevicesConsumptionFor7Days(Guid userID, int direction, int shareData)
     {
         bool DSOshare = _dataContext.Users
                         .Where(u => u.ID == userID)
                         .Select(sh => sh.sharesDataWithDso)
                         .FirstOrDefault();
-
-        if (DSOshare == false)
-            return null;
+        if (shareData == 0)
+        {
+            if (DSOshare == false)
+                return null;
+        }
+        else DSOshare = true;
 
         IEnumerable<String> deviceTypeIds = _deviceRepository.GetDevicesForUser(userID).Select(d => d.DeviceTypeID.ToString().ToUpper());
         
@@ -1100,15 +1110,18 @@ public class PowerUsageRepository : IPowerUsageRepository
         return puList;
     }
 
-    public List<PowerUsage> GetPowerUsageForDevicesProductionFor7Days(Guid userID, int direction)
+    public List<PowerUsage> GetPowerUsageForDevicesProductionFor7Days(Guid userID, int direction, int shareData)
     {
         bool DSOshare = _dataContext.Users
                         .Where(u => u.ID == userID)
                         .Select(sh => sh.sharesDataWithDso)
                         .FirstOrDefault();
-
-        if (DSOshare == false)
-            return null;
+        if (shareData == 0)
+        {
+            if (DSOshare == false)
+                return null;
+        }
+        else DSOshare = true;
 
         IEnumerable<String> deviceTypeIds = _deviceRepository.GetDevicesForUser(userID).Select(d => d.DeviceTypeID.ToString().ToUpper());
 
@@ -1158,15 +1171,18 @@ public class PowerUsageRepository : IPowerUsageRepository
         return puList;
     }
 
-    public List<PowerUsage> GetPowerUsageForDevicesConsumptionFor24Hours(Guid userID, int direction)
+    public List<PowerUsage> GetPowerUsageForDevicesConsumptionFor24Hours(Guid userID, int direction, int shareData)
     {
         bool DSOshare = _dataContext.Users
                         .Where(u => u.ID == userID)
                         .Select(sh => sh.sharesDataWithDso)
                         .FirstOrDefault();
-
-        if (DSOshare == false)
-            return null;
+        if (shareData == 0)
+        {
+            if (DSOshare == false)
+                return null;
+        }
+        else DSOshare = true;
 
         IEnumerable<String> deviceTypeIds = _deviceRepository.GetDevicesForUser(userID).Select(d => d.DeviceTypeID.ToString().ToUpper());
 
@@ -1216,15 +1232,18 @@ public class PowerUsageRepository : IPowerUsageRepository
         puList.Add(pu);
         return puList;
     }
-    public List<PowerUsage> GetPowerUsageForDevicesProductionFor24Hours(Guid userID, int direction)
+    public List<PowerUsage> GetPowerUsageForDevicesProductionFor24Hours(Guid userID, int direction, int shareData)
     {
         bool DSOshare = _dataContext.Users
                         .Where(u => u.ID == userID)
                         .Select(sh => sh.sharesDataWithDso)
                         .FirstOrDefault();
-
-        if (DSOshare == false)
-            return null;
+        if(shareData == 0)
+        {
+            if (DSOshare == false)
+             return null;
+        }
+        
 
         IEnumerable<String> deviceTypeIds = _deviceRepository.GetDevicesForUser(userID).Select(d => d.DeviceTypeID.ToString().ToUpper());
 
@@ -1946,15 +1965,19 @@ public class PowerUsageRepository : IPowerUsageRepository
         return pu;
     }
 
-    public PowerUsage GetDeviceWithMaxPowerUsageCurrentProduction(Guid userID)
+    public PowerUsage GetDeviceWithMaxPowerUsageCurrentProduction(Guid userID,int shareData)
     {
         bool DSOshare = _dataContext.Users
                        .Where(u => u.ID == userID)
                        .Select(sh => sh.sharesDataWithDso)
                        .FirstOrDefault();
 
-        if (DSOshare == false)
-            return null;
+        if (shareData == 0)
+        {
+            if (DSOshare == false)
+                return null;
+        }
+        else DSOshare = true;
 
         var devices = _deviceRepository.GetDevicesForUser(userID);
 
@@ -2003,15 +2026,18 @@ public class PowerUsageRepository : IPowerUsageRepository
 
     }
 
-    public PowerUsage GetDeviceWithMaxPowerUsageCurrentConsumption(Guid userID)
+    public PowerUsage GetDeviceWithMaxPowerUsageCurrentConsumption(Guid userID, int shareData)
     {
         bool DSOshare = _dataContext.Users
                        .Where(u => u.ID == userID)
                        .Select(sh => sh.sharesDataWithDso)
                        .FirstOrDefault();
-
-        if (DSOshare == false)
-            return null;
+        if (shareData == 0)
+        {
+            if (DSOshare == false)
+                return null;
+        }
+        else DSOshare = true;
 
         var devices = _deviceRepository.GetDevicesForUser(userID);
 
@@ -2134,13 +2160,17 @@ public class PowerUsageRepository : IPowerUsageRepository
 
     public double savedEnergyForUserConsumer(Guid userID, int direction)
     {
-        bool DSOshare = _dataContext.Users
+       /* bool DSOshare = _dataContext.Users
                        .Where(u => u.ID == userID)
                        .Select(sh => sh.sharesDataWithDso)
                        .FirstOrDefault();
-
-        if (DSOshare == false)
-            return 0;
+        if (shareData == 0)
+        {
+            if (DSOshare == false)
+                return 0;
+        }
+        else DSOshare = true;*/
+        
 
         DateTime endDate = DateTime.Now;
         DateTime startDate = DateTime.Now;
@@ -2432,9 +2462,6 @@ public class PowerUsageRepository : IPowerUsageRepository
             .Where(u => u.ID == userID)
             .Select(sh => sh.sharesDataWithDso)
             .FirstOrDefault();
-
-        if (DSOshare == false)
-            return 0;
 
         var consumes = savedEnergyForUserConsumer(userID, 1);
 
