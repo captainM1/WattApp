@@ -357,4 +357,7 @@ export class AuthService {
   getDispacher(id : any):Observable<any>{
     return this.http.get(environment.apiUrl + "/api/Dispatcher/get-single/" + id);
   }
+  declineRequest(reqID:any):Observable<any> {
+    return this.http.post<string>(environment.apiUrl + "/api/User/decline-request-to-dso/"+reqID,{});
+  }
 }

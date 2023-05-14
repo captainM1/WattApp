@@ -4,13 +4,13 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfirmPasswordValidator } from 'src/app/helpers/confirm-password.validator';
 import { AuthService } from 'src/app/services/auth.service';
 import { SettingsService } from 'src/app/services/settings.service';
-
+import { BackgroundService } from 'src/app/services/background.service';
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.css']
 })
-export class SettingsComponent implements OnInit, AfterViewInit {
+export class SettingsComponent implements OnInit, AfterViewInit{
   allowAccess = false;
   type: string = "password";
   type2: string = "password";
@@ -23,11 +23,9 @@ export class SettingsComponent implements OnInit, AfterViewInit {
   isText3: boolean = false;
   resetForm!: FormGroup;
   submitted = false;
-  requestSend: boolean = true;
-  requestApproved: boolean = false;
-  requestPending: boolean = false;
+  requestStatus: string = 'no';
 
-  constructor(private apiService: SettingsService, private auth: AuthService, private fb: FormBuilder,) { }
+  constructor(private apiService: SettingsService, private auth: AuthService, private fb: FormBuilder,private backgroundService:BackgroundService) { }
 
   @ViewChild('exampleModal') exampleModal!: ElementRef;
 
@@ -41,13 +39,30 @@ export class SettingsComponent implements OnInit, AfterViewInit {
     }
     )
 
-    if(this.apiService.getRole() == 'RegularUser'){
-      this.requestSend = false;
-      this.requestApproved = true;
-    }
+    this.apiService.alreadyHasReq().subscribe(
+      (response) => {
+        if(response == true)
+          this.requestStatus = 'pending'
+      }
+    )
+    this.apiService.statusOfReq().subscribe(
+      response => {
+        console.log(response)
+        if (response == true) {
+          this.requestStatus = 'accepted'
+          this.backgroundService.ngOnDestroy();
+        }
+      }
+    )
 
-    this.userAlreadyApplied();
-    console.log(this.auth.getFullToken());
+    this.backgroundService.startBackgroundProcess();
+    this.backgroundService.subscribeToStatusUpdate().subscribe(status => {
+      this.requestStatus = status;
+    });
+  }
+
+  ngOnDestroy() {
+    this.backgroundService.ngOnDestroy();
   }
 
   ngAfterViewInit(): void {
@@ -99,19 +114,40 @@ export class SettingsComponent implements OnInit, AfterViewInit {
     this.eyeIcon3 = "fa-eye-slash";
   }
 
+  toggleAccess(){
 
+  }
 
-  toggleAccess() {
-    if(!this.allowAccess){
-      this.allowAccess = true;
-      this.apiService.sendRequest().subscribe(
-        (info) => {
-          console.log("Success");
-        },
-        (error) => {
-          console.log(error);
-        });
-    }
+  sendReq() {
+    this.apiService.sendRequest().subscribe(
+      (info) => {
+        console.log("Success");
+      },
+      (error) => {
+        console.log(error);
+      });
+    this.requestStatus = 'pending'
+  }
+  cancelReq(){
+    this.apiService.cancelRequest().subscribe(
+      (info) => {
+        console.log("Success");
+      },
+      (error) => {
+        console.log(error);
+      });
+      this.requestStatus = 'no'
+  }
+
+  disconnectDSO(){
+    this.apiService.disconnectDSO().subscribe(
+      (info) => {
+        console.log("Success");
+      },
+      (error) => {
+        console.log(error);
+      });
+      this.requestStatus = 'no'
   }
 
   sendRequest(){

@@ -6,27 +6,31 @@
         <h3 class="mb-3">Settings</h3>
         <div class="permissions">
             <h4>Permissions</h4>
-            <div class="row">
-                <div class="col-6"><button class="btn btn-lock send w-100" *ngIf="requestSend" (click)="sendRequest()">Send request</button></div>
-                <div class="col-6"></div>
-            </div>
-            <div class="row">
-                <div class="col-6"><button class="btn btn-lock pending w-100" *ngIf="requestPending" disabled>Request pending</button></div>
-                <div class="col-6"><button class="btn btn-lock bad w-100" *ngIf="requestPending" (click)="cancelRequest()">Cancel request</button></div>
-            </div>
-            <div class="row">
-                <div class="col-sm"><button class="btn btn-lock approved w-100" *ngIf="requestApproved" (click)="disconnect()">Request approved</button></div>
-                <div class="col-sm"><button class="btn btn-lock bad w-100" *ngIf="requestApproved">Disconnect from DSO</button></div>
-            </div>
-            
-            
-            
             <div>
             <label class="toggle mt-3">
                 <span class="toggle-label">Allow DSO to access my information: &nbsp;</span>
                 <input class="toggle-checkbox" type="checkbox" [(ngModel)]="allowAccess" (click)="toggleAccess()">
                 <div class="toggle-switch"></div>
             </label>
+            </div>
+            <div>
+            <label class="toggle mt-3">
+                <span class="toggle-label">Allow DSO to control consumption time:&nbsp;</span>
+                <input class="toggle-checkbox" type="checkbox" [disabled]="!allowAccess" [(ngModel)]="allowControl" (click)="toggleControl()">
+                <div class="toggle-switch"></div>
+            </label>
+            </div>
+            
+            <div *ngIf="requestStatus == 'no'" class="d-flex justify-content-center">
+              <button (click)="sendReq()">Send request</button>
+            </div>
+            <div *ngIf="requestStatus == 'pending'" class="d-flex justify-content-center flex-column align-items-center">
+              <h3>Your request is pending</h3>
+              <button (click)="cancelReq()">Cancel request</button>
+            </div>
+            <div *ngIf="requestStatus == 'accepted'" class="d-flex justify-content-center flex-column align-items-center">
+              <h3>You are connected to DSO</h3>
+              <button (click)="disconnectDSO()">Dissconect from DSO</button>
             </div>
         </div>
         <div>
