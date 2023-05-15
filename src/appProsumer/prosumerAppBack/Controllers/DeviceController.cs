@@ -324,8 +324,15 @@ namespace prosumerAppBack.Controllers
         {
             var isIt = _deviceService.IsDeviceTurnedOn(deviceID);
             if (isIt == false)
-                return BadRequest("Device is turned off");
-            return Ok("Device is turned on");
+                return false;
+            return true;
+        }
+        
+        [HttpGet("change-state/{deviceID}")]
+        public ActionResult<Boolean> turnDevice(Guid deviceID)
+        {
+            var isIt = _deviceService.ChangeState(deviceID);
+            return Ok(isIt);
         }
 
         [HttpGet("DSO-has-control/{deviceID}")]

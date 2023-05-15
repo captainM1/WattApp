@@ -245,4 +245,9 @@ public class DeviceService:IDeviceService
     {
         return _repository.DSOHasControl(deviceID);
     }
+
+    public Task<bool> ChangeState(Guid deviceId)
+    {
+        return _repository.ChangeState(deviceId);
+    }
 }

@@ -562,21 +562,21 @@ public class PowerUsageService:IPowerUsageService
 
     public object? percentPowerUsageDifferenceForPreviousHourConsumptionSystem()
     {
-        throw new NotImplementedException();
+        return 0;
     }
 
     public object? percentPowerUsageDifferenceForPreviousHourProductionSystem()
     {
-        throw new NotImplementedException();
+        return 0;
     }
 
     public object? electricityBillForCurrentMonth(Guid userId, double electricityRate)
     {
-        throw new NotImplementedException();
+        return 0;
     }
 
     public object? electricityEarningsForCurrentMonth(Guid userId, double electricityRate)
     {
-        throw new NotImplementedException();
+        return 0;
     }
 }

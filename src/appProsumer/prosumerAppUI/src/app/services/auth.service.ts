@@ -114,5 +114,10 @@ export class AuthService {
     return this.http.get<any>(environment.apiUrl + "/api/Device/devices/info/"+deviceID);
   }
 
-
+  changeState(id:any):Observable<any>{
+    return this.http.get<any>(environment.apiUrl + "/api/Device/change-state/"+id);
+  }
+  isOn(id:any):Observable<any>{
+    return this.http.get<any>(environment.apiUrl + "/api/Device/is-turned-on/"+id);
+  }
 }

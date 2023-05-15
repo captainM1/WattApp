@@ -5,6 +5,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { environment } from 'src/environments/environment';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import { catchError, forkJoin, of, tap } from 'rxjs';
 
 @Component({
   selector: 'app-my-devices',
@@ -28,16 +29,42 @@ export class MyDevicesComponent implements OnInit {
     this.auth.getDeviceData().subscribe(
       (data) => {
         console.log(data);
-        this.devices = data;
-        this.devices.forEach((device:any) => {
-          this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/current/device/${device.deviceId}`, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) })
-            .subscribe(data => {
-              console.log(data);
-              this.deviceToday[device.deviceId] = data;
-            },
-            error => {
-              this.deviceToday[device.deviceId] = 0;
-            });
+        const deviceObservables = data.map((device: any) => {
+          return this.auth.isOn(device.deviceId).pipe(
+            tap((isOn: boolean) => {
+              device.isToggled = isOn;
+            }),
+            catchError((error) => {
+              device.isToggled = false;
+              return of(null);
+            })
+          );
+        });
+  
+        forkJoin(deviceObservables).subscribe(
+          () => {
+            this.devices = data;
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
+  
+        this.devices.forEach((device: any) => {
+          this.http
+            .get<any[]>(
+              `${environment.apiUrl}/api/PowerUsage/power-usage/current/device/${device.deviceId}`,
+              { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) }
+            )
+            .subscribe(
+              (data) => {
+                console.log(data);
+                this.deviceToday[device.deviceId] = data;
+              },
+              (error) => {
+                this.deviceToday[device.deviceId] = 0;
+              }
+            );
         });
       },
       (error) => {
@@ -45,6 +72,7 @@ export class MyDevicesComponent implements OnInit {
       }
     );
   }
+  
 
   exportToExcel(): void {
     const worksheet = XLSX.utils.table_to_sheet(this.myTable.nativeElement);
@@ -53,5 +81,10 @@ export class MyDevicesComponent implements OnInit {
     const fileBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     const blob = new Blob([fileBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     saveAs(blob, 'table-data.xlsx');
+  }
+  changeState(id:any){
+    this.auth.changeState(id).subscribe(
+      Response => console.log("Response")
+    );
   }
 }

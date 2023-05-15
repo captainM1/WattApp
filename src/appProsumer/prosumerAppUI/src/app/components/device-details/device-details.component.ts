@@ -135,7 +135,7 @@ export class DeviceDetailsComponent implements OnInit {
       },
       error => {
          console.error('Error fetching months history info:', error);
-      })
+      })  
   }
 
   goBack(){

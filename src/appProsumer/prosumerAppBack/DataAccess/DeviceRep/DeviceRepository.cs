@@ -288,7 +288,7 @@ namespace prosumerAppBack.DataAccess
         public Boolean IsDeviceTurnedOn(Guid deviceID)
         {
             var isOn = _dbContext.Devices
-                            .Where(d => d.ID == deviceID)
+                            .Where(d => d.ID.ToString().ToUpper() == deviceID.ToString().ToUpper())
                             .Select(ison => ison.IsOn)
                             .FirstOrDefault();
 
@@ -303,6 +303,21 @@ namespace prosumerAppBack.DataAccess
                             .FirstOrDefault();
 
             return sharesWithDSO;
+         }
+
+         public  async Task<bool> ChangeState(Guid deviceId)
+         {
+             var device = await _dbContext.Devices.FirstOrDefaultAsync(d => d.ID == deviceId);
+
+             if (device.IsOn == false)
+                 device.IsOn = true;
+             else
+                 device.IsOn = false;
+
+             _dbContext.Devices.Update(device);
+             _dbContext.SaveChangesAsync();
+
+             return true;
          }
     }
 
