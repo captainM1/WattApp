@@ -21,8 +21,8 @@ namespace prosumerAppBack.BusinessLogic
         public Task<List<PowerUsage>> GetPowerUsageSumByDeviceConsumer(int direction);
         public Task<PowerUsage> GetPowerUsagesForEachDayProductionMonth(int direction); // za svaki dan prethodnih/sledecih mesec dana ukupna potrosnja svih uredjaja u danu
         public Task<PowerUsage> GetPowerUsagesForEachDayConsumptionMonth(int direction);
-        public Task<List<PowerUsage>> GetPowerUsageForDevicesProduction(Guid userID, int direction);
-        public Task<List<PowerUsage>> GetPowerUsageForDevicesConsumption(Guid userID, int direction);        
+        public Task<List<PowerUsage>> GetPowerUsageForDevicesProduction(Guid userID, int direction, int shareData);
+        public Task<List<PowerUsage>> GetPowerUsageForDevicesConsumption(Guid userID, int direction,int shareData);        
         public Task<PowerUsage> GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction);       
         public Task<PowerUsage> GetPowerConsumedForADaySystem();
         public Task<PowerUsage> GetPowerProducedForADaySystem();
@@ -30,19 +30,19 @@ namespace prosumerAppBack.BusinessLogic
         public Task<double> GetCurrentPowerProduction();        
         public Task<double> CurrentSumPowerUsageSystemConsumer();
         public Task<double> CurrentSumPowerUsageSystemProducer();
-        public Task<List<PowerUsage>> GetPowerUsageForDevicesConsumptionFor7Days(Guid userID, int direction);
-        public Task<List<PowerUsage>> GetPowerUsageForDevicesProductionFor7Days(Guid userID, int direction);
-        public Task<List<PowerUsage>> GetPowerUsageForDevicesConsumptionFor24Hours(Guid userID, int direction);
-        public Task<List<PowerUsage>> GetPowerUsageForDevicesProductionFor24Hours(Guid userID, int direction);
+        public Task<List<PowerUsage>> GetPowerUsageForDevicesConsumptionFor7Days(Guid userID, int direction, int shareData);
+        public Task<List<PowerUsage>> GetPowerUsageForDevicesProductionFor7Days(Guid userID, int direction, int shareData);
+        public Task<List<PowerUsage>> GetPowerUsageForDevicesConsumptionFor24Hours(Guid userID, int direction, int shareData);
+        public Task<List<PowerUsage>> GetPowerUsageForDevicesProductionFor24Hours(Guid userID, int direction, int shareData);
         public Task<IEnumerable<TimestampPowerPair>> GetForDeviceByHour(Guid deviceID);//provereno i promenjeno da vraca do trenutnog_sata -1 a ne za ceo dan
         public Task<PowerUsage> GetDeviceWithMaxPowerUsage24Production(Guid userID);
         public Task<PowerUsage> GetDeviceWithMaxPowerUsage24Consumption(Guid userID);
         public Task<PowerUsage> GetDeviceWithMaxPowerUsagePreviousWeekProduction(Guid userID);
         public Task<PowerUsage> GetDeviceWithMaxPowerUsagePreviousMonthProduction(Guid userID, int direction);
-        public Task<PowerUsage> GetDeviceWithMaxPowerUsageCurrentProduction(Guid userID);
+        public Task<PowerUsage> GetDeviceWithMaxPowerUsageCurrentProduction(Guid userID, int shareData);
         public Task<PowerUsage> GetDeviceWithMaxPowerUsagePreviousWeekConsumption(Guid userID);
         public Task<PowerUsage> GetDeviceWithMaxPowerUsagePreviousMonthConsumption(Guid userID, int direction);
-        public Task<PowerUsage> GetDeviceWithMaxPowerUsageCurrentConsumption(Guid userID);
+        public Task<PowerUsage> GetDeviceWithMaxPowerUsageCurrentConsumption(Guid userID, int shareData);
         public Task<PowerUsage> Get12hoursBefore12hoursAfter(Guid deviceID);
         public Task<double> SavedEnergySystemConsumer();
         public Task<double> SavedEnergySystemProducer();
@@ -62,5 +62,7 @@ namespace prosumerAppBack.BusinessLogic
         public Task<double> electricityEarningsLastMonth(Guid userID, double electricityRate);
         public Task<double> electricityEarnings2MonthsAgo(Guid userID, double electricityRate);
         public Task<double> electricityBillCurrentMonth(Guid userID, double electricityRate);
+        public double PercentPowerUsageDifferenceForPreviousHourConsumptionSystem();
+        public double ElectricityBillForCurrentMonth(Guid userID, double electricityRate);
     }
 }

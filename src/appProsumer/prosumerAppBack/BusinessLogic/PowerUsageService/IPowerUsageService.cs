@@ -28,22 +28,22 @@ public interface IPowerUsageService
     public Task<PowerUsage> GetPowerUsagesForEachDayConsumtionMonth(int direction);
     public Task<PowerUsage> GetPowerUsagesForEachDayProductionMonth(int direction);
     public Task<IEnumerable<TimestampPowerPair>> GetForDeviceByHour(Guid deviceID);
-    public Task<List<PowerUsage>> GetPowerUsageForDevicesConsumption(Guid userID, int direction);
-    public Task<List<PowerUsage>> GetPowerUsageForDevicesProduction(Guid userID, int direction);
-    public Task<List<PowerUsage>> GetPowerUsageForDevicesConsumptionFor7Days(Guid userID, int direction);
-    public Task<List<PowerUsage>> GetPowerUsageForDevicesProductionFor7Days(Guid userID, int direction);
+    public Task<List<PowerUsage>> GetPowerUsageForDevicesConsumption(Guid userID, int direction, int shareDso);//
+    public Task<List<PowerUsage>> GetPowerUsageForDevicesProduction(Guid userID, int direction, int shareDso);//
+    public Task<List<PowerUsage>> GetPowerUsageForDevicesConsumptionFor7Days(Guid userID, int direction, int shareDso);//
+    public Task<List<PowerUsage>> GetPowerUsageForDevicesProductionFor7Days(Guid userID, int direction, int shareDso);//
     public Task<PowerUsage> GetPowerUsageFor12HoursUpDown(Guid deviceID);
     public Task<PowerUsage> GetPowerUsageForDevicePast24Hours(Guid deviceID, int direction);
-    public Task<List<PowerUsage>> GetPowerUsageForDevicesProductionFor24Hours(Guid userID, int direction);
-    public Task<List<PowerUsage>> GetPowerUsageForDevicesConsumptionFor24Hours(Guid userID, int direction);
+    public Task<List<PowerUsage>> GetPowerUsageForDevicesProductionFor24Hours(Guid userID, int direction, int shareDso);//
+    public Task<List<PowerUsage>> GetPowerUsageForDevicesConsumptionFor24Hours(Guid userID, int direction, int shareDso);//
     public Task<PowerUsage> GetMaxUsagePast24HoursConsumption(Guid userID);
     public Task<PowerUsage> GetMaxUsagePast24HoursProduction(Guid userID);
     public Task<PowerUsage> GetMaxUsagePreviousWeekConsumption(Guid userID);
     public Task<PowerUsage> GetMaxUsagePreviousMonthConsumption(Guid userID, int direction);
-    public Task<PowerUsage> GetMaxUsagePreviousCurrentConsumption(Guid userID);
+    public Task<PowerUsage> GetMaxUsagePreviousCurrentConsumption(Guid userID, int dsoShare);
     public Task<PowerUsage> GetMaxUsagePreviousWeekProductoin(Guid userID);
     public Task<PowerUsage> GetMaxUsagePreviousMonthProduction(Guid userID, int direction);
-    public Task<PowerUsage> GetMaxUsagePreviousCurrentProduction(Guid userID);
+    public Task<PowerUsage> GetMaxUsagePreviousCurrentProduction(Guid userID, int dsoShare);
     public Task<double> SavedEnergySystemProducer();
     public Task<double> SavedEnergySystemConsumer();
     public Task<double> DeviceSystemPowerUsage(Guid deviceID);
@@ -62,4 +62,8 @@ public interface IPowerUsageService
     public Task<double> electricityEarnings2MonthsAgo(Guid userID, double electricityRate);
     public Task<double> electricityEarningsLastMonth(Guid userID, double electricityRate);
     public Task<double> electricityBillCurrentMonth(Guid userID, double electricityRate);
+    object? percentPowerUsageDifferenceForPreviousHourConsumptionSystem();
+    object? percentPowerUsageDifferenceForPreviousHourProductionSystem();
+    object? electricityBillForCurrentMonth(Guid userId, double electricityRate);
+    object? electricityEarningsForCurrentMonth(Guid userId, double electricityRate);
 }

@@ -107,8 +107,7 @@ namespace prosumerAppBack.Migrations
                     Email = table.Column<string>(type: "TEXT", nullable: true),
                     PasswordResetToken = table.Column<string>(type: "TEXT", nullable: true),
                     PasswordResetTokenExpires = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    sharesDataWithDso = table.Column<bool>(type: "INTEGER", nullable: false),
-                    dsoHasControl = table.Column<bool>(type: "INTEGER", nullable: false)
+                    sharesDataWithDso = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -121,7 +120,8 @@ namespace prosumerAppBack.Migrations
                 {
                     ID = table.Column<Guid>(type: "TEXT", nullable: false),
                     UserID = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Approved = table.Column<bool>(type: "INTEGER", nullable: false)
+                    Approved = table.Column<bool>(type: "INTEGER", nullable: true),
+                    Date = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -164,7 +164,8 @@ namespace prosumerAppBack.Migrations
                     DeviceName = table.Column<string>(type: "TEXT", nullable: true),
                     DeviceTypeID = table.Column<Guid>(type: "TEXT", nullable: false),
                     OwnerID = table.Column<Guid>(type: "TEXT", nullable: false),
-                    IsOn = table.Column<bool>(type: "INTEGER", nullable: false)
+                    IsOn = table.Column<bool>(type: "INTEGER", nullable: false),
+                    dsoHasControl = table.Column<bool>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -221,12 +222,12 @@ namespace prosumerAppBack.Migrations
             migrationBuilder.InsertData(
                 table: "Dispatchers",
                 columns: new[] { "ID", "Email", "FirstName", "LastName", "PasswordHash", "PhoneNumber", "Role", "Salt" },
-                values: new object[] { new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f53"), "admin@gmail.com", "Adminovic", "Adminovski", new byte[] { 11, 222, 18, 39, 242, 161, 84, 65, 216, 7, 167, 238, 226, 80, 239, 56, 253, 48, 195, 223, 71, 30, 28, 37, 125, 86, 119, 207, 92, 49, 215, 127 }, null, "Admin", new byte[] { 83, 53, 215, 205, 73, 196, 238, 53, 85, 207, 182, 115, 3, 28, 240, 14 } });
+                values: new object[] { new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f53"), "admin@gmail.com", "Adminovic", "Adminovski", new byte[] { 98, 110, 58, 103, 24, 49, 234, 94, 48, 122, 121, 92, 75, 163, 90, 157, 72, 93, 20, 123, 161, 154, 147, 223, 220, 97, 153, 12, 69, 18, 64, 139 }, null, "Admin", new byte[] { 171, 181, 48, 243, 8, 94, 204, 208, 156, 167, 248, 92, 134, 66, 187, 94 } });
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "ID", "Address", "City", "Country", "Email", "FirstName", "LastName", "PasswordHash", "PasswordResetToken", "PasswordResetTokenExpires", "PhoneNumber", "Role", "Salt", "dsoHasControl", "sharesDataWithDso" },
-                values: new object[] { new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f52"), "Radoja Domanovica 6", "Kragujevac", "Serbia", "petarsimic@gmail.com", "Petar", "Simic", new byte[] { 247, 116, 101, 117, 172, 44, 107, 166, 15, 106, 96, 78, 110, 9, 28, 246, 252, 39, 61, 138, 16, 16, 102, 9, 10, 192, 98, 226, 247, 8, 38, 33 }, null, null, "064-316-15-81", "UnapprovedUser", new byte[] { 65, 62, 95, 6, 177, 112, 219, 133, 87, 101, 56, 208, 150, 84, 16, 209 }, false, false });
+                columns: new[] { "ID", "Address", "City", "Country", "Email", "FirstName", "LastName", "PasswordHash", "PasswordResetToken", "PasswordResetTokenExpires", "PhoneNumber", "Role", "Salt", "sharesDataWithDso" },
+                values: new object[] { new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f52"), "Radoja Domanovica 6", "Kragujevac", "Serbia", "petarsimic@gmail.com", "Petar", "Simic", new byte[] { 113, 33, 110, 31, 200, 143, 229, 102, 1, 211, 37, 116, 235, 141, 75, 37, 48, 253, 180, 205, 160, 119, 30, 110, 24, 2, 192, 26, 165, 4, 67, 87 }, null, null, "064-316-15-81", "UnapprovedUser", new byte[] { 16, 179, 108, 95, 109, 124, 25, 177, 20, 183, 228, 132, 87, 78, 117, 41 }, false });
 
             migrationBuilder.InsertData(
                 table: "DeviceTypes",
@@ -244,6 +245,9 @@ namespace prosumerAppBack.Migrations
                     { new Guid("73e8b43e-bfaf-4db9-9f36-cf40cc057a6c"), new Guid("77cbc929-1cf2-4750-900a-164de4abe28b"), new Guid("4d4d4d4d-4d4d-4d4d-4d4d-4d4d4d4d4d58"), "Refrigerator", 250.0 },
                     { new Guid("783d8bd7-725b-42b6-a76b-6e9ad0fca6da"), new Guid("77cbc929-1cf2-4750-900a-164de4abe28b"), new Guid("4d4d4d4d-4d4d-4d4d-4d4d-4d4d4d4d4d51"), "Refrigerator", 250.0 },
                     { new Guid("815f9d3e-f0f8-4e0d-9b6e-9043293bee9d"), new Guid("77cbc929-1cf2-4750-900a-164de4abe28b"), new Guid("4d4d4d4d-4d4d-4d4d-4d4d-4d4d4d4d4d52"), "Dishwasher", 1800.0 },
+                    { new Guid("9d3d39b2-56d8-44e7-8ad5-b64efc6784f1"), new Guid("b17c9155-7e6f-4d37-8a86-ea1abb327bb2"), new Guid("4d4d4d4d-4d4d-4d4d-4d4d-4d4d4d4d4d50"), "Battery", 10000.0 },
+                    { new Guid("9d3d39b2-56d8-44e7-8ad5-b64efc6784f2"), new Guid("b17c9155-7e6f-4d37-8a86-ea1abb327bb2"), new Guid("4d4d4d4d-4d4d-4d4d-4d4d-4d4d4d4d4d4e"), "Battery", 15000.0 },
+                    { new Guid("9d3d39b2-56d8-44e7-8ad5-b64efc6784f3"), new Guid("b17c9155-7e6f-4d37-8a86-ea1abb327bb2"), new Guid("4d4d4d4d-4d4d-4d4d-4d4d-4d4d4d4d4d52"), "Battery", 12000.0 },
                     { new Guid("9d3d39b2-56d8-44e7-8ad5-b64efc6784fe"), new Guid("77cbc929-1cf2-4750-900a-164de4abe28b"), new Guid("4d4d4d4d-4d4d-4d4d-4d4d-4d4d4d4d4d61"), "Washing Machine", 1000.0 },
                     { new Guid("a2d2d5ec-b064-4f72-9e0e-84c1171cc14d"), new Guid("18f30035-59de-474f-b9db-987476de551f"), new Guid("4d4d4d4d-4d4d-4d4d-4d4d-4d4d4d4d4d63"), "Solar Panel", 4000.0 },
                     { new Guid("a2d2d5ec-b064-4f72-9e0e-84c1171cc14f"), new Guid("18f30035-59de-474f-b9db-987476de551f"), new Guid("4d4d4d4d-4d4d-4d4d-4d4d-4d4d4d4d4d54"), "Solar Panel", 6000.0 },
@@ -254,11 +258,11 @@ namespace prosumerAppBack.Migrations
 
             migrationBuilder.InsertData(
                 table: "Devices",
-                columns: new[] { "ID", "DeviceName", "DeviceTypeID", "IsOn", "MacAdress", "OwnerID" },
+                columns: new[] { "ID", "DeviceName", "DeviceTypeID", "IsOn", "MacAdress", "OwnerID", "dsoHasControl" },
                 values: new object[,]
                 {
-                    { new Guid("32ea7105-f582-4441-ae81-b738c4284f7d"), "Solarni Panel", new Guid("a2d2d5ec-b064-4f72-9e0e-84c1171cc14d"), false, "00-1B-63-84-45-E7", new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f52") },
-                    { new Guid("32ea7105-f582-4441-ae81-b738c4284f7e"), "Ves Masina", new Guid("32ea7105-f582-4441-ae81-b738c4284f7e"), false, "00-1B-63-84-45-E6", new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f52") }
+                    { new Guid("32ea7105-f582-4441-ae81-b738c4284f7d"), "Solarni Panel", new Guid("a2d2d5ec-b064-4f72-9e0e-84c1171cc14d"), false, "00-1B-63-84-45-E7", new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f52"), false },
+                    { new Guid("32ea7105-f582-4441-ae81-b738c4284f7e"), "Ves Masina", new Guid("32ea7105-f582-4441-ae81-b738c4284f7e"), false, "00-1B-63-84-45-E6", new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f52"), false }
                 });
 
             migrationBuilder.CreateIndex(

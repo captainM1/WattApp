@@ -11,7 +11,7 @@ using prosumerAppBack.DataAccess;
 namespace prosumerAppBack.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230511010545_InitialMigration")]
+    [Migration("20230515024643_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -41,6 +41,9 @@ namespace prosumerAppBack.Migrations
                     b.Property<Guid>("OwnerID")
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("dsoHasControl")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("ID");
 
                     b.HasIndex("DeviceTypeID");
@@ -57,7 +60,8 @@ namespace prosumerAppBack.Migrations
                             DeviceTypeID = new Guid("32ea7105-f582-4441-ae81-b738c4284f7e"),
                             IsOn = false,
                             MacAdress = "00-1B-63-84-45-E6",
-                            OwnerID = new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f52")
+                            OwnerID = new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f52"),
+                            dsoHasControl = false
                         },
                         new
                         {
@@ -66,7 +70,8 @@ namespace prosumerAppBack.Migrations
                             DeviceTypeID = new Guid("a2d2d5ec-b064-4f72-9e0e-84c1171cc14d"),
                             IsOn = false,
                             MacAdress = "00-1B-63-84-45-E7",
-                            OwnerID = new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f52")
+                            OwnerID = new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f52"),
+                            dsoHasControl = false
                         });
                 });
 
@@ -438,6 +443,30 @@ namespace prosumerAppBack.Migrations
                             ManufacturerID = new Guid("4d4d4d4d-4d4d-4d4d-4d4d-4d4d4d4d4d63"),
                             Name = "Solar Panel",
                             Wattage = 4000.0
+                        },
+                        new
+                        {
+                            ID = new Guid("9d3d39b2-56d8-44e7-8ad5-b64efc6784f2"),
+                            GroupID = new Guid("b17c9155-7e6f-4d37-8a86-ea1abb327bb2"),
+                            ManufacturerID = new Guid("4d4d4d4d-4d4d-4d4d-4d4d-4d4d4d4d4d4e"),
+                            Name = "Battery",
+                            Wattage = 15000.0
+                        },
+                        new
+                        {
+                            ID = new Guid("9d3d39b2-56d8-44e7-8ad5-b64efc6784f3"),
+                            GroupID = new Guid("b17c9155-7e6f-4d37-8a86-ea1abb327bb2"),
+                            ManufacturerID = new Guid("4d4d4d4d-4d4d-4d4d-4d4d-4d4d4d4d4d52"),
+                            Name = "Battery",
+                            Wattage = 12000.0
+                        },
+                        new
+                        {
+                            ID = new Guid("9d3d39b2-56d8-44e7-8ad5-b64efc6784f1"),
+                            GroupID = new Guid("b17c9155-7e6f-4d37-8a86-ea1abb327bb2"),
+                            ManufacturerID = new Guid("4d4d4d4d-4d4d-4d4d-4d4d-4d4d4d4d4d50"),
+                            Name = "Battery",
+                            Wattage = 10000.0
                         });
                 });
 
@@ -481,9 +510,9 @@ namespace prosumerAppBack.Migrations
                             Email = "admin@gmail.com",
                             FirstName = "Adminovic",
                             LastName = "Adminovski",
-                            PasswordHash = new byte[] { 11, 222, 18, 39, 242, 161, 84, 65, 216, 7, 167, 238, 226, 80, 239, 56, 253, 48, 195, 223, 71, 30, 28, 37, 125, 86, 119, 207, 92, 49, 215, 127 },
+                            PasswordHash = new byte[] { 98, 110, 58, 103, 24, 49, 234, 94, 48, 122, 121, 92, 75, 163, 90, 157, 72, 93, 20, 123, 161, 154, 147, 223, 220, 97, 153, 12, 69, 18, 64, 139 },
                             Role = "Admin",
-                            Salt = new byte[] { 83, 53, 215, 205, 73, 196, 238, 53, 85, 207, 182, 115, 3, 28, 240, 14 }
+                            Salt = new byte[] { 171, 181, 48, 243, 8, 94, 204, 208, 156, 167, 248, 92, 134, 66, 187, 94 }
                         });
                 });
 
@@ -531,9 +560,6 @@ namespace prosumerAppBack.Migrations
                         .IsRequired()
                         .HasColumnType("BLOB");
 
-                    b.Property<bool>("dsoHasControl")
-                        .HasColumnType("INTEGER");
-
                     b.Property<bool>("sharesDataWithDso")
                         .HasColumnType("INTEGER");
 
@@ -551,11 +577,10 @@ namespace prosumerAppBack.Migrations
                             Email = "petarsimic@gmail.com",
                             FirstName = "Petar",
                             LastName = "Simic",
-                            PasswordHash = new byte[] { 247, 116, 101, 117, 172, 44, 107, 166, 15, 106, 96, 78, 110, 9, 28, 246, 252, 39, 61, 138, 16, 16, 102, 9, 10, 192, 98, 226, 247, 8, 38, 33 },
+                            PasswordHash = new byte[] { 113, 33, 110, 31, 200, 143, 229, 102, 1, 211, 37, 116, 235, 141, 75, 37, 48, 253, 180, 205, 160, 119, 30, 110, 24, 2, 192, 26, 165, 4, 67, 87 },
                             PhoneNumber = "064-316-15-81",
                             Role = "UnapprovedUser",
-                            Salt = new byte[] { 65, 62, 95, 6, 177, 112, 219, 133, 87, 101, 56, 208, 150, 84, 16, 209 },
-                            dsoHasControl = false,
+                            Salt = new byte[] { 16, 179, 108, 95, 109, 124, 25, 177, 20, 183, 228, 132, 87, 78, 117, 41 },
                             sharesDataWithDso = false
                         });
                 });
@@ -566,8 +591,11 @@ namespace prosumerAppBack.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("Approved")
+                    b.Property<bool?>("Approved")
                         .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("Date")
+                        .HasColumnType("TEXT");
 
                     b.Property<Guid>("UserID")
                         .HasColumnType("TEXT");
