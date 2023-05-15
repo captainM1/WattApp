@@ -6,7 +6,6 @@
         <h3 class="mb-3">Settings</h3>
         <div class="permissions">
             <h4>Permissions</h4>
-            <h4 [(ngModel)]="requestSent">Request sent</h4>
             <div>
             <label class="toggle mt-3">
                 <span class="toggle-label">Allow DSO to access my information: &nbsp;</span>
@@ -20,6 +19,18 @@
                 <input class="toggle-checkbox" type="checkbox" [disabled]="!allowAccess" [(ngModel)]="allowControl" (click)="toggleControl()">
                 <div class="toggle-switch"></div>
             </label>
+            </div>
+            
+            <div *ngIf="requestStatus == 'no'" class="d-flex justify-content-center">
+              <button (click)="sendReq()">Send request</button>
+            </div>
+            <div *ngIf="requestStatus == 'pending'" class="d-flex justify-content-center flex-column align-items-center">
+              <h3>Your request is pending</h3>
+              <button (click)="cancelReq()">Cancel request</button>
+            </div>
+            <div *ngIf="requestStatus == 'accepted'" class="d-flex justify-content-center flex-column align-items-center">
+              <h3>You are connected to DSO</h3>
+              <button (click)="disconnectDSO()">Dissconect from DSO</button>
             </div>
         </div>
         <div>

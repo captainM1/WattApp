@@ -159,4 +159,29 @@ public class DispatcherRepository : IDispatcherRepository
 
         return true;
     }
+
+    public async Task<IEnumerable<object>> GetAllUsersAplicationToDsoAsync()
+    {
+        var users = await _dbContext.Users
+            .Join(_dbContext.UsersAppliedToDSO, u => u.ID, o => o.UserID, (u, o) => new { User = u, UserApplied = o })
+            .Where(d => d.UserApplied.Approved != null)
+            .Select(d => new UserApplicationInfo() 
+            {
+                ID = d.User.ID,
+                FirstName = d.User.FirstName,
+                LastName = d.User.LastName,
+                PhoneNumber = d.User.PhoneNumber,
+                Address = d.User.Address,
+                City = d.User.City,
+                Country = d.User.Country,
+                Email = d.User.Email,
+                Approved = d.UserApplied.Approved,
+                Date = d.UserApplied.Date
+            })
+            .ToListAsync();
+
+        return users;
+    }
+
+    
 }

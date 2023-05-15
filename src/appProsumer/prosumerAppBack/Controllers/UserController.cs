@@ -202,7 +202,7 @@ public class UserController : ControllerBase
     {
         try
         {
-            var result = await _userService.DeclineUserRequestToDso(id);
+            var result = await _userService.RemoveUserRequestToDso(id);
 
             return Ok(result);
         }
@@ -293,7 +293,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("decline-request-to-dso/{id}")]
-    [Authorize(Roles = "Dispatcher,Admin")]
+    //[Authorize(Roles = "Dispatcher,Admin")]
     public async Task<IActionResult> DeclineRequestForDso(Guid id)
     {
         try
@@ -306,14 +306,6 @@ public class UserController : ControllerBase
         {
             return StatusCode(500, ex.Message);
         }
-    }
-
-    [HttpGet("DSO-has-control/{userID}")]
-    public ActionResult<bool> DSOHasControl(Guid userID)
-    {
-        var has = _userService.DSOHasControl(userID);
-
-        return has;
     }
 
     [HttpGet("user-shares-with-DSO/{userID}")]
@@ -340,11 +332,11 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("update-user-dso-control-permission/{id}")]
-    public async Task<IActionResult> UpdateUserDsoControl(Guid id, [FromBody] Boolean dsoHasControl)
+    public async Task<IActionResult> UpdateUserDeviceDsoControl(Guid id, [FromBody] Boolean dsoHasControl)
     {
         try
         {
-            var result = await _userService.UpdateUserDsoControl(id, dsoHasControl);
+            var result = await _userService.UpdateUserDeviceDsoControl(id, dsoHasControl);
 
             return Ok(result);
         }
@@ -375,6 +367,21 @@ public class UserController : ControllerBase
         try
         {
             var result = await _userService.UserAllreadyAppliedToDso(userID);
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+    
+    [HttpGet("status-of-application/{userID}")]
+    public async Task<IActionResult> UserStatusAppliedToDso(Guid userID)
+    {
+        try
+        {
+            var result = await _userService.UserStatusAppliedToDso(userID);
 
             return Ok(result);
         }

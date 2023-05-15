@@ -449,3 +449,19 @@ body {
 {
   font-weight: bold;
 }
+
+.pending{
+  background-color: darkgoldenrod;
+}
+
+.approved{
+  background-color: green;
+}
+
+.bad{
+  background-color:red;
+}
+
+pending, approved, bad{
+  width: 95% !important;
+}

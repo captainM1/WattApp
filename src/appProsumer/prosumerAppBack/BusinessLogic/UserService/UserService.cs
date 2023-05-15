@@ -286,6 +286,15 @@ public class UserService:IUserService
         }
         return true;
     }
+    public async Task<Boolean> RemoveUserRequestToDso(Guid id)
+    {
+        var action = await _repository.RemoveUserRequestToDso(id);
+        if (!action)
+        {
+            throw new NullReferenceException("Action failed");
+        }
+        return true;
+    }
 
     public async Task<User> DisconnectFromDso(Guid id)
     {
@@ -305,9 +314,9 @@ public class UserService:IUserService
         }
         return true;
     }
-    public async Task<Boolean> UpdateUserDsoControl(Guid id, Boolean dsoHasControl)
+    public async Task<Boolean> UpdateUserDeviceDsoControl(Guid id, Boolean dsoHasControl)
     {
-        var action = await _repository.UpdateUserDsoControl(id, dsoHasControl);
+        var action = await _repository.UpdateUserDeviceDsoControl(id, dsoHasControl);
         if (!action)
         {
             throw new BadRequestException("User dso control consumption time permission has failed to update");
@@ -336,16 +345,14 @@ public class UserService:IUserService
     {
         return _repository.SharesWhidDSO(userID);
     }
-
-    public bool DSOHasControl(Guid userID)
-    {
-        return _repository.DSOHasControl(userID);
-    }
-
+    
     public async Task<Boolean> UserAllreadyAppliedToDso(Guid id)
     {
         return await _repository.UserAllreadyAppliedToDso(id);
     }
 
-
+    public async Task<bool> UserStatusAppliedToDso(Guid userId)
+    {
+        return await _repository.UserStatusAppliedToDso(userId);
+    }
 }

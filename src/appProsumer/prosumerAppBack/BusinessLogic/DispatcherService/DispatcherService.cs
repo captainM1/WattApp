@@ -130,5 +130,16 @@ namespace prosumerAppBack.BusinessLogic.DispatcherService
 
             return action;
         }
+
+        public async Task<IEnumerable<object>> GetAllUsersAplicationToDsoAsync()
+        {
+            var users = await _repository.GetAllUsersAplicationToDsoAsync();
+            if (users == null)
+            {
+                throw new BadRequestException("no users whos application was reviewed found");
+            }
+
+            return users;
+        }
     }
 }

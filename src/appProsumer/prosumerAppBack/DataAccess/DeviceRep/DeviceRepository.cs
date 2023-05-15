@@ -103,6 +103,7 @@ namespace prosumerAppBack.DataAccess
                 DeviceName = addDeviceDto.DeviceName,
                 DeviceTypeID = addDeviceDto.DeviceTypeID,
                 IsOn = false,
+                dsoHasControl = false,
             };
 
             _dbContext.Devices.Add(newDevice);
@@ -158,7 +159,8 @@ namespace prosumerAppBack.DataAccess
                     deviceTypeName = d.DeviceType.Name, 
                     macAdress = d.MacAdress,
                     manufacturerName = d.DeviceType.Manufacturer.Name,
-                    groupName = d.DeviceType.Group.Name
+                    groupName = d.DeviceType.Group.Name,
+                    wattage = d.DeviceType.Wattage
                 })
                 .FirstOrDefaultAsync();   
         }
@@ -292,6 +294,16 @@ namespace prosumerAppBack.DataAccess
 
             return isOn;
         }
+
+         public bool DSOHasControl(Guid deviceID)
+         {
+            bool sharesWithDSO = _dbContext.Devices
+                            .Where(u => u.ID == deviceID)
+                            .Select(share => share.dsoHasControl)
+                            .FirstOrDefault();
+
+            return sharesWithDSO;
+         }
     }
 
     public class DeviceInfo
@@ -302,6 +314,7 @@ namespace prosumerAppBack.DataAccess
         public string manufacturerName { get; set; }       
         public string groupName { get; set; }
         public string deviceName { get; set; }
+        public double wattage { get; set; }
     }
 
     public class DeviceInfoWithType

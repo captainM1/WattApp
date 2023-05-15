@@ -23,12 +23,13 @@ public interface IUserService
     Task<Boolean> DeclineUserRequestToDso(Guid id);
     Task CreatePasswordResetToken(string email);
     Task<User> GetUserByPasswordResetTokenAsync(string passwordResetToken);
-    Task ResetPasswordToken(string token);
-    public bool DSOHasControl(Guid userID);
+    Task ResetPasswordToken(string token);    
     public bool SharesWhidDSO(Guid userID);
     Task<User> DisconnectFromDso(Guid id);
     Task<Boolean> UpdateUserDataSharing(Guid id, Boolean sharesDataWithDso);
-    Task<Boolean> UpdateUserDsoControl(Guid id, Boolean dsoHasControl);
+    Task<Boolean> UpdateUserDeviceDsoControl(Guid id, Boolean dsoHasControl);
     Task<List<UsersRequestedToDso>> GetUsersAppliedToDso();
     Task<Boolean> UserAllreadyAppliedToDso(Guid id);
+    Task<Boolean> UserStatusAppliedToDso(Guid userId);
+    Task<Boolean> RemoveUserRequestToDso(Guid id);
 }

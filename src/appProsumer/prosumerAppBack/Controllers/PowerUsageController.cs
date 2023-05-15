@@ -13,7 +13,7 @@ namespace prosumerAppBack.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-//[Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
+[Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
 public class PowerUsageController : ControllerBase
 {
     private readonly IPowerUsageService _powerUsageService;
@@ -32,8 +32,6 @@ public class PowerUsageController : ControllerBase
 
         if (powerUsages == -1)
             return BadRequest("Device does not exists");
-        else if (powerUsages == 0)
-            return BadRequest("Device is turned off");
         return Ok(powerUsages);
     }
 
@@ -532,17 +530,59 @@ public class PowerUsageController : ControllerBase
         return Ok(powerUsage);
     }
 
-    [HttpGet("power-usage/percentage-difference-for-previous-week/consumption/{userId}")]
-    public async Task<ActionResult<double>> percentPowerUsageDifferenceForPreviousWeekConsumption(Guid userId)
+    [HttpGet("power-usage/percentage-difference-for-previous-hour/consumption/{userId}")]
+    public async Task<ActionResult<double>> percentPowerUsageDifferenceForPreviousHourConsumption(Guid userId)
     {
-        var powerUsage = await _powerUsageService.percentPowerUsageDifferenceForPreviousWeekConsumption(userId);
+        var powerUsage = await _powerUsageService.percentPowerUsageDifferenceForPreviousHourConsumption(userId);
         return Ok(powerUsage);
     }
 
-    [HttpGet("power-usage/percentage-difference-for-previous-week/production/{userId}")]
-    public async Task<ActionResult<double>> percentPowerUsageDifferenceForPreviousWeekProduction(Guid userId)
+    [HttpGet("power-usage/percentage-difference-for-previous-hour/production/{userId}")]
+    public async Task<ActionResult<double>> percentPowerUsageDifferenceForPreviousHourProduction(Guid userId)
     {
-        var powerUsage = await _powerUsageService.percentPowerUsageDifferenceForPreviousWeekProduction(userId);
+        var powerUsage = await _powerUsageService.percentPowerUsageDifferenceForPreviousHourProduction(userId);
+        return Ok(powerUsage);
+    }
+
+    [HttpGet("power-usage/percentage-difference-for-previous-hour/consumption/system")]
+    public ActionResult<double> percentPowerUsageDifferenceForPreviousHourConsumptionSystem()
+    {
+        var powerUsage = _powerUsageService.percentPowerUsageDifferenceForPreviousHourConsumptionSystem();
+        return Ok(powerUsage);
+    }
+
+    [HttpGet("power-usage/percentage-difference-for-previous-hour/production/system")]
+    public ActionResult<double> percentPowerUsageDifferenceForPreviousHourProductionSystem()
+    {
+        var powerUsage = _powerUsageService.percentPowerUsageDifferenceForPreviousHourProductionSystem();
+        return Ok(powerUsage);
+    }
+
+    [HttpGet("power-usage/electricityBill/CurrentMonth/{userID}")]
+    public ActionResult<double> electricityBillForCurrentMonth(Guid userID, double electricityRate)
+    {
+        var powerUsage = _powerUsageService.electricityBillForCurrentMonth(userID, electricityRate);
+        return Ok(powerUsage);
+    }
+
+    [HttpGet("power-usage/percentage-difference-for-previous-hour/consumption/system")]
+    public ActionResult<double> percentPowerUsageDifferenceForPreviousHourConsumptionSystem()
+    {
+        var powerUsage = _powerUsageService.percentPowerUsageDifferenceForPreviousHourConsumptionSystem();
+        return Ok(powerUsage);
+    }
+
+    [HttpGet("power-usage/percentage-difference-for-previous-hour/production/system")]
+    public ActionResult<double> percentPowerUsageDifferenceForPreviousHourProductionSystem()
+    {
+        var powerUsage = _powerUsageService.percentPowerUsageDifferenceForPreviousHourProductionSystem();
+        return Ok(powerUsage);
+    }
+
+    [HttpGet("power-usage/electricityBill/CurrentMonth/{userID}")]
+    public ActionResult<double> electricityBillForCurrentMonth(Guid userID, double electricityRate)
+    {
+        var powerUsage = _powerUsageService.electricityBillForCurrentMonth(userID, electricityRate);
         return Ok(powerUsage);
     }
 
@@ -557,6 +597,20 @@ public class PowerUsageController : ControllerBase
     public async Task<ActionResult<double>> electricityBill2(Guid userID, double electricityRate)
     {
         var powerUsage = await _powerUsageService.electricityBill2MonthsAgo(userID, electricityRate);
+        return Ok(powerUsage);
+    }
+
+    [HttpGet("power-usage/electricityEarnings/CurrentMonth/{userID}")]
+    public ActionResult<double> electricityEarningsForCurrentMonth(Guid userID, double electricityRate)
+    {
+        var powerUsage = _powerUsageService.electricityEarningsForCurrentMonth(userID, electricityRate);
+        return Ok(powerUsage);
+    }
+
+    [HttpGet("power-usage/electricityEarnings/CurrentMonth/{userID}")]
+    public ActionResult<double> electricityEarningsForCurrentMonth(Guid userID, double electricityRate)
+    {
+        var powerUsage = _powerUsageService.electricityEarningsForCurrentMonth(userID, electricityRate);
         return Ok(powerUsage);
     }
 
@@ -579,5 +633,101 @@ public class PowerUsageController : ControllerBase
     {
         var powerUsage = await _powerUsageService.electricityBillCurrentMonth(userID, electricityRate);
         return Ok(powerUsage);
+    }
+
+    [HttpGet("power-usage/most-consumes/current/no-user-share-data-check/{userID}")]
+    public ActionResult<PowerUsage> GetMostConsumerCurrentConsumptionNoShareDataCheck(Guid userID)
+    {
+        var powerUsages = _powerUsageService.GetMaxUsagePreviousCurrentConsumption(userID,1);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/most-produces/current/no-user-share-data-check/{userID}")]
+    public ActionResult<PowerUsage> GetMostConsumerCurrentProductionNoShareDataCheck(Guid userID)
+    {
+        var powerUsages = _powerUsageService.GetMaxUsagePreviousCurrentProduction(userID,1);
+        return Ok(powerUsages);
+    }
+    [HttpGet("power-usage/previous24Hours/consumption/user-every-day-device-usage/no-user-share-data-check/{userID}")]
+    public ActionResult<List<PowerUsage>> GetPowerUsageForDevicesConsumptionForPrevious24HoursNoShareDataCheck(Guid userID)
+    {
+        var powerUsages = _powerUsageService.GetPowerUsageForDevicesConsumptionFor24Hours(userID, -1, 1);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/next24Hours/consumption/user-every-day-device-usage/no-user-share-data-check/{userID}")]
+    public ActionResult<List<PowerUsage>> GetPowerUsageForDevicesConsumptionForNext24HoursNoShareDataCheck(Guid userID)
+    {
+        var powerUsages = _powerUsageService.GetPowerUsageForDevicesConsumptionFor24Hours(userID, 1, 1);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/previous24Hours/production/user-every-day-device-usage/no-user-share-data-check/{userID}")]
+    public ActionResult<List<PowerUsage>> GetPowerUsageForDevicesProductionForPrevious24HoursNoShareDataCheck(Guid userID)
+    {
+        var powerUsages = _powerUsageService.GetPowerUsageForDevicesProductionFor24Hours(userID, -1, 1);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/next24Hours/production/user-every-day-device-usage/no-user-share-data-check/{userID}")]
+    public ActionResult<List<PowerUsage>> GetPowerUsageForDevicesProductionForNext24HoursNoShareDataCheck(Guid userID)
+    {
+        var powerUsages = _powerUsageService.GetPowerUsageForDevicesProductionFor24Hours(userID, 1, 1);
+        return Ok(powerUsages);
+    }
+    [HttpGet("power-usage/previous7Days/consumption/user-every-day-device-usage/no-user-share-data-check/{userID}")]
+    public ActionResult<List<PowerUsage>> GetPowerUsageForDevicesConsumptionForPrevious7DaysNoShareDataCheck(Guid userID)
+    {
+        var powerUsages = _powerUsageService.GetPowerUsageForDevicesConsumptionFor7Days(userID, -1, 1);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/next7Days/consumption/user-every-day-device-usage/no-user-share-data-check/{userID}")]
+    public ActionResult<List<PowerUsage>> GetPowerUsageForDevicesConsumptionForNext7DaysNoShareDataCheck(Guid userID)
+    {
+        var powerUsages = _powerUsageService.GetPowerUsageForDevicesConsumptionFor7Days(userID, 1, 1);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/previous7Days/production/user-every-day-device-usage/no-user-share-data-check/{userID}")]
+    public ActionResult<List<PowerUsage>> GetPowerUsageForDevicesProductionForPrevious7DaysNoShareDataCheck(Guid userID)
+    {
+        var powerUsages = _powerUsageService.GetPowerUsageForDevicesProductionFor7Days(userID, -1, 1);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/next7Days/production/user-every-day-device-usage/no-user-share-data-check/{userID}")]
+    public ActionResult<List<PowerUsage>> GetPowerUsageForDevicesProductionForNext7DaysNoShareDataCheck(Guid userID)
+    {
+        var powerUsages = _powerUsageService.GetPowerUsageForDevicesProductionFor7Days(userID, 1, 1);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/previousMonth/consumption/user-every-day-device-usage/no-user-share-data-check/{userID}")]
+    public ActionResult<List<PowerUsage>> GetPowerUsageEachDayOfEachDevicePrevMonthConsumptionNoShareDataCheck(Guid userID)
+    {
+        var powerUsages = _powerUsageService.GetPowerUsageForDevicesConsumption(userID, -1, 1);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/nextMonth/consumption/user-every-day-device-usage/no-user-share-data-check/{userID}")]
+    public ActionResult<List<PowerUsage>> GetPowerUsageEachDayOfEachDeviceNextMonthConsumptionNoShareDataCheck(Guid userID)
+    {
+        var powerUsages = _powerUsageService.GetPowerUsageForDevicesConsumption(userID, 1, 1);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/previousMonth/production/user-every-day-device-usage/no-user-share-data-check/{userID}")]
+    public ActionResult<List<PowerUsage>> GetPowerUsageEachDayOfEachDevicePrevMonthProductionNoShareDataCheck(Guid userID)
+    {
+        var powerUsages = _powerUsageService.GetPowerUsageForDevicesProduction(userID, -1, 1);
+        return Ok(powerUsages);
+    }
+
+    [HttpGet("power-usage/nextMonth/production/user-every-day-device-usage/no-user-share-data-check/{userID}")]
+    public ActionResult<List<PowerUsage>> GetPowerUsageEachDayOfEachDeviceNextMonthProductionNoShareDataCheck(Guid userID)
+    {
+        var powerUsages = _powerUsageService.GetPowerUsageForDevicesProduction(userID, 1, 1);
+        return Ok(powerUsages);
     }
 }

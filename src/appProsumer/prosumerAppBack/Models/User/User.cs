@@ -41,7 +41,6 @@ namespace prosumerAppBack.Models
         public string? PasswordResetToken { get; set; }
         public DateTime? PasswordResetTokenExpires { get; set; }
         public Boolean sharesDataWithDso { get; set; }
-        public Boolean dsoHasControl { get; set; }
         public ICollection<Device.Device> Devices { get; set; }
         
     }
