@@ -25,7 +25,7 @@ public class DispatcherController : ControllerBase
     [HttpPost("signup")]
     [AllowAnonymous]
     //[Authorize(Roles = "Admin")]
-    public async Task<IActionResult> Register([FromBody] DispatcherRegisterDto userRegisterDto)
+    public async Task<IActionResult> Register(DispatcherRegisterDto userRegisterDto)
     {
         try
         {
