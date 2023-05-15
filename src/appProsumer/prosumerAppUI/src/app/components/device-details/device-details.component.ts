@@ -83,20 +83,21 @@ export class DeviceDetailsComponent implements OnInit {
             error => {
               console.error('Error fetching device future:', error);
             })
+            this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/today/currentPowerUsage/${this.deviceId}`)
+            .subscribe(data => {
+              console.log(data);
+              data.forEach(item => {
+                this.deviceToday += item.powerUsage;
+              });
+              console.log(this.deviceToday);
+            },
+            error => {
+              console.error('Error fetching device today:', error);
+            })
         },
         error => {
           console.error('Error fetching device history:', error);
-        })
-
-      this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/current/device/${this.deviceId}`)
-        .subscribe(data => {
-          console.log(data);
-          this.deviceToday = data;
-        },
-        error => {
-          console.error('Error fetching device today:', error);
-        })
-      
+        })      
       
       this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/Next24h/device-usage_per_hour/${this.deviceId}`)
       .subscribe((data:any) =>{
