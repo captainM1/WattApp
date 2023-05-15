@@ -25,8 +25,9 @@ export class SettingsComponent implements OnInit, AfterViewInit{
   resetForm!: FormGroup;
   submitted = false;
   requestStatus: string = 'no';
+  allowControl: boolean = false
 
-  constructor(private apiService: SettingsService, private auth: AuthService, private fb: FormBuilder,private backgroundService:BackgroundService private router : Router) { }
+  constructor(private apiService: SettingsService, private auth: AuthService, private fb: FormBuilder,private backgroundService:BackgroundService,private router : Router) { }
 
   @ViewChild('exampleModal') exampleModal!: ElementRef;
 
@@ -71,7 +72,9 @@ export class SettingsComponent implements OnInit, AfterViewInit{
       this.reset();
     });
   }
-
+  toggleControl(){
+    
+  }
   hideShowPass(){
     this.isText = !this.isText;
     this.isText ? this.eyeIcon = "fa-eye" : this.eyeIcon = "fa-eye-slash";
@@ -150,59 +153,6 @@ export class SettingsComponent implements OnInit, AfterViewInit{
       });
       this.requestStatus = 'no'
   }
-
-  sendRequest(){
-    this.apiService.sendRequest().subscribe(
-      (info) => {
-        console.log("Success");
-        this.requestPending = true;
-        this.requestSend = false;
-      },
-      (error) => {
-        console.log(error);
-      });
-  }
-
-  userAlreadyApplied(){
-    this.apiService.userAlreadyApplied().subscribe(
-      (info) => {
-        if(info){
-          this.requestPending = true;
-          this.requestSend = false;
-        }
-      },
-      (error) => {
-        console.log(error);
-      });
-  }
-
-  cancelRequest(){
-    this.apiService.cancelRequest().subscribe(
-      (info) => {
-        console.log(info);
-        this.requestPending = false;
-        this.requestSend = true;
-      },
-      (error) => {
-        console.log(error);
-      });
-  }
-
-  disconnect(){
-
-  }
-
-  public buttonText: string = 'Request approved';
-
-  public onButtonHover(): void {
-    this.buttonText = 'Disconnect from DSO';
-  }
-
-  public onButtonLeave(): void {
-    this.buttonText = 'Request approved';
-  }
-
-
   signOut(){
     this.auth.signOut();
   }

@@ -349,7 +349,6 @@ public class PowerUsageRepository : IPowerUsageRepository
 
         return sum;
     }
-
     public async Task<double> CurrentSumPowerUsageSystemConsumer()
     {
         DateTime currentHourTimestamp = DateTime.Now.AddHours(-1);
@@ -2480,7 +2479,7 @@ public class PowerUsageRepository : IPowerUsageRepository
 
     public async Task<double> electricityBillLastMonth(Guid userID, double electricityRate)
     {
-        double currentConsumption = this.CurrentSumPowerUsageSystemProducer();
+        double currentConsumption = this.CurrentSumPowerUsageSystemProducer().Result;
 
         DateTime currentHourTimestamp = DateTime.Now.AddHours(-2);
         double sum = 0;
@@ -2491,12 +2490,12 @@ public class PowerUsageRepository : IPowerUsageRepository
 
         foreach (var device in powerUsageData)
         {
-            Guid userID = _dataContext.Devices
+            Guid userIDD = _dataContext.Devices
                         .Where(d => d.DeviceTypeID.ToString().ToUpper() == device.ToString().ToUpper())
                         .Select(u => u.OwnerID)
                         .FirstOrDefault();
             bool DSOshare = _dataContext.Users
-                        .Where(u => u.ID == userID)
+                        .Where(u => u.ID == userIDD)
                         .Select(sh => sh.sharesDataWithDso)
                         .FirstOrDefault();
 
@@ -2515,14 +2514,14 @@ public class PowerUsageRepository : IPowerUsageRepository
 
             if (DSOshare == true && deviceGroupName == "Producer" && isOn == true)
             {
-                sum += GetCurrentPowerUsage(currentHourTimestamp, device);
+                sum += GetCurrentPowerUsage(currentHourTimestamp, device).Result;
             }
         }
         return ((currentConsumption - sum) / sum) * 100;
     }
-    public double percentPowerUsageDifferenceForPreviousHourConsumptionSystem()
+    public double PercentPowerUsageDifferenceForPreviousHourConsumptionSystem()
     {
-        double currentConsumption = this.CurrentSumPowerUsageSystemConsumer();
+        double currentConsumption = this.CurrentSumPowerUsageSystemConsumer().Result;
                 
         DateTime currentHourTimestamp = DateTime.Now.AddHours(-2);
         double sum = 0;
@@ -2558,27 +2557,17 @@ public class PowerUsageRepository : IPowerUsageRepository
 
             if (DSOshare == true && deviceGroupName == "Consumer" && isOn == true)
             {
-                sum += GetCurrentPowerUsage(currentHourTimestamp, device);
+                sum += GetCurrentPowerUsage(currentHourTimestamp, device).Result;
             }
         }        
         return ((currentConsumption - sum) / sum) * 100;
     }
-    public double electricityBillForCurrentMonth(Guid userID, double electricityRate)
+
+    public double ElectricityBillForCurrentMonth(Guid userID, double electricityRate)
     {
         var consumes = savedEnergyForUserConsumer(userID, 3);
 
-        return consumes * electricityRate;
-    }
-    public double electricityBillLastMonth(Guid userID, double electricityRate)
-    {
-        bool DSOshare = _dataContext.Users
-            .Where(u => u.ID == userID)
-            .Select(sh => sh.sharesDataWithDso)
-            .FirstOrDefault();
-
-        var consumes = await savedEnergyForUserConsumer(userID, 1);
-
-        return consumes * electricityRate;
+        return consumes.Result * electricityRate;
     }
 
     public async Task<double> electricityBill2MonthsAgo(Guid userID, double electricityRate)
@@ -2599,7 +2588,7 @@ public class PowerUsageRepository : IPowerUsageRepository
     {
         var consumes = savedEnergyForUserProducer(userID, 3);
 
-        return consumes * electricityRate;
+        return consumes.Result * electricityRate;
     }
 
     public async Task<double> electricityEarningsLastMonth(Guid userID, double electricityRate)

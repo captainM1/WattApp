@@ -213,9 +213,9 @@ public class PowerUsageService:IPowerUsageService
         return powerUsage;
     }
 
-    public async Task<List<PowerUsage>> GetPowerUsageForDevicesProduction(Guid userID, int direction)
+    public async Task<List<PowerUsage>> GetPowerUsageForDevicesProduction(Guid userID, int direction, int dsoShare)
     {
-        var powerUsages = await _repository.GetPowerUsageForDevicesProduction(userID, direction);
+        var powerUsages = await _repository.GetPowerUsageForDevicesProduction(userID, direction,dsoShare);
         if (!powerUsages.Any())
         {
             throw new NotFoundException("Uses does not share data with DSO");
@@ -223,45 +223,46 @@ public class PowerUsageService:IPowerUsageService
         return powerUsages;
     }
 
-    public async Task<List<PowerUsage>> GetPowerUsageForDevicesConsumption(Guid userID, int direction)
+    public async Task<List<PowerUsage>> GetPowerUsageForDevicesConsumption(Guid userID, int direction, int dsoShare)
     {
-        var powerUsages = await _repository.GetPowerUsageForDevicesConsumption(userID, direction);
+        var powerUsages = await _repository.GetPowerUsageForDevicesConsumption(userID, direction,dsoShare);
         if (!powerUsages.Any())
         {
             throw new NotFoundException("Uses does not share data with DSO");
         }
         return powerUsages;
     }
-    public async Task<List<PowerUsage>> GetPowerUsageForDevicesConsumptionFor7Days(Guid userID, int direction)
+
+    public async Task<List<PowerUsage>> GetPowerUsageForDevicesConsumptionFor7Days(Guid userID, int direction, int dsoShare)
     {
-        var powerUsages = await _repository.GetPowerUsageForDevicesConsumptionFor7Days(userID, direction);
+        var powerUsages = await _repository.GetPowerUsageForDevicesConsumptionFor7Days(userID, direction,dsoShare);
         if (!powerUsages.Any())
         {
             throw new NotFoundException("Uses does not share data with DSO");
         }
         return powerUsages;
     }
-    public async Task<List<PowerUsage>> GetPowerUsageForDevicesProductionFor7Days(Guid userID, int direction)
+    public async Task<List<PowerUsage>> GetPowerUsageForDevicesProductionFor7Days(Guid userID, int direction, int dsoShare)
     {
-        var powerUsages = await _repository.GetPowerUsageForDevicesProductionFor7Days(userID, direction);
+        var powerUsages = await _repository.GetPowerUsageForDevicesProductionFor7Days(userID, direction,dsoShare);
         if (!powerUsages.Any())
         {
             throw new NotFoundException("Uses does not share data with DSO");
         }
         return powerUsages;
     }
-    public async Task<List<PowerUsage>> GetPowerUsageForDevicesConsumptionFor24Hours(Guid userID, int direction)
+    public async Task<List<PowerUsage>> GetPowerUsageForDevicesConsumptionFor24Hours(Guid userID, int direction, int dsoShare)
     {
-        var powerUsages = await _repository.GetPowerUsageForDevicesConsumptionFor24Hours(userID, direction);
+        var powerUsages = await _repository.GetPowerUsageForDevicesConsumptionFor24Hours(userID, direction,dsoShare);
         if (!powerUsages.Any())
         {
             throw new NotFoundException("Uses does not share data with DSO");
         }
         return powerUsages;
     }
-    public async Task<List<PowerUsage>> GetPowerUsageForDevicesProductionFor24Hours(Guid userID, int direction)
+    public async Task<List<PowerUsage>> GetPowerUsageForDevicesProductionFor24Hours(Guid userID, int direction, int dsoShare)
     {
-        var powerUsages = await _repository.GetPowerUsageForDevicesProductionFor24Hours(userID, direction);
+        var powerUsages = await _repository.GetPowerUsageForDevicesProductionFor24Hours(userID, direction,dsoShare);
         if (!powerUsages.Any())
         {
             throw new NotFoundException("Uses does not share data with DSO");
@@ -377,9 +378,9 @@ public class PowerUsageService:IPowerUsageService
         return result;
     }
 
-    public async Task<PowerUsage> GetMaxUsagePreviousCurrentConsumption(Guid userID)
+    public async Task<PowerUsage> GetMaxUsagePreviousCurrentConsumption(Guid userID, int dsoShare)
     {
-        PowerUsage result = await _repository.GetDeviceWithMaxPowerUsageCurrentConsumption(userID);
+        PowerUsage result = await _repository.GetDeviceWithMaxPowerUsageCurrentConsumption(userID,dsoShare);
         if (result == null)
         {
             throw new NullReferenceException("User does not share data with DSO");
@@ -407,9 +408,9 @@ public class PowerUsageService:IPowerUsageService
         return result;
     }
 
-    public async Task<PowerUsage> GetMaxUsagePreviousCurrentProduction(Guid userID)
+    public async Task<PowerUsage> GetMaxUsagePreviousCurrentProduction(Guid userID, int dsoShare)
     {
-        PowerUsage result = await _repository.GetDeviceWithMaxPowerUsageCurrentProduction(userID);
+        PowerUsage result = await _repository.GetDeviceWithMaxPowerUsageCurrentProduction(userID,dsoShare);
         if (result == null)
         {
             throw new NullReferenceException("User does not share data with DSO");
@@ -477,7 +478,7 @@ public class PowerUsageService:IPowerUsageService
         if (powerUsage == 0)
         {
             throw new NullReferenceException("User doesnt share data with DSO");
-        }*/
+        }
         return powerUsage;
     }
 
@@ -559,11 +560,23 @@ public class PowerUsageService:IPowerUsageService
         return price;
     }
 
-    public double electricityEarningsForCurrentMonth(Guid userID, double electricityRate)
+    public object? percentPowerUsageDifferenceForPreviousHourConsumptionSystem()
     {
-        var price = _repository.electricityEarningsForCurrentMonth(userID, electricityRate);
-        
-        return price;
+        throw new NotImplementedException();
     }
 
+    public object? percentPowerUsageDifferenceForPreviousHourProductionSystem()
+    {
+        throw new NotImplementedException();
+    }
+
+    public object? electricityBillForCurrentMonth(Guid userId, double electricityRate)
+    {
+        throw new NotImplementedException();
+    }
+
+    public object? electricityEarningsForCurrentMonth(Guid userId, double electricityRate)
+    {
+        throw new NotImplementedException();
+    }
 }
