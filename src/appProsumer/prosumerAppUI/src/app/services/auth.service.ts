@@ -102,7 +102,9 @@ export class AuthService {
             this.messageService.add({ severity: 'warn', summary: 'Cancelled', detail: 'You have cancelled' });
             break;
         }
-      }
+      },
+      acceptButtonStyleClass: 'p-button-danger', 
+      rejectButtonStyleClass: 'p-button-secondary'
     });
   }
 

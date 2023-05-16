@@ -55,7 +55,7 @@ export class LoginComponent implements OnInit{
       this.auth.login(this.loginForm.get('email')?.value, this.loginForm.get('password')?.value)
       .subscribe(
         (response) => {
-          this.cookie.set('jwtToken', response);
+          this.cookie.set('jwtTokenDso', response);
           this.messageService.add({ severity: 'success', summary: 'Logged in', detail: 'Welcome back', life: 3000 });
           
           setTimeout(() => {

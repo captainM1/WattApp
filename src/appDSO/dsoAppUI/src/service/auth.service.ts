@@ -42,7 +42,7 @@ export class AuthService {
   }
   
   getFullToken() {
-    const jwtToken = this.cookie.get('jwtToken');
+    const jwtToken = this.cookie.get('jwtTokenDso');
     return jwtToken;
   }
 
@@ -52,7 +52,7 @@ export class AuthService {
       header: 'Confirmation',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        this.cookie.delete('jwtToken');
+        this.cookie.delete('jwtTokenDSO');
         this.router.navigate(['/signin']);
       },
       reject: (type: any) => {
@@ -64,7 +64,9 @@ export class AuthService {
             this.messageService.add({ severity: 'warn', summary: 'Cancelled', detail: 'You have cancelled' });
             break;
         }
-      }
+      },
+      acceptButtonStyleClass: 'p-button-danger', 
+      rejectButtonStyleClass: 'p-button-secondary'
     });
   }
   
@@ -338,7 +340,7 @@ export class AuthService {
 
   getToken() {
 
-    const jwtToken = this.cookie.get('jwtToken');
+    const jwtToken = this.cookie.get('jwtTokenDso');
      const decoded :any = jwt_decode(jwtToken);
      return decoded.unique_name;
   }
