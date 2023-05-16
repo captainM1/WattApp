@@ -63,9 +63,6 @@ export class HomeComponent implements OnInit, AfterViewInit{
 	
 	total!: number;
 
-	labProducers!: string[];
-	labConsumers!: string[];
-	labStorages!:string[];
 	
 // consumption 
 	public currentConsumptionSys!:any;
@@ -245,7 +242,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 				this.weatherLoader = false;
 			},
 			error: (error : any) => {
-				console.log("error loading weather.");
+				console.log(error);
 				this.spinner.hide();
 				this.weatherLoader = false;
 			}
@@ -253,8 +250,8 @@ export class HomeComponent implements OnInit, AfterViewInit{
 	}
 
 	giveMeChartForTemperatureDaily(){
-		const timeSlice = this.weather.hourly.time.slice(0,24);
-		const time = timeSlice.map((time)=>{
+		const timeSlice = this.weather?.hourly?.time.slice(0,24);
+		const time = timeSlice?.map((time)=>{
 			const date = new Date(time);
 			const hours = date.getHours().toString().padStart(2,"0");
 			const minutes = date.getMinutes().toString().padStart(2,"0");
@@ -265,7 +262,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		const data = {
 		labels: labels,
 		datasets: [{
-			label: 'Hourly temperature change',
+			label: 'Temperature by hour',
 			data: this.weather.hourly.temperature_2m,
 			fill: true,
 			borderColor: 'rgb(98, 183, 254)',
@@ -280,7 +277,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		  x: {
 			title: {
 			  display: true,
-			  text: 'Temperature hourly',
+			  text: 'Time (hours)',
 			},
 			ticks: {
 			  font: {
@@ -311,19 +308,25 @@ export class HomeComponent implements OnInit, AfterViewInit{
 	
 	
 	getNumberOfUsers(){
-		this.auth.getUserNumber().subscribe(
-			(response : any) => {
-				this.totalUsers = response;
+		this.auth.getUserNumber().subscribe({
+			next:(response : any)=>{
+					this.totalUsers = response;
+			},
+			error : (error : any)=>{
+				console.log(error);
 			}
-		)
+		})
 	}
 
 	getAllUserInfo(){
-		this.auth.getAllUserInfo().subscribe(
-			(response : any)=>{
+		this.auth.getAllUserInfo().subscribe({
+			next:(response : any)=>{
 				this.User = response;
+			},
+			error: (error : any)=>{
+				console.log(error);
 			}
-		)
+		});
 	}
 	
 	getDeviceGroup(){
@@ -346,22 +349,20 @@ export class HomeComponent implements OnInit, AfterViewInit{
 								this.storage = response;
 							}
 							
-							this.total = this.producers.length + this.consumers.length + this.storage.length;
+							this.total = this.producers?.length + this.consumers?.length + this.storage?.length;
 							
-							this.labProducers = [...new Set(this.producers.map(element => element.name))];
-							this.labConsumers = [...new Set(this.consumers.map(element => element.name))];
-							this.labStorages = [...new Set(this.storage.map(element => element.name))];
 							
-							this.lengthProducers = this.producers.length;
-							this.lengthConsumers = this.consumers.length;
-							this.lengthStorage = this.storage.length;
+							
+							this.lengthProducers = this.producers?.length;
+							this.lengthConsumers = this.consumers?.length;
+							this.lengthStorage = this.storage?.length;
+							
+							// this.lengthStorage = this.storage.length;
 							this.getNumberOfUsers();
 							
-						}
-					 )
+						})
 					}
-				}
-			)	
+				})	
 		}
 		
 //  System
@@ -376,6 +377,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 				this.currentConsumptionSystemLoader = false;
 			},
 			error:(error:any)=>{
+				console.log(error);
 				this.spinner.hide();
 				this.currentConsumptionSystemLoader = false;
 			}
@@ -384,15 +386,18 @@ export class HomeComponent implements OnInit, AfterViewInit{
 	currentConsumptionDay(){
 		this.spinner.show();
 		this.currentConsumptionDayLoader = true;
-		this.auth.currentConsumptionDay().subscribe(
-		(response:any)=>{
-			this.currentDataC = response['timestampPowerPairs'];
-			console.log()
-			this.consumptionCurrentDifference(this.currentDataC);
-			this.makeDataForConsumptionDay(this.currentDataC);
-			this.lineChartConsumptionProduction(this.powerusageCurrentDayProduction, this.powerusageCurrentConsumptionDay, this.timestampCurrentConsumptionDay);
-			this.spinner.hide();
-			this.currentConsumptionDayLoader = false;
+		this.auth.currentConsumptionDay().subscribe({
+			next:(response:any)=>{
+				this.currentDataC = response['timestampPowerPairs'];
+				this.consumptionCurrentDifference(this.currentDataC);
+				this.makeDataForConsumptionDay(this.currentDataC);
+				this.lineChartConsumptionProduction(this.powerusageCurrentDayProduction, this.powerusageCurrentConsumptionDay, this.timestampCurrentConsumptionDay);
+				this.spinner.hide();
+				this.currentConsumptionDayLoader = false;
+			},
+			error:(error:any)=>{
+				console.log(error);
+			}
 		})
 	}
 
@@ -428,7 +433,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 				powerUsage1: this.powerusageCurrentDayProduction[i].toFixed(2)
 			};
 			this.dataConsumptionProduction.push(pair);
-			console.log("ConsumptionProduction Data", this.dataConsumptionProduction);
+	
 		}
 	}
 		
@@ -517,7 +522,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 
 		graphProductionConsumption:any;
 		lineChartConsumptionProduction(data1 : any, data3: any, label : any){
-			console.log("labnel", label);
+			
 			const d1 = data1;
 			const d2 = data3;
 			const l = label;
@@ -1095,6 +1100,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 					this.powerUsageListPrev24hProduction.push(this.productionPrev24hData[i]['powerUsage']);
 				}
 				
+
 				
 			}
 			timestampListPrev24hConsumption!:string[];
@@ -1258,11 +1264,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 					};
 					this.data7daysHistory.push(pair);
 				}
-				console.log("data7daysHistory",this.data7daysHistory)
-			
 				
-				console.log("time-power",this.timestampListPrev7DaysConsumption, this.powerUsageListPrev7DaysConsumption);
-				console.log("this.data7daysHistory", this.data7daysHistory);
 				
 			  }
 
@@ -1297,7 +1299,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			}
 
 			  previous7DaysGraph(data1 : any, data2 :any, label : any){
-				console.log("previous 7 days graph --");
+				
 				if (this.consumptionPrev7daysGraph){
 				  if (this.chartPrev7days) {
 					this.chartPrev7days.destroy();
@@ -1425,7 +1427,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 				this.auth.productionPreviousMonth().subscribe({
 					next:(response : any)=>{
 						this.productionPreviousMonthData = response['timestampPowerPairs'];
-						console.log
+					
 						this.makeDataProductionPrevMonth(this.productionPreviousMonthData);
 						this.spinner.hide();
 						this.productionPrevMonthSystemLoader = false;
@@ -1447,7 +1449,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			  }
 			  
 			  previousMonthGraph(data1 : any, label : any, data2 : any){
-				console.log("prev month",data1, data2, label);
+			
 				if (this.consumptionPrevMonthGraph){
 				  if (this.chartPrevMonth) {
 					this.chartPrevMonth.destroy();
@@ -1561,13 +1563,14 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		this.auth.consumptionNext24h().subscribe({
 			next:(response : any)=>{
 				this.consumptionNext24hData = response['timestampPowerPairs'];
+			
 				this.makeDataConsumptionNext24h(this.consumptionNext24hData);
 				this.next24Graph(this.powerUsageListNext24hConsumption, this.powerusageProductionNext24h,this.timestampListNext24hConsumption);
 				this.spinner.hide();
 				this.consumptionNext24hLoader = false;
 			},
 			error: (err : any) => {
-				console.log("this.consumptionNext24hData error");
+			
 				this.spinner.hide();
 				this.consumptionNext24hLoader = false;
 			}
@@ -1596,14 +1599,14 @@ export class HomeComponent implements OnInit, AfterViewInit{
 					};
 				this.data24Future.push(pair);
 			}
+
 	}
 	
 	chartNext24h!:any;
 	next24Graph(data1 : any,  data2 : any, label : any){
 		const d = data1;
 		const l = label;
-		console.log("DA",d);
-		console.log("l", l);
+	
 		if (this.consumptionNext24hGraph){
 		  if (this.chartNext24h) {
 			this.chartNext24h.destroy();
@@ -1691,7 +1694,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 	}
 	chartNext7daysC!:any;
 	next7DaysGraph(data1 : any, label : any, data2 : any){
-		console.log("next",data1, label, data2)
+	
 		if (this.consumptionNext7daysGraph){
 		  if (this.chartNext7daysC) {
 			this.chartNext7daysC.destroy();
@@ -1906,7 +1909,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		this.auth.productionNext24h().subscribe({
 			next:(response : any)=>{
 				this.productionNext24hData = response['timestampPowerPairs'];
-				console.log("productionNext24hData",this.productionNext24hData);
+				//console.log("productionNext24hData",this.productionNext24hData);
 				this.makeDataProductionNext24h(this.productionNext24hData);
 				this.spinner.hide();
 				this.productionNext24hLoader = false;
@@ -1924,6 +1927,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		for(let i = 0; i < dataGraph.length; i++){
 				this.powerusageProductionNext24h.push(this.productionNext24hData[i]['powerUsage']);
 		}
+		
 	}
 	
 	productionNext7DaysData!:[];
@@ -1965,7 +1969,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 				this.productionNextMonthLoader = false;
 			},
 			error: (err : any) => {
-				console.log("productionNextMonth error");
+				console.log(err);
 				this.spinner.hide();
 				this.productionNextMonthLoader = false;
 			}

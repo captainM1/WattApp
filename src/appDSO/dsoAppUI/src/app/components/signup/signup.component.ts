@@ -73,7 +73,8 @@ export class SignupComponent implements OnInit {
       this.isText2 ? this.eyeIcon2 = "fa-eye" : this.eyeIcon2 = "fa-eye-slash";
       this.isText2 ? this.type2 = "text" : this.type2 = "password";
     }
-
+    firstName!: string;
+    lastName!:string;
     onSubmit(){
       this.submitted = true;
       if(this.signupForm.invalid){
@@ -82,17 +83,22 @@ export class SignupComponent implements OnInit {
         this.router.navigate(['signup']);
         return;
       }else if(this.signupForm.valid){
-        this.auth.register(this.signupForm.get('firstName')?.value,"Dispatcher",this.signupForm.get('email')?.value,this.signupForm.get('password')?.value)
+        if( this.signupForm.get('firstName')?.value != null  && this.signupForm.get('lastName') != null){
+           this.firstName = this.signupForm.get('firstName')?.value;
+           this.lastName = this.signupForm.get('lastName')?.value;
+        }
+        this.auth.register(this.signupForm.get('firstName')?.value,this.signupForm.get('lastName')?.value,"Dispatcher",this.signupForm.get('phonenumber')?.value,this.signupForm.get('email')?.value,this.signupForm.get('password')?.value)
         .subscribe((message) =>
           {
               this.signupForm.reset();
-              this.messageService.add({ severity: 'success', summary: 'Register success', detail: message });
+              this.messageService.add({ severity: 'success', summary: 'Register success', detail: "Welcome  "+this.firstName+ " "+this.lastName});
               this.router.navigate(['signin'])
           }
         );
       }
     }
     deleteDispecher(id : any){
+      if (confirm('Are you sure you want to delete this record?')) {
       this.auth.deleteDispathcer(id).subscribe({
         next:(response : any) => {
           this.messageService.add({ severity: 'success', summary: 'Register deleted'});
@@ -102,6 +108,7 @@ export class SignupComponent implements OnInit {
           console.log("ERRROR delete");
         }
       })
+    }
     }
     giveMeWorker(id : any){
       this.auth.getDispacher(id).subscribe({
