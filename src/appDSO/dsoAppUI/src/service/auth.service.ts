@@ -52,7 +52,7 @@ export class AuthService {
       header: 'Confirmation',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        this.cookie.delete('jwtTokenDSO');
+        this.cookie.delete('jwtTokenDso');
         this.router.navigate(['/signin']);
       },
       reject: (type: any) => {
