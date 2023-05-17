@@ -10,14 +10,15 @@ import { catchError, Observable, tap, throwError } from 'rxjs';
 import { AuthService } from 'service/auth.service';
 import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
-
+import { CookieService } from "ngx-cookie-service"
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
 
   constructor(
     private auth : AuthService,
     private router : Router,
-    private msg : MessageService
+    private msg : MessageService,
+    private cookie:CookieService
     
   ) {}
 
@@ -38,6 +39,7 @@ export class TokenInterceptor implements HttpInterceptor {
       catchError((err : any) =>{
         if(err instanceof HttpErrorResponse){
           if(err.status === 401){
+            this.cookie.delete('jwtTokenDso');
             this.msg.add({severity: 'Error', summary: "Error", detail: "Your token has expired"});
             this.router.navigate(['/signin']);
           }
