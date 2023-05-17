@@ -33,7 +33,7 @@ import { EditDeviceComponent } from './components/edit-device/edit-device.compon
 import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
 import { NavComponent } from './components/nav/nav.component';
 import { MyDevicesComponent } from './components/my-devices/my-devices.component';
-
+import { TooltipModule } from 'primeng/tooltip';
 
 import { MobNavComponent } from './components/mob-nav/mob-nav.component';
 import { Home2Component } from './components/home2/home2.component';
@@ -100,7 +100,8 @@ import { SettingsComponent } from './components/settings/settings.component';
     Ng2SearchPipeModule,
     [MatProgressSpinnerModule],
     MatSnackBarModule,
-    NgxSpinnerModule    
+    NgxSpinnerModule,
+    TooltipModule
   ],
   providers: [MessageService,ConfirmationService, {provide:HTTP_INTERCEPTORS,useClass:TokenInterceptor,multi:true}, MatDialog],
   bootstrap: [AppComponent]

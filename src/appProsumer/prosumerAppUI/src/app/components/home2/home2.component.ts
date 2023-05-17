@@ -18,8 +18,6 @@ export class Home2Component implements OnInit, AfterViewInit {
   userID!: any;
   token!:any;
   weather! : Root;
-  currentConsumes!: any;
-  currentProduces!: any;
   number!: any;
   devices!: any;
   id!:any;
@@ -46,10 +44,6 @@ export class Home2Component implements OnInit, AfterViewInit {
 
   @ViewChild('myChart') myChart!: ElementRef;
   @ViewChild('hourlyTemp') hourlyTemp!: ElementRef;
-  @ViewChild('currentPowerUsageGraph') currentPowerUsageGraph!:ElementRef;
-  @ViewChild('currentProductionGraph') currentProductionGraph!:ElementRef;
-  @ViewChild('currentMostConsumesGraph') currentMostConsumesGraph!:ElementRef;
-  @ViewChild('currentMostProducesGraph') currentMostProducesGraph!:ElementRef;
   @ViewChild('previous24ConsumptionGraph') previous24ConsumptionGraph!:ElementRef;
 
   ngAfterViewInit(): void {
@@ -89,8 +83,6 @@ export class Home2Component implements OnInit, AfterViewInit {
        this.getConsumptionSevedEnergyMonth(this.userID);
        this.currentUsageUser(this.userID);
        this.currentProductionUser(this.userID);
-       this.currentMostConsumes(this.userID);
-       this.currentMostProduces(this.userID);
        this.auth1.getConsumptionPrevious24Hours(this.userID).subscribe(
         (response : any) => {
           this.graph24prev = response;
@@ -112,41 +104,12 @@ export class Home2Component implements OnInit, AfterViewInit {
     )
   }
 
-  currentMostProduces(id:any)
-  {
-    this.auth1.getCurrentMostProduces(id).subscribe(
-      (response:any)=>{
-        console.log(response);
-        this.currentProduces = response.timestampPowerPairs[0].powerUsage.toFixed(2);
-        this.id = response.id;
-        this.halfDoughnutMostProduces(this.currentProduces);
-
-      }
-    )
-  }
-
-  currentMostConsumes(id:any)
-  {
-    this.auth1.getCurrentMostConsumes(id).subscribe(
-      (response:any)=>{
-        console.log(response);
-        this.currentConsumes = response.timestampPowerPairs[0].powerUsage.toFixed(2);
-        console.log(this.currentConsumes);
-        this.id = response.id;
-        console.log(response.id + "id");
-        this.halfDoughnutMostConsumes(this.currentConsumes);
-        this.halfDoughnutProduction(this.currentConsumes); //ovo je samo za prikaz jer nemamo production
-
-      }
-    )
-  }
 
   currentUsageUser(id:any){
     this.auth1.getCurrentConsumptionSummary(id).subscribe(
       (response : any) => {
         this.currentUsage = response.toFixed(2);
         console.log(response);
-        this.halfDoughnut(response);
       }
     )
   }
@@ -156,128 +119,9 @@ export class Home2Component implements OnInit, AfterViewInit {
     this.auth1.getCurrentProductionSummary(id).subscribe(
       (response : any) => {
         this.currentProduction = response.toFixed(2);
-        //this.halfDoughnutProduction(response);
       }
     )
   }
-
-
-halfDoughnut(usage: any){
-  const d = usage;
-  const data = {
-    labels: ['Energy consumption'],
-    datasets: [
-      {
-        label: 'Energy consumption',
-        data: [d, 1000-d],
-        backgroundColor: ['#FF8811', '#ECEFF1'],
-      },
-    ],
-  };
-
-  const options = {
-   circumference:180,
-   rotation:270,
-   aspectRation: 2
-
-
-
-  };
-
-  const chart = new Chart(this.currentPowerUsageGraph.nativeElement, {
-    type: 'doughnut',
-    data: data,
-    options: options,
-  });
-}
-
-halfDoughnutProduction(usage: any){
-  const d = usage;
-  const data = {
-    labels: ['Energy production'],
-    datasets: [
-      {
-        label: 'Energy production',
-        data: [d, 1000-d],
-        backgroundColor: ['#026670', '#ECEFF1'],
-      },
-    ],
-  };
-
-  const options = {
-   circumference:180,
-   rotation:270,
-   aspectRation: 2
-
-
-
-  };
-
-  const chart = new Chart(this.currentProductionGraph.nativeElement, {
-    type: 'doughnut',
-    data: data,
-    options: options,
-  });
-}
-
-
-halfDoughnutMostConsumes(usage: any){
-  const d = usage;
-  const data = {
-    labels: ['Energy consumption'],
-    datasets: [
-      {
-        label: 'Energy consumption',
-        data: [d, 1000-d],
-        backgroundColor: ['#FF8811', '#ECEFF1'],
-      },
-    ],
-  };
-
-  const options = {
-   circumference:180,
-   rotation:270,
-   aspectRation: 2
-
-
-
-  };
-
-  const chart = new Chart(this.currentMostConsumesGraph.nativeElement, {
-    type: 'doughnut',
-    data: data,
-    options: options,
-  });
-}
-
-halfDoughnutMostProduces(usage: any){
-  const d = usage;
-  const data = {
-    labels: ['Energy production'],
-    datasets: [
-      {
-        label: 'Energy production',
-        data: [d, 1000-d],
-        backgroundColor: ['#026670', '#ECEFF1'],
-      },
-    ],
-  };
-
-  const options = {
-   circumference:180,
-   rotation:270,
-   aspectRation: 2
-
-
-
-  };
-
-  const chart = new Chart(this.currentMostProducesGraph.nativeElement, {
-    type: 'doughnut',
-    data: data,
-    options: options,
-  });
-}
 
 
 showWeatherDetails()

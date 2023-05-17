@@ -19,7 +19,7 @@ public class TokenMaker: ITokenMaker{
                 new Claim(ClaimTypes.Name, user.ID.ToString()),
                 new Claim("role",user.Role)
             }),
-            Expires = DateTime.UtcNow.AddMinutes(30),
+            Expires = DateTime.UtcNow.AddMinutes(60),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
         var token = tokenHandler.CreateToken(tokenDescriptor);
@@ -59,7 +59,7 @@ public class TokenMaker: ITokenMaker{
                 new Claim(ClaimTypes.Name, dispatcher.ID.ToString()),
                 new Claim("role",dispatcher.Role)
             }),
-            Expires = DateTime.UtcNow.AddMinutes(30),
+            Expires = DateTime.UtcNow.AddMinutes(60),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         };
         var token = tokenHandler.CreateToken(tokenDescriptor);
