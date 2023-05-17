@@ -16,6 +16,7 @@ export class NavComponent{
     private cookie:CookieService){}
 
   signOut(){
+    this.router.navigate(['/signin'])
       this.auth.signOut();
   }
 

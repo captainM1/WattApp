@@ -707,21 +707,18 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.isActiveProsumer = button === 'prosumer';
     this.isActioveConsumer = button === 'consumer';
     if(this.showSystemPage){
-    
-    if(this.isActiveProsumer){
-  
-      this.showMeProduction = true;
-      this.showMeConsumption = false;
-      this.HistoryProduction(this.selectedGraphHistoryProduction);
-      this.FutureProduction(this.selectedGraphFutureProduction);
-      
-    }else if(this.isActioveConsumer){
-     
       this.showMeProduction = false;
       this.showMeConsumption = true;
-      this.FutureConsumption(this.selectedGraphFutureConsumption);
       this.HistoryConsumption(this.selectedGraphHistoryConsumption);
-    }
+      this.FutureConsumption(this.selectedGraphFutureConsumption);
+      if(this.isActiveProsumer){
+    
+        this.showMeProduction = true;
+        this.showMeConsumption = false;
+        this.HistoryProduction(this.selectedGraphHistoryProduction);
+        this.FutureProduction(this.selectedGraphFutureProduction);
+        
+      }
   }
 }
   
@@ -749,6 +746,7 @@ export class TableComponent implements OnInit, AfterViewInit {
       this.showDevicePage = false;
       this.showSystemPage = true;
       this.showMeGeneral = false;
+      this.toggleActiveCP('consumption')
     
     }
   }

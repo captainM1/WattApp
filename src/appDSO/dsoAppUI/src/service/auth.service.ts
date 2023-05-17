@@ -32,10 +32,12 @@ export class AuthService {
     })
   }
 
-  register(username: string, role:string,email: string,password : string) : Observable<string>{
+  register(firstName: string, lastName: string, role:string, phonenumber: string, email: string,password : string) : Observable<string>{
     return this.http.post<string>(environment.apiUrl + "/api/Dispatcher/signup", {
-      UserName: username,
+      firstName: firstName,
+      lastName:lastName,
       Role: role,
+      phonenumber : phonenumber,
       Email : email,
       password: password
     })
