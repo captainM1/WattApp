@@ -1,18 +1,13 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { deviceGroup, deviceGroupManifacturers, deviceManifacturers, deviceTypeInformation, eachDevice } from 'models/Devices';
 import { AuthService } from 'service/auth.service';
-import { Chart, elements } from 'chart.js';
+import { Chart } from 'chart.js';
 import { ChartOptions } from 'chart.js';
 import { User } from 'models/User';
-import { animation } from '@angular/animations';
 import { Root } from 'models/weather';
-import { FormsModule } from '@angular/forms';
 import { Subscription, map, timer } from 'rxjs';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ModalTableComponent } from '../modal-table/modal-table.component';
 import { MatDialog } from '@angular/material/dialog';
-import * as bootstrap from 'bootstrap';
-import { TableExport } from 'tableexport';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 @Component({
@@ -923,7 +918,6 @@ export class HomeComponent implements OnInit, AfterViewInit{
 	giveMeDeviceByID(id : any){
 		this.auth.deviceInfoByID(id).subscribe(
 			(response : any) => {
-				// console.log("dev : ",response);
 			}
 		)
 	}
@@ -1686,7 +1680,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 				this.consumptionNext7DaysLoader = false;
 			},
 			error: (err : any) => {
-				console.log("this.consumptionNext7DaysData error");
+				console.log("this.consumptionNext7DaysData error" + err);
 				this.spinner.hide();
 				this.consumptionNext7DaysLoader = false;
 			}
@@ -1804,7 +1798,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 				this.consumptionNextMonthLoader = false;
 			},
 			error: (err : any) => {
-				console.log("consumptionNextMonth error");
+				console.log("consumptionNextMonth error" + err);
 				this.spinner.hide();
 				this.consumptionNextMonthLoader = false;
 			}
@@ -1909,13 +1903,12 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		this.auth.productionNext24h().subscribe({
 			next:(response : any)=>{
 				this.productionNext24hData = response['timestampPowerPairs'];
-				//console.log("productionNext24hData",this.productionNext24hData);
 				this.makeDataProductionNext24h(this.productionNext24hData);
 				this.spinner.hide();
 				this.productionNext24hLoader = false;
 			},
 			error: (err : any) => {
-				console.log("productionNext24hData error");
+				console.log("productionNext24hData error" + err);
 				this.spinner.hide();
 				this.productionNext24hLoader = false;
 			}
@@ -1942,7 +1935,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 				this.productionNext7DaysLoader = false;
 			},
 			error: (err : any) => {
-				console.log("productionNext7Days error");
+				console.log("productionNext7Days error" + err);
 				this.spinner.hide();
 				this.productionNext7DaysLoader = false;
 			}

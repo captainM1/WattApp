@@ -41,18 +41,15 @@ export class ProfileProsumerComponent implements OnInit{
   getUser(){
     this.auth.getAllUsers().subscribe(
       (response : any)=>{
-        console.log(response);
       }
     )
   }
 
   getToken(){
     this.token = this.serv.getToken();
-    console.log(this.token)
     this.auth.getThisUser(this.token).subscribe(
       (response :any)=>{
        this.userID = response;
-       console.log(this.userID);
        this.firstName = response.firstName;
        this.firstName = response.firstName;
        this.lastName = response.lastName;

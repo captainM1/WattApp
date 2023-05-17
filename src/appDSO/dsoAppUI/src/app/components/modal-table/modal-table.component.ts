@@ -1,5 +1,4 @@
 import { Component, Input, ViewChild } from '@angular/core';
-import { Defaults } from 'chart.js/dist/core/core.defaults';
 import { TableExport } from 'tableexport';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
@@ -28,6 +27,5 @@ export class ModalTableComponent {
     const fileBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     const blob = new Blob([fileBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     saveAs(blob, 'table-data.xlsx');
-    // console.log(worksheet)
   }
 }

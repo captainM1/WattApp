@@ -49,7 +49,6 @@ export class SettingsComponent implements OnInit, AfterViewInit{
     )
     this.apiService.statusOfReq().subscribe(
       response => {
-        console.log(response)
         if (response == true) {
           this.requestStatus = 'accepted'
           this.backgroundService.ngOnDestroy();
@@ -125,7 +124,6 @@ export class SettingsComponent implements OnInit, AfterViewInit{
   sendReq() {
     this.apiService.sendRequest().subscribe(
       (info) => {
-        console.log("Success");
       },
       (error) => {
         console.log(error);
@@ -135,7 +133,6 @@ export class SettingsComponent implements OnInit, AfterViewInit{
   cancelReq(){
     this.apiService.cancelRequest().subscribe(
       (info) => {
-        console.log("Success");
       },
       (error) => {
         console.log(error);
@@ -146,7 +143,6 @@ export class SettingsComponent implements OnInit, AfterViewInit{
   disconnectDSO(){
     this.apiService.disconnectDSO().subscribe(
       (info) => {
-        console.log("Success");
       },
       (error) => {
         console.log(error);

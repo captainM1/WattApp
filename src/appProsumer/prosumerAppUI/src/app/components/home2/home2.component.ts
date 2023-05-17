@@ -68,7 +68,6 @@ export class Home2Component implements OnInit, AfterViewInit {
     this.auth.getDeviceData().subscribe(
     (response:any)=>{
       this.number = response.length;
-      console.log(this.number);
     }
     );
   }
@@ -79,14 +78,12 @@ export class Home2Component implements OnInit, AfterViewInit {
     this.auth1.getThisUser(this.token).subscribe(
       (response :any)=>{
        this.userID = response.id;
-       console.log(this.userID);
        this.getConsumptionSevedEnergyMonth(this.userID);
        this.currentUsageUser(this.userID);
        this.currentProductionUser(this.userID);
        this.auth1.getConsumptionPrevious24Hours(this.userID).subscribe(
         (response : any) => {
           this.graph24prev = response;
-          console.log(response);
           this.makeData(this.graph24prev);
         }
        );
@@ -109,7 +106,6 @@ export class Home2Component implements OnInit, AfterViewInit {
     this.auth1.getCurrentConsumptionSummary(id).subscribe(
       (response : any) => {
         this.currentUsage = response.toFixed(2);
-        console.log(response);
       }
     )
   }
@@ -133,7 +129,6 @@ showWeatherDetails()
       this.isCloudy = (this.weather.current_weather.temperature <= 15 || this.weather.current_weather.temperature > 0)  && (this.weather.hourly.relativehumidity_2m[0] >= 30 || this.weather.hourly.relativehumidity_2m[0] < 90)
       this.isRainy =  this.weather.hourly.relativehumidity_2m[0] >= 90;
       this.isSnowy = this.weather.current_weather.temperature <= 0;
-      console.log(this.isCloudy);
       });
 }
 
@@ -208,7 +203,6 @@ showMeDevices(id : string){
   this.auth1.getDeviceInfoUserByID(id).subscribe(
     (response : any) => {
       this.allUserDevices = response;
-      console.log(this.allUserDevices + "all devices");
       for(let us of this.allUserDevices){
 
       this.auth.getDevicesInfoByID(us.deviceId).subscribe({

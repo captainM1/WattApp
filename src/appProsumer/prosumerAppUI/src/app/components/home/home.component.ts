@@ -37,7 +37,6 @@ export class HomeComponent implements OnInit{
     this.auth.getDeviceData().subscribe(
     (res:any)=>{
       this.num = res.length;
-      console.log(this.num);
       if(this.num > 0){
         this.showMeHome2 = true;
         this.showMeHome = false;

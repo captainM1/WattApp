@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'service/auth.service';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import jwt_decode from 'jwt-decode';
 import { CookieService } from "ngx-cookie-service"
 @Component({
@@ -16,8 +15,7 @@ export class NavComponent{
     private cookie:CookieService){}
 
   signOut(){
-    this.router.navigate(['/signin'])
-      this.auth.signOut();
+    this.auth.signOut();
   }
 
   getRole() {

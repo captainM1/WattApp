@@ -56,12 +56,10 @@ export class DeviceDetailsComponent implements OnInit {
   ngOnInit() {
     this.spinner.show();
     this.deviceId = this.route.snapshot.paramMap.get('id');
-    console.log(this.deviceId);
 
     this.http.get<any[]>(`${environment.apiUrl}/api/Device/devices/info/${this.deviceId}`)
       .subscribe(data => {
         this.device = data;
-        console.log(data);
         this.groupName = this.device.groupName;
       },
       error => {
@@ -85,11 +83,9 @@ export class DeviceDetailsComponent implements OnInit {
             })
             this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/today/currentPowerUsage/${this.deviceId}`)
             .subscribe(data => {
-              console.log(data);
               data.forEach(item => {
                 this.deviceToday += item.powerUsage;
               });
-              console.log(this.deviceToday);
             },
             error => {
               console.error('Error fetching device today:', error);
@@ -110,7 +106,6 @@ export class DeviceDetailsComponent implements OnInit {
 
       this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/Previous24h/device-usage_per_hour/${this.deviceId}`)
       .subscribe((data:any) =>{
-        console.log(data);
         this.last24HoursDate = data.timestampPowerPairs.map((item: any) => item.timestamp);
         this.last24HoursPower = data.timestampPowerPairs.map((item: any) => item.powerUsage);
       },
