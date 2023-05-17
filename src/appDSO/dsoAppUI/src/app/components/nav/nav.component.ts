@@ -20,7 +20,7 @@ export class NavComponent{
   }
 
   getRole() {
-    const jwtToken = this.cookie.get('jwtToken');
+    const jwtToken = this.cookie.get('jwtTokenDso');
      const decoded :any = jwt_decode(jwtToken);
      return decoded.role;
   }
