@@ -5,7 +5,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { environment } from 'src/environments/environment';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
-import { catchError, forkJoin, of, tap } from 'rxjs';
+import { Observable, catchError, forkJoin, map, of, tap } from 'rxjs';
 
 @Component({
   selector: 'app-my-devices',
@@ -43,34 +43,30 @@ export class MyDevicesComponent implements OnInit {
         forkJoin(deviceObservables).subscribe(
           () => {
             this.devices = data;
+            this.devices.forEach((device: any) => {
+              this.http
+                .get<any[]>(
+                  `${environment.apiUrl}/api/PowerUsage/power-usage/current/device/${device.deviceId}`)
+                .subscribe(
+                  (data) => {
+                    this.deviceToday[device.deviceId] = data;
+                  },
+                  (error) => {
+                    this.deviceToday[device.deviceId] = 0;
+                  }
+                );
+            });
           },
           (error) => {
             console.log(error);
           }
         );
-
-        this.devices.forEach((device: any) => {
-          this.http
-            .get<any[]>(
-              `${environment.apiUrl}/api/PowerUsage/power-usage/current/device/${device.deviceId}`,
-              { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) }
-            )
-            .subscribe(
-              (data) => {
-                this.deviceToday[device.deviceId] = data;
-              },
-              (error) => {
-                this.deviceToday[device.deviceId] = 0;
-              }
-            );
-        });
       },
       (error) => {
         console.log(error);
       }
     );
   }
-
 
   exportToExcel(): void {
     const tableData = this.myTable.nativeElement.cloneNode(true);
