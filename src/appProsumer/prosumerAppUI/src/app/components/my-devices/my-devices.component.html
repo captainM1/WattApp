@@ -59,7 +59,8 @@
               <td> {{ device.deviceName }} </td>
               <td> {{ device.manufacturerName }}</td>
               <td> </td>
-              <td> On </td>
+              <td *ngIf = device.isToggled> On </td>
+              <td *ngIf = !device.isToggled> Off </td>
           </tr>
         </table>
       </div>
