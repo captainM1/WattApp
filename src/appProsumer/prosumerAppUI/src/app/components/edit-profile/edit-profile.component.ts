@@ -6,6 +6,7 @@ import { User } from 'src/app/models/user';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { ConfirmPasswordValidator } from 'src/app/helpers/confirm-password.validator';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-edit-profile',
   templateUrl: './edit-profile.component.html',
@@ -35,7 +36,8 @@ export class EditProfileComponent implements OnInit{
     private auth : AuthUserService,
     private serv : AuthService,
     private fb: FormBuilder,
-    private messageService:MessageService
+    private messageService:MessageService,
+    private router : Router
   ){}
 
   ngOnInit(): void {
@@ -99,9 +101,12 @@ export class EditProfileComponent implements OnInit{
     this.auth.putUpdateUser(this.userID, profileData).subscribe(
       (response) => {
         console.log('Profile updated successfully:', response);
+        this.messageService.add({ severity: 'success', summary: 'Profile updated successfully!'});
+        this.router.navigate(['profile-prosumer']);
       },
       (error) => {
         console.error('Error updating profile:', error);
+        this.messageService.add({ severity: 'success', summary: 'Error updating profile!'});
       }
     );
   }
