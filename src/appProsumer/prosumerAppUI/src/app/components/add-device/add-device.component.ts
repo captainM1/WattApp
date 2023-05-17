@@ -57,12 +57,10 @@ export class AddDeviceComponent {
     this.selectedGroupValue = true;
     const selectElement = event.target as HTMLSelectElement;
     this.selectedGroup = selectElement.value;
-    console.log(this.selectedGroup);
 
       this.http.get<any[]>(`${environment.apiUrl}/api/Device/manufacturers/${this.selectedGroup}`)
       .subscribe({
         next: data => {
-          console.log(data);
           this.manufacturers = data;
         },
         error: err => {
@@ -75,12 +73,10 @@ export class AddDeviceComponent {
     this.addDeviceForm.get('device')?.enable();
     const manSelect = event.target as HTMLSelectElement;
     this.selectedManufacturerId = manSelect.value;
-    console.log(this.selectedManufacturerId);
 
       this.http.get<any[]>(`${environment.apiUrl}/api/Device/${this.selectedGroup}/${this.selectedManufacturerId}`)
       .subscribe({
         next: data => {
-          console.log(data);
           this.devices = data;
         },
         error: err => {
@@ -93,7 +89,6 @@ export class AddDeviceComponent {
     const deviceSelect = event.target as HTMLSelectElement;
     this.selectedDevice = deviceSelect.value;
     this.selectedWattage = this.devices.find(device => device.id === deviceSelect.value);
-    console.log(this.selectedDevice);
   }
 
   onSubmit() {
@@ -106,7 +101,6 @@ export class AddDeviceComponent {
   
       this.http.post(environment.apiUrl + '/api/Device/devices/add-new', new newDeviceDTO(this.selectedDevice, formData.macAddress, formData.deviceName), { headers })
         .subscribe(response => {
-          console.log(response);
           this.router.navigate(['home']);
         });
     } else {

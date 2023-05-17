@@ -14,13 +14,13 @@ export class EmployeesListComponent implements OnInit{
 
   ngOnInit(): void {
     this.employeesService.getAllEmployees().subscribe({
-      next: (employees) =>
+      next: (employees: Employee[]) =>
       {
         this.employees = employees;
       },
-      error: (response) =>
+      error: (err:any) =>
       {
-        console.log(response);
+        console.log(err);
       }
     })
   }

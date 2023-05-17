@@ -13,7 +13,7 @@ import { catchError, forkJoin, of, tap } from 'rxjs';
   styleUrls: ['./my-devices.component.css']
 })
 export class MyDevicesComponent implements OnInit {
-  devices: any;
+  devices: any = [];
   deviceToday: {[key: string]: any} = {};
   searchName: string = '';
 
@@ -28,7 +28,6 @@ export class MyDevicesComponent implements OnInit {
   ngOnInit(): void {
     this.auth.getDeviceData().subscribe(
       (data) => {
-        console.log(data);
         const deviceObservables = data.map((device: any) => {
           return this.auth.isOn(device.deviceId).pipe(
             tap((isOn: boolean) => {
@@ -58,7 +57,6 @@ export class MyDevicesComponent implements OnInit {
             )
             .subscribe(
               (data) => {
-                console.log(data);
                 this.deviceToday[device.deviceId] = data;
               },
               (error) => {
@@ -105,7 +103,7 @@ export class MyDevicesComponent implements OnInit {
 
   changeState(id:any){
     this.auth.changeState(id).subscribe(
-      Response => console.log("Response")
+      
     );
   }
 }

@@ -15,7 +15,6 @@ export class ConstellationDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.service.refreshlist();
-    console.log(this.service.list);
   }
 
   populateForm(selectedRecord:ConstellationDetail)

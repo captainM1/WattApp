@@ -144,7 +144,6 @@ export class DashboardComponent implements OnInit, AfterViewInit{
     this.auth1.getThisUser(this.token).subscribe(
       (response :any)=>{
        this.userID = response.id;
-       console.log(this.userID);
        this.HistoryConsumption(this.selectedGraphHistoryConsumption, this.userID);
        this.FutureConsumption(this.selectedGraphFutureConsumption, this.userID);
        this.HistoryProduction(this.selectedGraphHistoryProduction, this.userID);
@@ -239,7 +238,6 @@ export class DashboardComponent implements OnInit, AfterViewInit{
     this.auth1.getConsumptionPrevious24Hours(id).subscribe(
       (response : any) => {
         this.consumption24prev = response[0]['timestampPowerPairs'];
-        console.log(response);
         this.makeData(this.consumption24prev);
         this.previous24Graph();
         this.spinner.hide();
@@ -346,7 +344,6 @@ export class DashboardComponent implements OnInit, AfterViewInit{
     this.auth1.getConsumptionNext24Hours(id).subscribe(
       (response : any) => {
         this.consumption24next = response[0]['timestampPowerPairs'];
-        console.log(response);
         this.makeDataNext24h(this.consumption24next);
         this.spinner.hide();
         this.showNext24h = false;
@@ -468,8 +465,8 @@ export class DashboardComponent implements OnInit, AfterViewInit{
             this.showPreviousMonth = false;
 
           },
-        error: () => {
-          console.log("GRESKA.");
+        error: (err : any) => {
+          console.log("GRESKA." + err);
           this.spinner.hide();
           this.showPreviousMonth = false;
         }
@@ -566,9 +563,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
         this.auth1.getConsumptionNextMonth(id).subscribe(
           {
             next: (response:any) => {
-              console.log(response);
               this.consumptionNextMonthUser = response[0]['timestampPowerPairs'];
-              console.log(this.consumptionNextMonthUser);
               for(let i = 0; i < this.consumptionNextMonthUser.length; i++){
                 this.timeStampConsumptionNextMonth.push(this.consumptionNextMonthUser[i]['timestamp']);
                 this.powerUsageConsumptionNextMonth.push(this.consumptionNextMonthUser[i]['powerUsage']);
@@ -672,7 +667,6 @@ export class DashboardComponent implements OnInit, AfterViewInit{
       next:(response : any) => {
         this.consPrev7Days = response[0]['timestampPowerPairs'];
         this.makeDataGraphPrev7DaysConsumption(this.consPrev7Days);
-        console.log(this.consPrev7Days);
         this.chartConsumptionPrev7Days();
         this.spinner.hide();
         this.showPrevious7days = false;
@@ -704,8 +698,6 @@ export class DashboardComponent implements OnInit, AfterViewInit{
      this.extractedDatesPrev7Days.push(dateString);
 
     }
-    console.log(this.extractedDatesPrev7Days);
-    console.log(this.powerUsageConsumptionPrev7days);
 
     this.extractedDatesPrev7Days.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
@@ -768,13 +760,12 @@ export class DashboardComponent implements OnInit, AfterViewInit{
       next:(response : any) => {
         this.consNext7Days = response[0]['timestampPowerPairs'];
         this.makeDataGraphNext7DaysConsumption(this.consNext7Days);
-        console.log(this.consNext7Days);
         this.chartConsumptionNext7Days();
         this.spinner.hide();
         this.showNext7days = false;
       },
       error : (err : any) => {
-        console.log("error consumption next 7 days");
+        console.log("error consumption next 7 days " + err);
         this.spinner.hide();
         this.showNext7days = false;
       }
@@ -799,8 +790,6 @@ export class DashboardComponent implements OnInit, AfterViewInit{
       this.extractedDatesNext7Days.push(dateString);
 
     }
-    console.log(this.extractedDatesNext7Days);
-    console.log(this.powerUsageConsumptionNext7days);
 
     this.extractedDatesNext7Days.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
@@ -866,7 +855,6 @@ productionPrevious24h(id:any)
   this.auth1.getProductionPrevious24Hours(id).subscribe(
     (response : any) => {
       this.graphProduction24prev = response[0]['timestampPowerPairs'];;
-      console.log(response);
       this.makeDataProduction24(this.graphProduction24prev);
       this.spinner.hide();
       this.showProdPrevious24h = false;
@@ -897,7 +885,6 @@ makeDataProduction24(dataGraph:any){
     this.data24hProd.push(pair);
   
   }
-  console.log("this,",this.data24hProd);
 
   this.previousProduction24Graph(this.timestampListProductionPrev24h, this.powerUsageListProductionPrev24h);
 }
@@ -985,8 +972,8 @@ productionPrevMonth(id:any)
           this.showProdPreviousMonth = false;
 
         },
-      error: () => {
-        console.log("GRESKA.");
+        error: (err : any) => {
+        console.log("GRESKA." + err);
         this.spinner.hide();
         this.showProdPreviousMonth = false;
       }
@@ -1079,7 +1066,6 @@ productionPrev7Days(id : any){
     next:(response : any) => {
       this.prodPrev7Days = response[0]['timestampPowerPairs'];
       this.makeDataGraphPrev7DaysProduction(this.prodPrev7Days);
-      console.log(this.prodPrev7Days);
       this.chartProductionPrev7Days();
       this.spinner.hide();
       this.showProdPrevious7days = false;
@@ -1111,8 +1097,6 @@ chartProductionPrev7Days(){
     this.extractedDatesProductionPrev7Days.push(dateString);
 
   }
-  console.log(this.extractedDatesProductionPrev7Days);
-  console.log(this.powerUsageProductionPrev7days);
 
   this.extractedDatesProductionPrev7Days.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
@@ -1175,7 +1159,6 @@ productionNext24h(id:any)
   this.auth1.getProductionNext24Hours(id).subscribe(
     (response : any) => {
       this.graphProduction24next = response[0]['timestampPowerPairs'];;
-      console.log(response);
       this.makeDataProductionNext24(this.graphProduction24next);
       this.spinner.hide();
       this.showProdNext24h = false;
@@ -1279,13 +1262,12 @@ productionNext7Days(id : any){
     next:(response : any) => {
       this.prodNext7Days = response[0]['timestampPowerPairs'];
       this.makeDataGraphNext7DaysProduction(this.prodNext7Days);
-      console.log(this.prodNext7Days);
       this.chartProductionNext7Days();
       this.spinner.hide();
       this.showProdNext7days = false;
     },
     error : (err : any) => {
-      console.log("error production next 7 days");
+      console.log("error production next 7 days" + err);
     }
   })
 }
@@ -1309,8 +1291,6 @@ chartProductionNext7Days(){
     this.extractedDatesProductionNext7Days.push(dateString);
 
   }
-  console.log(this.extractedDatesProductionNext7Days);
-  console.log(this.powerUsageProductionNext7days);
 
   this.extractedDatesProductionNext7Days.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
@@ -1391,7 +1371,6 @@ productionNextMonth(id:any)
 
         },
       error: () => {
-        console.log("GRESKA.");
         this.spinner.hide();
         this.showProdNextMonth = false;
       }

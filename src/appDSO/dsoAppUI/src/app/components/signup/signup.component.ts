@@ -5,9 +5,6 @@ import { AuthService } from 'service/auth.service';
 import { MessageService } from 'primeng/api';
 import { CookieService } from "ngx-cookie-service";
 import { ConfirmPasswordValidator } from 'app/helpers/confirm-password.validator';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ProfileComponent } from '../profile/profile.component';
-import { ModelProfileComponent } from '../model-profile/model-profile.component';
 import { Role } from 'models/User';
 @Component({
   selector: 'app-signup',
@@ -105,7 +102,7 @@ export class SignupComponent implements OnInit {
           location.reload();
         },
         error:(err : any)=>{
-          console.log("ERRROR delete");
+          console.log("ERRROR delete" + err);
         }
       })
     }

@@ -94,7 +94,6 @@ export class SignupComponent  implements OnInit{
       field => {
         const control = formGroup.get(field);
         if(control instanceof FormControl){
-          console.log(control.value);
 
           control?.markAsDirty({onlySelf: true})
         }else if(control instanceof FormGroup){

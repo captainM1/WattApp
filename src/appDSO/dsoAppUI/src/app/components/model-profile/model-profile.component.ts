@@ -1,5 +1,4 @@
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
-import { TableExport } from 'tableexport';
 
 @Component({
   selector: 'app-model-profile',

@@ -46,11 +46,9 @@ export class EditProfileComponent implements OnInit{
 
   getToken(){
     this.token = this.serv.getToken();
-    console.log(this.token)
     this.auth.getThisUser(this.token).subscribe(
       (response :any)=>{
        this.userID = response.id;
-       console.log(this.userID);
         this.firstName = response.firstName;
         this.lastName = response.lastName;
         this.phoneNumber = response.phoneNumber;
@@ -100,12 +98,10 @@ export class EditProfileComponent implements OnInit{
 
     this.auth.putUpdateUser(this.userID, profileData).subscribe(
       (response) => {
-        console.log('Profile updated successfully:', response);
         this.messageService.add({ severity: 'success', summary: 'Profile updated successfully!'});
         this.router.navigate(['profile-prosumer']);
       },
       (error) => {
-        console.error('Error updating profile:', error);
         this.messageService.add({ severity: 'success', summary: 'Error updating profile!'});
       }
     );

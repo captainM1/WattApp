@@ -51,8 +51,6 @@ export class TokenInterceptor implements HttpInterceptor {
       }),
       tap(() => {
         // Log the success of the HTTP request
-        
-        
         console.log(`HTTP request successful`);
       })
     );
