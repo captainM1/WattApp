@@ -40,7 +40,7 @@ export class MyDevicesComponent implements OnInit {
             })
           );
         });
-  
+
         forkJoin(deviceObservables).subscribe(
           () => {
             this.devices = data;
@@ -49,7 +49,7 @@ export class MyDevicesComponent implements OnInit {
             console.log(error);
           }
         );
-  
+
         this.devices.forEach((device: any) => {
           this.http
             .get<any[]>(
@@ -72,16 +72,37 @@ export class MyDevicesComponent implements OnInit {
       }
     );
   }
-  
+
 
   exportToExcel(): void {
-    const worksheet = XLSX.utils.table_to_sheet(this.myTable.nativeElement);
+    const tableData = this.myTable.nativeElement.cloneNode(true);
+    const columnToRemoveIndex = 0;
+
+
+    const rows = tableData.getElementsByTagName('tr');
+    for (let i = 0; i < rows.length; i++) {
+      const cells = rows[i].getElementsByTagName('td');
+      if (cells.length > columnToRemoveIndex) {
+        cells[columnToRemoveIndex].remove();
+      }
+    }
+
+
+    const headerRow = tableData.getElementsByTagName('tr')[0];
+    const headerCell = headerRow.getElementsByTagName('th')[columnToRemoveIndex];
+    if (headerCell) {
+      headerCell.remove();
+    }
+
+    const worksheet = XLSX.utils.table_to_sheet(tableData);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
     const fileBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     const blob = new Blob([fileBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    saveAs(blob, 'table-data.xlsx');
+    saveAs(blob, 'devices.xlsx');
   }
+
+
   changeState(id:any){
     this.auth.changeState(id).subscribe(
       Response => console.log("Response")
