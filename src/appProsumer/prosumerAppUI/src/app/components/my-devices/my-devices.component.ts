@@ -101,18 +101,14 @@ export class MyDevicesComponent implements OnInit {
 
 
   confirmStateChange(device: any) {
-    device.isConfirmingStateChange = true; // Disable the checkbox until confirmation
     this.confirmationService.confirm({
       message: 'Are you sure you want to change the state of the device?',
       header: 'Confirmation',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         this.changeState(device.deviceId);
-        device.isConfirmingStateChange = false; // Enable the checkbox after confirmation
       },
       reject: (type: any) => {
-        device.isConfirmingStateChange = false; // Enable the checkbox after rejection or cancellation
-        // Handle rejection or cancellation if needed
         switch (type) {
           case ConfirmEventType.REJECT:
             this.messageService.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected' });
@@ -129,7 +125,7 @@ export class MyDevicesComponent implements OnInit {
   
   changeState(id: any) {
     this.auth.changeState(id).subscribe(() => {
-      // Success handling if needed
+      
     });
   }
 }
