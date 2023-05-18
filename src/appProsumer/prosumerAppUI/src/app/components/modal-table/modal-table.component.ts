@@ -19,13 +19,13 @@ export class ModalTableComponent {
   @ViewChild('myTable') myTable!: ElementRef;
 
 
-  exportToExcel(): void {
+  exportToExcel(tableData: string): void {
     const worksheet = XLSX.utils.table_to_sheet(this.myTable.nativeElement);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
     const fileBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     const blob = new Blob([fileBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    saveAs(blob, 'table-data.xlsx');
+    saveAs(blob, tableData + '.xlsx');
   }
 
 }

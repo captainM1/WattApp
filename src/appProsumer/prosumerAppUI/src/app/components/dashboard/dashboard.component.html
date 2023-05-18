@@ -144,7 +144,9 @@
           </div>
 
       <div class="modal-footer">
-        <button type="button" (click)="modalTableComponentHistoryConsumption.exportToExcel()"  class="btn btn-primary" >EXPORT DATA</button>
+        <button  *ngIf="selectedGraphHistoryConsumption === '24h'" type="button" (click)="modalTableComponentHistoryConsumption.exportToExcel('consumption_for_previous_24h')"  class="btn btn-primary" >EXPORT DATA</button>
+        <button  *ngIf="selectedGraphHistoryConsumption === 'month'" type="button" (click)="modalTableComponentHistoryConsumption.exportToExcel('consumption_for_previous_month')"  class="btn btn-primary" >EXPORT DATA</button>
+        <button  *ngIf="selectedGraphHistoryConsumption === '7days'" type="button" (click)="modalTableComponentHistoryConsumption.exportToExcel('consumption_for_previous_7days')"  class="btn btn-primary" >EXPORT DATA</button>
       </div>
     </div>
   </div>
@@ -173,7 +175,9 @@
           </div>
 
       <div class="modal-footer">
-        <button type="button" (click)="modalTableComponentFutureConsumption.exportToExcel()" class="btn btn-primary" >EXPORT DATA</button>
+        <button  *ngIf="selectedGraphFutureConsumption === '24h'" type="button" (click)="modalTableComponentFutureConsumption.exportToExcel('consumption_for_next_24h')" class="btn btn-primary" >EXPORT DATA</button>
+        <button  *ngIf="selectedGraphFutureConsumption === 'month'" type="button" (click)="modalTableComponentFutureConsumption.exportToExcel('consumption_for_next_month')" class="btn btn-primary" >EXPORT DATA</button>
+        <button  *ngIf="selectedGraphFutureConsumption === '7days'" type="button" (click)="modalTableComponentFutureConsumption.exportToExcel('consumption_for_next_7days')" class="btn btn-primary" >EXPORT DATA</button>
       </div>
     </div>
   </div>
@@ -201,7 +205,9 @@
           </div>
 
       <div class="modal-footer">
-        <button type="button" (click)="modalTableComponentHistoryProduction.exportToExcel()"  class="btn btn-primary" >EXPORT DATA </button>
+        <button *ngIf="selectedGraphHistoryProduction === '24h'" type="button" (click)="modalTableComponentHistoryProduction.exportToExcel('production_for_previous_24h')"  class="btn btn-primary" >EXPORT DATA </button>
+        <button *ngIf="selectedGraphHistoryProduction === 'month'" type="button" (click)="modalTableComponentHistoryProduction.exportToExcel('production_for_previous_month')"  class="btn btn-primary" >EXPORT DATA </button>
+        <button *ngIf="selectedGraphHistoryProduction === '7days'" type="button" (click)="modalTableComponentHistoryProduction.exportToExcel('production_for_previous_7days')"  class="btn btn-primary" >EXPORT DATA </button>
       </div>
     </div>
   </div>
@@ -229,7 +235,9 @@
           </div>
 
       <div class="modal-footer">
-        <button type="button" (click)="modalTableComponentFutureProduction.exportToExcel()" class="btn btn-primary"> EXPORT DATA </button>
+        <button *ngIf="selectedGraphFutureProduction === '24h'" type="button" (click)="modalTableComponentFutureProduction.exportToExcel('production_for_next_24h')" class="btn btn-primary"> EXPORT DATA </button>
+        <button *ngIf="selectedGraphFutureProduction === 'month'" type="button" (click)="modalTableComponentFutureProduction.exportToExcel('production_for_next_month')" class="btn btn-primary"> EXPORT DATA </button>
+        <button *ngIf="selectedGraphFutureProduction === '7days'" type="button" (click)="modalTableComponentFutureProduction.exportToExcel('production_for_next_7days')" class="btn btn-primary"> EXPORT DATA </button>
       </div>
     </div>
   </div>
