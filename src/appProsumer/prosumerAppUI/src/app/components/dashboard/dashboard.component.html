@@ -134,17 +134,17 @@
           <button type="button" id="closeBtn" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
           <div *ngIf="selectedGraphHistoryConsumption === '24h'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
-            <app-modal-table #ModalTableComponent [data]="data24h" [type]="'Consumption'" [message]="'Consumption For Previous 24h'" [time]="'Hour'"></app-modal-table>
+            <app-modal-table #ModalTableComponentHistoryConsumption [data]="data24h" [type]="'Consumption'" [message]="'Consumption For Previous 24h'" [time]="'Hour'"></app-modal-table>
           </div>
            <div *ngIf="selectedGraphHistoryConsumption === 'month'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
-            <app-modal-table #ModalTableComponent [data]="dataMonth" [type]="'Consumption'" [message]="'Consumption For Previous Month'" [time]="'Date'"></app-modal-table>
+            <app-modal-table #ModalTableComponentHistoryConsumption [data]="dataMonth" [type]="'Consumption'" [message]="'Consumption For Previous Month'" [time]="'Date'"></app-modal-table>
           </div>
           <div *ngIf="selectedGraphHistoryConsumption === '7days'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
-            <app-modal-table #ModalTableComponent [data]="data7days" [type]="'Consumption'" [message]="'Consumption For Previous 7 days'" [time]="'Day'"></app-modal-table>
+            <app-modal-table #ModalTableComponentHistoryConsumption [data]="data7days" [type]="'Consumption'" [message]="'Consumption For Previous 7 days'" [time]="'Day'"></app-modal-table>
           </div>
 
       <div class="modal-footer">
-        <button type="button" (click)="modalTableComponent.exportToExcel()"  class="btn btn-primary" >EXPORT DATA</button>
+        <button type="button" (click)="modalTableComponentHistoryConsumption.exportToExcel()"  class="btn btn-primary" >EXPORT DATA</button>
       </div>
     </div>
   </div>
@@ -163,17 +163,17 @@
           <button type="button" id="closeBtn" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
           <div *ngIf="selectedGraphFutureConsumption === '24h'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
-            <app-modal-table #ModalTableComponent [data]="dataNext24h" [type]="'Consumption'" [message]="'Consumption For Next 24h'" [time]="'Hour'"></app-modal-table>
+            <app-modal-table #ModalTableComponentFutureConsumption [data]="dataNext24h" [type]="'Consumption'" [message]="'Consumption For Next 24h'" [time]="'Hour'"></app-modal-table>
           </div>
            <div *ngIf="selectedGraphFutureConsumption === 'month'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
-            <app-modal-table #ModalTableComponent [data]="dataNextMonth" [type]="'Consumption'" [message]="'Consumption For Next Month'" [time]="'Date'"></app-modal-table>
+            <app-modal-table #ModalTableComponentFutureConsumption [data]="dataNextMonth" [type]="'Consumption'" [message]="'Consumption For Next Month'" [time]="'Date'"></app-modal-table>
          </div>
           <div *ngIf="selectedGraphFutureConsumption === '7days'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
-            <app-modal-table #ModalTableComponent [data]="dataNext7days" [type]="'Consumption'" [message]="'Consumption For Next 7 days'" [time]="'Day'"></app-modal-table>
+            <app-modal-table #ModalTableComponentFutureConsumption [data]="dataNext7days" [type]="'Consumption'" [message]="'Consumption For Next 7 days'" [time]="'Day'"></app-modal-table>
           </div>
 
       <div class="modal-footer">
-        <button type="button" (click)="modalTableComponent.exportToExcel()" class="btn btn-primary" >EXPORT DATA</button>
+        <button type="button" (click)="modalTableComponentFutureConsumption.exportToExcel()" class="btn btn-primary" >EXPORT DATA</button>
       </div>
     </div>
   </div>
@@ -191,17 +191,17 @@
           <button type="button" id="closeBtn" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
           <div *ngIf="selectedGraphHistoryProduction === '24h'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
-            <app-modal-table #ModalTableComponent [data]="data24hProd" [type]="'Production'" [message]="'Production For Previous 24h'" [time]="'Hour'"></app-modal-table>
+            <app-modal-table #ModalTableComponentHistoryProduction [data]="data24hProd" [type]="'Production'" [message]="'Production For Previous 24h'" [time]="'Hour'"></app-modal-table>
           </div>
            <div *ngIf="selectedGraphHistoryProduction === 'month'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
-            <app-modal-table #ModalTableComponent [data]="dataMonthProd" [type]="'Production'" [message]="'Production For Previous Month'" [time]="'Date'"></app-modal-table>
+            <app-modal-table #ModalTableComponentHistoryProduction [data]="dataMonthProd" [type]="'Production'" [message]="'Production For Previous Month'" [time]="'Date'"></app-modal-table>
          </div>
           <div *ngIf="selectedGraphHistoryProduction === '7days'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
-            <app-modal-table #ModalTableComponent [data]="data7daysProd" [type]="'Production'" [message]="'Production For Previous 7 days'" [time]="'Day'"></app-modal-table>
+            <app-modal-table #ModalTableComponentHistoryProduction [data]="data7daysProd" [type]="'Production'" [message]="'Production For Previous 7 days'" [time]="'Day'"></app-modal-table>
           </div>
 
       <div class="modal-footer">
-        <button type="button" (click)="modalTableComponent.exportToExcel()"  class="btn btn-primary" >EXPORT DATA </button>
+        <button type="button" (click)="modalTableComponentHistoryProduction.exportToExcel()"  class="btn btn-primary" >EXPORT DATA </button>
       </div>
     </div>
   </div>
@@ -219,17 +219,17 @@
           <button type="button" id="closeBtn" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
           <div *ngIf="selectedGraphFutureProduction === '24h'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
-            <app-modal-table #ModalTableComponent [data]="dataNext24hProd" [type]="'Production'" [message]="'Production For Next 24h'" [time]="'Hour'"></app-modal-table>
+            <app-modal-table #ModalTableComponentFutureProduction [data]="dataNext24hProd" [type]="'Production'" [message]="'Production For Next 24h'" [time]="'Hour'"></app-modal-table>
           </div>
            <div *ngIf="selectedGraphFutureProduction === 'month'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
-            <app-modal-table #ModalTableComponent [data]="dataNextMonthProd" [type]="'Production'" [message]="'Production For Next Month'" [time]="'Date'"></app-modal-table>
+            <app-modal-table #ModalTableComponentFutureProduction [data]="dataNextMonthProd" [type]="'Production'" [message]="'Production For Next Month'" [time]="'Date'"></app-modal-table>
          </div>
           <div *ngIf="selectedGraphFutureProduction === '7days'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
-            <app-modal-table #ModalTableComponent [data]="dataNext7daysProd" [type]="'Production'" [message]="'Production For Next 7 days'" [time]="'Day'"></app-modal-table>
+            <app-modal-table #ModalTableComponentFutureProduction [data]="dataNext7daysProd" [type]="'Production'" [message]="'Production For Next 7 days'" [time]="'Day'"></app-modal-table>
           </div>
 
       <div class="modal-footer">
-        <button type="button" (click)="modalTableComponent.exportToExcel()" class="btn btn-primary"> EXPORT DATA </button>
+        <button type="button" (click)="modalTableComponentFutureProduction.exportToExcel()" class="btn btn-primary"> EXPORT DATA </button>
       </div>
     </div>
   </div>

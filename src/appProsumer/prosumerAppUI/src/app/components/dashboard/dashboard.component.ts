@@ -119,8 +119,10 @@ export class DashboardComponent implements OnInit, AfterViewInit{
   @ViewChild('productionNextMonthGraph') productionNextMonthGraph!:ElementRef;
   @ViewChild('productionNext7daysGraph')  productionNext7daysGraph!:ElementRef;
   @ViewChild('myTable') myTable!: ElementRef;
-  @ViewChild('ModalTableComponent') modalTableComponent!: ModalTableComponent;
-
+  @ViewChild('ModalTableComponentHistoryConsumption') modalTableComponentHistoryConsumption!: ModalTableComponent;
+  @ViewChild('ModalTableComponentFutureConsumption') modalTableComponentFutureConsumption!: ModalTableComponent;
+  @ViewChild('ModalTableComponentHistoryProduction') modalTableComponentHistoryProduction!: ModalTableComponent;
+  @ViewChild('ModalTableComponentFutureProduction') modalTableComponentFutureProduction!: ModalTableComponent;
 
  // zelena, narandzasta, crvena, deep sky blue, zuta
  backgroundColorsGraphs =  ['#62C370', '#EC7357', '#e3170a', '#30C5FF', '#ffc800'];
@@ -884,9 +886,9 @@ makeDataProduction24(dataGraph:any){
     this.powerUsageListProductionPrev24h.push(this.graphProduction24prev[i]['powerUsage']);
     }
 
-  this.timestampListProductionPrev24h.sort((a: string, b: string) => {
-    return parseInt(a) - parseInt(b);
-  });
+    this.timestampListProductionPrev24h.sort((a: string, b: string) => {
+      return parseInt(a) - parseInt(b);
+    });
 
   this.data24hProd=[];
   for (let i = 0; i < this.timestampListProductionPrev24h.length; i++) {
@@ -895,7 +897,7 @@ makeDataProduction24(dataGraph:any){
       powerUsage: this.powerUsageListProductionPrev24h[i]
     };
     this.data24hProd.push(pair);
-  
+
   }
   console.log("this,",this.data24hProd);
 
@@ -1005,12 +1007,12 @@ chartProductionPreviousMonth(){
 
   }
 
-  this.extractedDatesPrevMonth.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+  this.extractedDatesProductionPrevMonth.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
   this.dataMonthProd=[];
-    for (let i = 0; i < this.timeStampProductionPrevMonth.length; i++) {
+    for (let i = 0; i < this.extractedDatesProductionPrevMonth.length; i++) {
       const pair = {
-        timestamp: this.timeStampProductionPrevMonth[i],
+        timestamp: this.extractedDatesProductionPrevMonth[i],
         powerUsage: this.powerUsageProductionPrevMonth[i]
     };
     this.dataMonthProd.push(pair);
