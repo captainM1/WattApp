@@ -25,7 +25,6 @@ export class SettingsComponent implements OnInit, AfterViewInit{
   resetForm!: FormGroup;
   submitted = false;
   requestStatus: string = 'no';
-  allowControl: boolean = false
 
   constructor(private apiService: SettingsService, private auth: AuthService, private fb: FormBuilder,private backgroundService:BackgroundService,private router : Router) { }
 
@@ -44,14 +43,23 @@ export class SettingsComponent implements OnInit, AfterViewInit{
     this.apiService.alreadyHasReq().subscribe(
       (response) => {
         if(response == true)
-          this.requestStatus = 'pending'
+          this.requestStatus = 'pending';
       }
     )
     this.apiService.statusOfReq().subscribe(
       response => {
         console.log(response)
         if (response == true) {
-          this.requestStatus = 'accepted'
+          this.requestStatus = 'accepted';
+          this.apiService.getShareInfo().subscribe(
+            (data) => {
+              this.allowAccess = data;
+              console.log(data);
+            },
+            (error) => {
+              console.error('Error retrieving share information:', error);
+            }
+          );
           this.backgroundService.ngOnDestroy();
         }
       }
@@ -72,9 +80,7 @@ export class SettingsComponent implements OnInit, AfterViewInit{
       this.reset();
     });
   }
-  toggleControl(){
-    
-  }
+
   hideShowPass(){
     this.isText = !this.isText;
     this.isText ? this.eyeIcon = "fa-eye" : this.eyeIcon = "fa-eye-slash";
@@ -119,7 +125,8 @@ export class SettingsComponent implements OnInit, AfterViewInit{
   }
 
   toggleAccess(){
-
+    this.allowAccess = !this.allowAccess;
+    this.apiService.updateUserDataSharing(this.allowAccess);
   }
 
   sendReq() {
@@ -132,6 +139,7 @@ export class SettingsComponent implements OnInit, AfterViewInit{
       });
     this.requestStatus = 'pending'
   }
+
   cancelReq(){
     this.apiService.cancelRequest().subscribe(
       (info) => {
