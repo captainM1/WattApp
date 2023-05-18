@@ -356,18 +356,7 @@ public class UserRepository : IUserRepository
         _dbContext.Users.Update(user);
         await _dbContext.SaveChangesAsync();
         return true;
-    }
-
-    public async Task<Boolean> UpdateUserDeviceDsoControl(Guid id, Boolean dsoHasControl)
-    {
-        var device = await _dbContext.Devices.FirstOrDefaultAsync(u => u.ID == id);
-
-        device.dsoHasControl = dsoHasControl;
-
-        _dbContext.Devices.Update(device);
-        await _dbContext.SaveChangesAsync();
-        return true;
-    }
+    }    
 
     public async Task<List<UsersRequestedToDso>> GetUsersAppliedToDso()
     {

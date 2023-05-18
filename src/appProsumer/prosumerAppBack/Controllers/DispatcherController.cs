@@ -114,7 +114,7 @@ public class DispatcherController : ControllerBase
         }
     }
 
-    [HttpPost("update-dispatcher/{id}")]
+    [HttpPut("update-dispatcher/{id}")]
     // [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateUser(Guid id, [FromBody] DispatcherUpdateDto dispatcherUpdateDto)
     {

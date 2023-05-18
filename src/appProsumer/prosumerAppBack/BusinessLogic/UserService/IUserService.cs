@@ -27,7 +27,6 @@ public interface IUserService
     public bool SharesWhidDSO(Guid userID);
     Task<User> DisconnectFromDso(Guid id);
     Task<Boolean> UpdateUserDataSharing(Guid id, Boolean sharesDataWithDso);
-    Task<Boolean> UpdateUserDeviceDsoControl(Guid id, Boolean dsoHasControl);
     Task<List<UsersRequestedToDso>> GetUsersAppliedToDso();
     Task<Boolean> UserAllreadyAppliedToDso(Guid id);
     Task<Boolean> UserStatusAppliedToDso(Guid userId);

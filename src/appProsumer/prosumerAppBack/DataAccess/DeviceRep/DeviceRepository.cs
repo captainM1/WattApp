@@ -319,6 +319,17 @@ namespace prosumerAppBack.DataAccess
 
              return true;
          }
+
+        public async Task<Boolean> UpdateUserDeviceDsoControl(Guid deviceID, Boolean dsoHasControl)
+        {
+            var device = await _dbContext.Devices.FirstOrDefaultAsync(u => u.ID == deviceID);
+
+            device.dsoHasControl = dsoHasControl;
+
+            _dbContext.Devices.Update(device);
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
     }
 
     public class DeviceInfo
