@@ -299,3 +299,8 @@ select option:not(:checked) {
     color: #026670;
     background-color: white;
 }
+
+button:disabled{
+    color: white;
+    background-color: dimgray;
+}
