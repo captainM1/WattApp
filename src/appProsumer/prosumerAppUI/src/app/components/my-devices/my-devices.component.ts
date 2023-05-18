@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { Observable, catchError, forkJoin, map, of, tap } from 'rxjs';
+import { ConfirmEventType, ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-my-devices',
@@ -22,7 +23,9 @@ export class MyDevicesComponent implements OnInit {
   constructor(
     private auth: AuthService,
     private cookie: CookieService,
-    private http: HttpClient
+    private http: HttpClient,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
@@ -97,9 +100,36 @@ export class MyDevicesComponent implements OnInit {
   }
 
 
-  changeState(id:any){
-    this.auth.changeState(id).subscribe(
-      
-    );
+  confirmStateChange(device: any) {
+    device.isConfirmingStateChange = true; // Disable the checkbox until confirmation
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to change the state of the device?',
+      header: 'Confirmation',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.changeState(device.deviceId);
+        device.isConfirmingStateChange = false; // Enable the checkbox after confirmation
+      },
+      reject: (type: any) => {
+        device.isConfirmingStateChange = false; // Enable the checkbox after rejection or cancellation
+        // Handle rejection or cancellation if needed
+        switch (type) {
+          case ConfirmEventType.REJECT:
+            this.messageService.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected' });
+            break;
+          case ConfirmEventType.CANCEL:
+            this.messageService.add({ severity: 'warn', summary: 'Cancelled', detail: 'You have cancelled' });
+            break;
+        }
+      },
+      acceptButtonStyleClass: 'p-button-danger', 
+      rejectButtonStyleClass: 'p-button-secondary'
+    });
+  }
+  
+  changeState(id: any) {
+    this.auth.changeState(id).subscribe(() => {
+      // Success handling if needed
+    });
   }
 }
