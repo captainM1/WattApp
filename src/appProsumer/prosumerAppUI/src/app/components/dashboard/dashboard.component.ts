@@ -883,7 +883,7 @@ makeDataProduction24(dataGraph:any){
       powerUsage: this.powerUsageListProductionPrev24h[i]
     };
     this.data24hProd.push(pair);
-  
+
   }
 
   this.previousProduction24Graph(this.timestampListProductionPrev24h, this.powerUsageListProductionPrev24h);
@@ -992,12 +992,12 @@ chartProductionPreviousMonth(){
 
   }
 
-  this.extractedDatesPrevMonth.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+  this.extractedDatesProductionPrevMonth.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
   this.dataMonthProd=[];
-    for (let i = 0; i < this.timeStampProductionPrevMonth.length; i++) {
+    for (let i = 0; i < this.extractedDatesProductionPrevMonth.length; i++) {
       const pair = {
-        timestamp: this.timeStampProductionPrevMonth[i],
+        timestamp: this.extractedDatesProductionPrevMonth[i],
         powerUsage: this.powerUsageProductionPrevMonth[i]
     };
     this.dataMonthProd.push(pair);
