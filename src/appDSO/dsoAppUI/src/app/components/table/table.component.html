@@ -75,7 +75,10 @@
       <div class="modal-body" *ngIf="userPopUp">
         <div class="row" id = "row-modal">
           <h1 class="text-center">{{userPopUp.firstName}} {{userPopUp.lastName}}</h1>
-          
+          <div>
+            <span [ngClass]="{'green':  userPopUp.sharesDataWithDso === true, 'red':  userPopUp.sharesDataWithDso === false}"><i class = "fa fa-check-square-o">   User share data with DSO</i></span>
+           
+          </div>
         <div class="row" id = "cards-current">
           <div class="col" id = "col-popUp">
             <div class="card" id = "card-popUp">
@@ -103,7 +106,7 @@
           </div>
         </div>
       </div>
-        <div class="row">
+        <div class="row" *ngIf="userPopUp.sharesDataWithDso">
           <div class="col">
             <div class="id-button-popUp" >
               <button class = "my-button active" [class.active]="isActiveUser" (click)="toggleActive('user');" >About User</button>
@@ -152,12 +155,20 @@
                         <td >{{device.typeOfDevice}}</td>
                         <td [ngClass]="{'green': status === 1, 'red': status === 0}">{{device.statusOfDevice}}</td>
                         <td >{{device.powerusage}} kw/h</td>
-                        <td>
-                          <label class="switch">
-                            <input type="checkbox" [checked]="btnStatus" (change)="toggleDeviceStatus(selectedDevice)" [disabled]="deviceStatus === false">
+                        <td *ngIf="device.dsoHasControl === true">
+                          <label class="switch" >
+                            <input type="checkbox" [checked]="device.statusOfDevice === 'ON'" (click)="toggleDeviceStatus(device)">
                             <span class="slider round"></span>
                           </label>
                         </td>
+                        <td *ngIf="device.dsoHasControl === false">
+                          <span>
+                            <i class="fa fa-minus-square" style="color:red" aria-hidden="true"> Access denied!</i>
+
+                          </span>
+                        </td>
+
+                        
                       </tr>
                     </tbody>
                     <tfoot>
@@ -180,7 +191,7 @@
              
               <div>
                 <div class="id-button-popUp" >
-                  <button class = "my-button active"[class.active]="isActioveConsumer" (click)="toggleActiveCP('consumer'); ">Consumption</button>
+                  <button class = "my-button active"[class.active]="isActioveConsumer" (click)="toggleActiveCP('consumer');  ">Consumption</button>
                   <button  class = "my-button active" [class.active]="isActiveProsumer" (click)="toggleActiveCP('prosumer'); ">Production</button>
                 </div>
                

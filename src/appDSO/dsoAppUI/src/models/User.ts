@@ -21,6 +21,7 @@ export interface Device{
     manufacturerName: string;
     typeOfDevice: string;
     powerusage:number;
+    dsoHasControl:boolean;
    
 }
 export interface Role{
@@ -39,6 +40,7 @@ export interface Info{
     manufacturerName: string;
     typeOfDevice: string;
     statusOfDevice:string;
+    dsoHasControl:boolean;
  
 }
 export interface ExportSelected{

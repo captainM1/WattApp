@@ -21,13 +21,19 @@ export class ModalTableComponent {
 
   tableExport!:any;
   tablee!:any;
+  sheetName!:string;
   exportToExcel(): void {
     const worksheet = XLSX.utils.table_to_sheet(document.querySelector('#tableTable'));
     const workbook = XLSX.utils.book_new();
+   
+    
+    this.sheetName= 'power consumption and production.xlsx';
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+  
     const fileBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     const blob = new Blob([fileBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    saveAs(blob, 'table-data.xlsx');
-    // console.log(worksheet)
+   
+    saveAs(blob, 'this.sheetName.xlsx');
+    
   }
 }

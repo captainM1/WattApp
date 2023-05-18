@@ -195,6 +195,7 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   
   ngOnInit(): void {
+    
     this.spinner.show();
     setTimeout(() => {
       this.spinner.hide();
@@ -569,6 +570,20 @@ export class TableComponent implements OnInit, AfterViewInit {
               }
             }
           )
+
+          this.auth.dsoHasControl(us.deviceId).subscribe({
+            next: (response:any)=>{
+              console.log("DEVICE STATUS",response);
+              us.dsoHasControl = response;
+             
+                this.toggleDeviceStatus(us);
+              
+            },
+            error:(error : any)=>{
+              this.deviceStatus = false;
+              console.log(error);
+            }
+          })
           this.numberOfConsumers = 0;
           this.numberOfProsumers = 0;
           this.numberOfStorage = 0;
@@ -642,9 +657,8 @@ export class TableComponent implements OnInit, AfterViewInit {
     }
   }
   
-  
+  public userShareData : boolean = false;
   powerUsagePopUp!: number;
- 
   productionNextMonthUserLoader = false;
   productionPrevMonthUserLoader = false;
   popUp(id: string){
@@ -652,6 +666,12 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.auth.getUserInformation(id).subscribe(
       (response : any) => {
         this.userPopUp = response;
+        console.log("REPSONSE", response);
+        if(this.userPopUp['sharesDataWithDso'] === true){
+          this.userPopUp.sharesDataWithDso = true;
+        }else{
+          this.userPopUp.sharesDataWithDso = false;
+        }
         
         this.auth.UserConsumptionSummary(this.userPopUp.id).subscribe(
           (response:any) => {
@@ -677,7 +697,8 @@ export class TableComponent implements OnInit, AfterViewInit {
       this.FutureProduction(this.selectedGraphFutureProduction);
       this.productionNextMonth(this.userPopUp.id);
       this.productionPrevMonth(this.userPopUp.id);
-      this.dsoHasControlDevice(this.userPopUp.id);
+      
+      this.dsoShareData(this.userPopUp.id);
       }
     );
    }
@@ -707,12 +728,17 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.isActiveProsumer = button === 'prosumer';
     this.isActioveConsumer = button === 'consumer';
     if(this.showSystemPage){
+     if(this.isActioveConsumer){
+      this.isActioveConsumer = true;
+      this.isActiveProsumer = false;
       this.showMeProduction = false;
       this.showMeConsumption = true;
       this.HistoryConsumption(this.selectedGraphHistoryConsumption);
       this.FutureConsumption(this.selectedGraphFutureConsumption);
-      if(this.isActiveProsumer){
-    
+     }
+      else {
+        this.isActioveConsumer = false;
+        this.isActiveProsumer = true;
         this.showMeProduction = true;
         this.showMeConsumption = false;
         this.HistoryProduction(this.selectedGraphHistoryProduction);
@@ -1437,6 +1463,9 @@ productionPreviousMonthUser(id : any){
         this.chartPrev24h.destroy();
       }
     const data = {
+      markerType: "square",
+      type: "line",
+      lineDashType:'dot',
       labels: this.timestampConsumptionPrevious24h,
       datasets: [{
         label: 'Consumption For The Previous 24h',
@@ -1453,6 +1482,7 @@ productionPreviousMonthUser(id : any){
       }]
     }
     const options: ChartOptions = {
+      
       scales: {
         x: {
           title: {
@@ -2221,33 +2251,51 @@ consumptionNext24hGraph(){
       })
     }
 
-    dsoHasControlDevice(userID : any){
-      this.auth.dsoHasControl(userID).subscribe({
-        next:(response : any) => {
-          console.log(response);
-          if(response === true){
-            this.deviceStatus = true;
-          }else{
-            this.deviceStatus = false;
-          }
+    
+    sharedDataWithDSO:any;
+    dsoShareData(userID : any){
+      this.auth.userShareDataWithDSO(userID).subscribe({
+        next:(response : any)=>{
+          console.log("dsoShareData",response);
+          this.sharedDataWithDSO = response;
+         
         },
-        error : (err : any) => {
-          console.log("ERROR dsoHasControl...");
+        error:(error : any)=>{
+          console.log(error);
         }
       })
     }
-    public btnStatus!:boolean;
-    toggleDeviceStatus(device : Device){
-      this.btnStatus = !this.btnStatus;
-      if(this.deviceStatus === true){
-      if(this.deviceStatus){
-        console.log("ON")
-      }else{
-        console.log("OFF");
+    public isChecked!:boolean;
+    public isDisabled!:boolean;
+    public btnStatus:boolean = false;
+    toggleDeviceStatus(device:Info){
+      if(device.dsoHasControl == true){
+          if (device.dsoHasControl) {
+            if (device.statusOfDevice === "OFF") {
+              this.auth.changeStateOfDevice(device.deviceId,true).subscribe(
+                (response : any)=>{
+                  console.log("ZAHREV",response);
+                }
+              );
+              device.statusOfDevice = "ON"; 
+              
+              console.log(device);
+            } else {
+              this.auth.changeStateOfDevice(device.deviceId,false).subscribe(
+                (response:any)=>{
+
+                  console.log("SHKDS",response);
+                }
+              );
+              device.statusOfDevice = "OFF";
+             
+            }
+          }
+          console.log(device);
+        
       }
-    }else{
-      this.btnStatus = false;
-    }
+
+
     }
 }
 
