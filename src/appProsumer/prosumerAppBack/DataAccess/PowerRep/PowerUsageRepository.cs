@@ -24,19 +24,35 @@ public class PowerUsageRepository : IPowerUsageRepository
         _dataContext = dataContext;
         _deviceRepository = deviceRepository;
     }
+
+    public async Task<double> GetForDeviceAverage(Guid deviceID)
+    {
+        DateTime currentHourTimestamp = DateTime.Now.Date.AddHours(DateTime.Now.Hour);
+        DateTime lastWeekTimestamp = currentHourTimestamp.AddDays(-7);
+
+        Guid deviceTypeID = _dataContext.Devices
+            .Where(d => d.ID == deviceID)
+            .Select(d => d.DeviceTypeID)
+            .FirstOrDefault();
+
+        var powerUsageData = mongoCollection.AsQueryable()
+            .FirstOrDefault(d => d.ID.ToString().ToUpper() == deviceTypeID.ToString().ToUpper());
+
+        var hourDataInRange = powerUsageData.TimestampPowerPairs
+            .Where(p => p.Timestamp >= lastWeekTimestamp && p.Timestamp <= currentHourTimestamp);
+
+        if (hourDataInRange.Any())
+        {
+            var averagePowerUsage = hourDataInRange.Average(p => p.PowerUsage);
+            return averagePowerUsage;
+        }
+
+        return -1;
+    }
+
     public async Task<double> GetForDevice(Guid deviceID)
     {
         DateTime currentHourTimestamp = DateTime.Now.Date.AddHours(DateTime.Now.Hour);
-
-        bool isOn = _dataContext.Devices
-                    .Where(d => d.ID == deviceID)
-                    .Select(ison => ison.IsOn)
-                    .FirstOrDefault();
-
-        if(isOn == false)
-        {
-            return 0;
-        }
 
         Guid deviceTypeID = _dataContext.Devices
             .Where(d => d.ID == deviceID)
@@ -47,12 +63,23 @@ public class PowerUsageRepository : IPowerUsageRepository
             .FirstOrDefault(d => d.ID.ToString().ToUpper() == deviceTypeID.ToString().ToUpper());
 
         var data = powerUsageData.TimestampPowerPairs.Find(p => p.Timestamp == currentHourTimestamp);
-        
-        if (data != null)
-            return data.PowerUsage;
-        
-        return -1;
+
+        bool isOn = _dataContext.Devices
+            .Where(d => d.ID == deviceID)
+            .Select(ison => ison.IsOn)
+            .FirstOrDefault();
+
+        var current = data.PowerUsage;
+
+        if (isOn && current == 0)
+            return await GetForDeviceAverage(deviceID); // Add await keyword here
+
+        if (isOn && current != 0)
+            return current;
+
+        return 0;
     }
+
 
     public async Task<double> AveragePowerUsageProduction(Guid userID)
     {

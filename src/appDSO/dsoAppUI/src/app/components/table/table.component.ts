@@ -545,15 +545,18 @@ export class TableComponent implements OnInit, AfterViewInit {
           this.auth.currentPowerUsageDeviceID(us.deviceId).subscribe(
             {
               next:(response : any)=>{
-                this.todayPowerUsageDevice = (response);
-                us.powerusage = response.toFixed(2);
-                us.statusOfDevice = "ON";
-                this.status = 1;
+                if(response != 0){
+                  this.todayPowerUsageDevice = (response);
+                  us.powerusage = response.toFixed(2);
+                  us.statusOfDevice = "ON";
+                }
+                else{
+                  us.powerusage = 0;
+                  us.statusOfDevice = "OFF"
+                }
               },
               error:(error : any)=>{
-                us.powerusage = 0;
-                us.statusOfDevice = "OFF"
-                this.status = 0;
+                console.log(error)
               }
             }
           )

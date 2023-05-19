@@ -100,6 +100,7 @@ export class MyDevicesComponent implements OnInit {
   }
 
 
+  
   confirmStateChange(device: any) {
     device.isConfirmingStateChange = true; // Disable the checkbox until confirmation
     this.confirmationService.confirm({
