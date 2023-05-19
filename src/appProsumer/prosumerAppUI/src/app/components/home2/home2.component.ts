@@ -24,9 +24,6 @@ export class Home2Component implements OnInit, AfterViewInit {
   graph24prev!:any;
   powerUsageList: any = [];
   timestampList: any = [];
-  numberOfProducers:number = 0;
-  numberOfConsumers:number = 0;
-  numberOfStorage:number = 0;
   allUserDevices!: Info[];
   currentDate!: Observable<Date>;
   savedEnergyMonthConsumption!: number;
@@ -89,7 +86,6 @@ export class Home2Component implements OnInit, AfterViewInit {
           this.makeData(this.graph24prev);
         }
        );
-       this.showMeDevices(this.userID);
        this.ElectricityBillCurrentMonth(this.userID);
       }
     )
@@ -209,37 +205,6 @@ previous24Graph(list:any, valueList:any){
     options: options,
   });
 }
-
-
-showMeDevices(id : string){
-  this.auth1.getDeviceInfoUserByID(id).subscribe(
-    (response : any) => {
-      this.allUserDevices = response;
-      for(let us of this.allUserDevices){
-
-      this.auth.getDevicesInfoByID(us.deviceId).subscribe({
-        next: (response:any)=>{
-          us.typeOfDevice = response.groupName;
-          if(response.groupName === "Consumer"){
-            this.numberOfConsumers++;
-          }else if(response.groupName === "Prosumer"){
-            this.numberOfProducers++;
-          }else if(response.groupName === "Storage"){
-            this.numberOfStorage++;
-          }
-        },
-        error : (err : any)=>{
-          console.log("err");
-        }
-      }); }
-    }
-
-  )
-}
-
-
-
-
 
 }
 

@@ -159,6 +159,7 @@ export class SettingsComponent implements OnInit, AfterViewInit{
     this.eyeIcon3 = "fa-eye-slash";
   }
 
+
   toggleAccess(){
     this.allowAccess = !this.allowAccess;
     this.apiService.updateUserDataSharing(this.allowAccess);
