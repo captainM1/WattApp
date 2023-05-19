@@ -9,6 +9,7 @@ import { ConfirmationService, MessageService, ConfirmEventType } from 'primeng/a
 import { DeviceEditPopupComponent } from '../device-edit-popup/device-edit-popup.component';
 import { MatDialog } from '@angular/material/dialog';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { SettingsService } from 'src/app/services/settings.service';
 
 
 @Component({
@@ -42,6 +43,7 @@ export class DeviceDetailsComponent implements OnInit {
   label1: string = '';
   label2: string = '';
   showSpinner: boolean = true;
+  allowAccess: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -49,13 +51,24 @@ export class DeviceDetailsComponent implements OnInit {
     private router: Router,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private settings: SettingsService
   )
   {}
 
   ngOnInit() {
     this.spinner.show();
     this.deviceId = this.route.snapshot.paramMap.get('id');
+
+    this.settings.getShareInfo().subscribe(
+      (data) => {
+        this.allowAccess = data;
+        console.log(data);
+      },
+      (error) => {
+        console.error('Error retrieving share information:', error);
+      }
+    );
 
     this.http.get<any[]>(`${environment.apiUrl}/api/Device/devices/info/${this.deviceId}`)
       .subscribe(data => {

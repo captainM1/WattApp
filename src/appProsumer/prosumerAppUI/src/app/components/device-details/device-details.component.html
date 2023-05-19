@@ -26,7 +26,7 @@
                 </button>
             </div>
             <div class="col align-center">
-                <button mat-icon-button class="simple align-center" (click)="showPermissions()">
+                <button mat-icon-button class="simple align-center" (click)="showPermissions()" [disabled]="!allowAccess">
                     <mat-icon>bolt</mat-icon>
                     &nbsp;&nbsp;Permissions&nbsp;
                 </button>

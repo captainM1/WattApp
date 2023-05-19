@@ -9,14 +9,7 @@
             <div>
             <label class="toggle mt-3">
                 <span class="toggle-label">Allow DSO to access my information: &nbsp;</span>
-                <input class="toggle-checkbox" type="checkbox" [(ngModel)]="allowAccess" (click)="toggleAccess()">
-                <div class="toggle-switch"></div>
-            </label>
-            </div>
-            <div>
-            <label class="toggle mt-3">
-                <span class="toggle-label">Allow DSO to control consumption time:&nbsp;</span>
-                <input class="toggle-checkbox" type="checkbox" [disabled]="!allowAccess" [(ngModel)]="allowControl" (click)="toggleControl()">
+                <input class="toggle-checkbox" type="checkbox" [disabled]="requestStatus !== 'accepted'" [(ngModel)]="allowAccess" (click)="toggleAccess()">
                 <div class="toggle-switch"></div>
             </label>
             </div>
@@ -30,7 +23,7 @@
             </div>
             <div *ngIf="requestStatus == 'accepted'" class="d-flex justify-content-center flex-column align-items-center">
               <h3>You are connected to DSO</h3>
-              <button (click)="disconnectDSO()">Dissconect from DSO</button>
+              <button (click)="disconnectDSO()">Disconnect from DSO</button>
             </div>
         </div>
         <div>
