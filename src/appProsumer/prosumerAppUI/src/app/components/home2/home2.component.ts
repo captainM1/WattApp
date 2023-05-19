@@ -30,6 +30,8 @@ export class Home2Component implements OnInit, AfterViewInit {
   allUserDevices!: Info[];
   currentDate!: Observable<Date>;
   savedEnergyMonthConsumption!: number;
+  electricityBill!: number;
+  electricityRate = 7.584;
 
   isSunny!: boolean;
   isCloudy!: boolean;
@@ -88,7 +90,17 @@ export class Home2Component implements OnInit, AfterViewInit {
         }
        );
        this.showMeDevices(this.userID);
+       this.ElectricityBillCurrentMonth(this.userID);
       }
+    )
+  }
+
+  ElectricityBillCurrentMonth(id:any)
+  {
+    this.auth1.getElectricityBill(id, this.electricityRate).subscribe(
+         (response: any) =>{
+             this.electricityBill = response.toFixed(2);
+         }
     )
   }
 
@@ -178,7 +190,7 @@ previous24Graph(list:any, valueList:any){
       y: {
         title: {
           display: true,
-          text: 'Power consumption (kW)',
+          text: 'Energy Consumption [kWh]',
           font:{
             size: 10
           }

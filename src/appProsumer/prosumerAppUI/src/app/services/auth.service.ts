@@ -103,9 +103,15 @@ export class AuthService {
             break;
         }
       },
-      acceptButtonStyleClass: 'p-button-danger', 
+      acceptButtonStyleClass: 'p-button-danger',
       rejectButtonStyleClass: 'p-button-secondary'
     });
+  }
+
+  signOut2()
+  {
+    this.cookie.delete('jwtToken');
+    this.router.navigate(['/signin']);
   }
 
   getWeather():Observable<any>{

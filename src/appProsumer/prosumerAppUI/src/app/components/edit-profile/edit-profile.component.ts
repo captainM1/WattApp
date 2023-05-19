@@ -102,7 +102,7 @@ export class EditProfileComponent implements OnInit{
         this.router.navigate(['profile-prosumer']);
       },
       (error) => {
-        this.messageService.add({ severity: 'success', summary: 'Error updating profile!'});
+        this.messageService.add({ severity: 'error', summary: 'Error updating profile!'});
       }
     );
   }

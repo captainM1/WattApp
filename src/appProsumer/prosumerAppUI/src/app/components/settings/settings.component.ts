@@ -5,6 +5,9 @@ import { ConfirmPasswordValidator } from 'src/app/helpers/confirm-password.valid
 import { AuthService } from 'src/app/services/auth.service';
 import { SettingsService } from 'src/app/services/settings.service';
 import { BackgroundService } from 'src/app/services/background.service';import { Router } from '@angular/router';
+import { AuthUserService } from 'src/app/services/auth-user.service';
+import { User } from 'src/app/models/user';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-settings',
@@ -25,8 +28,12 @@ export class SettingsComponent implements OnInit, AfterViewInit{
   resetForm!: FormGroup;
   submitted = false;
   requestStatus: string = 'no';
+  userID!: User;
+  token!:any;
+  currentPassword!: string;
+  newPassword!: string;
 
-  constructor(private apiService: SettingsService, private auth: AuthService, private fb: FormBuilder,private backgroundService:BackgroundService,private router : Router) { }
+  constructor(private apiService: SettingsService, private auth: AuthService, private auth1: AuthUserService, private messageService:MessageService, private fb: FormBuilder,private backgroundService:BackgroundService,private router : Router) { }
 
   @ViewChild('exampleModal') exampleModal!: ElementRef;
 
@@ -38,7 +45,9 @@ export class SettingsComponent implements OnInit, AfterViewInit{
     },{
       validator: ConfirmPasswordValidator("password","confirmPassword")
     }
-    )
+    );
+
+    this.getToken();
 
     this.apiService.alreadyHasReq().subscribe(
       (response) => {
@@ -68,6 +77,15 @@ export class SettingsComponent implements OnInit, AfterViewInit{
     this.backgroundService.subscribeToStatusUpdate().subscribe(status => {
       this.requestStatus = status;
     });
+  }
+
+  getToken(){
+    this.token = this.auth.getToken();
+    this.auth1.getThisUser(this.token).subscribe(
+      (response :any)=>{
+       this.userID = response.id;
+      }
+    )
   }
 
   ngOnDestroy() {
@@ -106,7 +124,25 @@ export class SettingsComponent implements OnInit, AfterViewInit{
   {
     this.submitted = true;
     if(this.resetForm.valid){
-      this.resetForm.reset();
+      const passwordData = {
+        oldPassword: this.currentPassword,
+        newPassword: this.newPassword
+      };
+
+
+
+      this.auth1.changePassword(this.userID, passwordData).subscribe(
+        (response) => {
+          this.messageService.add({ severity: 'success', summary: 'Password updated successfully!'});
+          const buttonRef = document.getElementById('closeBtn');
+          buttonRef?.click();
+          this.auth.signOut2();
+        },
+        (error) => {
+          this.messageService.add({ severity: 'error', summary: 'Your current password is incorrect!'});
+
+        }
+      );
       return;
     }else{
     }
