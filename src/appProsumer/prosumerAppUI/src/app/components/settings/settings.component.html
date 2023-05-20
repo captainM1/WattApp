@@ -53,7 +53,7 @@
             <div class="invalid-feedback">
               <ng-container *ngIf="fields['currentPassword'].errors">
                 <span class="text-danger" *ngIf="fields['currentPassword'].errors?.['required'] && (fields['currentPassword'].touched || submitted)">*Current password is required!</span>
-                <span class="text-danger" *ngIf="fields['currentPassword'].errors?.['minlength'] && (fields['currentPassword'].dirty || submitted)">*Please provide a valid password!</span>
+                <span class="text-danger" *ngIf="fields['currentPassword'].errors?.['minlength'] && (fields['currentPassword'].dirty || submitted)">*Password must be at least 6 characters long!</span>
               </ng-container>
             </div>
           </div>
@@ -64,7 +64,7 @@
               <div class="invalid-feedback">
                 <ng-container *ngIf="fields['password'].errors">
                   <span class="text-danger" *ngIf="fields['password'].errors?.['required'] && (fields['password'].touched || submitted)">*New password is required!</span>
-                  <span class="text-danger" *ngIf="fields['password'].errors?.['minlength'] && (fields['password'].dirty || submitted)">*Please provide a valid password!</span>
+                  <span class="text-danger" *ngIf="fields['password'].errors?.['minlength'] && (fields['password'].dirty || submitted)">*Password must be at least 6 characters long!</span>
                 </ng-container>
               </div>
             </div>
