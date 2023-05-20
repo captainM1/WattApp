@@ -140,7 +140,6 @@ export class SettingsComponent implements OnInit, AfterViewInit{
         },
         (error) => {
           this.messageService.add({ severity: 'error', summary: 'Your current password is incorrect!'});
-
         }
       );
       return;
@@ -151,12 +150,38 @@ export class SettingsComponent implements OnInit, AfterViewInit{
   reset()
   {
     this.resetForm.reset();
+    this.resetForm.clearValidators();
+    this.resetForm.markAsPristine();
+    this.resetForm.markAsUntouched();
     this.type = "password";
     this.type2 = "password";
     this.type3 = "password";
     this.eyeIcon = "fa-eye-slash";
     this.eyeIcon2 = "fa-eye-slash";
     this.eyeIcon3 = "fa-eye-slash";
+    this.isText =false;
+    this.isText2 = false;
+    this.isText3 = false;
+
+    this.clearErrorMessages();
+  }
+
+  clearErrorMessages() {
+    const currentPasswordControl = this.resetForm.get('currentPassword');
+    const passwordControl = this.resetForm.get('password');
+    const confirmPasswordControl = this.resetForm.get('confirmPassword');
+
+    if (currentPasswordControl) {
+      currentPasswordControl.setErrors(null);
+    }
+
+    if (passwordControl) {
+      passwordControl.setErrors(null);
+    }
+
+    if (confirmPasswordControl) {
+      confirmPasswordControl.setErrors(null);
+    }
   }
 
 
