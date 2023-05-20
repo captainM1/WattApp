@@ -123,7 +123,7 @@ export class SettingsComponent implements OnInit, AfterViewInit{
   onReset()
   {
     this.submitted = true;
-    if(this.resetForm.valid){
+    if(this.resetForm.valid && (this.resetForm.get('password')?.dirty || this.resetForm.get('confirmPassword')?.dirty)){
       const passwordData = {
         oldPassword: this.currentPassword,
         newPassword: this.newPassword
