@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { SettingsService } from 'src/app/services/settings.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-permissions',
@@ -24,6 +25,14 @@ export class PermissionsComponent implements OnInit{
 
   ngOnInit() {
     this.deviceId = this.route.snapshot.paramMap.get('id');
+
+    this.http.get<any[]>(`${environment.apiUrl}/api/Device/devices/info/${this.deviceId}`)
+      .subscribe(data => {
+        this.device = data;
+      },
+      error => {
+        console.error('Error fetching device information:', error);
+      });
 
     this.settings.getControlInfo(this.deviceId).subscribe(
       (data) => {

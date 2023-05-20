@@ -110,6 +110,7 @@ export class DeviceDetailsComponent implements OnInit {
       
       this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/Next24h/device-usage_per_hour/${this.deviceId}`)
       .subscribe((data:any) =>{
+        console.log(data);
         this.next24HoursDate = data.timestampPowerPairs.map((item: any) => item.timestamp);
         this.next24HoursPower = data.timestampPowerPairs.map((item: any) => item.powerUsage);
       },
@@ -119,6 +120,7 @@ export class DeviceDetailsComponent implements OnInit {
 
       this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/Previous24h/device-usage_per_hour/${this.deviceId}`)
       .subscribe((data:any) =>{
+        console.log(data);
         this.last24HoursDate = data.timestampPowerPairs.map((item: any) => item.timestamp);
         this.last24HoursPower = data.timestampPowerPairs.map((item: any) => item.powerUsage);
       },
