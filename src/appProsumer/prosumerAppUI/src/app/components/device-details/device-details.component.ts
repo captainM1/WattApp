@@ -10,6 +10,7 @@ import { DeviceEditPopupComponent } from '../device-edit-popup/device-edit-popup
 import { MatDialog } from '@angular/material/dialog';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SettingsService } from 'src/app/services/settings.service';
+import { ModalTableComponent } from '../modal-table/modal-table.component';
 
 
 @Component({
@@ -44,6 +45,12 @@ export class DeviceDetailsComponent implements OnInit {
   label2: string = '';
   showSpinner: boolean = true;
   allowAccess: boolean = false;
+  data24h: any[]=[];
+  dataMonth: any[]=[];
+  data7days: any[]=[];
+
+  @ViewChild('myTable') myTable!: ElementRef;
+  @ViewChild('ModalTableComponentHistoryConsumption') modalTableComponentHistoryConsumption!: ModalTableComponent;
 
   constructor(
     private route: ActivatedRoute,
@@ -215,6 +222,15 @@ export class DeviceDetailsComponent implements OnInit {
     });
     this.label1 = "Today's history";
     this.label2 = "Tomorrow's prediction";
+    this.data24h=[];
+    const pom = [...this.last24HoursPower, this.deviceToday, ...this.next24HoursPower];
+    for (let i = 0; i < this.formattedLabels.length; i++) {
+      const pair = {
+        timestamp: this.formattedLabels[i],
+        powerUsage: pom[i]
+      };
+      this.dataMonth.push(pair);
+    }
   } 
   else if (this.selectedOption === 'Week') { 
     this.formattedLabels = [...this.deviceHistoryWeekDate, new Date(), ...this.deviceFutureWeekDate];
@@ -228,6 +244,15 @@ export class DeviceDetailsComponent implements OnInit {
     this.data1 = [null, null, null, null, null, null, null, this.deviceToday, ...this.deviceFutureWeekPower];
     this.label1 = "Last Week's History";
     this.label2 = "Next Week's Prediction";
+    this.data7days=[];
+    const pom = [...this.deviceHistoryWeekPower, this.deviceToday, ...this.deviceFutureWeekPower];
+    for (let i = 0; i < this.formattedLabels.length; i++) {
+      const pair = {
+        timestamp: this.formattedLabels[i],
+        powerUsage: pom[i]
+      };
+      this.data7days.push(pair);
+    }
   }
   else if (this.selectedOption === 'Month'){
     this.formattedLabels = [...this.deviceHistoryMonthDate, new Date(), ...this.deviceFutureMonthDate];
@@ -241,6 +266,15 @@ export class DeviceDetailsComponent implements OnInit {
     this.data1 = [null, null, null, null, null,null, null, null, null, null,null, null, null, null, null,null, null, null, null, null,null, null, null, null, null,null, null, null, null, null, null, this.deviceToday, ...this.deviceFutureMonthPower];
     this.label1 = "Last Month's History";
     this.label2 = "Next Month's Prediction";
+    this.dataMonth=[];
+    const pom = [...this.deviceHistoryMonthPower, this.deviceToday, ...this.deviceFutureMonthPower];
+    for (let i = 0; i < this.formattedLabels.length; i++) {
+      const pair = {
+        timestamp: this.formattedLabels[i],
+        powerUsage: pom[i]
+      };
+      this.dataMonth.push(pair);
+    }
   }
   this.initializeChart();
   }
