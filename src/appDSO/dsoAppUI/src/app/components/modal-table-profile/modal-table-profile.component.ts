@@ -27,6 +27,5 @@ export class ModalTableProfileComponent {
     const fileBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     const blob = new Blob([fileBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     saveAs(blob, 'table-data.xlsx');
-    // console.log(worksheet)
   }
 }

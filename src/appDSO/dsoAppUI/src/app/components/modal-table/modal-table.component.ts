@@ -1,5 +1,4 @@
 import { Component, Input, ViewChild } from '@angular/core';
-import { Defaults } from 'chart.js/dist/core/core.defaults';
 import { TableExport } from 'tableexport';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';

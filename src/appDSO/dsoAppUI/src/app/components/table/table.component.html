@@ -162,7 +162,7 @@
                         <td >{{device.manufacturerName}}</td>
                         <td >{{device.macAdress}}</td>
                         <td >{{device.typeOfDevice}}</td>
-                        <td [ngClass]="{'green': status === 1, 'red': status === 0}">{{device.statusOfDevice}}</td>
+                        <td [ngClass]="{'green': device.statusOfDevice === 'ON', 'red': device.statusOfDevice === 'OFF'}">{{device.statusOfDevice}}</td>
                         <td >{{device.powerusage}} kw/h</td>
                         <td *ngIf="device.dsoHasControl === true">
                           <label class="switch" >

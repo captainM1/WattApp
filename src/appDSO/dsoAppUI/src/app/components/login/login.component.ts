@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'service/auth.service';
-import { ConfirmEventType, MessageService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 import { CookieService } from "ngx-cookie-service";
 import { NgxSpinnerService } from 'ngx-spinner';
 
@@ -88,21 +88,12 @@ export class LoginComponent implements OnInit{
       field => {
         const control = formGroup.get(field);
         if(control instanceof FormControl){
-          console.log(control.value);
-
           control?.markAsDirty({onlySelf: true})
         }else if(control instanceof FormGroup){
           this.validateAllFormFields(control);
         }
       })
-    }
-
-    signOut(){
-      this.auth.signOut();
-      this.router.navigate(['/signin']);
-     
-    }
-
+  }
 }
 
 

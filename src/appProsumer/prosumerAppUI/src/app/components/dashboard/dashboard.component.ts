@@ -119,8 +119,10 @@ export class DashboardComponent implements OnInit, AfterViewInit{
   @ViewChild('productionNextMonthGraph') productionNextMonthGraph!:ElementRef;
   @ViewChild('productionNext7daysGraph')  productionNext7daysGraph!:ElementRef;
   @ViewChild('myTable') myTable!: ElementRef;
-  @ViewChild('ModalTableComponent') modalTableComponent!: ModalTableComponent;
-
+  @ViewChild('ModalTableComponentHistoryConsumption') modalTableComponentHistoryConsumption!: ModalTableComponent;
+  @ViewChild('ModalTableComponentFutureConsumption') modalTableComponentFutureConsumption!: ModalTableComponent;
+  @ViewChild('ModalTableComponentHistoryProduction') modalTableComponentHistoryProduction!: ModalTableComponent;
+  @ViewChild('ModalTableComponentFutureProduction') modalTableComponentFutureProduction!: ModalTableComponent;
 
  // zelena, narandzasta, crvena, deep sky blue, zuta
  backgroundColorsGraphs =  ['#62C370', '#EC7357', '#e3170a', '#30C5FF', '#ffc800'];
@@ -144,7 +146,6 @@ export class DashboardComponent implements OnInit, AfterViewInit{
     this.auth1.getThisUser(this.token).subscribe(
       (response :any)=>{
        this.userID = response.id;
-       console.log(this.userID);
        this.HistoryConsumption(this.selectedGraphHistoryConsumption, this.userID);
        this.FutureConsumption(this.selectedGraphFutureConsumption, this.userID);
        this.HistoryProduction(this.selectedGraphHistoryProduction, this.userID);
@@ -239,7 +240,6 @@ export class DashboardComponent implements OnInit, AfterViewInit{
     this.auth1.getConsumptionPrevious24Hours(id).subscribe(
       (response : any) => {
         this.consumption24prev = response[0]['timestampPowerPairs'];
-        console.log(response);
         this.makeData(this.consumption24prev);
         this.previous24Graph();
         this.spinner.hide();
@@ -317,7 +317,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
         y: {
           title: {
             display: true,
-            text: 'Power consumption (kW)',
+            text: 'Energy Consumption [kWh]',
             font:{
               size: 10,
             }
@@ -346,7 +346,6 @@ export class DashboardComponent implements OnInit, AfterViewInit{
     this.auth1.getConsumptionNext24Hours(id).subscribe(
       (response : any) => {
         this.consumption24next = response[0]['timestampPowerPairs'];
-        console.log(response);
         this.makeDataNext24h(this.consumption24next);
         this.spinner.hide();
         this.showNext24h = false;
@@ -422,7 +421,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
         y: {
           title: {
             display: true,
-            text: 'Power consumption (kW)',
+            text: 'Energy Consumption [kWh]',
             font:{
               size: 10
             }
@@ -468,8 +467,8 @@ export class DashboardComponent implements OnInit, AfterViewInit{
             this.showPreviousMonth = false;
 
           },
-        error: () => {
-          console.log("GRESKA.");
+        error: (err : any) => {
+          console.log("GRESKA." + err);
           this.spinner.hide();
           this.showPreviousMonth = false;
         }
@@ -539,7 +538,10 @@ export class DashboardComponent implements OnInit, AfterViewInit{
         y: {
           title: {
             display: true,
-            text: 'Power Consumption (kW)'
+            text: 'Energy Consumption [kWh]',
+            font: {
+            size: 9,
+          },
           },
           ticks: {
             font: {
@@ -566,9 +568,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
         this.auth1.getConsumptionNextMonth(id).subscribe(
           {
             next: (response:any) => {
-              console.log(response);
               this.consumptionNextMonthUser = response[0]['timestampPowerPairs'];
-              console.log(this.consumptionNextMonthUser);
               for(let i = 0; i < this.consumptionNextMonthUser.length; i++){
                 this.timeStampConsumptionNextMonth.push(this.consumptionNextMonthUser[i]['timestamp']);
                 this.powerUsageConsumptionNextMonth.push(this.consumptionNextMonthUser[i]['powerUsage']);
@@ -646,7 +646,10 @@ export class DashboardComponent implements OnInit, AfterViewInit{
         y: {
           title: {
             display: true,
-            text: 'Power Consumption (kW)',
+            text: 'Energy Consumption [kWh]',
+            font: {
+            size: 9,
+          },
           },
           ticks: {
             font: {
@@ -672,7 +675,6 @@ export class DashboardComponent implements OnInit, AfterViewInit{
       next:(response : any) => {
         this.consPrev7Days = response[0]['timestampPowerPairs'];
         this.makeDataGraphPrev7DaysConsumption(this.consPrev7Days);
-        console.log(this.consPrev7Days);
         this.chartConsumptionPrev7Days();
         this.spinner.hide();
         this.showPrevious7days = false;
@@ -704,8 +706,6 @@ export class DashboardComponent implements OnInit, AfterViewInit{
      this.extractedDatesPrev7Days.push(dateString);
 
     }
-    console.log(this.extractedDatesPrev7Days);
-    console.log(this.powerUsageConsumptionPrev7days);
 
     this.extractedDatesPrev7Days.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
@@ -749,7 +749,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
             y: {
               title: {
                 display: true,
-                text: 'Power Consumption (kW)',
+                text: 'Energy Consumption [kWh]',
                 font: {
                   size: 9,
                 },
@@ -768,13 +768,12 @@ export class DashboardComponent implements OnInit, AfterViewInit{
       next:(response : any) => {
         this.consNext7Days = response[0]['timestampPowerPairs'];
         this.makeDataGraphNext7DaysConsumption(this.consNext7Days);
-        console.log(this.consNext7Days);
         this.chartConsumptionNext7Days();
         this.spinner.hide();
         this.showNext7days = false;
       },
       error : (err : any) => {
-        console.log("error consumption next 7 days");
+        console.log("error consumption next 7 days " + err);
         this.spinner.hide();
         this.showNext7days = false;
       }
@@ -799,8 +798,6 @@ export class DashboardComponent implements OnInit, AfterViewInit{
       this.extractedDatesNext7Days.push(dateString);
 
     }
-    console.log(this.extractedDatesNext7Days);
-    console.log(this.powerUsageConsumptionNext7days);
 
     this.extractedDatesNext7Days.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
@@ -844,7 +841,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
             y: {
               title: {
                 display: true,
-                text: 'Power Consumption (kW)',
+                text: 'Energy Consumption [kWh]',
                 font: {
                   size: 9,
                 },
@@ -866,7 +863,6 @@ productionPrevious24h(id:any)
   this.auth1.getProductionPrevious24Hours(id).subscribe(
     (response : any) => {
       this.graphProduction24prev = response[0]['timestampPowerPairs'];;
-      console.log(response);
       this.makeDataProduction24(this.graphProduction24prev);
       this.spinner.hide();
       this.showProdPrevious24h = false;
@@ -884,9 +880,9 @@ makeDataProduction24(dataGraph:any){
     this.powerUsageListProductionPrev24h.push(this.graphProduction24prev[i]['powerUsage']);
     }
 
-  this.timestampListProductionPrev24h.sort((a: string, b: string) => {
-    return parseInt(a) - parseInt(b);
-  });
+    this.timestampListProductionPrev24h.sort((a: string, b: string) => {
+      return parseInt(a) - parseInt(b);
+    });
 
   this.data24hProd=[];
   for (let i = 0; i < this.timestampListProductionPrev24h.length; i++) {
@@ -895,9 +891,8 @@ makeDataProduction24(dataGraph:any){
       powerUsage: this.powerUsageListProductionPrev24h[i]
     };
     this.data24hProd.push(pair);
-  
+
   }
-  console.log("this,",this.data24hProd);
 
   this.previousProduction24Graph(this.timestampListProductionPrev24h, this.powerUsageListProductionPrev24h);
 }
@@ -941,7 +936,7 @@ previousProduction24Graph(list:any, valueList:any){
       y: {
         title: {
           display: true,
-          text: 'Power production (kW)',
+          text: 'Energy Production [kWh]',
           font:{
             size: 10,
           }
@@ -985,8 +980,8 @@ productionPrevMonth(id:any)
           this.showProdPreviousMonth = false;
 
         },
-      error: () => {
-        console.log("GRESKA.");
+        error: (err : any) => {
+        console.log("GRESKA." + err);
         this.spinner.hide();
         this.showProdPreviousMonth = false;
       }
@@ -1005,12 +1000,12 @@ chartProductionPreviousMonth(){
 
   }
 
-  this.extractedDatesPrevMonth.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+  this.extractedDatesProductionPrevMonth.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
   this.dataMonthProd=[];
-    for (let i = 0; i < this.timeStampProductionPrevMonth.length; i++) {
+    for (let i = 0; i < this.extractedDatesProductionPrevMonth.length; i++) {
       const pair = {
-        timestamp: this.timeStampProductionPrevMonth[i],
+        timestamp: this.extractedDatesProductionPrevMonth[i],
         powerUsage: this.powerUsageProductionPrevMonth[i]
     };
     this.dataMonthProd.push(pair);
@@ -1054,7 +1049,10 @@ chartProductionPreviousMonth(){
       y: {
         title: {
           display: true,
-          text: 'Power Production (kW)'
+          text: 'Energy Production [kWh]',
+          font: {
+            size: 9,
+          }
         },
         ticks: {
           font: {
@@ -1079,7 +1077,6 @@ productionPrev7Days(id : any){
     next:(response : any) => {
       this.prodPrev7Days = response[0]['timestampPowerPairs'];
       this.makeDataGraphPrev7DaysProduction(this.prodPrev7Days);
-      console.log(this.prodPrev7Days);
       this.chartProductionPrev7Days();
       this.spinner.hide();
       this.showProdPrevious7days = false;
@@ -1111,8 +1108,6 @@ chartProductionPrev7Days(){
     this.extractedDatesProductionPrev7Days.push(dateString);
 
   }
-  console.log(this.extractedDatesProductionPrev7Days);
-  console.log(this.powerUsageProductionPrev7days);
 
   this.extractedDatesProductionPrev7Days.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
@@ -1156,7 +1151,7 @@ chartProductionPrev7Days(){
           y: {
             title: {
               display: true,
-              text: 'Power Production (kW)',
+              text: 'Energy Production [kWh]',
               font: {
                 size: 9,
               },
@@ -1175,7 +1170,6 @@ productionNext24h(id:any)
   this.auth1.getProductionNext24Hours(id).subscribe(
     (response : any) => {
       this.graphProduction24next = response[0]['timestampPowerPairs'];;
-      console.log(response);
       this.makeDataProductionNext24(this.graphProduction24next);
       this.spinner.hide();
       this.showProdNext24h = false;
@@ -1251,7 +1245,7 @@ nextProduction24Graph(list:any, valueList:any){
       y: {
         title: {
           display: true,
-          text: 'Power production (kW)',
+          text: 'Energy Production [kWh]',
           font:{
             size: 10,
           }
@@ -1279,13 +1273,12 @@ productionNext7Days(id : any){
     next:(response : any) => {
       this.prodNext7Days = response[0]['timestampPowerPairs'];
       this.makeDataGraphNext7DaysProduction(this.prodNext7Days);
-      console.log(this.prodNext7Days);
       this.chartProductionNext7Days();
       this.spinner.hide();
       this.showProdNext7days = false;
     },
     error : (err : any) => {
-      console.log("error production next 7 days");
+      console.log("error production next 7 days" + err);
     }
   })
 }
@@ -1309,8 +1302,6 @@ chartProductionNext7Days(){
     this.extractedDatesProductionNext7Days.push(dateString);
 
   }
-  console.log(this.extractedDatesProductionNext7Days);
-  console.log(this.powerUsageProductionNext7days);
 
   this.extractedDatesProductionNext7Days.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
 
@@ -1355,7 +1346,7 @@ chartProductionNext7Days(){
           y: {
             title: {
               display: true,
-              text: 'Power Production (kW)',
+              text: 'Energy Production [kWh]',
               font: {
                 size: 9,
               },
@@ -1391,7 +1382,6 @@ productionNextMonth(id:any)
 
         },
       error: () => {
-        console.log("GRESKA.");
         this.spinner.hide();
         this.showProdNextMonth = false;
       }
@@ -1459,7 +1449,10 @@ chartProductionNextMonth(){
       y: {
         title: {
           display: true,
-          text: 'Power Production (kW)'
+          text: 'Energy Production [kWh]',
+          font: {
+            size: 9,
+          },
         },
         ticks: {
           font: {

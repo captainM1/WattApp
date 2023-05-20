@@ -22,7 +22,6 @@ export class PermissionsComponent implements OnInit{
 
   ngOnInit() {
     this.deviceId = this.route.snapshot.paramMap.get('id');
-    console.log(this.deviceId);
   }
 
   goBack(){

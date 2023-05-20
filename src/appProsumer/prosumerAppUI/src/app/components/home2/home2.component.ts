@@ -24,12 +24,11 @@ export class Home2Component implements OnInit, AfterViewInit {
   graph24prev!:any;
   powerUsageList: any = [];
   timestampList: any = [];
-  numberOfProducers:number = 0;
-  numberOfConsumers:number = 0;
-  numberOfStorage:number = 0;
   allUserDevices!: Info[];
   currentDate!: Observable<Date>;
   savedEnergyMonthConsumption!: number;
+  electricityBill!: number;
+  electricityRate = 7.584;
 
   isSunny!: boolean;
   isCloudy!: boolean;
@@ -68,7 +67,6 @@ export class Home2Component implements OnInit, AfterViewInit {
     this.auth.getDeviceData().subscribe(
     (response:any)=>{
       this.number = response.length;
-      console.log(this.number);
     }
     );
   }
@@ -79,19 +77,26 @@ export class Home2Component implements OnInit, AfterViewInit {
     this.auth1.getThisUser(this.token).subscribe(
       (response :any)=>{
        this.userID = response.id;
-       console.log(this.userID);
        this.getConsumptionSevedEnergyMonth(this.userID);
        this.currentUsageUser(this.userID);
        this.currentProductionUser(this.userID);
        this.auth1.getConsumptionPrevious24Hours(this.userID).subscribe(
         (response : any) => {
           this.graph24prev = response;
-          console.log(response);
           this.makeData(this.graph24prev);
         }
        );
-       this.showMeDevices(this.userID);
+       this.ElectricityBillCurrentMonth(this.userID);
       }
+    )
+  }
+
+  ElectricityBillCurrentMonth(id:any)
+  {
+    this.auth1.getElectricityBill(id, this.electricityRate).subscribe(
+         (response: any) =>{
+             this.electricityBill = response.toFixed(2);
+         }
     )
   }
 
@@ -109,7 +114,6 @@ export class Home2Component implements OnInit, AfterViewInit {
     this.auth1.getCurrentConsumptionSummary(id).subscribe(
       (response : any) => {
         this.currentUsage = response.toFixed(2);
-        console.log(response);
       }
     )
   }
@@ -133,7 +137,6 @@ showWeatherDetails()
       this.isCloudy = (this.weather.current_weather.temperature <= 15 || this.weather.current_weather.temperature > 0)  && (this.weather.hourly.relativehumidity_2m[0] >= 30 || this.weather.hourly.relativehumidity_2m[0] < 90)
       this.isRainy =  this.weather.hourly.relativehumidity_2m[0] >= 90;
       this.isSnowy = this.weather.current_weather.temperature <= 0;
-      console.log(this.isCloudy);
       });
 }
 
@@ -183,7 +186,7 @@ previous24Graph(list:any, valueList:any){
       y: {
         title: {
           display: true,
-          text: 'Power consumption (kW)',
+          text: 'Energy Consumption [kWh]',
           font:{
             size: 10
           }
@@ -202,38 +205,6 @@ previous24Graph(list:any, valueList:any){
     options: options,
   });
 }
-
-
-showMeDevices(id : string){
-  this.auth1.getDeviceInfoUserByID(id).subscribe(
-    (response : any) => {
-      this.allUserDevices = response;
-      console.log(this.allUserDevices + "all devices");
-      for(let us of this.allUserDevices){
-
-      this.auth.getDevicesInfoByID(us.deviceId).subscribe({
-        next: (response:any)=>{
-          us.typeOfDevice = response.groupName;
-          if(response.groupName === "Consumer"){
-            this.numberOfConsumers++;
-          }else if(response.groupName === "Prosumer"){
-            this.numberOfProducers++;
-          }else if(response.groupName === "Storage"){
-            this.numberOfStorage++;
-          }
-        },
-        error : (err : any)=>{
-          console.log("err");
-        }
-      }); }
-    }
-
-  )
-}
-
-
-
-
 
 }
 

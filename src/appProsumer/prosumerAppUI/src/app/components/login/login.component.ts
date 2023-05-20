@@ -108,7 +108,6 @@ export class LoginComponent implements OnInit{
       field => {
         const control = formGroup.get(field);
         if(control instanceof FormControl){
-          console.log(control.value);
 
           control?.markAsDirty({onlySelf: true})
         }else if(control instanceof FormGroup){
@@ -130,7 +129,6 @@ export class LoginComponent implements OnInit{
     {
       if(this.checkValidEmail(this.resetPasswordEmail))
       {
-        console.log(this.resetPasswordEmail);
         this.resetPasswordEmail = "";
         const buttnoRef = document.getElementById("closeBtn");
         buttnoRef?.click();
@@ -138,12 +136,6 @@ export class LoginComponent implements OnInit{
         //API call to be done
       }
     }
-
-    signOut(){
-      this.auth.signOut();
-      this.router.navigate(['/signin']);
-    }
-
 }
 
 

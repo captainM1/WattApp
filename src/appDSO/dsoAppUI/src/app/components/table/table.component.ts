@@ -1,24 +1,14 @@
-import { write, writeXLSX } from 'xlsx';
-import { animate, state, style, transition, trigger } from '@angular/animations';
-import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import * as L from 'leaflet';
 import { Device, ExportSelected, Info, Root, Root2, User } from 'models/User';
 import { AuthService } from 'service/auth.service';
-import {PageEvent} from '@angular/material/paginator';
-import { FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table'; 
-import {MatPaginator} from '@angular/material/paginator';
-import {MatTableDataSource} from '@angular/material/table';
-import { PaginatorModule } from 'primeng/paginator';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { Chart, ChartOptions } from 'chart.js';
 import { Subscription } from 'rxjs';
-import { canvas } from 'chart.js/dist/helpers/helpers.canvas';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { NgxUiLoaderModule,NgxUiLoaderHttpModule, NgxUiLoaderService } from 'ngx-ui-loader';
-import { ModalTableProfileComponent } from '../modal-table-profile/modal-table-profile.component';
+import {  NgxUiLoaderService } from 'ngx-ui-loader';
 
 
 @Component({
@@ -269,7 +259,6 @@ export class TableComponent implements OnInit, AfterViewInit {
         }
       }
       this.makeDataForExportSelectedUsers(this.selectedUsers);
-      console.log("Selected",this.selectedUsers);
     }
     
     makeDataForExportSelectedUsers(users: User[]){
@@ -653,15 +642,18 @@ applyFilter(): void {
           this.auth.currentPowerUsageDeviceID(us.deviceId).subscribe(
             {
               next:(response : any)=>{
-                this.todayPowerUsageDevice = (response);
-                us.powerusage = response.toFixed(2);
-                us.statusOfDevice = "ON";
-                this.status = 1;
+                if(response != 0){
+                  this.todayPowerUsageDevice = (response);
+                  us.powerusage = response.toFixed(2);
+                  us.statusOfDevice = "ON";
+                }
+                else{
+                  us.powerusage = 0;
+                  us.statusOfDevice = "OFF"
+                }
               },
               error:(error : any)=>{
-                us.powerusage = 0;
-                us.statusOfDevice = "OFF"
-                this.status = 0;
+                console.log(error)
               }
             }
           )
@@ -684,12 +676,10 @@ applyFilter(): void {
         this.auth.getDevicesInfoByID(us.deviceId).subscribe({
           next: (response:any)=>{
             us.typeOfDevice = response.groupName;
-            console.log("tyoe", us.typeOfDevice);
             if(response.groupName === "Consumer"){
               this.numberOfConsumers++;
               this.devicesConsumers.push(us);
             }else if(response.groupName === "Producer"){
-              console.log("resp", response.groupName);
               this.numberOfProsumers++;
               this.devicesProducers.push(us);
             }else if(response.groupName === "Storage"){
@@ -698,7 +688,7 @@ applyFilter(): void {
             }
           },
           error : (err : any)=>{
-            console.log("det device info by id");
+            console.log("det device info by id" + err);
           }
         }); 
       }
@@ -988,7 +978,7 @@ applyFilter(): void {
          
         },
         error : (err : any) => {
-          console.log("error consumption next month");
+          console.log("error consumption next month" + err);
           this.spinner.hide();
           this.consumptionNextMonthLoader = false;
         }
@@ -1033,8 +1023,8 @@ applyFilter(): void {
           this.consumptionPrevMonthLoader = false;
           
           },
-        error: () => {
-          console.log("error consumption prev month");
+        error: (err: any) => {
+          console.log("error consumption prev month" + err);
           this.spinner.hide();
           this.consumptionPrevMonthLoader = false;
         }
@@ -1192,7 +1182,7 @@ productionPreviousMonthUser(id : any){
       this.productionPrevMonthUserLoader = false;
     },
     error: (err : any) => {
-      console.log("error production prev month");
+      console.log("error production prev month" + err);
       this.spinner.hide();
       this.productionPrevMonthUserLoader = false;
     }
@@ -1211,7 +1201,7 @@ productionPreviousMonthUser(id : any){
           this.productionNextMonthUserLoader = false;
         },
         error : (err : any) => {
-          console.log("error procustion next month user");
+          console.log("error procustion next month user" + err);
           this.spinner.hide();
           this.productionNextMonthUserLoader = false;
         }
@@ -1335,7 +1325,7 @@ productionPreviousMonthUser(id : any){
 
       },
       error : (err : any) => {
-        console.log("error consumptio previous 7 days");
+        console.log("error consumptio previous 7 days" + err);
         this.spinner.hide();
         this.consumptionPrev7DaysLoader = false;
       }
@@ -1402,14 +1392,12 @@ productionPreviousMonthUser(id : any){
     this.auth.getConsumptionNext7days(id).subscribe({
       next:(response : any) => {
         this.consNext7Days = response[0]['timestampPowerPairs'];
-        console.log("shdaj",this.consNext7Days);
         this.makeDataGraphNext7DaysConsumption(this.consNext7Days);
         this.chartConsumptionNext7Days();
         this.spinner.hide();
         this.consumptionNext7DaysLoader = false;
       },
       error : (err : any) => {
-        console.log("error consumption next 7 days");
         this.spinner.hide();
         this.consumptionNext7DaysLoader = false;
       }
@@ -1856,7 +1844,6 @@ consumptionNext24hGraph(){
               this.productionPrevMonthLoader = false;
             },
           error: () => {
-            console.log("productionPrevMonth - err.");
             this.spinner.hide();
             this.productionPrevMonthLoader = false;
           }
@@ -1960,7 +1947,6 @@ consumptionNext24hGraph(){
 
         },
         error : (err : any) => {
-          console.log("error production previous 7 days");
           this.spinner.hide();
           this.productionPrev7DaysLoader = false;
         }
@@ -2150,7 +2136,6 @@ consumptionNext24hGraph(){
           this.productionNext7DaysLoader = false;
         },
         error : (err : any) => {
-          console.log("error production next 7 days");
           this.spinner.hide();
           this.productionNext7DaysLoader = false;
         }
@@ -2241,7 +2226,6 @@ consumptionNext24hGraph(){
               this.productionNextMonthLoader = false;
             },
           error: () => {
-            console.log("production next month.");
             this.spinner.hide();
             this.productionNextMonthLoader = false;
           }

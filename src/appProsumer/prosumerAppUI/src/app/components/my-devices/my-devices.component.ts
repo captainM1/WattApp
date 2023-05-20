@@ -5,7 +5,10 @@ import { AuthService } from 'src/app/services/auth.service';
 import { environment } from 'src/environments/environment';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
-import { catchError, forkJoin, of, tap } from 'rxjs';
+import { Observable, catchError, forkJoin, map, of, tap } from 'rxjs';
+import { ConfirmEventType, ConfirmationService, MessageService } from 'primeng/api';
+import { AuthUserService } from 'src/app/services/auth-user.service';
+import { Info } from 'src/app/models/user';
 
 @Component({
   selector: 'app-my-devices',
@@ -13,22 +16,23 @@ import { catchError, forkJoin, of, tap } from 'rxjs';
   styleUrls: ['./my-devices.component.css']
 })
 export class MyDevicesComponent implements OnInit {
-  devices: any;
+  devices: any = [];
   deviceToday: {[key: string]: any} = {};
   searchName: string = '';
-
+  typeOfDevices: {[key: string]: any} = {};
   @ViewChild('myTable') myTable!: ElementRef;
 
   constructor(
     private auth: AuthService,
     private cookie: CookieService,
-    private http: HttpClient
+    private http: HttpClient,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
     this.auth.getDeviceData().subscribe(
       (data) => {
-        console.log(data);
         const deviceObservables = data.map((device: any) => {
           return this.auth.isOn(device.deviceId).pipe(
             tap((isOn: boolean) => {
@@ -44,35 +48,43 @@ export class MyDevicesComponent implements OnInit {
         forkJoin(deviceObservables).subscribe(
           () => {
             this.devices = data;
+            this.devices.forEach((device: any) => {
+              this.http
+                .get<any[]>(
+                  `${environment.apiUrl}/api/PowerUsage/power-usage/current/device/${device.deviceId}`)
+                .subscribe(
+                  (data) => {
+                    this.deviceToday[device.deviceId] = data;
+                  },
+                  (error) => {
+                    this.deviceToday[device.deviceId] = 0;
+                  }
+                );
+            });
+            this.devices.forEach((device: any) => {
+              this.http
+                .get<any[]>(
+                  `${environment.apiUrl}/api/Device/devices/info/${device.deviceId}`)
+                .subscribe(
+                  (response:any) => {
+                    this.typeOfDevices[device.deviceId] = response.groupName;
+                  },
+                  (error) => {
+                  }
+                );
+            });
+
           },
           (error) => {
             console.log(error);
           }
         );
-
-        this.devices.forEach((device: any) => {
-          this.http
-            .get<any[]>(
-              `${environment.apiUrl}/api/PowerUsage/power-usage/current/device/${device.deviceId}`,
-              { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) }
-            )
-            .subscribe(
-              (data) => {
-                console.log(data);
-                this.deviceToday[device.deviceId] = data;
-              },
-              (error) => {
-                this.deviceToday[device.deviceId] = 0;
-              }
-            );
-        });
       },
       (error) => {
         console.log(error);
       }
     );
   }
-
 
   exportToExcel(): void {
     const tableData = this.myTable.nativeElement.cloneNode(true);
@@ -103,9 +115,38 @@ export class MyDevicesComponent implements OnInit {
   }
 
 
-  changeState(id:any){
-    this.auth.changeState(id).subscribe(
-      Response => console.log("Response")
-    );
+
+  confirmStateChange(device: any) {
+    device.isConfirmingStateChange = true; // Disable the checkbox until confirmation
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to change the state of the device?',
+      header: 'Confirmation',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.changeState(device.deviceId);
+        device.isConfirmingStateChange = false; // Enable the checkbox after confirmation
+      },
+      reject: (type: any) => {
+        device.isConfirmingStateChange = false; // Enable the checkbox after rejection or cancellation
+        // Handle rejection or cancellation if needed
+        switch (type) {
+          case ConfirmEventType.REJECT:
+            this.messageService.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected' });
+            break;
+          case ConfirmEventType.CANCEL:
+            this.messageService.add({ severity: 'warn', summary: 'Cancelled', detail: 'You have cancelled' });
+            break;
+        }
+      },
+      acceptButtonStyleClass: 'p-button-danger',
+      rejectButtonStyleClass: 'p-button-secondary'
+    });
   }
+
+  changeState(id: any) {
+    this.auth.changeState(id).subscribe(() => {
+      // Success handling if needed
+    });
+  }
+
 }

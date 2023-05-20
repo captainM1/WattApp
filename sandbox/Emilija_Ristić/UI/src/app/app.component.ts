@@ -32,19 +32,16 @@ export class AppComponent implements OnInit {
     this.cardService.getAllCards()
     .subscribe(
       response => {
-        // console.log(response);
         this.cards = response;
         
     });
   }
 
   onSubmit(){
-    // console.log(this.card);
     if(this.card.id === ''){
     this.cardService.addCard(this.card)
     .subscribe(
       response => {
-        console.log(response);
         this.getAllCards();
         this.card = {
           id: '',
