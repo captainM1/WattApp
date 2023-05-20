@@ -40,7 +40,8 @@ import { TableModule } from 'primeng/table';
 import { ProfileComponent } from './components/profile/profile.component';
 import { ModalTableProfileComponent } from './components/modal-table-profile/modal-table-profile.component';
 import { TableExport } from 'tableexport';
-import { ModelProfileComponent } from './components/model-profile/model-profile.component'
+import { ModelProfileComponent } from './components/model-profile/model-profile.component';
+import { ModalEditProfileComponent } from './components/modal-edit-profile/modal-edit-profile.component'
 var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
 
 
@@ -60,7 +61,8 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     ErrorPageComponent,
     ProfileComponent,
     ModalTableProfileComponent,
-    ModelProfileComponent
+    ModelProfileComponent,
+    ModalEditProfileComponent
 
 ],
   imports: [

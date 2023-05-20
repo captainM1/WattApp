@@ -185,6 +185,7 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   
   ngOnInit(): void {
+    
     this.spinner.show();
     setTimeout(() => {
       this.spinner.hide();
@@ -197,7 +198,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     
   
     this.savedEnergy(this.id);
-
+   
 
   }
 
@@ -354,6 +355,98 @@ export class TableComponent implements OnInit, AfterViewInit {
     }
   }
 
+  exportToExcelSelectedFutureConsumption(select : any): void {
+ 
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.aoa_to_sheet([['Sample Data']]);
+  	
+    const worksheetName = 'Custom Worksheet Name';
+    XLSX.utils.book_append_sheet(workbook, worksheet, worksheetName);
+  
+   
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const data = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+	let fileNameFuture = 'Custom_File_Name.xlsx';
+	fileNameFuture = "Consumption  for the Next "+select;
+	this.saveFile(data, fileNameFuture);
+  }
+  exportToExcelSelectedHistoryConsumption(select : any): void {
+ 
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.aoa_to_sheet([['Sample Data']]);
+    const worksheetName = 'Custom Worksheet Name';
+    XLSX.utils.book_append_sheet(workbook, worksheet, worksheetName);
+  
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const data = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+	let fileNameHistory = 'Custom_File_Name.xlsx';
+	fileNameHistory = "Consumption for the Previous "+select;
+	this.saveFile(data, fileNameHistory);
+  }
+
+  exportToExcelSelectedFutureProduction(select : any): void {
+ 
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.aoa_to_sheet([['Sample Data']]);
+  	
+    const worksheetName = 'Custom Worksheet Name';
+    XLSX.utils.book_append_sheet(workbook, worksheet, worksheetName);
+  
+   
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const data = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+	let fileNameFuture = 'Custom_File_Name.xlsx';
+	fileNameFuture = "Production  for the Next "+select;
+	this.saveFile(data, fileNameFuture);
+  }
+  exportToExcelSelectedHistoryProduction(select : any): void {
+ 
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.aoa_to_sheet([['Sample Data']]);
+    const worksheetName = 'Custom Worksheet Name';
+    XLSX.utils.book_append_sheet(workbook, worksheet, worksheetName);
+  
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const data = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+	let fileNameHistory = 'Custom_File_Name.xlsx';
+	fileNameHistory = "Production for the Previous "+select;
+	this.saveFile(data, fileNameHistory);
+  }
+  
+  saveFile(data: Blob, filename: string): void {
+    const a = document.createElement('a');
+    document.body.appendChild(a);
+    const url = window.URL.createObjectURL(data);
+    a.href = url;
+    a.download = filename;
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  }
+
+
+showFilterOptions = false;
+selectedFilterOption: string = "All Devices";
+devicesConsumers:Info[] = [];
+devicesProducers:Info[]= [];
+allUserDevicesPOM:Info[]= [];
+toggleFilterOptions(): void {
+  this.showFilterOptions = !this.showFilterOptions;
+}
+
+applyFilter(): void {
+ 
+  if(this.selectedFilterOption === "Consumers"){
+    this.allUserDevices = this.devicesConsumers;
+  }else if(this.selectedFilterOption === "Prosumers"){
+      this.allUserDevices = this.devicesProducers;
+  }else if(this.selectedFilterOption === "All Devices"){
+    this.allUserDevices = this.allUserDevicesPOM;
+  }else if(this.selectedFilterOption === "Energy Store"){
+    this.allUserDevices = this.devicesStorage;
+  }
+  this.showFilterOptions = false;
+}
   selectedColumn:any = null;
   selectedColumn1:any = null;
   selectedUsersTable: any[] = [];
@@ -527,6 +620,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.popUp(id);
   }  
 
+  devicesStorage:Info[] =[];
   
   numberOfProsumers:number = 0;
   numberOfConsumers:number = 0;
@@ -534,6 +628,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   devices!:Info;
   public status!:any;
   showMeDevices(id : string){
+    
     this.showDevGraph = !this.showDevGraph;
     this.getDeviceGroup();
     this.toggleTable = true;
@@ -541,6 +636,8 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.auth.getDeviceInfoUserByID(id).subscribe(
       (response : any) => {
         this.allUserDevices = response;
+        this.allUserDevicesPOM = response;
+        // console.log("All user devices",this.allUserDevices);
         for(let us of this.allUserDevices){
           this.auth.currentPowerUsageDeviceID(us.deviceId).subscribe(
             {
@@ -560,6 +657,19 @@ export class TableComponent implements OnInit, AfterViewInit {
               }
             }
           )
+
+          this.auth.dsoHasControl(us.deviceId).subscribe({
+            next: (response:any)=>{
+              // console.log("DEVICE STATUS",response);
+              us.dsoHasControl = response;
+              this.toggleDeviceStatus(us);
+              
+            },
+            error:(error : any)=>{
+              this.deviceStatus = false;
+              console.log(error);
+            }
+          })
           this.numberOfConsumers = 0;
           this.numberOfProsumers = 0;
           this.numberOfStorage = 0;
@@ -568,10 +678,13 @@ export class TableComponent implements OnInit, AfterViewInit {
             us.typeOfDevice = response.groupName;
             if(response.groupName === "Consumer"){
               this.numberOfConsumers++;
+              this.devicesConsumers.push(us);
             }else if(response.groupName === "Producer"){
               this.numberOfProsumers++;
+              this.devicesProducers.push(us);
             }else if(response.groupName === "Storage"){
               this.numberOfStorage++;
+              this.devicesStorage.push(us);
             }
           },
           error : (err : any)=>{
@@ -581,6 +694,8 @@ export class TableComponent implements OnInit, AfterViewInit {
       }
       }
     )
+   
+  
   }
    getDeviceGroup(){
       this.auth.getDeviceGroup().subscribe(
@@ -631,9 +746,8 @@ export class TableComponent implements OnInit, AfterViewInit {
     }
   }
   
-  
+  public userShareData : boolean = false;
   powerUsagePopUp!: number;
- 
   productionNextMonthUserLoader = false;
   productionPrevMonthUserLoader = false;
   popUp(id: string){
@@ -641,6 +755,12 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.auth.getUserInformation(id).subscribe(
       (response : any) => {
         this.userPopUp = response;
+        console.log("REPSONSE", response);
+        if(this.userPopUp['sharesDataWithDso'] === true){
+          this.userPopUp.sharesDataWithDso = true;
+        }else{
+          this.userPopUp.sharesDataWithDso = false;
+        }
         
         this.auth.UserConsumptionSummary(this.userPopUp.id).subscribe(
           (response:any) => {
@@ -666,7 +786,8 @@ export class TableComponent implements OnInit, AfterViewInit {
       this.FutureProduction(this.selectedGraphFutureProduction);
       this.productionNextMonth(this.userPopUp.id);
       this.productionPrevMonth(this.userPopUp.id);
-      this.dsoHasControlDevice(this.userPopUp.id);
+      
+      this.dsoShareData(this.userPopUp.id);
       }
     );
    }
@@ -696,12 +817,17 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.isActiveProsumer = button === 'prosumer';
     this.isActioveConsumer = button === 'consumer';
     if(this.showSystemPage){
+     if(this.isActioveConsumer){
+      this.isActioveConsumer = true;
+      this.isActiveProsumer = false;
       this.showMeProduction = false;
       this.showMeConsumption = true;
       this.HistoryConsumption(this.selectedGraphHistoryConsumption);
       this.FutureConsumption(this.selectedGraphFutureConsumption);
-      if(this.isActiveProsumer){
-    
+     }
+      else {
+        this.isActioveConsumer = false;
+        this.isActiveProsumer = true;
         this.showMeProduction = true;
         this.showMeConsumption = false;
         this.HistoryProduction(this.selectedGraphHistoryProduction);
@@ -1424,6 +1550,9 @@ productionPreviousMonthUser(id : any){
         this.chartPrev24h.destroy();
       }
     const data = {
+      markerType: "square",
+      type: "line",
+      lineDashType:'dot',
       labels: this.timestampConsumptionPrevious24h,
       datasets: [{
         label: 'Consumption For The Previous 24h',
@@ -1440,6 +1569,7 @@ productionPreviousMonthUser(id : any){
       }]
     }
     const options: ChartOptions = {
+      
       scales: {
         x: {
           title: {
@@ -2204,32 +2334,61 @@ consumptionNext24hGraph(){
       })
     }
 
-    dsoHasControlDevice(userID : any){
-      this.auth.dsoHasControl(userID).subscribe({
-        next:(response : any) => {
-          if(response === true){
-            this.deviceStatus = true;
-          }else{
-            this.deviceStatus = false;
-          }
+    
+    sharedDataWithDSO:any;
+    dsoShareData(userID : any){
+      this.auth.userShareDataWithDSO(userID).subscribe({
+        next:(response : any)=>{
+          console.log("dsoShareData",response);
+          this.sharedDataWithDSO = response;
+         
         },
-        error : (err : any) => {
-          console.log("ERROR dsoHasControl...");
+        error:(error : any)=>{
+          console.log(error);
         }
       })
     }
-    public btnStatus!:boolean;
-    toggleDeviceStatus(device : Device){
-      this.btnStatus = !this.btnStatus;
-      if(this.deviceStatus === true){
-      if(this.deviceStatus){
-        console.log("ON")
-      }else{
-        console.log("OFF");
+    public isChecked!:boolean;
+    public isDisabled!:boolean;
+    public btnStatus:boolean = false;
+    toggleDeviceStatus(device:Info){
+      if(device.dsoHasControl == true){
+          if (device.dsoHasControl) {
+            if (device.statusOfDevice === "OFF") {
+              this.auth.changeStateOfDevice(device.deviceId,true).subscribe({
+                next:(response:any)=>{
+                  console.log(response);
+                 
+                },
+                error:(error:any)=>{
+                  console.log(error);
+                }
+              }
+              );
+              device.statusOfDevice = "ON"; 
+              
+              console.log(device);
+            } else {
+              this.auth.changeStateOfDevice(device.deviceId,false).subscribe({
+                next:(response:any)=>{
+                  console.log(response);
+                 
+                },
+                error:(error:any)=>{
+                  console.log(error);
+                }
+              }
+                
+              );
+              device.statusOfDevice = "OFF";
+             
+            }
+          }
+          console.log(device);
+        
       }
-    }else{
-      this.btnStatus = false;
-    }
+
+
     }
 }
 

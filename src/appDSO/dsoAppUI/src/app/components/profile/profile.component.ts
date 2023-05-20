@@ -16,6 +16,7 @@ export class ProfileComponent implements OnInit{
   city!: string;
   country!: string;
   email!: string;
+  password!:string;
   @ViewChild('profile') profile!:ElementRef; 
   constructor(
     private serv : AuthService
@@ -38,7 +39,10 @@ export class ProfileComponent implements OnInit{
        this.city = response.city;
        this.country = response.country;
        this.email = response.email;
+       this.password = response.password;
       }
     )
   }
+
+ 
 }

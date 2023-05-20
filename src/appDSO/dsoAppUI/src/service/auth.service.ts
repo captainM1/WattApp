@@ -370,7 +370,25 @@ export class AuthService {
     return this.http.get(environment.apiUrl + "/api/User/user-shares-with-DSO/" + userID);
   }
   
-  dsoHasControl(userID : any){
-    return this.http.get(environment.apiUrl + "/api/User/DSO-has-control/"+userID);
+  dsoHasControl(deviceID : any){
+    return this.http.get(environment.apiUrl +"/api/Device/DSO-has-control/"+deviceID);
+  }
+
+  updateDispacher(dispID:any, firstName : string, lastName:string,  phoneNumber:string,email:string):Observable<any>{
+    const data = {
+      firstName:firstName,
+      lastName:lastName,
+      phoneNumber:phoneNumber,
+      email:email,
+    }
+    return this.http.post(environment.apiUrl + "/api/Dispatcher/update-dispatcher/"+dispID,data);
+  }
+
+  changeStateOfDevice(deviceID : any, status: boolean):Observable<any>{
+    const data = {
+      id:deviceID,
+      isOn:status
+    }
+    return this.http.post(environment.apiUrl+"/api/Device/update-device-state",data);
   }
 }

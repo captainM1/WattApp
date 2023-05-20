@@ -123,6 +123,15 @@ public class DispatcherController : ControllerBase
         return Ok(new { message = "dispatcher updated successfully" });
     }
 
+    [HttpPut("update-password-for-dispatcher/{id}")]
+    // [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> UpdateDispatcherPassword(Guid id, DispatcherPasswordUpdate dispatcherPasswordUpdate)
+    {
+        await _dispatcherService.UpdateDispatcherPassword(id, dispatcherPasswordUpdate);
+
+        return Ok(new { message = "password updated successfully" });
+    }
+
     [HttpGet("get-users-application-history")]
     public async Task<IActionResult> GetAllUsersAplicationToDsoAsync()
     {
