@@ -249,7 +249,7 @@ public class UserRepository : IUserRepository
     }
     public async Task<Boolean> ApproveUserRequestToDso(Guid id)
     {
-        var newUser = await _dbContext.UsersAppliedToDSO.FirstOrDefaultAsync(x => x.UserID == id && x.Approved == null);
+        var newUser = await _dbContext.UsersAppliedToDSO.FirstOrDefaultAsync(x => x.ID == id && x.Approved == null);
         if(newUser == null)
         {
             return false;
