@@ -187,7 +187,14 @@ export class SettingsComponent implements OnInit, AfterViewInit{
 
   toggleAccess(){
     this.allowAccess = !this.allowAccess;
-    this.apiService.updateUserDataSharing(this.allowAccess);
+    this.apiService.updateUserDataSharing(this.allowAccess).subscribe(
+      (response) => {
+        console.log("Success");
+      },
+      (error) => {
+        console.log("Fail");
+      }
+    );
   }
 
   sendReq() {

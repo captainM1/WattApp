@@ -24,7 +24,7 @@ namespace prosumerAppBack.Controllers
             _userService = userService;
         }
 
-        [HttpPost("update/{id}")]
+        [HttpPut("update/{id}")]
         // [Authorize(Roles = "UnapprovedUser,RegularUser")]
         public async Task<IActionResult> UpdateDevice(Guid id, [FromBody] UpdateDeviceDto updateDeviceDto)
         {
@@ -254,7 +254,7 @@ namespace prosumerAppBack.Controllers
             }
         }
 
-        [HttpPost("update-rule/{id}")]
+        [HttpPut("update-rule/{id}")]
         //  [Authorize(Roles = "UnapprovedUser,RegularUser")]
         public async Task<IActionResult> UpdateDeviceRule(Guid id, [FromBody] DeviceRuleDto deviceRuleDto)
         {
@@ -286,7 +286,7 @@ namespace prosumerAppBack.Controllers
             }
         }
 
-        [HttpPost("update-requirement/{id}")]
+        [HttpPut("update-requirement/{id}")]
         // [Authorize(Roles = "UnapprovedUser,RegularUser")]
         public async Task<IActionResult> UpdateDeviceRequirement(Guid id, [FromBody] DeviceRequirementDto deviceRequirementDto)
         {
@@ -341,6 +341,21 @@ namespace prosumerAppBack.Controllers
             var has = _deviceService.DSOHasControl(deviceID);
 
             return has;
+        }
+
+        [HttpPut("update-device-dso-control-permission/{deviceID}")]
+        public async Task<IActionResult> UpdateUserDeviceDsoControl(Guid deviceID, [FromBody] Boolean dsoHasControl)
+        {
+            try
+            {
+                var result = await _deviceService.UpdateUserDeviceDsoControl(deviceID, dsoHasControl);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
     }
 }

@@ -105,7 +105,7 @@ public class UserController : ControllerBase
         return users;
     }
 
-    [HttpPost("update-user/{id}")]
+    [HttpPut("update-user/{id}")]
    // [Authorize(Roles = "UnapprovedUser,RegularUser")]
     public async Task<IActionResult> UpdateUser(Guid id, [FromBody] UserUpdateDto userUpdateDto)
     {
@@ -113,8 +113,8 @@ public class UserController : ControllerBase
 
         return Ok(new { message = "user updated successfully" });
     }
-
-    [HttpPost("update-password/{userID}")]
+        
+    [HttpPut("update-password/{userID}")]
     public async Task<IActionResult> UpdatePassword(Guid userID, string oldPassword, string newPassword)
     {
         await _userService.UpdatePassword(userID, oldPassword, newPassword);
@@ -316,7 +316,7 @@ public class UserController : ControllerBase
         return has;
     }
 
-    [HttpPost("update-user-data-sharing-permission/{id}")]
+    [HttpPut("update-user-data-sharing-permission/{id}")]
     public async Task<IActionResult> UpdateUserDataSharing(Guid id, [FromBody] Boolean sharesDataWithDso)
     {
         try
@@ -330,22 +330,7 @@ public class UserController : ControllerBase
             return StatusCode(500, ex.Message);
         }
     }
-
-    [HttpPost("update-user-dso-control-permission/{id}")]
-    public async Task<IActionResult> UpdateUserDeviceDsoControl(Guid id, [FromBody] Boolean dsoHasControl)
-    {
-        try
-        {
-            var result = await _userService.UpdateUserDeviceDsoControl(id, dsoHasControl);
-
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, ex.Message);
-        }
-    }
-
+        
     [HttpGet("get-users-that-applied-to-dso")]
     public async Task<IActionResult> GetUsersAppliedToDso()
     {

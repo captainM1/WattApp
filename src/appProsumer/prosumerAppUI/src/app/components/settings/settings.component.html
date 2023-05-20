@@ -13,17 +13,25 @@
                 <div class="toggle-switch"></div>
             </label>
             </div>
-
-            <div *ngIf="requestStatus == 'no'" class="d-flex justify-content-center">
+            
+            <div *ngIf="requestStatus == 'no'" class="row d-flex justify-content-center">
               <button (click)="sendReq()">Send request</button>
             </div>
-            <div *ngIf="requestStatus == 'pending'" class="d-flex justify-content-center flex-column align-items-center">
-              <h3>Your request is pending</h3>
-              <button (click)="cancelReq()">Cancel request</button>
+            <div *ngIf="requestStatus == 'pending'" class="row">
+              <div class="col-6">
+                <button class="false w-100">Your request is pending</button>
+              </div>
+              <div class="col-6">
+                <button class="w-100 pending" (click)="cancelReq()">Cancel request</button>
+              </div>  
             </div>
-            <div *ngIf="requestStatus == 'accepted'" class="d-flex justify-content-center flex-column align-items-center">
-              <h3>You are connected to DSO</h3>
-              <button (click)="disconnectDSO()">Disconnect from DSO</button>
+            <div *ngIf="requestStatus == 'accepted'" class="row">
+              <div class="col-6">
+                <button class="false w-100">You're connected to DSO</button>
+              </div>
+              <div class="col-6">
+                <button class="w-100 bad" (click)="disconnectDSO()">Disconnect from DSO</button>
+              </div>
             </div>
         </div>
         <div>
