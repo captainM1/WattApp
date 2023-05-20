@@ -157,7 +157,7 @@
                           <h1 class="text-center">History Consumption and Production</h1>
                             <label for="graphSelect">Select Graph:</label>
                             <div>
-                                <select [(ngModel)]="selectedGraphHistoryConsumption" (ngModelChange)="HistoryConsumption(selectedGraphHistoryConsumption)">
+                                <select [(ngModel)]="selectedGraphHistoryConsumption" (ngModelChange)="HistoryConsumption(selectedGraphHistoryConsumption)" >
                                   <option value="month">Previous Month</option>
                                   <option value="7days">Previous 7 Days</option>
                                   <option value="24h">Previous 24 Hours</option>
@@ -260,7 +260,7 @@
                 <app-modal-table #ModalTableComponent [data]="dataMonthHistory" [type]="'Consumption'" [message]="'Consumption and Production For Previous Month'" [time]="'Day'"></app-modal-table>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-primary" (click) = "exportToExcel()">Export Data</button>
+                <button type="button" class="btn btn-primary" (click) = "exportToExcelSelectedHistory(selectedGraphHistoryConsumption)">Export Data</button>
               </div>
         </div>
       </div>
@@ -290,7 +290,7 @@
               <app-modal-table #ModalTableComponent [data]="dataMonthFuture" [type]="'Consumption'" [message]="'Consumption and Production For Next Month'" [time]="'Day'"></app-modal-table>
             </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" (click) = "exportToExcel()">Export Data</button>
+          <button type="button" class="btn btn-primary" (click) = "exportToExcelSelectedFuture(selectedGraphFutureConsumption)">Export Data</button>
         </div>
         </div>
       </div>

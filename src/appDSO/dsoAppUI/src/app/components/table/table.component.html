@@ -134,20 +134,29 @@
         </div>
             <div *ngIf="showDevicePage">
               <div class="row" id = "table">
-                <div class="col-sm-6" style = "width: 62%;">
+                <div class="col-sm-6" style = "width: 65%; overflow-y: scroll; scrollbar-color: #026670; scrollbar-width: thin; padding-right:0px">
                   <table class="tableDevices">
                     <thead>
                       <tr>
                         <th>Device name</th>
                         <th>Device manifacture</th>
                         <th>Mac Address</th>
-                        <th>Type of Device</th>
+                        <th *ngIf="!showFilterOptions" style="display: block ruby; width: 20px;">Type of Device <i class="fa fa-filter" aria-hidden="true" style = "color:white"(click)="toggleFilterOptions()"></i></th>
+                        <th class="filter-options" *ngIf="showFilterOptions">
+                          <select [(ngModel)]="selectedFilterOption">
+                            <option value="All Devices">All Devices</option>
+                            <option value="Consumers">Consumers</option>
+                            <option value="Prosumers">Producers</option>
+                            <option value="Storages">Energy Store</option>
+                          </select>
+                          <button class= "apply"(click)="applyFilter()">Apply</button>
+                        </th>
                         <th>Device Status</th>
                         <th>Power Usage</th>
                         <th>Control Device</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody >
                       <tr *ngFor="let device of allUserDevices; let j = index;" [(ngModel)]="selectedDevice" (click)="displayGraph(device); selectedColumn1 = j;" [class.active-column]="selectedColumn1 === j && selectedDevice">
                         <td >{{device.deviceTypeName}}</td>
                         <td >{{device.manufacturerName}}</td>
@@ -164,18 +173,11 @@
                         <td *ngIf="device.dsoHasControl === false">
                           <span>
                             <i class="fa fa-minus-square" style="color:red" aria-hidden="true"> Access denied!</i>
-
                           </span>
                         </td>
-
-                        
                       </tr>
                     </tbody>
-                    <tfoot>
-                      <div  class="paginator-container">
-                          <p-paginator [rows]="pageSize" [totalRecords]="lengthOfUsers" [rowsPerPageOptions]="pageSizeOptions" (onPageChange)="onPageChange($event); deselectDevice();"></p-paginator>
-                      </div>
-                    </tfoot>
+                    
                   </table>
                 </div>
                 <div class="col" >
@@ -396,7 +398,7 @@
             <app-modal-table-profile #ModalTableComponent [data]="dataConsumptionPrevMonth" [type]="'Consumption'" [message]="'Consumption For Previous Month '" [time]="'Day'"></app-modal-table-profile>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary" (click) = "exportToExcel()">Export Data</button>
+            <button type="button" class="btn btn-primary" (click) = "exportToExcelSelectedHistoryConsumption(selectedGraphHistoryConsumption)">Export Data</button>
           </div>
     </div>
   </div>
@@ -423,7 +425,7 @@
             <app-modal-table-profile #ModalTableComponent [data]="dataconsumptionNextMonth" [type]="'Consumption'" [message]="'Consumption fot Next Month'" [time]="'Day'"></app-modal-table-profile>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary" (click) = "exportToExcel()">Export Data</button>
+            <button type="button" class="btn btn-primary" (click) = "exportToExcelSelectedFutureConsumption(selectedGraphFutureConsumption)">Export Data</button>
           </div>
     </div>
   </div>
@@ -450,7 +452,7 @@
             <app-modal-table-profile #ModalTableComponent [data]="dataproductionPreviousMonth" [type]="'Consumption'" [message]="'Production For Previous Month'" [time]="'Day'"></app-modal-table-profile>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary" (click) = "exportToExcel()">Export Data</button>
+            <button type="button" class="btn btn-primary" (click) = "exportToExcelSelectedHistoryProduction(selectedGraphHistoryProduction)">Export Data</button>
           </div>
     </div>
   </div>
@@ -477,7 +479,7 @@
             <app-modal-table-profile #ModalTableComponent [data]="dataProductionNextMonth" [type]="'Consumption'" [message]="'Production For Next Month '" [time]="'Day'"></app-modal-table-profile>
           </div>
           <div class="modal-footer">
-              <button type="button" class="btn btn-primary" (click) = "exportToExcel()">Export Data</button>
+              <button type="button" class="btn btn-primary" (click) = "exportToExcelSelectedFutureProduction(selectedGraphFutureProduction)">Export Data</button>
           </div>
     </div>
   </div>

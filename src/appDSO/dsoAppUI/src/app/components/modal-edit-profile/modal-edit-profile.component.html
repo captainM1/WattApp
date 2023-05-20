@@ -6,15 +6,23 @@
                     <label for="username">First Name:</label>
                     <input style = "width: 100%" type="text" class="form-control"  id="first-name" aria-describedby="First Name" name="firstName" [(ngModel)]="firstName" >
                 </div>
-
                 <div class="form-group" style="align-self: center;">
                     <label for="First Name">Last Name:</label>
                     <input style = "width: 100%" type="text" class="form-control" id="last-name" name="lastName" [(ngModel)]="lastName">
                 </div>
                 <div class="form-group" style="align-self: center;">
+                    <label for="Email Address">Phone Number:</label>
+                    <input style = "width: 100%" type="text" class="form-control" name="phoneNumber"  [(ngModel)]="phoneNumber">
+                </div>
+                <div class="form-group" style="align-self: center;">
                     <label for="Email Address">Email Address:</label>
                     <input style = "width: 100%" type="text" class="form-control" name="email"  [(ngModel)]="email">
                 </div>
+                <div class="form-group" style="align-self: center;">
+                    <label for="Email Address">Password:</label>
+                    <input style = "width: 100%" type="text" class="form-control" name="password"  [(ngModel)]="password">
+                </div>
+                
             </form>
             <div class="modal-footer ">
                 <button type="button" class="btn-save" (click)="updateDispacher()">Save Changes</button>

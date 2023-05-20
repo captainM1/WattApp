@@ -178,9 +178,10 @@ tr{
   cursor: pointer;
 }
 .modal-dialog{
-  max-width: 1150px;
+  max-width: 1200px;
   text-align: center;
-  margin-top: 40px;
+  margin-top: 60px;
+  max-height: 600px;
 }
 .id-button-popUp{
   margin-bottom: 10px;
@@ -192,8 +193,9 @@ tr{
 }
 .tableDevices{
   border: 2px solid #026670;
- 
-
+}
+.tableDevices thead tr th{
+  width: 14%;
 }
 .tableDevices th tr{
   font-size: 12px;
@@ -430,4 +432,26 @@ input:checked + .slider:before {
 
 .green input[type="checkbox"] {
   border-color: green;
+}
+.filter-options {
+  left: 200;
+  background-color: #ffffff;
+  padding: 10px;
+  border: 1px solid #cccccc;
+  z-index: 999;
+  width: 100%;
+}
+.apply{
+  width: 50%;
+  height: 20%;
+}
+
+.filter-options select {
+  margin-right: 5px;
+  margin-left: 5px;
+  width: 100%;
+}
+
+.filter-options button {
+  margin-top: 10px;
 }

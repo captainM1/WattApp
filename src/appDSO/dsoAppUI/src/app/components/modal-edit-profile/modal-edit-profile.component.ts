@@ -12,6 +12,8 @@ export class ModalEditProfileComponent {
   @Input() lastName!: string;
   @Input() email!: string;
   @Input() id!:string;
+  @Input() phoneNumber!:string;
+  @Input() password!:string;
 
   constructor(
     private auth : AuthService,
@@ -24,7 +26,7 @@ export class ModalEditProfileComponent {
       lastName : this.lastName,
       email : this.email
     };
-    this.auth.updateDispacher(this.id, this.firstName, this.lastName, this.email).subscribe({
+    this.auth.updateDispacher(this.id, this.firstName, this.lastName, this.phoneNumber, this.email).subscribe({
       next:(response:any)=>{
         console.log("SUCC", response);
         this.router.navigate(['profile']);

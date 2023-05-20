@@ -29,6 +29,10 @@
                         <input style = "width: 100%" type="text" class="form-control" id="last-name" name="lastName" [(ngModel)]="lastName"  [disabled]="true">
                     </div>
                     <div class="form-group" style="align-self: center;">
+                        <label for="Email Address">Phone Number:</label>
+                        <input style = "width: 100%" type="text" class="form-control" name="phoneNumber"  [(ngModel)]="phoneNumber" [disabled]="true">
+                    </div>
+                    <div class="form-group" style="align-self: center;">
                         <label for="Email Address">Email Address:</label>
                         <input style = "width: 100%" type="text" class="form-control" name="email"  [(ngModel)]="email" [disabled]="true">
                     </div>
@@ -54,7 +58,7 @@
               <button type="button" id="closeBtn" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <app-modal-edit-profile [email] = "email" [lastName]="lastName" [firstName]="firstName" [id] = "userID"></app-modal-edit-profile>
+                <app-modal-edit-profile [email] = "email" [lastName]="lastName" [firstName]="firstName" [id] = "userID" [phoneNumber]="phoneNumber" [password]="password"></app-modal-edit-profile>
             </div>
 
        

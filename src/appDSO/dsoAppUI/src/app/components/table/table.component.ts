@@ -208,7 +208,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     
   
     this.savedEnergy(this.id);
-
+   
 
   }
 
@@ -366,6 +366,98 @@ export class TableComponent implements OnInit, AfterViewInit {
     }
   }
 
+  exportToExcelSelectedFutureConsumption(select : any): void {
+ 
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.aoa_to_sheet([['Sample Data']]);
+  	
+    const worksheetName = 'Custom Worksheet Name';
+    XLSX.utils.book_append_sheet(workbook, worksheet, worksheetName);
+  
+   
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const data = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+	let fileNameFuture = 'Custom_File_Name.xlsx';
+	fileNameFuture = "Consumption  for the Next "+select;
+	this.saveFile(data, fileNameFuture);
+  }
+  exportToExcelSelectedHistoryConsumption(select : any): void {
+ 
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.aoa_to_sheet([['Sample Data']]);
+    const worksheetName = 'Custom Worksheet Name';
+    XLSX.utils.book_append_sheet(workbook, worksheet, worksheetName);
+  
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const data = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+	let fileNameHistory = 'Custom_File_Name.xlsx';
+	fileNameHistory = "Consumption for the Previous "+select;
+	this.saveFile(data, fileNameHistory);
+  }
+
+  exportToExcelSelectedFutureProduction(select : any): void {
+ 
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.aoa_to_sheet([['Sample Data']]);
+  	
+    const worksheetName = 'Custom Worksheet Name';
+    XLSX.utils.book_append_sheet(workbook, worksheet, worksheetName);
+  
+   
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const data = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+	let fileNameFuture = 'Custom_File_Name.xlsx';
+	fileNameFuture = "Production  for the Next "+select;
+	this.saveFile(data, fileNameFuture);
+  }
+  exportToExcelSelectedHistoryProduction(select : any): void {
+ 
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.aoa_to_sheet([['Sample Data']]);
+    const worksheetName = 'Custom Worksheet Name';
+    XLSX.utils.book_append_sheet(workbook, worksheet, worksheetName);
+  
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const data = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+	let fileNameHistory = 'Custom_File_Name.xlsx';
+	fileNameHistory = "Production for the Previous "+select;
+	this.saveFile(data, fileNameHistory);
+  }
+  
+  saveFile(data: Blob, filename: string): void {
+    const a = document.createElement('a');
+    document.body.appendChild(a);
+    const url = window.URL.createObjectURL(data);
+    a.href = url;
+    a.download = filename;
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  }
+
+
+showFilterOptions = false;
+selectedFilterOption: string = "All Devices";
+devicesConsumers:Info[] = [];
+devicesProducers:Info[]= [];
+allUserDevicesPOM:Info[]= [];
+toggleFilterOptions(): void {
+  this.showFilterOptions = !this.showFilterOptions;
+}
+
+applyFilter(): void {
+ 
+  if(this.selectedFilterOption === "Consumers"){
+    this.allUserDevices = this.devicesConsumers;
+  }else if(this.selectedFilterOption === "Prosumers"){
+      this.allUserDevices = this.devicesProducers;
+  }else if(this.selectedFilterOption === "All Devices"){
+    this.allUserDevices = this.allUserDevicesPOM;
+  }else if(this.selectedFilterOption === "Energy Store"){
+    this.allUserDevices = this.devicesStorage;
+  }
+  this.showFilterOptions = false;
+}
   selectedColumn:any = null;
   selectedColumn1:any = null;
   selectedUsersTable: any[] = [];
@@ -539,6 +631,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.popUp(id);
   }  
 
+  devicesStorage:Info[] =[];
   
   numberOfProsumers:number = 0;
   numberOfConsumers:number = 0;
@@ -546,6 +639,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   devices!:Info;
   public status!:any;
   showMeDevices(id : string){
+    
     this.showDevGraph = !this.showDevGraph;
     this.getDeviceGroup();
     this.toggleTable = true;
@@ -553,7 +647,8 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.auth.getDeviceInfoUserByID(id).subscribe(
       (response : any) => {
         this.allUserDevices = response;
-        console.log("All user devices",this.allUserDevices);
+        this.allUserDevicesPOM = response;
+        // console.log("All user devices",this.allUserDevices);
         for(let us of this.allUserDevices){
           this.auth.currentPowerUsageDeviceID(us.deviceId).subscribe(
             {
@@ -573,10 +668,9 @@ export class TableComponent implements OnInit, AfterViewInit {
 
           this.auth.dsoHasControl(us.deviceId).subscribe({
             next: (response:any)=>{
-              console.log("DEVICE STATUS",response);
+              // console.log("DEVICE STATUS",response);
               us.dsoHasControl = response;
-             
-                this.toggleDeviceStatus(us);
+              this.toggleDeviceStatus(us);
               
             },
             error:(error : any)=>{
@@ -593,11 +687,14 @@ export class TableComponent implements OnInit, AfterViewInit {
             console.log("tyoe", us.typeOfDevice);
             if(response.groupName === "Consumer"){
               this.numberOfConsumers++;
+              this.devicesConsumers.push(us);
             }else if(response.groupName === "Producer"){
               console.log("resp", response.groupName);
               this.numberOfProsumers++;
+              this.devicesProducers.push(us);
             }else if(response.groupName === "Storage"){
               this.numberOfStorage++;
+              this.devicesStorage.push(us);
             }
           },
           error : (err : any)=>{
@@ -607,6 +704,8 @@ export class TableComponent implements OnInit, AfterViewInit {
       }
       }
     )
+   
+  
   }
    getDeviceGroup(){
       this.auth.getDeviceGroup().subscribe(
@@ -2272,20 +2371,30 @@ consumptionNext24hGraph(){
       if(device.dsoHasControl == true){
           if (device.dsoHasControl) {
             if (device.statusOfDevice === "OFF") {
-              this.auth.changeStateOfDevice(device.deviceId,true).subscribe(
-                (response : any)=>{
-                  console.log("ZAHREV",response);
+              this.auth.changeStateOfDevice(device.deviceId,true).subscribe({
+                next:(response:any)=>{
+                  console.log(response);
+                 
+                },
+                error:(error:any)=>{
+                  console.log(error);
                 }
+              }
               );
               device.statusOfDevice = "ON"; 
               
               console.log(device);
             } else {
-              this.auth.changeStateOfDevice(device.deviceId,false).subscribe(
-                (response:any)=>{
-
-                  console.log("SHKDS",response);
+              this.auth.changeStateOfDevice(device.deviceId,false).subscribe({
+                next:(response:any)=>{
+                  console.log(response);
+                 
+                },
+                error:(error:any)=>{
+                  console.log(error);
                 }
+              }
+                
               );
               device.statusOfDevice = "OFF";
              

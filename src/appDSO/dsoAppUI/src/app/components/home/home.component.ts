@@ -209,13 +209,58 @@ export class HomeComponent implements OnInit, AfterViewInit{
  
  
   exportToExcel(): void {
-    const worksheet = XLSX.utils.table_to_sheet(document.querySelector('#tableTable'));
     const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-    const fileBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-    const blob = new Blob([fileBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    saveAs(blob, 'table-data.xlsx');
+    const worksheet = XLSX.utils.aoa_to_sheet([['Sample Data']]);
+    const worksheetName = 'Custom Worksheet Name';
+    XLSX.utils.book_append_sheet(workbook, worksheet, worksheetName);
+  
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const data = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+	let fileNameHistory = 'Custom_File_Name.xlsx';
+	fileNameHistory = "Consumption and Production for the Previous 12h";
+	this.saveFile(data, fileNameHistory);
   }
+
+  exportToExcelSelectedFuture(select : any): void {
+ 
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.aoa_to_sheet([['Sample Data']]);
+  	
+    const worksheetName = 'Custom Worksheet Name';
+    XLSX.utils.book_append_sheet(workbook, worksheet, worksheetName);
+  
+   
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const data = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+	let fileNameFuture = 'Custom_File_Name.xlsx';
+	fileNameFuture = "Consumption and Production for the Next "+select;
+	this.saveFile(data, fileNameFuture);
+  }
+  exportToExcelSelectedHistory(select : any): void {
+ 
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.aoa_to_sheet([['Sample Data']]);
+    const worksheetName = 'Custom Worksheet Name';
+    XLSX.utils.book_append_sheet(workbook, worksheet, worksheetName);
+  
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const data = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+	let fileNameHistory = 'Custom_File_Name.xlsx';
+	fileNameHistory = "Consumption and Production for the Previous "+select;
+	this.saveFile(data, fileNameHistory);
+  }
+  
+  saveFile(data: Blob, filename: string): void {
+    const a = document.createElement('a');
+    document.body.appendChild(a);
+    const url = window.URL.createObjectURL(data);
+    a.href = url;
+    a.download = filename;
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  }
+
 
 	getDate(){
 		this.currentDate = timer(0,1000).pipe(
