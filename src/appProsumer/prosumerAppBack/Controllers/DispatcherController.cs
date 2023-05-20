@@ -114,13 +114,22 @@ public class DispatcherController : ControllerBase
         }
     }
 
-    [HttpPost("update-dispatcher/{id}")]
+    [HttpPut("update-dispatcher/{id}")]
     // [Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateUser(Guid id, [FromBody] DispatcherUpdateDto dispatcherUpdateDto)
     {
         await _dispatcherService.UpdateDispatcher(id, dispatcherUpdateDto);
 
         return Ok(new { message = "dispatcher updated successfully" });
+    }
+
+    [HttpPut("update-password-for-dispatcher/{id}")]
+    // [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> UpdateDispatcherPassword(Guid id, DispatcherPasswordUpdate dispatcherPasswordUpdate)
+    {
+        await _dispatcherService.UpdateDispatcherPassword(id, dispatcherPasswordUpdate);
+
+        return Ok(new { message = "password updated successfully" });
     }
 
     [HttpGet("get-users-application-history")]
