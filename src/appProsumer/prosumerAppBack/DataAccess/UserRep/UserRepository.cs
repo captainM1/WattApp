@@ -259,6 +259,7 @@ public class UserRepository : IUserRepository
 
         var approvedUser = _dbContext.Users.FirstOrDefaultAsync(u => u.ID == newUser.UserID);
         approvedUser.Result.Role = "RegularUser";
+        approvedUser.Result.sharesDataWithDso = true;
         _dbContext.Users.Update(approvedUser.Result);
         _dbContext.UsersAppliedToDSO.Update(newUser);
         await _dbContext.SaveChangesAsync();
