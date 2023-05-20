@@ -271,7 +271,7 @@ public class UserRepository : IUserRepository
 
     public async Task<Boolean> DeclineUserRequestToDso(Guid id)
     {
-        var user = await _dbContext.UsersAppliedToDSO.FirstOrDefaultAsync(x => x.UserID == id && x.Approved == null);
+        var user = await _dbContext.UsersAppliedToDSO.FirstOrDefaultAsync(x => x.ID == id && x.Approved == null);
         if (user == null)
         {
             return false;
@@ -281,7 +281,7 @@ public class UserRepository : IUserRepository
 
 
         //user.Approved = -1;
-        _dbContext.UsersAppliedToDSO.Remove(user);
+        _dbContext.UsersAppliedToDSO.Update(user);
         await _dbContext.SaveChangesAsync();
         return true;
     }
