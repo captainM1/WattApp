@@ -105,7 +105,7 @@ export class AuthUserService {
   }
 
   getElectricityBill(userID: any, electricityRate: number):Observable<any>{
-    return this.http.get(environment.apiUrl + `/api/PowerUsage/power-usage/electricityBill/LastMonth/${userID}?electricityRate=${electricityRate}`, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
+    return this.http.get(environment.apiUrl + `/api/PowerUsage/power-usage/electricityBill/CurrentMonth/${userID}?electricityRate=${electricityRate}`, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
   }
 
 
@@ -119,6 +119,10 @@ export class AuthUserService {
 
   getUserSharesWithDSO(userID: any):Observable<any>{
     return this.http.get(environment.apiUrl + `/api/User/user-shares-with-DSO/${userID}`, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
+  }
+
+  changePassword(userID: any, password:any):Observable<any>{
+    return this.http.post(environment.apiUrl + `/api/User/update-password/${userID}?oldPassword=`+password.oldPassword+`&newPassword=`+password.newPassword,  { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
   }
 
 }

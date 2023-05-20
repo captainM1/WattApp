@@ -78,7 +78,7 @@ export class DeviceDetailsComponent implements OnInit {
       error => {
         console.error('Error fetching device information:', error);
       });
-    
+
       this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/7daysHistory/device/${this.deviceId}`)
         .subscribe((data:any) => {
           this.deviceHistoryWeekDate = data.timestampPowerPairs.map((time:any) => time.timestamp);
@@ -106,8 +106,8 @@ export class DeviceDetailsComponent implements OnInit {
         },
         error => {
           console.error('Error fetching device history:', error);
-        })      
-      
+        })
+
       this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/Next24h/device-usage_per_hour/${this.deviceId}`)
       .subscribe((data:any) =>{
         this.next24HoursDate = data.timestampPowerPairs.map((item: any) => item.timestamp);
@@ -139,11 +139,11 @@ export class DeviceDetailsComponent implements OnInit {
       .subscribe((data:any) =>{
         this.deviceFutureMonthDate = data.timestampPowerPairs.map((item: any) => item.timestamp);
         this.deviceFutureMonthPower = data.timestampPowerPairs.map((item: any) => item.powerUsage);
-        
+
       },
       error => {
          console.error('Error fetching months history info:', error);
-      })  
+      })
   }
 
   goBack(){
@@ -168,7 +168,7 @@ export class DeviceDetailsComponent implements OnInit {
             break;
         }
       },
-      acceptButtonStyleClass: 'p-button-danger', 
+      acceptButtonStyleClass: 'p-button-danger',
       rejectButtonStyleClass: 'p-button-secondary'
     });
   }
@@ -186,7 +186,7 @@ export class DeviceDetailsComponent implements OnInit {
     );
   }
 
-  
+
 
   showPermissions(){
     this.router.navigate(['/permissions', this.deviceId]);
@@ -213,8 +213,8 @@ export class DeviceDetailsComponent implements OnInit {
     });
     this.label1 = "Today's history";
     this.label2 = "Tomorrow's prediction";
-  } 
-  else if (this.selectedOption === 'Week') { 
+  }
+  else if (this.selectedOption === 'Week') {
     this.formattedLabels = [...this.deviceHistoryWeekDate, new Date(), ...this.deviceFutureWeekDate];
     this.formattedLabels = this.formattedLabels.map((date:any) => {
       const parsedDate = new Date(date);
@@ -245,7 +245,7 @@ export class DeviceDetailsComponent implements OnInit {
 
   initializeChart() {
     if (this.chartElement){
-        
+
       if (this.chart) {
         this.chart.destroy();
       }
@@ -281,7 +281,7 @@ export class DeviceDetailsComponent implements OnInit {
             y: {
               title: {
                 display: true,
-                text: 'Power Usage (kW)'
+                text: 'Power Usage [kWh]'
               }
             },
             x: {
@@ -292,7 +292,7 @@ export class DeviceDetailsComponent implements OnInit {
             },
           }
         }
-        
+
       });
   }
 }
