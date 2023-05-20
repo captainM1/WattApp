@@ -27,7 +27,7 @@
         <td>{{user.LastName}}</td>
         <td>{{user.Address}}</td>
         <td>
-          <button class="btn btn-primary btn-lock  w-50 text-center  my-custom-button" (click)="acceptRequest(user.RequestId)">
+          <button class="btn btn-primary btn-lock  w-50 text-center  my-custom-button" (click)="acceptRequest(user.UserID)">
             <img
               src="../../../assets/icons/check.png"
               alt=""
@@ -36,7 +36,7 @@
           </button>
         </td>
         <td>
-          <button class="btn btn-primary btn-lock  w-50 text-center  my-custom-button" data-bs-target="#exampleModal1" data-bs-toggle="modal" (click)="declineRequest(user.RequestId)">
+          <button class="btn btn-primary btn-lock  w-50 text-center  my-custom-button" data-bs-target="#exampleModal1" data-bs-toggle="modal" (click)="declineRequest(user.UserID)">
             <img
                 src="../../../assets/icons/multiply.png"
                 alt=""
