@@ -249,7 +249,7 @@ public class UserRepository : IUserRepository
     }
     public async Task<Boolean> ApproveUserRequestToDso(Guid id)
     {
-        var newUser = await _dbContext.UsersAppliedToDSO.FirstOrDefaultAsync(x => x.ID == id && x.Approved == null);
+        var newUser = await _dbContext.UsersAppliedToDSO.FirstOrDefaultAsync(x => x.UserID == id && x.Approved == null);
         if(newUser == null)
         {
             return false;
@@ -258,12 +258,8 @@ public class UserRepository : IUserRepository
         newUser.Date = DateTime.Now;
 
         var approvedUser = _dbContext.Users.FirstOrDefaultAsync(u => u.ID == newUser.UserID);
-        approvedUser.Result.sharesDataWithDso = true;
         approvedUser.Result.Role = "RegularUser";
         _dbContext.Users.Update(approvedUser.Result);
-        await _dbContext.SaveChangesAsync();
-
-        newUser.Approved = true;
         _dbContext.UsersAppliedToDSO.Update(newUser);
         await _dbContext.SaveChangesAsync();
         return true;
@@ -271,16 +267,14 @@ public class UserRepository : IUserRepository
 
     public async Task<Boolean> DeclineUserRequestToDso(Guid id)
     {
-        var user = await _dbContext.UsersAppliedToDSO.FirstOrDefaultAsync(x => x.ID == id && x.Approved == null);
+        var user = await _dbContext.UsersAppliedToDSO.FirstOrDefaultAsync(x => x.UserID == id && x.Approved == false);
         if (user == null)
         {
             return false;
         }
         user.Approved = false;
         user.Date = DateTime.Now;
-
-
-        //user.Approved = -1;
+        
         _dbContext.UsersAppliedToDSO.Update(user);
         await _dbContext.SaveChangesAsync();
         return true;
@@ -376,8 +370,10 @@ public class UserRepository : IUserRepository
     {
         var status = await _dbContext.UsersAppliedToDSO.FirstOrDefaultAsync(u =>
             u.UserID.ToString().ToUpper() == userId.ToString().ToUpper());
-
-        if (status == null)
+        
+        Console.WriteLine(status);
+        
+        if (status.Approved == null)
             return false;
         if (status.Approved == false)
             return false;
