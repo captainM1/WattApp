@@ -29,6 +29,10 @@
                         <input style = "width: 100%" type="text" class="form-control" id="last-name" name="lastName" [(ngModel)]="lastName"  [disabled]="true">
                     </div>
                     <div class="form-group" style="align-self: center;">
+                        <label for="Email Address">Phone Number:</label>
+                        <input style = "width: 100%" type="text" class="form-control" name="phoneNumber"  [(ngModel)]="phoneNumber" [disabled]="true">
+                    </div>
+                    <div class="form-group" style="align-self: center;">
                         <label for="Email Address">Email Address:</label>
                         <input style = "width: 100%" type="text" class="form-control" name="email"  [(ngModel)]="email" [disabled]="true">
                     </div>
@@ -37,10 +41,30 @@
             
             <div class="row-2"id = "btn-save">
                 <div class="col-sm-6" id="col-img-btn-main" >
+                    <button class="buttonOpenModal" style="margin-left: 5px;" mat-button data-bs-target="#editProfileDispacher" data-bs-toggle="modal">
+                        Edit Profile
+                    </button>
                 </div>
             </div>
         </div>
     </div>
+    <div class="modal fade " id="editProfileDispacher" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" >
+          <div class="modal-content">
+            <div class="modal-header">
+              <p class="modal-title" id="exampleModalLabel">
+                Edit Profile
+              </p>
+              <button type="button" id="closeBtn" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <app-modal-edit-profile [email] = "email" [lastName]="lastName" [firstName]="firstName" [id] = "userID" [phoneNumber]="phoneNumber" [password]="password"></app-modal-edit-profile>
+            </div>
+
+       
+        </div>
+      </div>
+      </div>
 
 
 

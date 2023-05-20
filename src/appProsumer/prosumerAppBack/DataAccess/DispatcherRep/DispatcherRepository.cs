@@ -147,9 +147,29 @@ public class DispatcherRepository : IDispatcherRepository
         dispatcher.LastName = dispatcherUpdateDto.LastName;
         dispatcher.Email = dispatcherUpdateDto.Email;
         dispatcher.PhoneNumber = dispatcherUpdateDto.PhoneNumber;
+        
+        _dbContext.Dispatchers.Update(dispatcher);
+        await _dbContext.SaveChangesAsync();
+
+        return true;
+    }
+
+    public async Task<Boolean> UpdateDispatcherPassword(Guid id, DispatcherPasswordUpdate dispatcherPasswordUpdate)
+    {
+        Dispatcher dispatcher = await this.GetDispatcherByIdAsync(id);
+
+        if (dispatcher == null || dispatcher.Role != "Dispatcher")
+        {
+            return false;
+        }
+
+        var isDispatcherRight = _passwordHasher.VerifyPassword(dispatcherPasswordUpdate.OldPassword, dispatcher.Salt, dispatcher.PasswordHash);
+        if (isDispatcherRight == false)
+            return false;
+
         byte[] salt;
         byte[] hash;
-        (salt, hash) = _passwordHasher.HashPassword(dispatcherUpdateDto.Password);
+        (salt, hash) = _passwordHasher.HashPassword(dispatcherPasswordUpdate.NewPassword);
 
         dispatcher.Salt = salt;
         dispatcher.PasswordHash = hash;

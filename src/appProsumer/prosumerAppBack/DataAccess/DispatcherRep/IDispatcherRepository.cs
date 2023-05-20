@@ -15,4 +15,5 @@ public interface IDispatcherRepository
     Task<Boolean> DeleteDispatcher(Guid dispatcherID);
     Task<Boolean> UpdateDispatcher(Guid id, DispatcherUpdateDto dispatcherUpdateDto);
     Task<IEnumerable<object>> GetAllUsersAplicationToDsoAsync();
+    Task<Boolean> UpdateDispatcherPassword(Guid id, DispatcherPasswordUpdate dispatcherPasswordUpdate);
 }
