@@ -19,6 +19,7 @@ namespace prosumerAppBack.Models
             Role = user.Role;
             Email = user.Email;
             Devices = user.Devices;
+            profilePicture = null;
         }
 
         public User()
@@ -38,6 +39,8 @@ namespace prosumerAppBack.Models
         public string? Country { get; set; }
         public string? Role { get; set; }
         public string? Email { get; set; }
+
+        public string? profilePicture { get; set; }
         public string? PasswordResetToken { get; set; }
         public DateTime? PasswordResetTokenExpires { get; set; }
         public Boolean sharesDataWithDso { get; set; }

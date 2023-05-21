@@ -375,4 +375,9 @@ public class UserController : ControllerBase
             return StatusCode(500, ex.Message);
         }
     }
+    [HttpPut("update-user-image")]
+    public async Task<IActionResult> SaveImageForUser( [FromBody] UpdateImageViewModel updateImageViewModel)
+    {
+        return Ok(await _userService.SaveImageForUser(updateImageViewModel.Id, updateImageViewModel.imagePicture));
+    }
 }

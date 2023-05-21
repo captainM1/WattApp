@@ -26,4 +26,5 @@ public interface IUserRepository
     Task<List<UsersRequestedToDso>> GetUsersAppliedToDso();
     Task<bool> UserStatusAppliedToDso(Guid userId);
     Task<Boolean> RemoveUserRequestToDso(Guid id);
+    public Task<User> SaveProfilePictureAsync(Guid userId, string profilePicture);
 }

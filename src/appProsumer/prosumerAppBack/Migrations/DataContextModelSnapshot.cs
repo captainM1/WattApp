@@ -507,9 +507,9 @@ namespace prosumerAppBack.Migrations
                             Email = "admin@gmail.com",
                             FirstName = "Adminovic",
                             LastName = "Adminovski",
-                            PasswordHash = new byte[] { 98, 110, 58, 103, 24, 49, 234, 94, 48, 122, 121, 92, 75, 163, 90, 157, 72, 93, 20, 123, 161, 154, 147, 223, 220, 97, 153, 12, 69, 18, 64, 139 },
+                            PasswordHash = new byte[] { 167, 29, 10, 9, 188, 65, 128, 15, 67, 206, 185, 28, 182, 12, 89, 92, 64, 185, 184, 207, 202, 179, 76, 129, 235, 143, 16, 213, 179, 42, 216, 9 },
                             Role = "Admin",
-                            Salt = new byte[] { 171, 181, 48, 243, 8, 94, 204, 208, 156, 167, 248, 92, 134, 66, 187, 94 }
+                            Salt = new byte[] { 243, 78, 71, 236, 60, 243, 113, 131, 101, 226, 57, 11, 74, 166, 182, 210 }
                         });
                 });
 
@@ -557,6 +557,9 @@ namespace prosumerAppBack.Migrations
                         .IsRequired()
                         .HasColumnType("BLOB");
 
+                    b.Property<string>("profilePicture")
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("sharesDataWithDso")
                         .HasColumnType("INTEGER");
 
@@ -574,10 +577,10 @@ namespace prosumerAppBack.Migrations
                             Email = "petarsimic@gmail.com",
                             FirstName = "Petar",
                             LastName = "Simic",
-                            PasswordHash = new byte[] { 113, 33, 110, 31, 200, 143, 229, 102, 1, 211, 37, 116, 235, 141, 75, 37, 48, 253, 180, 205, 160, 119, 30, 110, 24, 2, 192, 26, 165, 4, 67, 87 },
+                            PasswordHash = new byte[] { 123, 152, 101, 126, 5, 177, 90, 239, 211, 238, 176, 202, 45, 29, 102, 191, 112, 21, 110, 176, 228, 88, 0, 83, 164, 74, 15, 166, 185, 98, 182, 142 },
                             PhoneNumber = "064-316-15-81",
                             Role = "UnapprovedUser",
-                            Salt = new byte[] { 16, 179, 108, 95, 109, 124, 25, 177, 20, 183, 228, 132, 87, 78, 117, 41 },
+                            Salt = new byte[] { 175, 174, 252, 227, 236, 52, 36, 57, 2, 214, 2, 35, 171, 186, 76, 214 },
                             sharesDataWithDso = false
                         });
                 });
