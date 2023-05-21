@@ -260,4 +260,14 @@ public class DeviceService:IDeviceService
         }
         return true;
     }
+
+    public Task<IEnumerable<DeviceDto>> GetProducersThatAreNotAttachedToABattery(Guid userID)
+    {
+        var producers = _repository.GetProducersThatAreNotAttachedToABattery(userID);
+        if (producers == null)
+        {
+            throw new NotFoundException();
+        }
+        return producers;
+    }
 }

@@ -330,6 +330,28 @@ namespace prosumerAppBack.DataAccess
             await _dbContext.SaveChangesAsync();
             return true;
         }
+
+        public async Task<IEnumerable<DeviceDto>> GetProducersThatAreNotAttachedToABattery(Guid userID)
+        {
+            var producers = _dbContext.Devices
+                            .Where(u => u.OwnerID == userID)
+                            .Include(u => u.DeviceType)
+                            .ThenInclude(u => u.Group)
+                            .Where(u => u.DeviceType.Group.Name == "Producer")
+                            .Select(d => new DeviceDto()
+                            {
+                                DeviceID = d.ID,
+                                DeviceName = d.DeviceName
+                            })                            
+                            .Except(_dbContext.BatteryConnections.Include(e => e.Device).Select(e => new DeviceDto() 
+                            {
+                                DeviceID = e.Device.ID,
+                                DeviceName = e.Device.DeviceName                                
+                            }))                            
+                            .ToList();     
+                                    
+            return producers;
+        }
     }
 
     public class DeviceInfo
@@ -355,6 +377,11 @@ namespace prosumerAppBack.DataAccess
     {
         public Guid ManufacturerID { get; set; }
         public string ManufacturerName { get; set; }
+    }
+    public class DeviceDto
+    {
+        public Guid DeviceID { get; set; }
+        public string DeviceName { get; set; }
     }
 }
 

@@ -29,4 +29,5 @@ public interface IDeviceService
     public bool DSOHasControl(Guid deviceID);
     public Task<bool> ChangeState(Guid deviceId);
     Task<Boolean> UpdateUserDeviceDsoControl(Guid deviceID, Boolean dsoHasControl);
+    Task<IEnumerable<DeviceDto>> GetProducersThatAreNotAttachedToABattery(Guid userID);
 }

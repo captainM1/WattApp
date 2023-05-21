@@ -357,6 +357,21 @@ namespace prosumerAppBack.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        [HttpGet("get-producers-that-are-not-connected-to-battey/{userID}")]
+        public async Task<IActionResult> GetProducersThatAreNotAttachedToABattery(Guid userID)
+        {
+            try
+            {
+                var devices = await _deviceService.GetProducersThatAreNotAttachedToABattery(userID);
+
+                return Ok(devices);
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
+        }
     }
 }
 
