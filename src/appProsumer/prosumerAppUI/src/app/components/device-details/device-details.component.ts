@@ -22,6 +22,7 @@ export class DeviceDetailsComponent implements OnInit {
   device: any;
   groupName: string = '';
   deviceId: any;
+  deviceCurrent: any;
   deviceHistoryWeekPower: any = [];
   deviceFutureWeekPower: any = [];
   deviceHistoryWeekDate: any = [];
@@ -70,7 +71,6 @@ export class DeviceDetailsComponent implements OnInit {
     this.settings.getShareInfo().subscribe(
       (data) => {
         this.allowAccess = data;
-        console.log(data);
       },
       (error) => {
         console.error('Error retrieving share information:', error);
@@ -81,6 +81,14 @@ export class DeviceDetailsComponent implements OnInit {
       .subscribe(data => {
         this.device = data;
         this.groupName = this.device.groupName;
+      },
+      error => {
+        console.error('Error fetching device information:', error);
+      });
+
+      this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/current/device/${this.deviceId}`)
+      .subscribe(data => {
+        this.deviceCurrent = data;
       },
       error => {
         console.error('Error fetching device information:', error);
@@ -117,7 +125,6 @@ export class DeviceDetailsComponent implements OnInit {
 
       this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/Next24h/device-usage_per_hour/${this.deviceId}`)
       .subscribe((data:any) =>{
-        console.log(data);
         this.next24HoursDate = data.timestampPowerPairs.map((item: any) => item.timestamp);
         this.next24HoursPower = data.timestampPowerPairs.map((item: any) => item.powerUsage);
       },
@@ -127,7 +134,6 @@ export class DeviceDetailsComponent implements OnInit {
 
       this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/Previous24h/device-usage_per_hour/${this.deviceId}`)
       .subscribe((data:any) =>{
-        console.log(data);
         this.last24HoursDate = data.timestampPowerPairs.map((item: any) => item.timestamp);
         this.last24HoursPower = data.timestampPowerPairs.map((item: any) => item.powerUsage);
       },
@@ -212,33 +218,41 @@ export class DeviceDetailsComponent implements OnInit {
 
   onOptionSelect() {
   if (this.selectedOption === 'Today') {
-    this.data = this.last24HoursPower;
-    this.data1 = this.next24HoursPower;
-    this.formattedLabels = this.last24HoursDate.map((date:any) => {
+    this.data = [...this.last24HoursPower, this.deviceCurrent, null, null, null, null, null, null, null, null, null, null, null, null,null, null, null, null, null, null,null, null, null, null, null, null];
+    this.data1 = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, this.deviceCurrent, ...this.next24HoursPower];
+    const currentDate = new Date();
+    const offset = currentDate.getTimezoneOffset() * 60000;
+    const adjustedDate = new Date(currentDate.getTime() - offset).toISOString();
+    this.formattedLabels = [...this.last24HoursDate, adjustedDate, ...this.next24HoursDate];
+    this.formattedLabels = this.formattedLabels.map((date:any) => {
       const parsedDate = new Date(date);
-      const hours = parsedDate.getHours() + 1;
+      const hours = parsedDate.getUTCHours();
       const minutes = parsedDate.getMinutes();
-      return `${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}`;
+      return `${hours < 10 ? '0' + hours : hours}:00`;
     });
-    this.label1 = "Today's history";
-    this.label2 = "Tomorrow's prediction";
+    this.label1 = "24 hour history";
+    this.label2 = "24 hour prediction";
     this.data24h=[];
-    const pom = [...this.last24HoursPower, this.deviceToday, ...this.next24HoursPower];
+    const pom = [...this.last24HoursPower, this.deviceCurrent, ...this.next24HoursPower];
     for (let i = 0; i < this.formattedLabels.length; i++) {
       const pair = {
         timestamp: this.formattedLabels[i],
         powerUsage: pom[i]
       };
-      this.dataMonth.push(pair);
+      this.data24h.push(pair);
     }
   } 
   else if (this.selectedOption === 'Week') { 
     this.formattedLabels = [...this.deviceHistoryWeekDate, new Date(), ...this.deviceFutureWeekDate];
     this.formattedLabels = this.formattedLabels.map((date:any) => {
       const parsedDate = new Date(date);
-      const month = parsedDate.getMonth() + 1;
+      const monthNames = [
+        'January', 'February', 'March', 'April', 'May', 'June', 'July',
+        'August', 'September', 'October', 'November', 'December'
+      ];
+      const month = monthNames[parsedDate.getMonth()];
       const day = parsedDate.getDate();
-      return `${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
+      return `${month} ${day}`;
     });
     this.data = [...this.deviceHistoryWeekPower, this.deviceToday, null, null, null, null, null, null];
     this.data1 = [null, null, null, null, null, null, null, this.deviceToday, ...this.deviceFutureWeekPower];
@@ -258,9 +272,13 @@ export class DeviceDetailsComponent implements OnInit {
     this.formattedLabels = [...this.deviceHistoryMonthDate, new Date(), ...this.deviceFutureMonthDate];
     this.formattedLabels = this.formattedLabels.map((date:any) => {
       const parsedDate = new Date(date);
-      const month = parsedDate.getMonth() + 1;
+      const monthNames = [
+        'January', 'February', 'March', 'April', 'May', 'June', 'July',
+        'August', 'September', 'October', 'November', 'December'
+      ];
+      const month = monthNames[parsedDate.getMonth()];
       const day = parsedDate.getDate();
-      return `${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
+      return `${month} ${day}`;
     });
     this.data = [...this.deviceHistoryMonthPower, this.deviceToday,null, null, null, null, null,null, null, null, null, null,null, null, null, null, null,null, null, null, null, null,null, null, null, null, null,null, null, null, null, null,null];
     this.data1 = [null, null, null, null, null,null, null, null, null, null,null, null, null, null, null,null, null, null, null, null,null, null, null, null, null,null, null, null, null, null, null, this.deviceToday, ...this.deviceFutureMonthPower];
@@ -317,7 +335,7 @@ export class DeviceDetailsComponent implements OnInit {
             y: {
               title: {
                 display: true,
-                text: 'Power Usage [kWh]'
+                text: 'Power Amount [kWh]'
               }
             },
             x: {
