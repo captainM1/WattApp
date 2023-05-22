@@ -374,14 +374,14 @@ export class AuthService {
     return this.http.get(environment.apiUrl +"/api/Device/DSO-has-control/"+deviceID);
   }
 
-  updateDispacher(dispID:any, firstName : string, lastName:string,  phoneNumber:string,email:string):Observable<any>{
+  updateDispacher(dispID:string, firstName : string, lastName:string,  phoneNumber:string,email:string):Observable<any>{
     const data = {
       firstName:firstName,
       lastName:lastName,
       phoneNumber:phoneNumber,
       email:email,
     }
-    return this.http.post(environment.apiUrl + "/api/Dispatcher/update-dispatcher/"+dispID,data);
+    return this.http.put(environment.apiUrl + "/api/Dispatcher/update-dispatcher/"+dispID,data);
   }
 
   changeStateOfDevice(deviceID : any, status: boolean):Observable<any>{
@@ -390,5 +390,16 @@ export class AuthService {
       isOn:status
     }
     return this.http.post(environment.apiUrl+"/api/Device/update-device-state",data);
+  }
+  stateOfDevice(deviceID:any):Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/Device/is-turned-on/"+deviceID);
+  }
+
+  updatePasswordForDispacher(dispID:any, old:string, newpass:string):Observable<any>{
+    const data = {
+      oldPassword:old,
+      newPassword:newpass,
+    }
+    return this.http.put(environment.apiUrl+'/api/Dispatcher/update-password-for-dispatcher/'+dispID, data)
   }
 }
