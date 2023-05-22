@@ -48,7 +48,7 @@
                             <span class="input-group-addon addon-icon" [ngClass]="{'invalid-icon': submitted && fields['phonenumber'].errors}"><i class="fa fa-phone"></i></span>
                             <div class="invalid-feedback" style="margin: 0.2rem;">
                                 <span class="text-danger" *ngIf="submitted && fields['phonenumber'].errors?.['required']">*Phone number is required!</span>
-                                <span class="text-danger" *ngIf="fields['phonenumber'].errors?.['phonenumber']">"*Please, provide a valid phone number.</span>
+                                <span class="text-danger"*ngIf="fields['phonenumber'].hasError('pattern')">">"*Please, provide a valid phone number.</span>
                               </div>
                         </div>
 
