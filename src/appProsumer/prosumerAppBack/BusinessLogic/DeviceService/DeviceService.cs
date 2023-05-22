@@ -250,4 +250,14 @@ public class DeviceService:IDeviceService
     {
         return _repository.ChangeState(deviceId);
     }
+
+    public async Task<Boolean> UpdateUserDeviceDsoControl(Guid deviceID, Boolean dsoHasControl)
+    {
+        var action = await _repository.UpdateUserDeviceDsoControl(deviceID, dsoHasControl);
+        if (!action)
+        {
+            throw new BadRequestException("Device dso control consumption time permission has failed to update");
+        }
+        return true;
+    }
 }

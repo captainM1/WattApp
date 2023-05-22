@@ -7,6 +7,8 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { Observable, catchError, forkJoin, map, of, tap } from 'rxjs';
 import { ConfirmEventType, ConfirmationService, MessageService } from 'primeng/api';
+import { AuthUserService } from 'src/app/services/auth-user.service';
+import { Info } from 'src/app/models/user';
 
 @Component({
   selector: 'app-my-devices',
@@ -17,7 +19,7 @@ export class MyDevicesComponent implements OnInit {
   devices: any = [];
   deviceToday: {[key: string]: any} = {};
   searchName: string = '';
-
+  typeOfDevices: {[key: string]: any} = {};
   @ViewChild('myTable') myTable!: ElementRef;
 
   constructor(
@@ -59,6 +61,19 @@ export class MyDevicesComponent implements OnInit {
                   }
                 );
             });
+            this.devices.forEach((device: any) => {
+              this.http
+                .get<any[]>(
+                  `${environment.apiUrl}/api/Device/devices/info/${device.deviceId}`)
+                .subscribe(
+                  (response:any) => {
+                    this.typeOfDevices[device.deviceId] = response.groupName;
+                  },
+                  (error) => {
+                  }
+                );
+            });
+
           },
           (error) => {
             console.log(error);
@@ -100,20 +115,16 @@ export class MyDevicesComponent implements OnInit {
   }
 
 
-  
+
   confirmStateChange(device: any) {
-    device.isConfirmingStateChange = true; // Disable the checkbox until confirmation
     this.confirmationService.confirm({
       message: 'Are you sure you want to change the state of the device?',
       header: 'Confirmation',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         this.changeState(device.deviceId);
-        device.isConfirmingStateChange = false; // Enable the checkbox after confirmation
       },
       reject: (type: any) => {
-        device.isConfirmingStateChange = false; // Enable the checkbox after rejection or cancellation
-        // Handle rejection or cancellation if needed
         switch (type) {
           case ConfirmEventType.REJECT:
             this.messageService.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected' });
@@ -123,14 +134,15 @@ export class MyDevicesComponent implements OnInit {
             break;
         }
       },
-      acceptButtonStyleClass: 'p-button-danger', 
+      acceptButtonStyleClass: 'p-button-danger',
       rejectButtonStyleClass: 'p-button-secondary'
     });
   }
-  
+
   changeState(id: any) {
     this.auth.changeState(id).subscribe(() => {
-      // Success handling if needed
+      
     });
   }
+
 }

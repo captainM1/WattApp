@@ -29,6 +29,7 @@ export class BackgroundService implements OnDestroy{
       response => {
         if (response === true) {
           this.statusUpdate$.next('accepted');
+          this.ngOnDestroy();
         }
       }
     )

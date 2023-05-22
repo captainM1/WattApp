@@ -313,16 +313,7 @@ public class UserService:IUserService
             throw new BadRequestException("User data sharing permission has failed to update");
         }
         return true;
-    }
-    public async Task<Boolean> UpdateUserDeviceDsoControl(Guid id, Boolean dsoHasControl)
-    {
-        var action = await _repository.UpdateUserDeviceDsoControl(id, dsoHasControl);
-        if (!action)
-        {
-            throw new BadRequestException("User dso control consumption time permission has failed to update");
-        }
-        return true;
-    }
+    }    
 
     public async Task<List<UsersRequestedToDso>> GetUsersAppliedToDso()
     {
@@ -354,5 +345,17 @@ public class UserService:IUserService
     public async Task<bool> UserStatusAppliedToDso(Guid userId)
     {
         return await _repository.UserStatusAppliedToDso(userId);
+    }
+    public async Task<bool> SaveImageForUser(Guid id, string profilePicture)
+        
+    {
+        var user = await _repository.SaveProfilePictureAsync(id, profilePicture);
+
+        if (user == null)
+        {
+            return false;
+        }
+        
+        return true;
     }
 }

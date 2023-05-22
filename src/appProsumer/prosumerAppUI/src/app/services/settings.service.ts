@@ -18,30 +18,16 @@ export class SettingsService {
     return this.http.get<any>(`${environment.apiUrl}/api/User/user-shares-with-DSO/${this.userId}`, { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
   }
 
-  updateUserDataSharing(allowAccess: boolean): void {
-    const apiUrl = `${environment.apiUrl}/api/User/update-user-data-sharing-permission/${this.userId}`;
-    const requestBody = { sharesDataWithDso: allowAccess };
-  
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${this.cookie.get('jwtToken')}`
-    });
-  
-    this.http.post(apiUrl, requestBody, { headers }).subscribe(
-      (response) => {
-        console.log('User data sharing permission updated:', response);
-      },
-      (error) => {
-        console.error('Error updating user data sharing permission:', error);
-      }
-    );
+  updateUserDataSharing(allowAccess: boolean):Observable<any> {
+    return this.http.put(`${environment.apiUrl}/api/User/update-user-data-sharing-permission/${this.userId}`, allowAccess , { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
   } 
 
   getControlInfo(deviceId: string){
     return this.http.get<any>(`${environment.apiUrl}/api/Device/DSO-has-control/${deviceId}`, {});
   }
 
-  updateDeviceControl(allowAccess: boolean): void {
+  updateDeviceControl(deviceId:string, allowControl: boolean):Observable<any>  {
+    return this.http.put(`${environment.apiUrl}/api/Device/update-device-dso-control-permission/${deviceId}`, allowControl , { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
   } 
 
   sendRequest(){

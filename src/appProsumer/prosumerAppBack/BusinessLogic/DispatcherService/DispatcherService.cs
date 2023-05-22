@@ -141,5 +141,15 @@ namespace prosumerAppBack.BusinessLogic.DispatcherService
 
             return users;
         }
+
+        public async Task<Boolean> UpdateDispatcherPassword(Guid id, DispatcherPasswordUpdate dispatcherPasswordUpdate)
+        {
+            var action = await _repository.UpdateDispatcherPassword(id, dispatcherPasswordUpdate);
+            if (!action)
+            {
+                throw new NullReferenceException("Action failed");
+            }
+            return true;
+        }
     }
 }

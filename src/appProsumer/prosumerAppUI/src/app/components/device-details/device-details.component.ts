@@ -10,6 +10,7 @@ import { DeviceEditPopupComponent } from '../device-edit-popup/device-edit-popup
 import { MatDialog } from '@angular/material/dialog';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SettingsService } from 'src/app/services/settings.service';
+import { ModalTableComponent } from '../modal-table/modal-table.component';
 
 
 @Component({
@@ -44,6 +45,12 @@ export class DeviceDetailsComponent implements OnInit {
   label2: string = '';
   showSpinner: boolean = true;
   allowAccess: boolean = false;
+  data24h: any[]=[];
+  dataMonth: any[]=[];
+  data7days: any[]=[];
+
+  @ViewChild('myTable') myTable!: ElementRef;
+  @ViewChild('ModalTableComponentHistoryConsumption') modalTableComponentHistoryConsumption!: ModalTableComponent;
 
   constructor(
     private route: ActivatedRoute,
@@ -78,7 +85,7 @@ export class DeviceDetailsComponent implements OnInit {
       error => {
         console.error('Error fetching device information:', error);
       });
-    
+
       this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/7daysHistory/device/${this.deviceId}`)
         .subscribe((data:any) => {
           this.deviceHistoryWeekDate = data.timestampPowerPairs.map((time:any) => time.timestamp);
@@ -106,10 +113,11 @@ export class DeviceDetailsComponent implements OnInit {
         },
         error => {
           console.error('Error fetching device history:', error);
-        })      
-      
+        })
+
       this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/Next24h/device-usage_per_hour/${this.deviceId}`)
       .subscribe((data:any) =>{
+        console.log(data);
         this.next24HoursDate = data.timestampPowerPairs.map((item: any) => item.timestamp);
         this.next24HoursPower = data.timestampPowerPairs.map((item: any) => item.powerUsage);
       },
@@ -119,6 +127,7 @@ export class DeviceDetailsComponent implements OnInit {
 
       this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/Previous24h/device-usage_per_hour/${this.deviceId}`)
       .subscribe((data:any) =>{
+        console.log(data);
         this.last24HoursDate = data.timestampPowerPairs.map((item: any) => item.timestamp);
         this.last24HoursPower = data.timestampPowerPairs.map((item: any) => item.powerUsage);
       },
@@ -139,11 +148,11 @@ export class DeviceDetailsComponent implements OnInit {
       .subscribe((data:any) =>{
         this.deviceFutureMonthDate = data.timestampPowerPairs.map((item: any) => item.timestamp);
         this.deviceFutureMonthPower = data.timestampPowerPairs.map((item: any) => item.powerUsage);
-        
+
       },
       error => {
          console.error('Error fetching months history info:', error);
-      })  
+      })
   }
 
   goBack(){
@@ -168,7 +177,7 @@ export class DeviceDetailsComponent implements OnInit {
             break;
         }
       },
-      acceptButtonStyleClass: 'p-button-danger', 
+      acceptButtonStyleClass: 'p-button-danger',
       rejectButtonStyleClass: 'p-button-secondary'
     });
   }
@@ -186,7 +195,7 @@ export class DeviceDetailsComponent implements OnInit {
     );
   }
 
-  
+
 
   showPermissions(){
     this.router.navigate(['/permissions', this.deviceId]);
@@ -213,6 +222,15 @@ export class DeviceDetailsComponent implements OnInit {
     });
     this.label1 = "Today's history";
     this.label2 = "Tomorrow's prediction";
+    this.data24h=[];
+    const pom = [...this.last24HoursPower, this.deviceToday, ...this.next24HoursPower];
+    for (let i = 0; i < this.formattedLabels.length; i++) {
+      const pair = {
+        timestamp: this.formattedLabels[i],
+        powerUsage: pom[i]
+      };
+      this.dataMonth.push(pair);
+    }
   } 
   else if (this.selectedOption === 'Week') { 
     this.formattedLabels = [...this.deviceHistoryWeekDate, new Date(), ...this.deviceFutureWeekDate];
@@ -226,6 +244,15 @@ export class DeviceDetailsComponent implements OnInit {
     this.data1 = [null, null, null, null, null, null, null, this.deviceToday, ...this.deviceFutureWeekPower];
     this.label1 = "Last Week's History";
     this.label2 = "Next Week's Prediction";
+    this.data7days=[];
+    const pom = [...this.deviceHistoryWeekPower, this.deviceToday, ...this.deviceFutureWeekPower];
+    for (let i = 0; i < this.formattedLabels.length; i++) {
+      const pair = {
+        timestamp: this.formattedLabels[i],
+        powerUsage: pom[i]
+      };
+      this.data7days.push(pair);
+    }
   }
   else if (this.selectedOption === 'Month'){
     this.formattedLabels = [...this.deviceHistoryMonthDate, new Date(), ...this.deviceFutureMonthDate];
@@ -239,13 +266,22 @@ export class DeviceDetailsComponent implements OnInit {
     this.data1 = [null, null, null, null, null,null, null, null, null, null,null, null, null, null, null,null, null, null, null, null,null, null, null, null, null,null, null, null, null, null, null, this.deviceToday, ...this.deviceFutureMonthPower];
     this.label1 = "Last Month's History";
     this.label2 = "Next Month's Prediction";
+    this.dataMonth=[];
+    const pom = [...this.deviceHistoryMonthPower, this.deviceToday, ...this.deviceFutureMonthPower];
+    for (let i = 0; i < this.formattedLabels.length; i++) {
+      const pair = {
+        timestamp: this.formattedLabels[i],
+        powerUsage: pom[i]
+      };
+      this.dataMonth.push(pair);
+    }
   }
   this.initializeChart();
   }
 
   initializeChart() {
     if (this.chartElement){
-        
+
       if (this.chart) {
         this.chart.destroy();
       }
@@ -281,7 +317,7 @@ export class DeviceDetailsComponent implements OnInit {
             y: {
               title: {
                 display: true,
-                text: 'Power Usage (kW)'
+                text: 'Power Usage [kWh]'
               }
             },
             x: {
@@ -292,7 +328,7 @@ export class DeviceDetailsComponent implements OnInit {
             },
           }
         }
-        
+
       });
   }
 }

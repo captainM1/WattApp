@@ -93,7 +93,7 @@
     }
 
     button{
-        font-size: 14px;
+        font-size: 13px;
         height: 40px;
         text-align: left;
         width: 60%;
@@ -454,15 +454,25 @@ body {
   background-color: darkgoldenrod;
 }
 
-.approved{
-  background-color: green;
+.pending:hover, .pending:active{
+  background-color:#b8940b;
 }
 
 .bad{
-  background-color:red;
+  background-color:#B10B09;
 }
 
-pending, approved, bad{
-  width: 95% !important;
+.bad:hover, .bad:active{
+  background-color:#B92322;
 }
 
+.false{
+  background-color:white;
+  color:#026670;
+  filter:none;
+  border: none;
+}
+
+.col-6{
+  padding:0px 5px;
+}

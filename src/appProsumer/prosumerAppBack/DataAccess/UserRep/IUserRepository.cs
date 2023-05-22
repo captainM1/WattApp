@@ -20,11 +20,11 @@ public interface IUserRepository
     Task ResetPasswordToken(string token);
     public bool SharesWhidDSO(Guid userID);    
     Task<User> DisconnectFromDso(Guid id);
-    Task<Boolean> UpdateUserDataSharing(Guid id, Boolean sharesDataWithDso);
-    Task<Boolean> UpdateUserDeviceDsoControl(Guid id, Boolean dsoHasControl);
+    Task<Boolean> UpdateUserDataSharing(Guid id, Boolean sharesDataWithDso);    
     Task<Boolean> UserAllreadyAppliedToDso(Guid id);
     public Task<Boolean> ResetPassword(Guid id, string newPassword);
     Task<List<UsersRequestedToDso>> GetUsersAppliedToDso();
     Task<bool> UserStatusAppliedToDso(Guid userId);
     Task<Boolean> RemoveUserRequestToDso(Guid id);
+    public Task<User> SaveProfilePictureAsync(Guid userId, string profilePicture);
 }

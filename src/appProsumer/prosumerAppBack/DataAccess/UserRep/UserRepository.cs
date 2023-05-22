@@ -1,4 +1,5 @@
 using System.Security.Cryptography;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using prosumerAppBack.Helper;
@@ -258,12 +259,9 @@ public class UserRepository : IUserRepository
         newUser.Date = DateTime.Now;
 
         var approvedUser = _dbContext.Users.FirstOrDefaultAsync(u => u.ID == newUser.UserID);
-        approvedUser.Result.sharesDataWithDso = true;
         approvedUser.Result.Role = "RegularUser";
+        approvedUser.Result.sharesDataWithDso = true;
         _dbContext.Users.Update(approvedUser.Result);
-        await _dbContext.SaveChangesAsync();
-
-        newUser.Approved = true;
         _dbContext.UsersAppliedToDSO.Update(newUser);
         await _dbContext.SaveChangesAsync();
         return true;
@@ -271,17 +269,15 @@ public class UserRepository : IUserRepository
 
     public async Task<Boolean> DeclineUserRequestToDso(Guid id)
     {
-        var user = await _dbContext.UsersAppliedToDSO.FirstOrDefaultAsync(x => x.UserID == id && x.Approved == null);
+        var user = await _dbContext.UsersAppliedToDSO.FirstOrDefaultAsync(x => x.UserID == id && x.Approved == false);
         if (user == null)
         {
             return false;
         }
         user.Approved = false;
         user.Date = DateTime.Now;
-
-
-        //user.Approved = -1;
-        _dbContext.UsersAppliedToDSO.Remove(user);
+        
+        _dbContext.UsersAppliedToDSO.Update(user);
         await _dbContext.SaveChangesAsync();
         return true;
     }
@@ -356,18 +352,7 @@ public class UserRepository : IUserRepository
         _dbContext.Users.Update(user);
         await _dbContext.SaveChangesAsync();
         return true;
-    }
-
-    public async Task<Boolean> UpdateUserDeviceDsoControl(Guid id, Boolean dsoHasControl)
-    {
-        var device = await _dbContext.Devices.FirstOrDefaultAsync(u => u.ID == id);
-
-        device.dsoHasControl = dsoHasControl;
-
-        _dbContext.Devices.Update(device);
-        await _dbContext.SaveChangesAsync();
-        return true;
-    }
+    }    
 
     public async Task<List<UsersRequestedToDso>> GetUsersAppliedToDso()
     {
@@ -387,8 +372,10 @@ public class UserRepository : IUserRepository
     {
         var status = await _dbContext.UsersAppliedToDSO.FirstOrDefaultAsync(u =>
             u.UserID.ToString().ToUpper() == userId.ToString().ToUpper());
-
-        if (status == null)
+        
+        Console.WriteLine(status);
+        
+        if (status.Approved == null)
             return false;
         if (status.Approved == false)
             return false;
@@ -415,5 +402,14 @@ public class UserRepository : IUserRepository
         _dbContext.UsersAppliedToDSO.Remove(user);
         await _dbContext.SaveChangesAsync();
         return true;
+    }
+    public async Task<User> SaveProfilePictureAsync(Guid userId, string profilePicture)
+    {
+        var user = await _dbContext.Users.FindAsync(userId);
+
+        user.profilePicture = profilePicture;
+        await _dbContext.SaveChangesAsync();
+
+        return user;
     }
 }

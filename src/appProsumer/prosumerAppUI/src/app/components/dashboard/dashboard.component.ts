@@ -317,7 +317,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
         y: {
           title: {
             display: true,
-            text: 'Power consumption (kW)',
+            text: 'Energy Consumption [kWh]',
             font:{
               size: 10,
             }
@@ -421,7 +421,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
         y: {
           title: {
             display: true,
-            text: 'Power consumption (kW)',
+            text: 'Energy Consumption [kWh]',
             font:{
               size: 10
             }
@@ -538,7 +538,10 @@ export class DashboardComponent implements OnInit, AfterViewInit{
         y: {
           title: {
             display: true,
-            text: 'Power Consumption (kW)'
+            text: 'Energy Consumption [kWh]',
+            font: {
+            size: 9,
+          },
           },
           ticks: {
             font: {
@@ -643,7 +646,10 @@ export class DashboardComponent implements OnInit, AfterViewInit{
         y: {
           title: {
             display: true,
-            text: 'Power Consumption (kW)',
+            text: 'Energy Consumption [kWh]',
+            font: {
+            size: 9,
+          },
           },
           ticks: {
             font: {
@@ -743,7 +749,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
             y: {
               title: {
                 display: true,
-                text: 'Power Consumption (kW)',
+                text: 'Energy Consumption [kWh]',
                 font: {
                   size: 9,
                 },
@@ -835,7 +841,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
             y: {
               title: {
                 display: true,
-                text: 'Power Consumption (kW)',
+                text: 'Energy Consumption [kWh]',
                 font: {
                   size: 9,
                 },
@@ -930,7 +936,7 @@ previousProduction24Graph(list:any, valueList:any){
       y: {
         title: {
           display: true,
-          text: 'Power production (kW)',
+          text: 'Energy Production [kWh]',
           font:{
             size: 10,
           }
@@ -1043,7 +1049,10 @@ chartProductionPreviousMonth(){
       y: {
         title: {
           display: true,
-          text: 'Power Production (kW)'
+          text: 'Energy Production [kWh]',
+          font: {
+            size: 9,
+          }
         },
         ticks: {
           font: {
@@ -1142,7 +1151,7 @@ chartProductionPrev7Days(){
           y: {
             title: {
               display: true,
-              text: 'Power Production (kW)',
+              text: 'Energy Production [kWh]',
               font: {
                 size: 9,
               },
@@ -1236,7 +1245,7 @@ nextProduction24Graph(list:any, valueList:any){
       y: {
         title: {
           display: true,
-          text: 'Power production (kW)',
+          text: 'Energy Production [kWh]',
           font:{
             size: 10,
           }
@@ -1337,7 +1346,7 @@ chartProductionNext7Days(){
           y: {
             title: {
               display: true,
-              text: 'Power Production (kW)',
+              text: 'Energy Production [kWh]',
               font: {
                 size: 9,
               },
@@ -1440,7 +1449,10 @@ chartProductionNextMonth(){
       y: {
         title: {
           display: true,
-          text: 'Power Production (kW)'
+          text: 'Energy Production [kWh]',
+          font: {
+            size: 9,
+          },
         },
         ticks: {
           font: {

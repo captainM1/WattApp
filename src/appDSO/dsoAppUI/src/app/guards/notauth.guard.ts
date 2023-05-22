@@ -19,7 +19,7 @@ export class NotauthGuard  {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
-      if(!this.cookie.check("jwtToken")){
+      if(!this.cookie.check("jwtTokenDso")){
         return true;
       }
       else{

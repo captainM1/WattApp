@@ -59,6 +59,10 @@
                         <option value="Week">Week</option>
                         <option value="Month">Month</option>
                     </select>
+
+                    <button class="buttonOpenModal" style="margin-left: 5px;" mat-button data-bs-target="#consumptionHistory" data-bs-toggle="modal">
+                        <i class="fa fa-table" aria-hidden="true"></i>
+                    </button>
                 </div>
             </div>
             <div class="align-center chart">
@@ -69,3 +73,32 @@
     </div>
 </div>
 
+<div class="modal fade " id="consumptionHistory" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" >
+      <div class="modal-content">
+        <div class="modal-header">
+          <p class="modal-title" id="exampleModalLabel">
+            <span *ngIf="selectedOption === 'Today'" style="color: #026670; font-size: 20px; font-weight: 700;"> Consumption For The Previous 24h </span>
+            <span *ngIf="selectedOption === 'Week'" style="color: #026670; font-size: 20px; font-weight: 700;"> Consumption For The Previous Month </span>
+            <span *ngIf="selectedOption === 'Month'" style="color: #026670; font-size: 20px; font-weight: 700;"> Consumption For The Previous 7 days </span>
+          </p>
+          <button type="button" id="closeBtn" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+          <div *ngIf="selectedOption === 'Today'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
+            <app-modal-table #ModalTableComponentHistoryConsumption [data]="data24h" [type]="'Consumption'" [message]="'Consumption For Previous 24h'" [time]="'Hour'"></app-modal-table>
+          </div>
+           <div *ngIf="selectedOption === 'Week'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
+            <app-modal-table #ModalTableComponentHistoryConsumption [data]="data7days" [type]="'Consumption'" [message]="'Consumption For Previous Month'" [time]="'Date'"></app-modal-table>
+          </div>
+          <div *ngIf="selectedOption === 'Month'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
+            <app-modal-table #ModalTableComponentHistoryConsumption [data]="dataMonth" [type]="'Consumption'" [message]="'Consumption For Previous 7 days'" [time]="'Day'"></app-modal-table>
+          </div>
+
+      <div class="modal-footer">
+        <button  *ngIf="selectedOption === '24h'" type="button" (click)="modalTableComponentHistoryConsumption.exportToExcel('consumption_for_previous_24h')"  class="btn btn-primary" >EXPORT DATA</button>
+        <button  *ngIf="selectedOption === 'month'" type="button" (click)="modalTableComponentHistoryConsumption.exportToExcel('consumption_for_previous_month')"  class="btn btn-primary" >EXPORT DATA</button>
+        <button  *ngIf="selectedOption === '7days'" type="button" (click)="modalTableComponentHistoryConsumption.exportToExcel('consumption_for_previous_7days')"  class="btn btn-primary" >EXPORT DATA</button>
+      </div>
+    </div>
+  </div>
+  </div>

@@ -105,6 +105,7 @@ namespace prosumerAppBack.Migrations
                     Country = table.Column<string>(type: "TEXT", nullable: true),
                     Role = table.Column<string>(type: "TEXT", nullable: true),
                     Email = table.Column<string>(type: "TEXT", nullable: true),
+                    profilePicture = table.Column<string>(type: "TEXT", nullable: true),
                     PasswordResetToken = table.Column<string>(type: "TEXT", nullable: true),
                     PasswordResetTokenExpires = table.Column<DateTime>(type: "TEXT", nullable: true),
                     sharesDataWithDso = table.Column<bool>(type: "INTEGER", nullable: false)
@@ -222,12 +223,12 @@ namespace prosumerAppBack.Migrations
             migrationBuilder.InsertData(
                 table: "Dispatchers",
                 columns: new[] { "ID", "Email", "FirstName", "LastName", "PasswordHash", "PhoneNumber", "Role", "Salt" },
-                values: new object[] { new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f53"), "admin@gmail.com", "Adminovic", "Adminovski", new byte[] { 98, 110, 58, 103, 24, 49, 234, 94, 48, 122, 121, 92, 75, 163, 90, 157, 72, 93, 20, 123, 161, 154, 147, 223, 220, 97, 153, 12, 69, 18, 64, 139 }, null, "Admin", new byte[] { 171, 181, 48, 243, 8, 94, 204, 208, 156, 167, 248, 92, 134, 66, 187, 94 } });
+                values: new object[] { new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f53"), "admin@gmail.com", "Adminovic", "Adminovski", new byte[] { 167, 29, 10, 9, 188, 65, 128, 15, 67, 206, 185, 28, 182, 12, 89, 92, 64, 185, 184, 207, 202, 179, 76, 129, 235, 143, 16, 213, 179, 42, 216, 9 }, null, "Admin", new byte[] { 243, 78, 71, 236, 60, 243, 113, 131, 101, 226, 57, 11, 74, 166, 182, 210 } });
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "ID", "Address", "City", "Country", "Email", "FirstName", "LastName", "PasswordHash", "PasswordResetToken", "PasswordResetTokenExpires", "PhoneNumber", "Role", "Salt", "sharesDataWithDso" },
-                values: new object[] { new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f52"), "Radoja Domanovica 6", "Kragujevac", "Serbia", "petarsimic@gmail.com", "Petar", "Simic", new byte[] { 113, 33, 110, 31, 200, 143, 229, 102, 1, 211, 37, 116, 235, 141, 75, 37, 48, 253, 180, 205, 160, 119, 30, 110, 24, 2, 192, 26, 165, 4, 67, 87 }, null, null, "064-316-15-81", "UnapprovedUser", new byte[] { 16, 179, 108, 95, 109, 124, 25, 177, 20, 183, 228, 132, 87, 78, 117, 41 }, false });
+                columns: new[] { "ID", "Address", "City", "Country", "Email", "FirstName", "LastName", "PasswordHash", "PasswordResetToken", "PasswordResetTokenExpires", "PhoneNumber", "Role", "Salt", "profilePicture", "sharesDataWithDso" },
+                values: new object[] { new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f52"), "Radoja Domanovica 6", "Kragujevac", "Serbia", "petarsimic@gmail.com", "Petar", "Simic", new byte[] { 123, 152, 101, 126, 5, 177, 90, 239, 211, 238, 176, 202, 45, 29, 102, 191, 112, 21, 110, 176, 228, 88, 0, 83, 164, 74, 15, 166, 185, 98, 182, 142 }, null, null, "064-316-15-81", "UnapprovedUser", new byte[] { 175, 174, 252, 227, 236, 52, 36, 57, 2, 214, 2, 35, 171, 186, 76, 214 }, null, false });
 
             migrationBuilder.InsertData(
                 table: "DeviceTypes",

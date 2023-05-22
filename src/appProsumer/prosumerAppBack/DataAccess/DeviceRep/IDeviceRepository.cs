@@ -30,6 +30,7 @@ namespace prosumerAppBack.BusinessLogic
         public Boolean IsDeviceTurnedOn(Guid deviceID);
         public bool DSOHasControl(Guid deviceID);
         public Task<bool> ChangeState(Guid deviceId);
-	}
+        Task<Boolean> UpdateUserDeviceDsoControl(Guid deviceID, Boolean dsoHasControl);
+    }
 }
 
