@@ -78,26 +78,26 @@
       <div class="modal-content">
         <div class="modal-header">
           <p class="modal-title" id="exampleModalLabel">
-            <span *ngIf="selectedOption === 'Today'" style="color: #026670; font-size: 20px; font-weight: 700;"> Consumption For The Previous 24h </span>
-            <span *ngIf="selectedOption === 'Week'" style="color: #026670; font-size: 20px; font-weight: 700;"> Consumption For The Previous Month </span>
-            <span *ngIf="selectedOption === 'Month'" style="color: #026670; font-size: 20px; font-weight: 700;"> Consumption For The Previous 7 days </span>
+            <span *ngIf="selectedOption === 'Today'" style="color: #026670; font-size: 20px; font-weight: 700;"> History And Prediction For 24h </span>
+            <span *ngIf="selectedOption === 'Week'" style="color: #026670; font-size: 20px; font-weight: 700;"> History And Prediction For A Month </span>
+            <span *ngIf="selectedOption === 'Month'" style="color: #026670; font-size: 20px; font-weight: 700;">History And Prediction For 7 days </span>
           </p>
           <button type="button" id="closeBtn" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
           <div *ngIf="selectedOption === 'Today'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
-            <app-modal-table #ModalTableComponentHistoryConsumption [data]="data24h" [type]="'Consumption'" [message]="'Consumption For Previous 24h'" [time]="'Hour'"></app-modal-table>
+            <app-modal-table #ModalTableComponentHistoryConsumption [data]="data24h" [type]="groupName === 'Consumer' ? 'Consumption' : 'Production'" [message]="'History And Prediction For 24h'" [time]="'Hour'"></app-modal-table>
           </div>
            <div *ngIf="selectedOption === 'Week'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
-            <app-modal-table #ModalTableComponentHistoryConsumption [data]="data7days" [type]="'Consumption'" [message]="'Consumption For Previous Month'" [time]="'Date'"></app-modal-table>
+            <app-modal-table #ModalTableComponentHistoryConsumption [data]="data7days" [type]="groupName === 'Consumer' ? 'Consumption' : 'Production'" [message]="'History And Prediction For A Month'" [time]="'Date'"></app-modal-table>
           </div>
           <div *ngIf="selectedOption === 'Month'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
-            <app-modal-table #ModalTableComponentHistoryConsumption [data]="dataMonth" [type]="'Consumption'" [message]="'Consumption For Previous 7 days'" [time]="'Day'"></app-modal-table>
+            <app-modal-table #ModalTableComponentHistoryConsumption [data]="dataMonth" [type]="groupName === 'Consumer' ? 'Consumption' : 'Production'" [message]="'History And Prediction For 7 days'" [time]="'Date'"></app-modal-table>
           </div>
 
       <div class="modal-footer">
-        <button  *ngIf="selectedOption === '24h'" type="button" (click)="modalTableComponentHistoryConsumption.exportToExcel('consumption_for_previous_24h')"  class="btn btn-primary" >EXPORT DATA</button>
-        <button  *ngIf="selectedOption === 'month'" type="button" (click)="modalTableComponentHistoryConsumption.exportToExcel('consumption_for_previous_month')"  class="btn btn-primary" >EXPORT DATA</button>
-        <button  *ngIf="selectedOption === '7days'" type="button" (click)="modalTableComponentHistoryConsumption.exportToExcel('consumption_for_previous_7days')"  class="btn btn-primary" >EXPORT DATA</button>
+        <button  *ngIf="selectedOption === 'Today'" type="button" (click)="modalTableComponentHistoryConsumption.exportToExcel('history_and_prediction_24h_'+ device.deviceName)"  class="btn export" >EXPORT DATA</button>
+        <button  *ngIf="selectedOption === 'Month'" type="button" (click)="modalTableComponentHistoryConsumption.exportToExcel('history_and_prediction_month_'+device.deviceName)"  class="btn export" >EXPORT DATA</button>
+        <button  *ngIf="selectedOption === 'Week'" type="button" (click)="modalTableComponentHistoryConsumption.exportToExcel('history_and_prediction_7days_'+device.deviceName)"  class="btn export" >EXPORT DATA</button>
       </div>
     </div>
   </div>
