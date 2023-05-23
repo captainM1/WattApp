@@ -1,5 +1,6 @@
 <app-nav></app-nav>
-<div class="row" id = "row-page" style="margin-top: 100px;" id = "myBack">
+<div class="d-flex justify-content-center align-items-center w-100 h-100">
+<div class="row w-100" id = "row-page" id = "myBack">
   <div class="col-lg-7">
     <div class="input-div">
       <div>
@@ -36,22 +37,18 @@
                   <td>{{user.consumption}} kWh</td>
                   <td><button class="btn" (click)="openModel();">Show me profile</button></td>
               </tr>
-             
           </table>
           <div class="col">
             <tr style="width: 100%; display: flex; justify-content: center; text-align: center;">
               <p-paginator class="w-100" [rows]="pageSize" [totalRecords]="lengthOfUsers" [rowsPerPageOptions]="pageSizeOptions" (onPageChange)="onPageChange($event); deselectUsers();"></p-paginator>
             </tr>
           </div>
-         
-         
-      
         </div> 
     </div>
-    <div class="col">
-        <div id = "map" style="width: 550px; height: 400px;" >
+    <div class="col d-flex justify-content-end align-items-end flex-column">
+        <div id = "map" class="w-100" style="height: 80%;">
       </div>
-      <div class="style-info">
+      <div class="style-info d-flex justify-content-between align-items-center w-100">
         <li class = "info">
           <i class="fa fa-square" aria-hidden="true" style="color:#62C370"></i> Green zone (up to 350 kWh)
         </li>
@@ -484,5 +481,5 @@
     </div>
   </div>
   </div>
-
+</div>
 

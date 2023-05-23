@@ -26,11 +26,6 @@
   font-size: 12px;
 
 }
-
-#map{
-  margin-top: 115px;
-  margin-left: 20px;
-}
 .fa{
   padding: 10px;
   color: #026670;
@@ -287,9 +282,6 @@ label{
   margin-top: 2px;
   color: #7e828b;
   font-size: 12px;
-  display: block;
-  text-align: center;
-
 }
 .info{
   display: inline-block;

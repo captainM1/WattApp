@@ -10,7 +10,6 @@ import { Subscription } from 'rxjs';
 import { NgxSpinnerService } from 'ngx-spinner';
 import {  NgxUiLoaderService } from 'ngx-ui-loader';
 
-
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
@@ -18,7 +17,6 @@ import {  NgxUiLoaderService } from 'ngx-ui-loader';
   
 })
 export class TableComponent implements OnInit, AfterViewInit {
-
 
   @ViewChild('powerUsageGraph') powerUsageGraph!:ElementRef;
   @ViewChild('prev24DeviceID') prev24DeviceID!:ElementRef;
