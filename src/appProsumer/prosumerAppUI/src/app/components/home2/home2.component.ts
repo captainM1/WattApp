@@ -150,9 +150,7 @@ makeData(dataGraph:any){
     });
   });
 
-  this.timestampList.sort((a: string, b: string) => {
-    return parseInt(a) - parseInt(b);
-  });
+
   this.previous24Graph(this.timestampList, this.powerUsageList);
 }
 
