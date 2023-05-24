@@ -57,18 +57,16 @@ export class SettingsComponent implements OnInit, AfterViewInit{
     )
     this.apiService.statusOfReq().subscribe(
       response => {
-        if (response == true) {
+        if (response != null && response == true) {
           this.requestStatus = 'accepted';
           this.apiService.getShareInfo().subscribe(
             (data) => {
               this.allowAccess = data;
-              console.log(data);
             },
             (error) => {
               console.error('Error retrieving share information:', error);
             }
           );
-          this.backgroundService.ngOnDestroy();
         }
       }
     )

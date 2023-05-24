@@ -4,7 +4,7 @@ import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { CookieService } from 'ngx-cookie-service';
-
+import { ImageUpdate } from '../models/user';
 @Injectable({
   providedIn: 'root'
 })
@@ -123,6 +123,34 @@ export class AuthUserService {
 
   changePassword(userID: any, password:any):Observable<any>{
     return this.http.post(environment.apiUrl + `/api/User/update-password/${userID}?oldPassword=`+password.oldPassword+`&newPassword=`+password.newPassword,  { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
+  }
+
+  uploadImage(imageData: Uint8Array, id: any): void {
+    
+    // Convert the image data to a Base64 string
+    const base64Image = this.convertToBase64(imageData);
+    
+    // Create an object with the ID and the Base64 image string
+    const updateImageViewModel = {
+      Id: id,
+      imagePicture: base64Image
+    };
+    
+    this.http.put(environment.apiUrl + '/api/User/update-user-image', updateImageViewModel)
+      .subscribe(
+        () => console.log('Image uploaded successfully'),
+        error => console.error('Error uploading image:', error)
+      );
+  }
+  convertToBase64(imageData: Uint8Array): string {
+    const binary = [];
+    const length = imageData.byteLength;
+
+    for (let i = 0; i < length; i++) {
+      binary.push(String.fromCharCode(imageData[i]));
+    }
+
+    return btoa(binary.join(''));
   }
 
 }

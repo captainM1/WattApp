@@ -25,6 +25,7 @@ export class ProfileProsumerComponent implements OnInit{
   city!: string;
   country!: string;
   email!: string;
+  image:any;
 
 
 
@@ -58,7 +59,7 @@ export class ProfileProsumerComponent implements OnInit{
        this.city = response.city;
        this.country = response.country;
        this.email = response.email;
-
+       this.image = response.profilePicture;
       }
     )
   }
