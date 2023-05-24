@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 
@@ -15,7 +15,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { GoogleMapsModule } from '@angular/google-maps';
 
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, SharedModule } from 'primeng/api';
 
 import { NgChartsModule } from 'ng2-charts';
 import * as CanvasJSAngularChart from '../assets/canvasjs.angular.component';
@@ -39,7 +39,6 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TableModule } from 'primeng/table';
 import { ProfileComponent } from './components/profile/profile.component';
 import { ModalTableProfileComponent } from './components/modal-table-profile/modal-table-profile.component';
-import { TableExport } from 'tableexport';
 import { ModelProfileComponent } from './components/model-profile/model-profile.component';
 import { ModalEditProfileComponent } from './components/modal-edit-profile/modal-edit-profile.component'
 var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
@@ -82,11 +81,10 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     PaginatorModule,
     NgxSpinnerModule,
     ToastModule,
-    TableModule,
     MatDialogModule,
     ConfirmDialogModule,
-    
-    
+    TableModule,
+    SharedModule
    
   ],
   providers: [MessageService,{provide:HTTP_INTERCEPTORS,useClass:TokenInterceptor,multi:true}, MatDialog, ConfirmationService],
