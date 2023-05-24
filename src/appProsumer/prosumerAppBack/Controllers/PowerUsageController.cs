@@ -688,4 +688,17 @@ public class PowerUsageController : ControllerBase
         var powerUsages = _powerUsageService.GetPowerUsageForDevicesProduction(userID, 1, 1);
         return Ok(powerUsages.Result);
     }
+
+    [HttpGet("update-batteries")]
+    public async Task UpdateBatteries()
+    {
+        try
+        {
+            await _powerUsageService.UpdateBatteries();
+        }
+        catch (ArgumentNullException ex)
+        {
+            throw new ArgumentException(ex.Message);
+        }
+    }
 }

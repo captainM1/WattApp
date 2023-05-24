@@ -2647,4 +2647,86 @@ public class PowerUsageRepository : IPowerUsageRepository
 
         return consumes * electricityRate;
     }
+
+    public async Task UpdateBatteries()
+    {
+        var batteries = _dataContext.BatteryConnections
+                        .Select(e => e.BatteryID)
+                        .Distinct()
+                        .ToList();
+        
+        foreach (var battery in batteries)
+        {
+            double sumProduction = 0;
+            var producers = _dataContext.BatteryConnections
+                            .Where(e => e.BatteryID == battery)
+                            .Select(e => e.Device.ID)
+                            .ToList();
+            foreach (var producer in producers)
+            {
+                sumProduction += await this.GetCurrentPowerProduction(producer);
+            }
+
+
+
+            var batteryTemp = _dataContext.Devices
+                              .Include(e => e.DeviceType)
+                              .Where(e => e.ID == battery)
+                              .Select(d => d.DeviceType.Wattage)
+                              .First();                           
+                              
+
+            BatteryStatus temp = await _dataContext.BatteryStatuses
+                                       .Where(e => e.Date == DateTime.Now.Date.AddHours(DateTime.Now.Hour-1))
+                                       .FirstOrDefaultAsync(b => b.ID == battery);
+
+            double percentChange= ((sumProduction * 1000) * 100) / batteryTemp;
+
+            if(temp == null)
+            {
+                temp = new BatteryStatus();
+                temp.ID = battery;
+                temp.Date = DateTime.Now.Date.AddHours(DateTime.Now.Hour);
+                temp.BatteryPercent = 0;
+            }
+            temp.BatteryPercent += percentChange;
+            temp.Date = DateTime.Now.Date.AddHours(DateTime.Now.Hour);
+
+            _dataContext.BatteryStatuses.Add(temp);
+            await _dataContext.SaveChangesAsync();
+            
+        }
+    }
+
+    public async Task<double> GetCurrentPowerProduction(Guid deviceID)
+    {
+        double powerUsages = 0;
+        var startOfAnHour = DateTime.Now.AddHours(-1);
+        var endOfAnHour = DateTime.Now;
+
+        var device = _dataContext.Devices.FirstOrDefaultAsync(e => e.ID == deviceID);        
+        
+        string deviceGroupName = _dataContext.DeviceGroups
+                    .Where(g => g.ID == _dataContext.DeviceTypes
+                        .Where(dt => dt.ID == device.Result.DeviceTypeID)
+                        .Select(dt => dt.GroupID)
+                        .FirstOrDefault())
+                    .Select(g => g.Name)
+                    .FirstOrDefault();
+
+        var userID = _dataContext.Devices
+                    .Where(d => d.DeviceTypeID == device.Result.DeviceTypeID)
+                    .Select(u => u.OwnerID)
+                    .FirstOrDefault();
+                
+        if (deviceGroupName == "Producer")
+        {
+            powerUsages += mongoCollection.AsQueryable().ToList()
+                .Where(d => d.ID.ToString().ToUpper() == device.Result.DeviceTypeID.ToString().ToUpper())
+                .Sum(p => p.TimestampPowerPairs.Where(t => t.Timestamp >= startOfAnHour && t.Timestamp < endOfAnHour).Sum(p => p.PowerUsage));
+        }
+        
+
+        return powerUsages;
+    }
 }

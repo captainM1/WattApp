@@ -3,9 +3,9 @@
 namespace prosumerAppBack.Models.Device
 {
     public class BatteryStatus
-    {
-        [Key]
+    {        
         public Guid ID { get; set; }
+        [Key]
         public DateTime Date { get; set; }
         public double BatteryPercent { get; set; }
     }

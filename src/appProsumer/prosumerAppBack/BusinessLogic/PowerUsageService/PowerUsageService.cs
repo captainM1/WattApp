@@ -579,4 +579,9 @@ public class PowerUsageService:IPowerUsageService
     {
         return 0;
     }
+
+    public async Task UpdateBatteries()
+    {
+        await _repository.UpdateBatteries();
+    }
 }

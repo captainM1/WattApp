@@ -64,5 +64,6 @@ namespace prosumerAppBack.BusinessLogic
         public Task<double> electricityBillCurrentMonth(Guid userID, double electricityRate);
         public double PercentPowerUsageDifferenceForPreviousHourConsumptionSystem();
         public double ElectricityBillForCurrentMonth(Guid userID, double electricityRate);
+        Task UpdateBatteries();
     }
 }

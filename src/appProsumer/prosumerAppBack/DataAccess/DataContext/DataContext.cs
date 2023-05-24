@@ -111,6 +111,9 @@ namespace prosumerAppBack.DataAccess
                 .WithMany(dt => dt.Devices)
                 .HasForeignKey(d => d.DeviceTypeID);
 
+            modelBuilder.Entity<BatteryConnections>()
+                .HasNoKey();
+
             modelBuilder.Entity<Device>()
                 .HasOne(d => d.Owner)
                 .WithMany(u => u.Devices)

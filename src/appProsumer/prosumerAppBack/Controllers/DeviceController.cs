@@ -13,7 +13,7 @@ namespace prosumerAppBack.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
+    //[Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
     public class DeviceController : ControllerBase
     {
         private readonly IDeviceService _deviceService;
@@ -358,7 +358,7 @@ namespace prosumerAppBack.Controllers
             }
         }
 
-        [HttpGet("get-producers-that-are-not-connected-to-battey/{userID}")]
+        [HttpGet("get-producers-that-are-not-connected-to-battery/{userID}")]
         public async Task<IActionResult> GetProducersThatAreNotAttachedToABattery(Guid userID)
         {
             try
@@ -371,7 +371,7 @@ namespace prosumerAppBack.Controllers
             {
                 throw new ArgumentException(ex.Message);
             }
-        }
+        }        
     }
 }
 

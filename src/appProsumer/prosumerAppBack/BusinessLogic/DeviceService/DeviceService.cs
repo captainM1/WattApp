@@ -3,6 +3,7 @@ using prosumerAppBack.DataAccess;
 using prosumerAppBack.Models;
 using prosumerAppBack.Models.Device;
 using SendGrid.Helpers.Errors.Model;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
 namespace prosumerAppBack.BusinessLogic.DeviceService;
@@ -261,13 +262,13 @@ public class DeviceService:IDeviceService
         return true;
     }
 
-    public Task<IEnumerable<DeviceDto>> GetProducersThatAreNotAttachedToABattery(Guid userID)
+    public async Task<IEnumerable<DeviceDto>> GetProducersThatAreNotAttachedToABattery(Guid userID)
     {
-        var producers = _repository.GetProducersThatAreNotAttachedToABattery(userID);
+        var producers = await _repository.GetProducersThatAreNotAttachedToABattery(userID);
         if (producers == null)
         {
             throw new NotFoundException();
         }
         return producers;
-    }
+    }    
 }

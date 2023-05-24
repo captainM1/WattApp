@@ -66,4 +66,5 @@ public interface IPowerUsageService
     object? percentPowerUsageDifferenceForPreviousHourProductionSystem();
     object? electricityBillForCurrentMonth(Guid userId, double electricityRate);
     object? electricityEarningsForCurrentMonth(Guid userId, double electricityRate);
+    Task UpdateBatteries();
 }
