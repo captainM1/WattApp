@@ -28,6 +28,10 @@ export class EditProfileComponent implements OnInit{
   submitted = false;
   dsoHasControl !: boolean;
   sharesDataWithDSO !: boolean;
+  isValidEmail: boolean = true;
+  isEmailModified: boolean = false;
+  isValidPhoneNumber: boolean = true;
+  isPhoneNumberModified: boolean = false;
 
 
   @ViewChild('exampleModal') exampleModal!: ElementRef;
@@ -96,16 +100,44 @@ export class EditProfileComponent implements OnInit{
       city: this.city
     };
 
-    this.auth.putUpdateUser(this.userID, profileData).subscribe(
-      (response) => {
-        this.messageService.add({ severity: 'success', summary: 'Profile updated successfully!'});
-        this.router.navigate(['profile-prosumer']);
-      },
-      (error) => {
-        this.messageService.add({ severity: 'error', summary: 'Error updating profile!'});
-      }
-    );
+    if (!this.isValidPhoneNumber || !this.isValidEmail)
+    {
+       this.messageService.add({ severity: 'error', summary: 'Error updating profile!'});
+    }
+    else
+    {
+      this.auth.putUpdateUser(this.userID, profileData).subscribe(
+        (response) => {
+          this.messageService.add({ severity: 'success', summary: 'Profile updated successfully!'});
+          this.router.navigate(['profile-prosumer']);
+        },
+        (error) => {
+          this.messageService.add({ severity: 'error', summary: 'Error updating profile!'});
+        }
+      );
+    }
   }
 
+
+  checkValidEmail(): void {
+    const pattern = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,3}$/;
+    this.isValidEmail = pattern.test(this.email);
+  }
+
+  onEmailInput(): void {
+    this.isEmailModified = true;
+    this.checkValidEmail();
+  }
+
+
+  checkValidPhoneNumber(): void {
+    const pattern = /^(\+381(\s?|-?))?0?[\d]{2}[\d]{3,4}[\d]{3,4}$/;
+    this.isValidPhoneNumber = pattern.test(this.phoneNumber);
+  }
+
+  onPhoneNumberInput(): void {
+    this.isPhoneNumberModified = true;
+    this.checkValidPhoneNumber();
+  }
 
 }
