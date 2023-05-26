@@ -110,7 +110,7 @@ export class AuthUserService {
 
 
   putUpdateUser(userID: any, profileData:any):Observable<any>{
-    return this.http.post(environment.apiUrl + `/api/User/update-user/${userID}`, profileData,{ headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
+    return this.http.put(environment.apiUrl + `/api/User/update-user/${userID}`, profileData,{ headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
   }
 
   getDsoHasControl(userID: any):Observable<any>{
@@ -122,7 +122,7 @@ export class AuthUserService {
   }
 
   changePassword(userID: any, password:any):Observable<any>{
-    return this.http.post(environment.apiUrl + `/api/User/update-password/${userID}?oldPassword=`+password.oldPassword+`&newPassword=`+password.newPassword,  { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
+    return this.http.put(environment.apiUrl + `/api/User/update-password/${userID}?oldPassword=`+password.oldPassword+`&newPassword=`+password.newPassword,  { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
   }
 
   uploadImage(imageData: Uint8Array, id: any): void {

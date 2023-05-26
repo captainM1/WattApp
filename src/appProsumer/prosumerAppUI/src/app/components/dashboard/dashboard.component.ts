@@ -261,9 +261,6 @@ export class DashboardComponent implements OnInit, AfterViewInit{
       this.powerUsageListPrev24h.push(this.consumption24prev[i]['powerUsage']);
       }
 
-    this.timestampListPrev24h.sort((a: string, b: string) => {
-      return parseInt(a) - parseInt(b);
-    });
 
 
     this.data24h=[];
@@ -365,10 +362,6 @@ export class DashboardComponent implements OnInit, AfterViewInit{
       this.powerUsageListNext24h.push(this.consumption24next[i]['powerUsage']);
       }
 
-
-    this.timestampListNext24h.sort((a: string, b: string) => {
-      return parseInt(a) - parseInt(b);
-    });
 
     this.dataNext24h=[];
     for (let i = 0; i < this.timestampListNext24h.length; i++) {
@@ -880,9 +873,7 @@ makeDataProduction24(dataGraph:any){
     this.powerUsageListProductionPrev24h.push(this.graphProduction24prev[i]['powerUsage']);
     }
 
-    this.timestampListProductionPrev24h.sort((a: string, b: string) => {
-      return parseInt(a) - parseInt(b);
-    });
+
 
   this.data24hProd=[];
   for (let i = 0; i < this.timestampListProductionPrev24h.length; i++) {
@@ -1189,9 +1180,6 @@ makeDataProductionNext24(dataGraph:any){
     this.powerUsageListProductionNext24h.push(this.graphProduction24next[i]['powerUsage']);
     }
 
-  this.timestampListProductionNext24h.sort((a: string, b: string) => {
-    return parseInt(a) - parseInt(b);
-  });
 
   this.dataNext24hProd=[];
   for (let i = 0; i < this.timestampListProductionNext24h.length; i++) {

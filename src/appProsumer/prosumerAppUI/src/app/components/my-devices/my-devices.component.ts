@@ -20,7 +20,10 @@ export class MyDevicesComponent implements OnInit {
   deviceToday: {[key: string]: any} = {};
   searchName: string = '';
   typeOfDevices: {[key: string]: any} = {};
+  selectedGroups: string[] = [];
+
   @ViewChild('myTable') myTable!: ElementRef;
+
 
   constructor(
     private auth: AuthService,
@@ -49,6 +52,7 @@ export class MyDevicesComponent implements OnInit {
           () => {
             this.devices = data;
             this.devices.forEach((device: any) => {
+              device.filtered = true;
               this.http
                 .get<any[]>(
                   `${environment.apiUrl}/api/PowerUsage/power-usage/current/device/${device.deviceId}`)
@@ -68,6 +72,7 @@ export class MyDevicesComponent implements OnInit {
                 .subscribe(
                   (response:any) => {
                     this.typeOfDevices[device.deviceId] = response.groupName;
+                    this.filterDevices();
                   },
                   (error) => {
                   }
@@ -85,6 +90,44 @@ export class MyDevicesComponent implements OnInit {
       }
     );
   }
+
+  isSelectedGroup(device: any): boolean {
+    const groupName = this.typeOfDevices[device.deviceId];
+    return this.selectedGroups.includes(groupName);
+  }
+
+
+
+  updateSelectedGroups(event: any, group: string) {
+    const checked = event.target.checked;
+    if (checked) {
+      this.selectedGroups.push(group);
+    } else {
+      const index = this.selectedGroups.indexOf(group);
+      if (index > -1) {
+        this.selectedGroups.splice(index, 1);
+      }
+    }
+    this.filterDevices();
+  }
+
+
+
+  filteredDevices: any[] = [];
+
+
+
+  filterDevices() {
+    if (this.selectedGroups.length === 0) {
+      this.filteredDevices = this.devices;
+    } else {
+      this.filteredDevices = this.devices.filter((device: any) => {
+        const groupName = this.typeOfDevices[device.deviceId];
+        return this.selectedGroups.includes(groupName);
+      });
+    }
+  }
+
 
   exportToExcel(): void {
     const tableData = this.myTable.nativeElement.cloneNode(true);
@@ -141,7 +184,7 @@ export class MyDevicesComponent implements OnInit {
 
   changeState(id: any) {
     this.auth.changeState(id).subscribe(() => {
-      
+
     });
   }
 
