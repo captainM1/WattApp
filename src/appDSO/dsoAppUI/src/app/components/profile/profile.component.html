@@ -15,7 +15,7 @@
             <div class="col-sm-4"  id = "top" >
               <div class="row" id = "img-btn" >
                 <div class="col" id = "col-img-btn">
-                    <img src="../../../assets/icons/images.jpg" style="width: 54%;">
+                    <img src="../../../assets/icons/images.jpg" style="width: 44%;">
                 </div>
             </div>
                 <form class="p-4 border" id = "form-user-enter" style="align-items: center;">
@@ -44,11 +44,14 @@
                     <button class="buttonOpenModal" style="margin-left: 5px;" mat-button data-bs-target="#editProfileDispacher" data-bs-toggle="modal">
                         Edit Profile
                     </button>
+                    <button class="buttonOpenModal" style="margin-left: 5px;" mat-button data-bs-target="#exampleModal" data-bs-toggle="modal">
+                       Change Password
+                    </button>
                 </div>
             </div>
         </div>
     </div>
-    <div class="modal fade " id="editProfileDispacher" tabindex="-1" aria-hidden="true">
+    <div class="modal fade " id="editProfileDispacher" tabindex="-1" aria-hidden="true" #modelEDIT>
         <div class="modal-dialog modal-dialog-centered modal-lg" >
           <div class="modal-content">
             <div class="modal-header">
@@ -58,10 +61,79 @@
               <button type="button" id="closeBtn" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <app-modal-edit-profile [email] = "email" [lastName]="lastName" [firstName]="firstName" [id] = "userID" [phoneNumber]="phoneNumber" [password]="password"></app-modal-edit-profile>
+                <app-modal-edit-profile (workerUpdated)="closeModal()"[email]="emailModal"[lastName]="lastNameModal"[firstName]="firstNameModal"  [phoneNumber]="mobileModal" [id]="idDisapcher"></app-modal-edit-profile>
             </div>
+        </div>
+      </div>
+      </div>
 
-       
+      <div class="modal fade"#exampleModal id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabe" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <p class="modal-title" id="exampleModalLabel">
+                <span style="color: #026670; padding-left: 10px; font-size: 22px; font-weight: bold"> Change password </span><br>
+      
+              </p>
+      
+              <button type="button" id="closeBtn" class="btn-close" (click)="reset()" data-bs-dismiss="modal" aria-label="Close"></button>
+      
+            </div>
+            <div class="modal-body">
+              <form [formGroup] = "resetForm">
+                <div class="input-group form-group " style="padding-top: 15px; padding-bottom: 15px;">
+                    <span class="input-group-addon addon-icon" [ngClass]="{'is-invalid invalid-icon': fields['currentPassword'].errors && (fields['currentPassword'].dirty || fields['currentPassword'].touched || submitted)}" >
+                  <input style = "display: inline;
+                  position: absolute;
+                  width: 100%;" class="form-control inputChange" [ngClass]="{'is-invalid invalid-input': fields['currentPassword'].errors && (fields['currentPassword'].dirty || fields['currentPassword'].touched || submitted)}" [(ngModel)]="currentPassword" formControlName="currentPassword" [type]="type3" placeholder="Current Password">
+                 <i style="cursor:pointer;
+                 position: absolute;
+                    right: 20px;" (click)="hideShowPass3()" class="fa {{eyeIcon3}}"></i></span>
+                  <div class="invalid-feedback" style="margin-top:30px">
+                    <ng-container *ngIf="fields['currentPassword'].errors">
+                      <span style="margin-top:30px" class="text-danger" *ngIf="fields['currentPassword'].errors?.['required'] && (fields['currentPassword'].touched || submitted)">*Current password is required!</span>
+                      <span style="margin-top:30px" class="text-danger" *ngIf="fields['currentPassword'].errors?.['minlength'] && (fields['currentPassword'].dirty || submitted)">*Password must be at least 6 characters long!</span>
+                    </ng-container>
+                  </div>
+                </div>
+      
+                  <div class="input-group form-group" style=" padding-top: 15px; padding-bottom: 15px;">
+                    <span class="input-group-addon addon-icon" [ngClass]="{'is-invalid invalid-icon': fields['password'].errors && (fields['password'].dirty || fields['password'].touched || submitted)}" >
+                    <input style = "display: inline;
+                    position: absolute;
+                    width: 100%;" class="form-control inputChange" [ngClass]="{'is-invalid invalid-input': fields['password'].errors && (fields['password'].dirty || fields['password'].touched || submitted)}" [(ngModel)]="newPassword"  formControlName="password" [type]="type" placeholder="New Password">
+                    <i style="cursor:pointer;
+                    position: absolute;
+                    right: 20px;" (click)="hideShowPass()" class="fa {{eyeIcon}}"></i></span>
+                    <div class="invalid-feedback" style="margin-top:30px">
+                      <ng-container *ngIf="fields['password'].errors">
+                        <span style="margin-top:30px" class="text-danger" *ngIf="fields['password'].errors?.['required'] && (fields['password'].touched || submitted)">*New password is required!</span>
+                        <span style="margin-top:30px" class="text-danger" *ngIf="fields['password'].errors?.['minlength'] && (fields['password'].dirty || submitted)">*Password must be at least 6 characters long!</span>
+                      </ng-container>
+                    </div>
+                  </div>
+      
+      
+                  <div class="input-group form-group  " style=" padding-top: 15px; padding-bottom: 15px;">
+                    <span class="input-group-addon addon-icon" [ngClass]="{'is-invalid invalid-icon': fields['confirmPassword'].errors && (fields['confirmPassword'].dirty || fields['confirmPassword'].touched || submitted)}" >
+                    <input style = "display: inline;
+                    position: absolute;
+                    width: 100%;"class="form-control inputChange invalid-input" [ngClass]="{'is-invalid invalid-input': fields['confirmPassword'].errors && (fields['confirmPassword'].dirty || fields['confirmPassword'].touched || submitted)}" formControlName="confirmPassword" [type]="type2" placeholder="Confirm Password">
+                    <i style="cursor: pointer;
+                    position: absolute;
+                    right: 20px;" (click)="hideShowPass2()" class="fa {{eyeIcon2}}"></i></span>
+                    <div class="invalid-feedback" style="margin-top:30px">
+                      <ng-container *ngIf="fields['confirmPassword'].errors">
+                        <span style="margin-top:30px"class="text-danger" *ngIf="fields['confirmPassword'].errors?.['required'] && (fields['confirmPassword'].touched || submitted)">*Confirm password is required!</span>
+                        <span style="margin-top:30px" class="text-danger" *ngIf="resetForm.hasError('confirmPasswordValidator', 'confirmPassword') && (fields['confirmPassword'].dirty || submitted)">*Password doesn't match!</span>
+                      </ng-container>
+                    </div>
+                  </div>
+              </form>
+          </div>
+          <div class="modal-footer justify-content-center">
+            <button id="sendButton" type="button" (click)="onReset()" class="btn btn-primary" > CHANGE </button>
+          </div>
         </div>
       </div>
       </div>

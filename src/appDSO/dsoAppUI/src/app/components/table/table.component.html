@@ -98,7 +98,7 @@
           <div class="card" id = "card-popUp">
             <h3 class="card-title" id = "card-title-popUp">Saved Energy:</h3>
             <div class="card-body" id = "card-body-popUp">
-              {{savedEnergyUser}} %
+              {{savedEnergyUser.toFixed(2)}} %
             </div>
           </div>
         </div>
@@ -131,10 +131,10 @@
         </div>
             <div *ngIf="showDevicePage">
               <div class="row" id = "table">
-                <div class="col-sm-6" style = "width: 65%; overflow-y: scroll; scrollbar-color: #026670; scrollbar-width: thin; padding-right:0px">
+                <div class="col-sm-6" style = "width:100%; overflow:auto; height: 300px; scrollbar-color: #026670; scrollbar-width: thin; padding-right:0px">
                   <table class="tableDevices">
-                    <thead>
-                      <tr>
+                    <thead style="position: sticky; top :0; z-index: 1px;">
+                      <tr >
                         <th>Device name</th>
                         <th>Device manifacture</th>
                         <th>Mac Address</th>
@@ -149,7 +149,7 @@
                           <button class= "apply"(click)="applyFilter()">Apply</button>
                         </th>
                         <th>Device Status</th>
-                        <th>Power Usage</th>
+                        <th>Energy [kWh]</th>
                         <th>Control Device</th>
                       </tr>
                     </thead>
@@ -160,7 +160,7 @@
                         <td >{{device.macAdress}}</td>
                         <td >{{device.typeOfDevice}}</td>
                         <td [ngClass]="{'green': device.statusOfDevice === 'ON', 'red': device.statusOfDevice === 'OFF'}">{{device.statusOfDevice}}</td>
-                        <td >{{device.powerusage}} kw/h</td>
+                        <td >{{device.powerusage.toFixed(2)}}</td>
                         <td *ngIf="device.dsoHasControl === true">
                           <label class="switch" >
                             <input type="checkbox" [checked]="device.statusOfDevice === 'ON'" (click)="toggleDeviceStatus(device)">
@@ -177,12 +177,12 @@
                     
                   </table>
                 </div>
-                <div class="col" >
+                <!-- <div class="col" >
                   <div>
                     <ngx-spinner bdColor = "rgba(0, 0, 0, 0.5)" size = "medium" color = "#fff" type = "ball-spin" [showSpinner]="graphDeviceLoader " [fullScreen]="false" *ngIf="graphDeviceLoader"><p style="color: #fff; margin-top:60px;"> Please wait... </p></ngx-spinner>
                     <canvas #prev24DeviceID></canvas>
                   </div>
-                </div>
+                </div> -->
             </div>
             </div>
            

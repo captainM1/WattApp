@@ -426,8 +426,9 @@ export class TableComponent implements OnInit, AfterViewInit {
 showFilterOptions = false;
 selectedFilterOption: string = "All Devices";
 devicesConsumers:Info[] = [];
-devicesProducers:Info[]= [];
-allUserDevicesPOM:Info[]= [];
+devicesProducers:Info[] = [];
+allUserDevicesPOM:Info[] = [];
+devicesStorage:Info[] = [];
 toggleFilterOptions(): void {
   this.showFilterOptions = !this.showFilterOptions;
 }
@@ -440,8 +441,10 @@ applyFilter(): void {
       this.allUserDevices = this.devicesProducers;
   }else if(this.selectedFilterOption === "All Devices"){
     this.allUserDevices = this.allUserDevicesPOM;
-  }else if(this.selectedFilterOption === "Energy Store"){
+  }else if(this.selectedFilterOption === "Storages"){
     this.allUserDevices = this.devicesStorage;
+  }else{
+    this.allUserDevices = this.allUserDevicesPOM;
   }
   this.showFilterOptions = false;
 }
@@ -570,7 +573,8 @@ applyFilter(): void {
       });
 
       if (this.selectedUsersTable.length > 0) {
-        // Select all users on the map
+
+        console.log("SELECE", this.selectedUsersTable);
         for (const user of this.selectedUsersTable) {
           this.auth.getCoordsByUserID(user.id).subscribe((response: any) => {
             const latlng = L.latLng(JSON.parse(response['coordinates']));
@@ -589,7 +593,7 @@ applyFilter(): void {
           });
         }
       } else {
-    
+       
         this.auth.getCoordsByUserID(id).subscribe(
           (response: any) => {
             const latlng = L.latLng(JSON.parse(response['coordinates']));
@@ -618,7 +622,7 @@ applyFilter(): void {
     this.popUp(id);
   }  
 
-  devicesStorage:Info[] =[];
+
   
   numberOfProsumers:number = 0;
   numberOfConsumers:number = 0;
@@ -635,22 +639,16 @@ applyFilter(): void {
       (response : any) => {
         this.allUserDevices = response;
         this.allUserDevicesPOM = response;
-        // console.log("All user devices",this.allUserDevices);
+        console.log("All user devices",this.allUserDevices);
         for(let us of this.allUserDevices){
           this.auth.currentPowerUsageDeviceID(us.deviceId).subscribe(
             {
               next:(response : any)=>{
-                if(response != 0){
-                  this.todayPowerUsageDevice = (response);
-                  us.powerusage = response.toFixed(2);
-                  us.statusOfDevice = "ON";
-                }
-                else{
-                  us.powerusage = 0;
-                  us.statusOfDevice = "OFF"
-                }
+                us.powerusage = response;
+                
               },
               error:(error : any)=>{
+                us.powerusage = 0;
                 console.log(error)
               }
             }
@@ -658,7 +656,6 @@ applyFilter(): void {
 
           this.auth.dsoHasControl(us.deviceId).subscribe({
             next: (response:any)=>{
-              // console.log("DEVICE STATUS",response);
               us.dsoHasControl = response;
               this.toggleDeviceStatus(us);
               
@@ -666,6 +663,18 @@ applyFilter(): void {
             error:(error : any)=>{
               this.deviceStatus = false;
               console.log(error);
+            }
+          })
+          this.auth.stateOfDevice(us.deviceId).subscribe({
+            next:(response:any)=>{
+              if(response === true){
+                us.statusOfDevice = "ON"
+              }else{
+                us.statusOfDevice = "OFF"
+              }
+            },
+            error:(err:any)=>{
+              console.log(err);
             }
           })
           this.numberOfConsumers = 0;
@@ -944,7 +953,7 @@ applyFilter(): void {
         y: {
           title: {
             display: true,
-            text: 'Power Consuming in (kw/day)',
+            text: 'Energy Consumption [kWh]',
           },
           ticks: {
             font: {
@@ -1095,7 +1104,7 @@ applyFilter(): void {
         y: {
           title: {
             display: true,
-            text: 'Power Consuming in (kw/day)',
+            text: 'Energy Consumption [kWh]',
           },
           ticks: {
             font: {
@@ -1152,7 +1161,7 @@ applyFilter(): void {
         y: {
           title: {
             display: true,
-            text: 'Power Consuming (kw)',
+            text: 'Energy Consumption [kWh]',
           },
           ticks: {
             font: {
@@ -1267,7 +1276,7 @@ productionPreviousMonthUser(id : any){
         y: {
           title: {
             display: true,
-            text: 'Power Production (kw)',
+            text: 'Energy Production [kWh]',
           },
           ticks: {
             font: {
@@ -1370,7 +1379,7 @@ productionPreviousMonthUser(id : any){
             y: {
               title: {
                 display: true,
-                text: 'Power Consumption (kW)',
+                text: 'Energy Consumption [kWh]',
                 font: {
                   size: 9,
                 },
@@ -1460,7 +1469,7 @@ productionPreviousMonthUser(id : any){
             y: {
               title: {
                 display: true,
-                text: 'Power Consumption (kW)',
+                text: 'Energy Consumption [kWh]',
                 font: {
                   size: 9,
                 },
@@ -1583,7 +1592,7 @@ productionPreviousMonthUser(id : any){
         y: {
           title: {
             display: true,
-            text: 'Power consumption (kW)',
+            text: 'Energy Consumption [kWh]',
             font:{
               size: 10,
             }
@@ -1679,7 +1688,7 @@ consumptionNext24hGraph(){
       y: {
         title: {
           display: true,
-          text: 'Power consumption (kW)',
+          text: 'Energy Consumption [kWh]',
           font:{
             size: 10
           }
@@ -1806,7 +1815,7 @@ consumptionNext24hGraph(){
           y: {
             title: {
               display: true,
-              text: 'Power production (kW)',
+              text: 'Energy Production [kWh]',
               font:{
                 size: 10,
               }
@@ -1911,7 +1920,7 @@ consumptionNext24hGraph(){
           y: {
             title: {
               display: true,
-              text: 'Power Production (kW)'
+              text: 'Energy Production [kWh]'
             },
             ticks: {
               font: {
@@ -2012,7 +2021,7 @@ consumptionNext24hGraph(){
               y: {
                 title: {
                   display: true,
-                  text: 'Power Production (kW)',
+                  text: 'Energy Production [kWh]',
                   font: {
                     size: 9,
                   },
@@ -2100,7 +2109,7 @@ consumptionNext24hGraph(){
           y: {
             title: {
               display: true,
-              text: 'Power production (kW)',
+              text: 'Energy Production [kWh]',
               font:{
                 size: 10,
               }
@@ -2198,7 +2207,7 @@ consumptionNext24hGraph(){
               y: {
                 title: {
                   display: true,
-                  text: 'Power Production (kW)',
+                  text: 'Energy Production [kWh]',
                   font: {
                     size: 9,
                   },
@@ -2294,7 +2303,7 @@ consumptionNext24hGraph(){
           y: {
             title: {
               display: true,
-              text: 'Power Production (kW)'
+              text: 'Energy Production [kWh]'
             },
             ticks: {
               font: {
@@ -2316,7 +2325,7 @@ consumptionNext24hGraph(){
     savedEnergy(userID : any){
       this.auth.savedEnergyConsumptionUser(userID).subscribe({
         next:(response : any) =>{
-          this.savedEnergyUser = response.toFixed(2);
+          this.savedEnergyUser = response;
         },
         error : (err : any) => {
           this.savedEnergyUser = 0;
@@ -2324,7 +2333,7 @@ consumptionNext24hGraph(){
       });
       this.auth.savedEnergyProductionUser(userID).subscribe({
         next:(response : any)=>{
-          this.savedEnergyUser += response.toFixed(2);
+          this.savedEnergyUser += response;
         },
         error: (err : any)=>{
           this.savedEnergyUser += 0;
@@ -2337,7 +2346,7 @@ consumptionNext24hGraph(){
     dsoShareData(userID : any){
       this.auth.userShareDataWithDSO(userID).subscribe({
         next:(response : any)=>{
-          console.log("dsoShareData",response);
+         
           this.sharedDataWithDSO = response;
          
         },
@@ -2351,43 +2360,29 @@ consumptionNext24hGraph(){
     public btnStatus:boolean = false;
     toggleDeviceStatus(device:Info){
       if(device.dsoHasControl == true){
-          if (device.dsoHasControl) {
+         
             if (device.statusOfDevice === "OFF") {
               this.auth.changeStateOfDevice(device.deviceId,true).subscribe({
                 next:(response:any)=>{
-                  console.log(response);
-                 
+                  device.statusOfDevice = "ON"; 
                 },
                 error:(error:any)=>{
                   console.log(error);
                 }
-              }
-              );
-              device.statusOfDevice = "ON"; 
+              });
               
-              console.log(device);
             } else {
               this.auth.changeStateOfDevice(device.deviceId,false).subscribe({
                 next:(response:any)=>{
-                  console.log(response);
-                 
+                  device.statusOfDevice = "OFF";
                 },
                 error:(error:any)=>{
                   console.log(error);
                 }
-              }
-                
-              );
-              device.statusOfDevice = "OFF";
-             
-            }
+              });
+             }
           }
-          console.log(device);
-        
-      }
-
-
-    }
+        }
 }
 
 

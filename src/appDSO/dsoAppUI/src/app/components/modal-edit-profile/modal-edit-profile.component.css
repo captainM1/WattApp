@@ -1,7 +1,7 @@
 .container-fluid{
     justify-content: center;
     display: flex;
-    background-color: #026670;
+   
 }
 form{
     border-radius: 2px solid #026670;

@@ -24,6 +24,7 @@ export class RequirementsComponent implements OnInit{
   acceptRequest(reqID: any){
     this.auth.acceptReq(reqID).subscribe(
       response => {
+      
         this.loadReq();
       }
     );

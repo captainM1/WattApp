@@ -17,6 +17,7 @@
     .container-fluid{
       width: 30%;
       height: 100%;
+      
 
     }
     .col{
@@ -31,13 +32,13 @@
 
     #edit-profile{
       margin-top: 50px;
-      border-radius: 10px;
+      border-radius: 5px;
       background-color: #FFFFFF;
       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
       margin: 0;
       background-color: #026670;
     }
-    #top{
+    #top{border: 2px solid #026670;
       display: block;
       justify-content: center;
       text-align: center;
@@ -117,7 +118,7 @@
       font-style: italic;
       font-size: 12px;
       opacity: 0.8;
-      border: 2px solid #026670;
+      
     }
 
     #form-user-enter{
@@ -132,7 +133,6 @@
    
 
 
-
     img{
       border-radius: 8px;
       border: 2px solid white;
@@ -145,8 +145,6 @@
       background-color: white;
       margin: 0;
       margin-top: 0px;
-      margin-top: 6px;
-      padding-top: 14px;
       padding-bottom: 10px;
 
     }
@@ -240,7 +238,7 @@
   max-width: 600px;
 }
 .modal-body{
-  background-color: #026670;
+  /* background-color: #026670; */
   padding-top: 30px;
 }
 

@@ -20,7 +20,7 @@ export class SignupComponent implements OnInit {
   isText: boolean = false;
   isText2: boolean = false;
   signupForm!: FormGroup;
-  allWorkers: any;
+  allWorkers!: Role[];
   workers!: Role[];
   disp!:Role;
   public emailModal : any;
@@ -28,6 +28,7 @@ export class SignupComponent implements OnInit {
   public lastNameModal: any;
   public roleModal : any;
   public mobileModal:any;
+  public id!:any;
   @ViewChild('profileDispacher') profileDispacher!: ElementRef;
   constructor(
     private fb: FormBuilder,
@@ -41,20 +42,28 @@ export class SignupComponent implements OnInit {
         firstName: ['', Validators.required],
         lastName: ['', Validators.required],
         email : ['', [Validators.required, Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
-        phonenumber: ['', Validators.required],
+        phonenumber: ['', [Validators.required, Validators.pattern('^(\\+381(\\s?|-?))?0?[\\d]{2}[\\d]{3,4}[\\d]{3,4}$')]] ,
         password: ['', [Validators.required, Validators.minLength(6)]],
         confirmPassword: ['', [Validators.required, Validators.minLength(6)]]
       },{
         validator: ConfirmPasswordValidator("password","confirmPassword")
       }
       )
+      this.getAllDispachers();
+      
+    }
+
+    getAllDispachers(){
       this.auth.getAllDispechers().subscribe(
         (response) => {
           this.allWorkers = response;
+        
         }
       )
+      
     }
 
+   
     get fields(){
       return this.signupForm.controls;
     }
@@ -111,6 +120,8 @@ export class SignupComponent implements OnInit {
       this.auth.getDispacher(id).subscribe({
         next:(response : any) => {
           this.disp = response;
+          this.id = this.disp.id;
+          console.log("ID",this.disp.id);
           this.firstNameModal = this.disp.firstName;
           this.lastNameModal = this.disp.lastName;
           this.emailModal = this.disp.email;
