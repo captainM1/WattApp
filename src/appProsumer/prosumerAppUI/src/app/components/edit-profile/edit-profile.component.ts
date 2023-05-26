@@ -129,7 +129,6 @@ export class EditProfileComponent implements OnInit{
     this.isEmailModified = true;
     this.checkValidEmail();
   }
-  }
 
   onFileSelected(event: any): void {
     const file: File = event.target.files[0];
