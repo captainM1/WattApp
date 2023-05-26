@@ -31,4 +31,6 @@ public interface IUserService
     Task<Boolean> UserAllreadyAppliedToDso(Guid id);
     Task<Boolean> UserStatusAppliedToDso(Guid userId);
     Task<Boolean> RemoveUserRequestToDso(Guid id);
+
+    public Task<bool> SaveImageForUser(Guid id, string profilePicture);
 }

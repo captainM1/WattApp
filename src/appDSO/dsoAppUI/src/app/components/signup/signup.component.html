@@ -92,10 +92,9 @@
                     </button>
                     </td>
                     <td><button id = "deleteBtn" (click)="deleteDispecher(worker.id)">Delete</button></td>
-                    
-                
                 </tr>
             </table>
+            <h1 *ngIf="allWorkers.length == 0" class="justify-content-center align-items-center d-flex">There are no employees</h1>
         </div>
         
     </div>

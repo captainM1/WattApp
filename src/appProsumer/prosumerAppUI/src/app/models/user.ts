@@ -21,3 +21,12 @@ export interface Info{
   powerUsage:string;
 
 }
+export class ImageUpdate{
+  id:any;
+  image:any;
+
+  constructor(id:any,image:any){
+    this.id = id;
+    this.image = image
+  }
+}

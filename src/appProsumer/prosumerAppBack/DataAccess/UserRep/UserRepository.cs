@@ -1,4 +1,5 @@
 using System.Security.Cryptography;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using prosumerAppBack.Helper;
@@ -401,5 +402,14 @@ public class UserRepository : IUserRepository
         _dbContext.UsersAppliedToDSO.Remove(user);
         await _dbContext.SaveChangesAsync();
         return true;
+    }
+    public async Task<User> SaveProfilePictureAsync(Guid userId, string profilePicture)
+    {
+        var user = await _dbContext.Users.FindAsync(userId);
+
+        user.profilePicture = profilePicture;
+        await _dbContext.SaveChangesAsync();
+
+        return user;
     }
 }

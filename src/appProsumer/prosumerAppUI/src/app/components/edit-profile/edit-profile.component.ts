@@ -32,6 +32,7 @@ export class EditProfileComponent implements OnInit{
   isEmailModified: boolean = false;
   isValidPhoneNumber: boolean = true;
   isPhoneNumberModified: boolean = false;
+  image: any;
 
 
   @ViewChild('exampleModal') exampleModal!: ElementRef;
@@ -60,7 +61,7 @@ export class EditProfileComponent implements OnInit{
         this.city = response.city;
         this.country = response.country;
         this.email = response.email;
-
+        this.image = response.profilePicture;
         this.sharesData(this.userID);
         this.hasControl(this.userID);
 
@@ -97,7 +98,7 @@ export class EditProfileComponent implements OnInit{
       lastName: this.lastName,
       sharesDataWithDso: this.sharesDataWithDSO,
       dsoHasControl: this.dsoHasControl,
-      city: this.city
+      city: this.city,
     };
 
     if (!this.isValidPhoneNumber || !this.isValidEmail)
@@ -128,7 +129,20 @@ export class EditProfileComponent implements OnInit{
     this.isEmailModified = true;
     this.checkValidEmail();
   }
+  }
 
+  onFileSelected(event: any): void {
+    const file: File = event.target.files[0];
+    const reader: FileReader = new FileReader();
+  
+    reader.onloadend = () => {
+      const byteArray = new Uint8Array(reader.result as ArrayBuffer);
+      this.auth.uploadImage(byteArray,this.userID);
+    };
+  
+    reader.readAsArrayBuffer(file);
+    this.getToken();
+  }
 
   checkValidPhoneNumber(): void {
     const pattern = /^(\+381(\s?|-?))?0?[\d]{2}[\d]{3,4}[\d]{3,4}$/;

@@ -27,10 +27,10 @@
                 </form>
                 <div class="row" id = "img-btn" >
                     <div class="col-sm-4" id = "col-img-btn">
-                        <img src="../../../assets/icons/images.jpg">
+                        <img src="data:image/jpeg;base64,{{ image }}" alt="Image" style="width: 300px; height: auto;">
                     </div>
                     <div class="row" id="row-img-btn">
-                        <button class="btn-add-img"  type="button">Add image</button>
+                        <input type="file" (change)="onFileSelected($event)">
                     </div>
                 </div>
             </div>

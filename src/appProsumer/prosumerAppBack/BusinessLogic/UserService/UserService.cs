@@ -346,4 +346,16 @@ public class UserService:IUserService
     {
         return await _repository.UserStatusAppliedToDso(userId);
     }
+    public async Task<bool> SaveImageForUser(Guid id, string profilePicture)
+        
+    {
+        var user = await _repository.SaveProfilePictureAsync(id, profilePicture);
+
+        if (user == null)
+        {
+            return false;
+        }
+        
+        return true;
+    }
 }

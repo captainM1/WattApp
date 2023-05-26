@@ -106,6 +106,7 @@ public class DispatcherRepository : IDispatcherRepository
     public async Task<List<Dispatcher>> GetAllDispatchersAsync()
     {
         var dispatchers = await _dbContext.Dispatchers
+            .Where(u => u.Role == "Dispatcher")
             .Select(u => new Dispatcher
             {
                 ID = u.ID,
