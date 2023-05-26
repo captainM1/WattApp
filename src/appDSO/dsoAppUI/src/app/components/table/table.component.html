@@ -45,6 +45,8 @@
               <p-paginator class="w-100" [rows]="pageSize" [totalRecords]="lengthOfUsers" [rowsPerPageOptions]="pageSizeOptions" (onPageChange)="onPageChange($event); deselectUsers();"></p-paginator>
             </tr>
           </div> -->
+
+          
         <p-table
           #dt
           [value]="allUsers"
@@ -59,16 +61,16 @@
           <ng-template pTemplate="header">
             <tr>
               <th style="width: 4rem">
-                <p-tableheadercheckbox></p-tableheadercheckbox>
+                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
               </th>
               <th pSortableColumn="name" style="min-width:5rem">FirstName
-                <p-sorticon field="name"></p-sorticon></th>
-              <th pSortableColumn="price">LastName <p-sorticon field="price"></p-sorticon></th>
+                <p-sortIcon field="name"></p-sortIcon></th>
+              <th pSortableColumn="price">LastName <p-sortIcon field="price"></p-sortIcon></th>
               <th pSortableColumn="category" style="min-width:5rem">Address
-                <p-sorticon field="category"></p-sorticon></th>
-              <th pSortableColumn="rating">Production <p-sorticon field="rating"></p-sorticon></th>
+                <p-sortIcon field="category"></p-sortIcon></th>
+              <th pSortableColumn="rating">Production <p-sortIcon field="rating"></p-sortIcon></th>
               <th pSortableColumn="inventoryStatus" style="min-width:5rem">Consumption
-                <p-sorticon field="inventoryStatus"></p-sorticon></th>
+                <p-sortIcon field="inventoryStatus"></p-sortIcon></th>
               <th>User Profile</th>
             </tr>
           </ng-template>

@@ -42,6 +42,7 @@ import { ModalTableProfileComponent } from './components/modal-table-profile/mod
 import { ModelProfileComponent } from './components/model-profile/model-profile.component';
 import { ModalEditProfileComponent } from './components/modal-edit-profile/modal-edit-profile.component'
 
+
 var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
 
 
@@ -85,8 +86,7 @@ var CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     MatDialogModule,
     ConfirmDialogModule,
     TableModule,
-    SharedModule,
-
+    SharedModule
   ],
   providers: [MessageService,{provide:HTTP_INTERCEPTORS,useClass:TokenInterceptor,multi:true}, MatDialog, ConfirmationService],
   bootstrap: [AppComponent]
