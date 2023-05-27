@@ -66,7 +66,7 @@
                 </div>
             </div>
             <div class="align-center chart">
-                <ngx-spinner bdColor = "rgba(0, 0, 0, 0.5)" size = "medium" color = "#fff" type = "ball-spin" [showSpinner]="showSpinner" [fullScreen]="false" *ngIf="showSpinner"><p style="color: #fff; margin-top: 60px;" > Please wait... </p></ngx-spinner>
+                <ngx-spinner bdColor = "rgba(0, 0, 0, 0.5)" size = "medium" color = "#fff" type = "ball-spin" [showSpinner]="showSpinner" [fullScreen]="false" *ngIf="showSpinner"><span style="color: #fff; font-weight: normal; margin-top: 60px;" > Please wait... </span></ngx-spinner>
                 <canvas #chart></canvas>
             </div>
         </div>
@@ -78,26 +78,26 @@
       <div class="modal-content">
         <div class="modal-header">
           <p class="modal-title" id="exampleModalLabel">
-            <span *ngIf="selectedOption === 'Today'" style="color: #026670; font-size: 20px; font-weight: 700;"> History And Prediction For 24h </span>
-            <span *ngIf="selectedOption === 'Week'" style="color: #026670; font-size: 20px; font-weight: 700;"> History And Prediction For A Month </span>
-            <span *ngIf="selectedOption === 'Month'" style="color: #026670; font-size: 20px; font-weight: 700;">History And Prediction For 7 days </span>
+            <span *ngIf="selectedOption === 'Today'" style="color: #026670; font-size: 17px; font-weight: 700; text-transform: none; font-style: italic;"> History And Prediction For 24h </span>
+            <span *ngIf="selectedOption === 'Week'" style="color: #026670; font-size: 17px; font-weight: 700; text-transform: none; font-style: italic;"> History And Prediction For 7 days </span>
+            <span *ngIf="selectedOption === 'Month'" style="color: #026670; font-size: 17px; font-weight: 700; text-transform: none; font-style: italic;"> History And Prediction For A Month </span>
           </p>
           <button type="button" id="closeBtn" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
           <div *ngIf="selectedOption === 'Today'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
-            <app-modal-table #ModalTableComponentHistoryConsumption [data]="data24h" [type]="groupName === 'Consumer' ? 'Consumption' : 'Production'" [message]="'History And Prediction For 24h'" [time]="'Hour'"></app-modal-table>
+            <app-modal-table #ModalTableComponent [data]="data24h" [type]="groupName === 'Consumer' ? 'Consumption' : 'Production'" [message]="'History And Prediction For 24h'" [time]="'Hour'"></app-modal-table>
           </div>
            <div *ngIf="selectedOption === 'Week'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
-            <app-modal-table #ModalTableComponentHistoryConsumption [data]="data7days" [type]="groupName === 'Consumer' ? 'Consumption' : 'Production'" [message]="'History And Prediction For A Month'" [time]="'Date'"></app-modal-table>
+            <app-modal-table #ModalTableComponent [data]="data7days" [type]="groupName === 'Consumer' ? 'Consumption' : 'Production'" [message]="'History And Prediction For 7 days'" [time]="'Date'"></app-modal-table>
           </div>
           <div *ngIf="selectedOption === 'Month'" class="modal-body" style="overflow-y: auto; overflow-x: hidden">
-            <app-modal-table #ModalTableComponentHistoryConsumption [data]="dataMonth" [type]="groupName === 'Consumer' ? 'Consumption' : 'Production'" [message]="'History And Prediction For 7 days'" [time]="'Date'"></app-modal-table>
+            <app-modal-table #ModalTableComponent [data]="dataMonth" [type]="groupName === 'Consumer' ? 'Consumption' : 'Production'" [message]="'History And Prediction For A Month'" [time]="'Date'"></app-modal-table>
           </div>
 
       <div class="modal-footer">
-        <button  *ngIf="selectedOption === 'Today'" type="button" (click)="modalTableComponentHistoryConsumption.exportToExcel('history_and_prediction_24h_'+ device.deviceName)"  class="btn export" >EXPORT DATA</button>
-        <button  *ngIf="selectedOption === 'Month'" type="button" (click)="modalTableComponentHistoryConsumption.exportToExcel('history_and_prediction_month_'+device.deviceName)"  class="btn export" >EXPORT DATA</button>
-        <button  *ngIf="selectedOption === 'Week'" type="button" (click)="modalTableComponentHistoryConsumption.exportToExcel('history_and_prediction_7days_'+device.deviceName)"  class="btn export" >EXPORT DATA</button>
+        <button  *ngIf="selectedOption === 'Today'" type="button" (click)="modalTableComponent.exportToExcel('history_and_prediction_24h_'+ device.deviceName)"  class="btn export" >EXPORT DATA</button>
+        <button  *ngIf="selectedOption === 'Month'" type="button" (click)="modalTableComponent.exportToExcel('history_and_prediction_month_'+device.deviceName)"  class="btn export" >EXPORT DATA</button>
+        <button  *ngIf="selectedOption === 'Week'" type="button" (click)="modalTableComponent.exportToExcel('history_and_prediction_7days_'+device.deviceName)"  class="btn export" >EXPORT DATA</button>
       </div>
     </div>
   </div>

@@ -51,7 +51,7 @@ export class DeviceDetailsComponent implements OnInit {
   data7days: any[]=[];
 
   @ViewChild('myTable') myTable!: ElementRef;
-  @ViewChild('ModalTableComponentHistoryConsumption') modalTableComponentHistoryConsumption!: ModalTableComponent;
+  @ViewChild('ModalTableComponent') modalTableComponent!: ModalTableComponent;
 
   constructor(
     private route: ActivatedRoute,
@@ -241,8 +241,8 @@ export class DeviceDetailsComponent implements OnInit {
       };
       this.data24h.push(pair);
     }
-  } 
-  else if (this.selectedOption === 'Week') { 
+  }
+  else if (this.selectedOption === 'Week') {
     this.formattedLabels = [...this.deviceHistoryWeekDate, new Date(), ...this.deviceFutureWeekDate];
     this.formattedLabels = this.formattedLabels.map((date:any) => {
       const parsedDate = new Date(date);
