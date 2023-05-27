@@ -7,7 +7,7 @@ import { SettingsService } from 'src/app/services/settings.service';
 import { BackgroundService } from 'src/app/services/background.service';import { Router } from '@angular/router';
 import { AuthUserService } from 'src/app/services/auth-user.service';
 import { User } from 'src/app/models/user';
-import { MessageService } from 'primeng/api';
+import { ConfirmEventType, ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-settings',
@@ -33,7 +33,7 @@ export class SettingsComponent implements OnInit, AfterViewInit{
   currentPassword!: string;
   newPassword!: string;
 
-  constructor(private apiService: SettingsService, private auth: AuthService, private auth1: AuthUserService, private messageService:MessageService, private fb: FormBuilder,private backgroundService:BackgroundService,private router : Router) { }
+  constructor(private apiService: SettingsService, private auth: AuthService, private auth1: AuthUserService, private messageService:MessageService, private fb: FormBuilder,private backgroundService:BackgroundService,private router : Router, private confirmationService: ConfirmationService,) { }
 
   @ViewChild('exampleModal') exampleModal!: ElementRef;
 
@@ -127,23 +127,41 @@ export class SettingsComponent implements OnInit, AfterViewInit{
         newPassword: this.newPassword
       };
 
-
-
-      this.auth1.changePassword(this.userID, passwordData).subscribe(
-        (response) => {
-          this.messageService.add({ severity: 'success', summary: 'Password updated successfully!'});
-          const buttonRef = document.getElementById('closeBtn');
-          buttonRef?.click();
-          this.auth.signOut2();
+      this.confirmationService.confirm({
+        message: 'Are you sure you want to change your password? The action cannot be undone and you will need to re-login.',
+        header: 'Confirmation',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+          this.auth1.changePassword(this.userID, passwordData).subscribe(
+            (response) => {
+              this.messageService.add({ severity: 'success', summary: 'Password updated successfully!'});
+              const buttonRef = document.getElementById('closeBtn');
+              buttonRef?.click();
+              this.auth.signOut2();
+            },
+            (error) => {
+              this.messageService.add({ severity: 'error', summary: 'Your current password is incorrect!'});
+            }
+          );
+          return;
         },
-        (error) => {
-          this.messageService.add({ severity: 'error', summary: 'Your current password is incorrect!'});
-        }
-      );
-      return;
-    }else{
-    }
+        reject: (type: any) => {
+          switch (type) {
+            case ConfirmEventType.REJECT:
+              this.messageService.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected' });
+              break;
+            case ConfirmEventType.CANCEL:
+              this.messageService.add({ severity: 'warn', summary: 'Cancelled', detail: 'You have cancelled' });
+              break;
+          }
+        },
+        acceptButtonStyleClass: 'p-button-danger',
+        rejectButtonStyleClass: 'p-button-secondary'
+      });
   }
+}
+
+
 
   reset()
   {
