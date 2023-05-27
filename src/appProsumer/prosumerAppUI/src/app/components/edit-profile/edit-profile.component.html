@@ -27,10 +27,11 @@
                 </form>
                 <div class="row" id = "img-btn" >
                     <div class="col-sm-4" id = "col-img-btn">
-                        <img src="data:image/jpeg;base64,{{ image }}" alt="Image" style="width: 300px; height: auto;">
+                      <img [src]="image" alt="Image" style="width: 240px; height: 220px; margin-top: 10px;">
                     </div>
                     <div class="row" id="row-img-btn">
-                        <input type="file" (change)="onFileSelected($event)">
+                      <button class="btn-add-img" (click)="fileInput.click()">Change image</button>
+                      <input type="file" #fileInput (change)="onFileSelected($event).subscribe()" style="display: none;">
                     </div>
                 </div>
             </div>

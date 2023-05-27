@@ -26,7 +26,7 @@ export class ProfileProsumerComponent implements OnInit{
   country!: string;
   email!: string;
   image:any;
-
+  defaultImage: string = 'assets/icons/images.jpg';
 
 
   constructor(
@@ -59,12 +59,36 @@ export class ProfileProsumerComponent implements OnInit{
        this.city = response.city;
        this.country = response.country;
        this.email = response.email;
-       this.image = response.profilePicture;
+       if (response.profilePicture) {
+        this.convertBase64ToImage(response.profilePicture)
+          .then((imageUrl: string) => {
+            this.image = imageUrl;
+          })
+          .catch((error) => {
+            console.error('Error converting Base64 to image:', error);
+            this.image = this.defaultImage;
+          });
+      } else {
+        this.image = this.defaultImage;
       }
-    )
+    }
+    );
   }
+
+
+  convertBase64ToImage(base64String: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        resolve(img.src);
+      };
+      img.onerror = (error) => {
+        reject(error);
+      };
+      img.src = 'data:image/jpeg;base64,' + base64String;
+    });
+  }
+
 }
-
-
 
 
