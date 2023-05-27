@@ -62,6 +62,7 @@ export class EditProfileComponent implements OnInit{
         this.city = response.city;
         this.country = response.country;
         this.email = response.email;
+        this.sharesData(this.userID);
 
         if (response.profilePicture) {
           this.convertBase64ToImage(response.profilePicture)
@@ -78,7 +79,6 @@ export class EditProfileComponent implements OnInit{
       }
       );
 
-          this.sharesData(this.userID);
   }
 
   convertBase64ToImage(base64String: string): Promise<string> {
