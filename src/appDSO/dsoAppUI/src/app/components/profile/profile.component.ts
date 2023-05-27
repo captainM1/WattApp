@@ -45,9 +45,15 @@ export class ProfileComponent implements OnInit{
   currentPassword!: string;
   newPassword!: string;
 
+  isValidEmail: boolean = true;
+  isEmailModified: boolean = false;
+  isValidPhoneNumber: boolean = true;
+  isPhoneNumberModified: boolean = false;
+
   @ViewChild('profile') profile!:ElementRef; 
   @ViewChild ('modelEDIT') modalElementRef!: ElementRef;
   @ViewChild('exampleModal') exampleModal!: ElementRef;
+ 
   constructor(
     private serv : AuthService,
     private r:Router,
@@ -183,6 +189,45 @@ reset(){
     if (confirmPasswordControl) {
       confirmPasswordControl.setErrors(null);
     }
+  }
+
+  updateDispacher(){
+   
+    const profile = {
+      firstName : this.firstName,
+      lastName : this.lastName,
+      email : this.email,
+      phoneNumber:this.phoneNumber
+    };
+    this.serv.updateDispacher(this.idDisapcher, this.firstName, this.lastName, this.phoneNumber, this.email).subscribe({
+      next:(response:any)=>{
+        this.closeModal();
+       
+      },
+      error:(error : any)=>{
+        console.log(error);
+      }
+
+    })
+  }
+
+  checkValidEmail(): void {
+    const pattern = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,3}$/;
+    this.isValidEmail = pattern.test(this.email);
+  }
+
+  onEmailInput(): void {
+    this.isEmailModified = true;
+    this.checkValidEmail();
+  }
+  checkValidPhoneNumber(): void {
+    const pattern = /^(\+381(\s?|-?))?0?[\d]{2}[\d]{3,4}[\d]{3,4}$/;
+    this.isValidPhoneNumber = pattern.test(this.phoneNumber);
+  }
+
+  onPhoneNumberInput(): void {
+    this.isPhoneNumberModified = true;
+    this.checkValidPhoneNumber();
   }
  
 }
