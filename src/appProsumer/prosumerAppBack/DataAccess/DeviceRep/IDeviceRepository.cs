@@ -32,6 +32,8 @@ namespace prosumerAppBack.BusinessLogic
         public Task<bool> ChangeState(Guid deviceId);
         Task<Boolean> UpdateUserDeviceDsoControl(Guid deviceID, Boolean dsoHasControl);
         Task<IEnumerable<DeviceDto>> GetProducersThatAreNotAttachedToABattery(Guid userID);
+        Task<IEnumerable<DeviceDto>> GetConsumersThatAreNotAttachedToABattery(Guid userID);
+        Task<Boolean> AddConnectionToBattery(Guid batteryID, Guid deviceID);
     }
 }
 

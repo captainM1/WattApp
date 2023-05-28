@@ -352,6 +352,65 @@ namespace prosumerAppBack.DataAccess
                                     
             return producers;
         }
+
+        public async Task<IEnumerable<DeviceDto>> GetConsumersThatAreNotAttachedToABattery(Guid userID)
+        {
+            var producers = _dbContext.Devices
+                            .Where(u => u.OwnerID == userID)
+                            .Include(u => u.DeviceType)
+                            .ThenInclude(u => u.Group)
+                            .Where(u => u.DeviceType.Group.Name == "Consumer")
+                            .Select(d => new DeviceDto()
+                            {
+                                DeviceID = d.ID,
+                                DeviceName = d.DeviceName
+                            })
+                            .Except(_dbContext.BatteryConnections.Include(e => e.Device).Select(e => new DeviceDto()
+                            {
+                                DeviceID = e.Device.ID,
+                                DeviceName = e.Device.DeviceName
+                            }))
+                            .ToList();
+
+            return producers;
+        }
+
+        public async Task<Boolean> AddConnectionToBattery(Guid batteryID, Guid deviceID)
+        {
+            var device = await _dbContext.Devices.FindAsync(deviceID);
+            var deviceCheck = await _dbContext.BatteryConnections.FirstOrDefaultAsync(d => d.Device.ID == deviceID);
+            if (deviceCheck != null)
+            {
+                return false;
+            }
+            
+            Guid deviceTypeID = _dbContext.Devices
+               .Where(d => d.ID == batteryID)
+               .Select(d => d.DeviceTypeID)
+               .FirstOrDefault();
+
+            string deviceGroupName = _dbContext.DeviceGroups
+                .Where(g => g.ID == _dbContext.DeviceTypes
+                    .Where(dt => dt.ID == deviceTypeID)
+                    .Select(dt => dt.GroupID)
+                    .FirstOrDefault())
+                .Select(g => g.Name)
+                .FirstOrDefault();
+            if (deviceGroupName == "Storage")
+            {
+                var newDevice = new BatteryConnections
+                {
+                    ConnectionID = new Guid(),
+                    BatteryID = batteryID,
+                    Device = device
+                };
+
+                _dbContext.BatteryConnections.Add(newDevice);
+                await _dbContext.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
     }
 
     public class DeviceInfo

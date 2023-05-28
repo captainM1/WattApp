@@ -2658,16 +2658,39 @@ public class PowerUsageRepository : IPowerUsageRepository
         foreach (var battery in batteries)
         {
             double sumProduction = 0;
-            var producers = _dataContext.BatteryConnections
+            double sumConsumption = 0;
+            var devices = _dataContext.BatteryConnections
                             .Where(e => e.BatteryID == battery)
                             .Select(e => e.Device.ID)
                             .ToList();
-            foreach (var producer in producers)
+
+            
+            foreach (var device in devices)
             {
-                sumProduction += await this.GetCurrentPowerProduction(producer);
+                Guid deviceTypeID = _dataContext.Devices
+               .Where(d => d.ID == device)
+               .Select(d => d.DeviceTypeID)
+               .FirstOrDefault();
+
+                string deviceGroupName = _dataContext.DeviceGroups
+                    .Where(g => g.ID == _dataContext.DeviceTypes
+                        .Where(dt => dt.ID == deviceTypeID)
+                        .Select(dt => dt.GroupID)
+                        .FirstOrDefault())
+                    .Select(g => g.Name)
+                    .FirstOrDefault();
+
+                if(deviceGroupName == "Producer")
+                {
+                    sumProduction += await this.GetCurrentPowerProduction(device);
+                }
+                else if(deviceGroupName == "Consumer")
+                {
+                    sumConsumption += await this.GetCurrentPowerConsumption(device);
+                }
+
+                
             }
-
-
 
             var batteryTemp = _dataContext.Devices
                               .Include(e => e.DeviceType)
@@ -2680,7 +2703,7 @@ public class PowerUsageRepository : IPowerUsageRepository
                                        .Where(e => e.Date == DateTime.Now.Date.AddHours(DateTime.Now.Hour-1))
                                        .FirstOrDefaultAsync(b => b.ID == battery);
 
-            double percentChange= ((sumProduction * 1000) * 100) / batteryTemp;
+            double percentChange= (((sumProduction-sumConsumption) * 1000) * 100) / batteryTemp;
 
             if(temp == null)
             {
@@ -2726,6 +2749,38 @@ public class PowerUsageRepository : IPowerUsageRepository
                 .Sum(p => p.TimestampPowerPairs.Where(t => t.Timestamp >= startOfAnHour && t.Timestamp < endOfAnHour).Sum(p => p.PowerUsage));
         }
         
+
+        return powerUsages;
+    }
+
+    public async Task<double> GetCurrentPowerConsumption(Guid deviceID)
+    {
+        double powerUsages = 0;
+        var startOfAnHour = DateTime.Now.AddHours(-1);
+        var endOfAnHour = DateTime.Now;
+
+        var device = _dataContext.Devices.FirstOrDefaultAsync(e => e.ID == deviceID);
+
+        string deviceGroupName = _dataContext.DeviceGroups
+                    .Where(g => g.ID == _dataContext.DeviceTypes
+                        .Where(dt => dt.ID == device.Result.DeviceTypeID)
+                        .Select(dt => dt.GroupID)
+                        .FirstOrDefault())
+                    .Select(g => g.Name)
+                    .FirstOrDefault();
+
+        var userID = _dataContext.Devices
+                    .Where(d => d.DeviceTypeID == device.Result.DeviceTypeID)
+                    .Select(u => u.OwnerID)
+                    .FirstOrDefault();
+
+        if (deviceGroupName == "Consumer")
+        {
+            powerUsages += mongoCollection.AsQueryable().ToList()
+                .Where(d => d.ID.ToString().ToUpper() == device.Result.DeviceTypeID.ToString().ToUpper())
+                .Sum(p => p.TimestampPowerPairs.Where(t => t.Timestamp >= startOfAnHour && t.Timestamp < endOfAnHour).Sum(p => p.PowerUsage));
+        }
+
 
         return powerUsages;
     }

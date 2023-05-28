@@ -270,5 +270,25 @@ public class DeviceService:IDeviceService
             throw new NotFoundException();
         }
         return producers;
-    }    
+    }
+
+    public async Task<IEnumerable<DeviceDto>> GetConsumersThatAreNotAttachedToABattery(Guid userID)
+    {
+        var producers = await _repository.GetConsumersThatAreNotAttachedToABattery(userID);
+        if (producers == null)
+        {
+            throw new NotFoundException();
+        }
+        return producers;
+    }
+
+    public async Task<Boolean> AddConnectionToBattery(Guid batteryID, Guid deviceID)
+    {
+        var producers = await _repository.AddConnectionToBattery(batteryID, deviceID);
+        if (producers == false)
+        {
+            throw new BadRequestException("device is already connected to battery");
+        }
+        return true;
+    }
 }

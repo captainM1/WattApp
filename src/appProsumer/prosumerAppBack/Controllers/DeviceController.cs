@@ -13,7 +13,7 @@ namespace prosumerAppBack.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
+    [Authorize(Roles = "Dispatcher,Admin,UnapprovedUser,RegularUser")]
     public class DeviceController : ControllerBase
     {
         private readonly IDeviceService _deviceService;
@@ -371,7 +371,37 @@ namespace prosumerAppBack.Controllers
             {
                 throw new ArgumentException(ex.Message);
             }
-        }        
+        }
+
+        [HttpGet("get-consumers-that-are-not-connected-to-battery/{userID}")]
+        public async Task<IActionResult> GetConsumersThatAreNotAttachedToABattery(Guid userID)
+        {
+            try
+            {
+                var devices = await _deviceService.GetConsumersThatAreNotAttachedToABattery(userID);
+
+                return Ok(devices);
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
+        }
+
+        [HttpPost("add-connection-to-battery/{batteryID}")]
+        public async Task<IActionResult> AddConnectionToBattery(Guid batteryID, [FromBody] Guid deviceID)
+        {
+            try
+            {
+                var devices = await _deviceService.AddConnectionToBattery(batteryID, deviceID);
+
+                return Ok(devices);
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
+        }
     }
 }
 
