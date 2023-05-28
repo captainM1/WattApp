@@ -9,6 +9,7 @@ import { Observable, catchError, forkJoin, map, of, tap } from 'rxjs';
 import { ConfirmEventType, ConfirmationService, MessageService } from 'primeng/api';
 import { AuthUserService } from 'src/app/services/auth-user.service';
 import { Info } from 'src/app/models/user';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-my-devices',
@@ -30,7 +31,8 @@ export class MyDevicesComponent implements OnInit {
     private cookie: CookieService,
     private http: HttpClient,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -166,14 +168,29 @@ export class MyDevicesComponent implements OnInit {
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         this.changeState(device.deviceId);
+        this.router.navigate(['/dashboard'],{skipLocationChange:true}).then(()=>{
+
+          this.router.navigate(['/home']);
+
+        });
       },
       reject: (type: any) => {
         switch (type) {
           case ConfirmEventType.REJECT:
             this.messageService.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected' });
+            this.router.navigate(['/dashboard'],{skipLocationChange:true}).then(()=>{
+
+              this.router.navigate(['/home']);
+
+            });
             break;
           case ConfirmEventType.CANCEL:
             this.messageService.add({ severity: 'warn', summary: 'Cancelled', detail: 'You have cancelled' });
+            this.router.navigate(['/dashboard'],{skipLocationChange:true}).then(()=>{
+
+              this.router.navigate(['/home']);
+
+            });
             break;
         }
       },

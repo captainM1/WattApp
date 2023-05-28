@@ -335,7 +335,7 @@ export class DeviceDetailsComponent implements OnInit {
             y: {
               title: {
                 display: true,
-                text: 'Power Amount [kWh]'
+                text: 'Energy [kWh]'
               }
             },
             x: {
