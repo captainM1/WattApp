@@ -17,6 +17,41 @@ namespace prosumerAppBack.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.3");
 
+            modelBuilder.Entity("prosumerAppBack.Models.Device.BatteryConnections", b =>
+                {
+                    b.Property<Guid>("ConnectionID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("BatteryID")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("DeviceID")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ConnectionID");
+
+                    b.HasIndex("DeviceID");
+
+                    b.ToTable("BatteryConnections");
+                });
+
+            modelBuilder.Entity("prosumerAppBack.Models.Device.BatteryStatus", b =>
+                {
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("TEXT");
+
+                    b.Property<double>("BatteryPercent")
+                        .HasColumnType("REAL");
+
+                    b.Property<Guid>("ID")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Date");
+
+                    b.ToTable("BatteryStatuses");
+                });
+
             modelBuilder.Entity("prosumerAppBack.Models.Device.Device", b =>
                 {
                     b.Property<Guid>("ID")
@@ -507,9 +542,9 @@ namespace prosumerAppBack.Migrations
                             Email = "admin@gmail.com",
                             FirstName = "Adminovic",
                             LastName = "Adminovski",
-                            PasswordHash = new byte[] { 167, 29, 10, 9, 188, 65, 128, 15, 67, 206, 185, 28, 182, 12, 89, 92, 64, 185, 184, 207, 202, 179, 76, 129, 235, 143, 16, 213, 179, 42, 216, 9 },
+                            PasswordHash = new byte[] { 192, 136, 153, 95, 96, 127, 76, 51, 132, 25, 151, 24, 188, 118, 178, 197, 134, 182, 85, 185, 223, 57, 226, 97, 76, 48, 56, 103, 2, 206, 130, 246 },
                             Role = "Admin",
-                            Salt = new byte[] { 243, 78, 71, 236, 60, 243, 113, 131, 101, 226, 57, 11, 74, 166, 182, 210 }
+                            Salt = new byte[] { 193, 27, 0, 27, 226, 173, 179, 36, 6, 229, 191, 248, 0, 226, 232, 243 }
                         });
                 });
 
@@ -577,10 +612,10 @@ namespace prosumerAppBack.Migrations
                             Email = "petarsimic@gmail.com",
                             FirstName = "Petar",
                             LastName = "Simic",
-                            PasswordHash = new byte[] { 123, 152, 101, 126, 5, 177, 90, 239, 211, 238, 176, 202, 45, 29, 102, 191, 112, 21, 110, 176, 228, 88, 0, 83, 164, 74, 15, 166, 185, 98, 182, 142 },
+                            PasswordHash = new byte[] { 248, 118, 52, 146, 101, 66, 156, 144, 130, 235, 221, 39, 68, 32, 222, 68, 37, 87, 190, 164, 255, 134, 31, 23, 214, 106, 250, 233, 126, 1, 89, 171 },
                             PhoneNumber = "064-316-15-81",
                             Role = "UnapprovedUser",
-                            Salt = new byte[] { 175, 174, 252, 227, 236, 52, 36, 57, 2, 214, 2, 35, 171, 186, 76, 214 },
+                            Salt = new byte[] { 237, 13, 94, 157, 248, 217, 196, 138, 219, 91, 144, 134, 234, 5, 160, 118 },
                             sharesDataWithDso = false
                         });
                 });
@@ -603,6 +638,17 @@ namespace prosumerAppBack.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("UsersAppliedToDSO");
+                });
+
+            modelBuilder.Entity("prosumerAppBack.Models.Device.BatteryConnections", b =>
+                {
+                    b.HasOne("prosumerAppBack.Models.Device.Device", "Device")
+                        .WithMany()
+                        .HasForeignKey("DeviceID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Device");
                 });
 
             modelBuilder.Entity("prosumerAppBack.Models.Device.Device", b =>

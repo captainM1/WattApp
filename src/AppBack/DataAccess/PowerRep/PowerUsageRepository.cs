@@ -68,8 +68,22 @@ public class PowerUsageRepository : IPowerUsageRepository
                 .FirstOrDefault();
         if(deviceGroupName == "Storage")
         {
-            var batteryPercent = _dataContext.BatteryStatuses.FirstOrDefaultAsync(e => e.ID == deviceID && e.Date == currentHourTimestamp).Result.BatteryPercent;
-            return batteryPercent;
+            var baterry = await _dataContext.BatteryStatuses.FirstOrDefaultAsync(e => e.ID == deviceID && e.Date == currentHourTimestamp);
+            if (baterry == null)
+            {
+                return 0;
+            }
+            var batteryCapacity = await _dataContext.Devices
+                                    .Include(d => d.DeviceType)
+                                    .ThenInclude(dt => dt.Manufacturer)
+                                    .Include(d => d.DeviceType)
+                                    .ThenInclude(dt => dt.Group)
+                                    .Where(d => d.ID == baterry.ID)
+                                    .Select(d => d.DeviceType.Wattage)
+                                    .FirstOrDefaultAsync();
+            var batteryPercent = _dataContext.BatteryStatuses.FirstOrDefaultAsync(e => e.ID == baterry.ID && e.Date == currentHourTimestamp).Result.BatteryPercent;
+            double batteryPower = batteryCapacity * (batteryPercent / 100);
+            return batteryPower;
         }
         else 
         {
@@ -2831,7 +2845,11 @@ public class PowerUsageRepository : IPowerUsageRepository
 
             if (deviceGroupName == "Storage")
             {
-                var batteryPercent = _dataContext.BatteryStatuses.FirstOrDefaultAsync(e => e.ID == device.ID && e.Date == currentHourTimestamp).Result.BatteryPercent;
+                var battery = await _dataContext.BatteryStatuses.FirstOrDefaultAsync(e => e.ID == device.ID && e.Date == currentHourTimestamp);
+                if (battery == null)
+                {
+                    return 0;
+                }
                 var batteryCapacity = await _dataContext.Devices
                                     .Include(d => d.DeviceType)
                                     .ThenInclude(dt => dt.Manufacturer)
@@ -2840,7 +2858,8 @@ public class PowerUsageRepository : IPowerUsageRepository
                                     .Where(d => d.ID == device.ID)
                                     .Select(d => d.DeviceType.Wattage)
                                     .FirstOrDefaultAsync();
-                batteryPower += batteryCapacity * (batteryPercent/100);
+                var batteryPercent = _dataContext.BatteryStatuses.FirstOrDefaultAsync(e => e.ID == device.ID && e.Date == currentHourTimestamp).Result.BatteryPercent;
+                batteryPower += batteryCapacity * (batteryPercent / 100);
             }
         }
         return batteryPower;
