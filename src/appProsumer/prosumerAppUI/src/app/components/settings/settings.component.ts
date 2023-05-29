@@ -33,7 +33,7 @@ export class SettingsComponent implements OnInit, AfterViewInit{
   currentPassword!: string;
   newPassword!: string;
 
-  constructor(private apiService: SettingsService, private auth: AuthService, private auth1: AuthUserService, private messageService:MessageService, private fb: FormBuilder,private backgroundService:BackgroundService,private router : Router, private confirmationService: ConfirmationService,) { }
+  constructor(private apiService: SettingsService, private auth: AuthService, private auth1: AuthUserService, private messageService:MessageService, private fb: FormBuilder,private backgroundService:BackgroundService,private router : Router, private confirmationService: ConfirmationService) { }
 
   @ViewChild('exampleModal') exampleModal!: ElementRef;
 
