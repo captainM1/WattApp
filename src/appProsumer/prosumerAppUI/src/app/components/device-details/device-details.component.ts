@@ -1,17 +1,16 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { Router } from '@angular/router';
 import Chart from 'chart.js/auto';
 import { ViewChild, ElementRef } from '@angular/core';
 import { ConfirmationService, MessageService, ConfirmEventType } from 'primeng/api';
-import { DeviceEditPopupComponent } from '../device-edit-popup/device-edit-popup.component';
-import { MatDialog } from '@angular/material/dialog';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SettingsService } from 'src/app/services/settings.service';
 import { ModalTableComponent } from '../modal-table/modal-table.component';
-
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { DeviceDialogComponent } from '../device-dialog/device-dialog.component';
 
 @Component({
   selector: 'app-device-details',
@@ -49,9 +48,14 @@ export class DeviceDetailsComponent implements OnInit {
   data24h: any[]=[];
   dataMonth: any[]=[];
   data7days: any[]=[];
+  deviceForm!: FormGroup;
+  deviceName: string = '';
+  tip: string = '';
 
   @ViewChild('myTable') myTable!: ElementRef;
   @ViewChild('ModalTableComponentHistoryConsumption') modalTableComponentHistoryConsumption!: ModalTableComponent;
+  @ViewChild('ModalTableComponentEditDevice') modalTableComponentEditDevice!: ModalTableComponent;
+
 
   constructor(
     private route: ActivatedRoute,
@@ -60,13 +64,19 @@ export class DeviceDetailsComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
     private spinner: NgxSpinnerService,
-    private settings: SettingsService
-  )
-  {}
+    private settings: SettingsService,
+    private dialog: MatDialog,
+    private formBuilder: FormBuilder
+  ) {}
+
 
   ngOnInit() {
     this.spinner.show();
     this.deviceId = this.route.snapshot.paramMap.get('id');
+
+    this.deviceForm = this.formBuilder.group({
+      deviceName: ['', Validators.required]
+    });
 
     this.settings.getShareInfo().subscribe(
       (data) => {
@@ -81,6 +91,8 @@ export class DeviceDetailsComponent implements OnInit {
       .subscribe(data => {
         this.device = data;
         this.groupName = this.device.groupName;
+        this.deviceForm.patchValue({ deviceName: this.device.deviceName });
+        this.deviceName = this.device.deviceName;
       },
       error => {
         console.error('Error fetching device information:', error);
@@ -161,6 +173,28 @@ export class DeviceDetailsComponent implements OnInit {
       })
   }
 
+  updateDeviceName() {
+    const deviceName = this.deviceForm.get('deviceName')?.value;
+    const headers = new HttpHeaders().set('Content-Type', 'text/json');
+    this.http.put(`${environment.apiUrl}/api/Device/update/${this.deviceId}`, deviceName, { headers })
+    .subscribe((response) => {
+      console.log("Success");
+    },
+    (error) => {
+      console.log("Fail");
+    });
+  }
+
+  openDialog() {
+    const dialogRef = this.dialog.open(DeviceDialogComponent);
+
+    dialogRef.afterClosed().subscribe(newDeviceName => {
+      if (newDeviceName) {
+        // Perform your logic to update the deviceName using the newDeviceName value
+      }
+    });
+  }
+
   goBack(){
     this.router.navigate(['/home']);
   }
@@ -230,6 +264,7 @@ export class DeviceDetailsComponent implements OnInit {
       const minutes = parsedDate.getMinutes();
       return `${hours < 10 ? '0' + hours : hours}:00`;
     });
+    this.tip='line';
     this.label1 = "24 hour history";
     this.label2 = "24 hour prediction";
     this.data24h=[];
@@ -241,8 +276,8 @@ export class DeviceDetailsComponent implements OnInit {
       };
       this.data24h.push(pair);
     }
-  } 
-  else if (this.selectedOption === 'Week') { 
+  }
+  else if (this.selectedOption === 'Week') {
     this.formattedLabels = [...this.deviceHistoryWeekDate, new Date(), ...this.deviceFutureWeekDate];
     this.formattedLabels = this.formattedLabels.map((date:any) => {
       const parsedDate = new Date(date);
@@ -258,6 +293,7 @@ export class DeviceDetailsComponent implements OnInit {
     this.data1 = [null, null, null, null, null, null, null, this.deviceToday, ...this.deviceFutureWeekPower];
     this.label1 = "Last Week's History";
     this.label2 = "Next Week's Prediction";
+    this.tip = 'bar';
     this.data7days=[];
     const pom = [...this.deviceHistoryWeekPower, this.deviceToday, ...this.deviceFutureWeekPower];
     for (let i = 0; i < this.formattedLabels.length; i++) {
@@ -285,6 +321,7 @@ export class DeviceDetailsComponent implements OnInit {
     this.label1 = "Last Month's History";
     this.label2 = "Next Month's Prediction";
     this.dataMonth=[];
+    this.tip = 'line';
     const pom = [...this.deviceHistoryMonthPower, this.deviceToday, ...this.deviceFutureMonthPower];
     for (let i = 0; i < this.formattedLabels.length; i++) {
       const pair = {

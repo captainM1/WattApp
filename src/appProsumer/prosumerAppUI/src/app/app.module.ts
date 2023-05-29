@@ -53,6 +53,7 @@ import { DeviceEditPopupComponent } from './components/device-edit-popup/device-
 
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { SettingsComponent } from './components/settings/settings.component';
+import { DeviceDialogComponent } from './components/device-dialog/device-dialog.component';
 
 @NgModule({
   declarations: [
@@ -78,7 +79,8 @@ import { SettingsComponent } from './components/settings/settings.component';
     DashboardComponent,
     DeviceEditPopupComponent,
     ModalTableComponent,
-    SettingsComponent
+    SettingsComponent,
+    DeviceDialogComponent
   ],
   imports: [
     BrowserModule,
