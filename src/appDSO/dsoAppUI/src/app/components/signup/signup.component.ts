@@ -50,20 +50,20 @@ export class SignupComponent implements OnInit {
       }
       )
       this.getAllDispachers();
-      
+
     }
 
     getAllDispachers(){
       this.auth.getAllDispechers().subscribe(
         (response) => {
           this.allWorkers = response;
-        
+
         }
       )
-      
+
     }
 
-   
+
     get fields(){
       return this.signupForm.controls;
     }
@@ -97,8 +97,12 @@ export class SignupComponent implements OnInit {
         .subscribe((message) =>
           {
               this.signupForm.reset();
-              this.messageService.add({ severity: 'success', summary: 'Register success', detail: "Welcome  "+this.firstName+ " "+this.lastName});
-              this.router.navigate(['signin'])
+              this.messageService.add({ severity: 'success', summary: 'Register success'});
+              this.router.navigate(['/home'],{skipLocationChange:false}).then(()=>{
+
+                this.router.navigate(['/signup']);
+
+              });
           }
         );
       }
@@ -130,5 +134,5 @@ export class SignupComponent implements OnInit {
         }
       })
     }
- 
+
 }
