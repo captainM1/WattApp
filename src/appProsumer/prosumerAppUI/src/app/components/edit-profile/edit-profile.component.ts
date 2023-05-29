@@ -122,7 +122,6 @@ export class EditProfileComponent implements OnInit{
 
 
 
-
   get fields(){
     return this.resetForm.controls;
   }
@@ -176,19 +175,6 @@ export class EditProfileComponent implements OnInit{
   onEmailInput(): void {
     this.isEmailModified = true;
     this.checkValidEmail();
-  }
-
-  onFileSelected(event: any): void {
-    const file: File = event.target.files[0];
-    const reader: FileReader = new FileReader();
-  
-    reader.onloadend = () => {
-      const byteArray = new Uint8Array(reader.result as ArrayBuffer);
-      this.auth.uploadImage(byteArray,this.userID);
-    };
-  
-    reader.readAsArrayBuffer(file);
-    this.getToken();
   }
 
   checkValidPhoneNumber(): void {
