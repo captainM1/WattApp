@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using prosumerAppBack.Models;
 
 namespace prosumerAppBack.BusinessLogic.PowerUsageService;
@@ -66,4 +67,6 @@ public interface IPowerUsageService
     object? percentPowerUsageDifferenceForPreviousHourProductionSystem();
     object? electricityBillForCurrentMonth(Guid userId, double electricityRate);
     object? electricityEarningsForCurrentMonth(Guid userId, double electricityRate);
+    Task UpdateBatteries();
+    Task<double> GetForUserBatteryPower(Guid userID);
 }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using prosumerAppBack.BusinessLogic;
 using prosumerAppBack.BusinessLogic.DeviceService;
+using prosumerAppBack.DataAccess;
 using prosumerAppBack.Models;
 using prosumerAppBack.Models.Device;
 
@@ -355,6 +356,81 @@ namespace prosumerAppBack.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet("get-producers-that-are-not-connected-to-battery/{userID}")]
+        public async Task<IActionResult> GetProducersThatAreNotAttachedToABattery(Guid userID)
+        {
+            try
+            {
+                var devices = await _deviceService.GetProducersThatAreNotAttachedToABattery(userID);
+
+                return Ok(devices);
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
+        }
+
+        [HttpGet("get-consumers-that-are-not-connected-to-battery/{userID}")]
+        public async Task<IActionResult> GetConsumersThatAreNotAttachedToABattery(Guid userID)
+        {
+            try
+            {
+                var devices = await _deviceService.GetConsumersThatAreNotAttachedToABattery(userID);
+
+                return Ok(devices);
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
+        }
+
+        [HttpPost("add-connection-to-battery/{batteryID}")]
+        public async Task<IActionResult> AddConnectionToBattery(Guid batteryID, [FromBody] Guid deviceID)
+        {
+            try
+            {
+                var devices = await _deviceService.AddConnectionToBattery(batteryID, deviceID);
+
+                return Ok(devices);
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
+        }
+
+        [HttpGet("get-battery-info/{batteryID}")]
+        public async Task<IActionResult> GetBatteryInfo(Guid batteryID)
+        {
+            try
+            {
+                var battery = await _deviceService.GetBatteryInfo(batteryID);
+
+                return Ok(battery);
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new ArgumentException(ex.Message);
+            }
+        }
+
+        [HttpGet("get-connected-devices-info/{batteryID}")]
+        public async Task<IActionResult> GetDevicesConnectedToBattery(Guid batteryID)
+        {
+            try
+            {
+                var battery = await _deviceService.GetDevicesConnectedToBattery(batteryID);
+
+                return Ok(battery);
+            }
+            catch (ArgumentNullException ex)
+            {
+                throw new ArgumentException(ex.Message);
             }
         }
     }

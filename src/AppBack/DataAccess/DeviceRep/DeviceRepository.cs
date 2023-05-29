@@ -330,6 +330,128 @@ namespace prosumerAppBack.DataAccess
             await _dbContext.SaveChangesAsync();
             return true;
         }
+
+        public async Task<IEnumerable<DeviceDto>> GetProducersThatAreNotAttachedToABattery(Guid userID)
+        {
+            var producers = _dbContext.Devices
+                            .Where(u => u.OwnerID == userID)
+                            .Include(u => u.DeviceType)
+                            .ThenInclude(u => u.Group)
+                            .Where(u => u.DeviceType.Group.Name == "Producer")
+                            .Select(d => new DeviceDto()
+                            {
+                                DeviceID = d.ID,
+                                DeviceName = d.DeviceName
+                            })                            
+                            .Except(_dbContext.BatteryConnections.Include(e => e.Device).Select(e => new DeviceDto() 
+                            {
+                                DeviceID = e.Device.ID,
+                                DeviceName = e.Device.DeviceName                                
+                            }))                            
+                            .ToList();     
+                                    
+            return producers;
+        }
+
+        public async Task<IEnumerable<DeviceDto>> GetConsumersThatAreNotAttachedToABattery(Guid userID)
+        {
+            var producers = _dbContext.Devices
+                            .Where(u => u.OwnerID == userID)
+                            .Include(u => u.DeviceType)
+                            .ThenInclude(u => u.Group)
+                            .Where(u => u.DeviceType.Group.Name == "Consumer")
+                            .Select(d => new DeviceDto()
+                            {
+                                DeviceID = d.ID,
+                                DeviceName = d.DeviceName
+                            })
+                            .Except(_dbContext.BatteryConnections.Include(e => e.Device).Select(e => new DeviceDto()
+                            {
+                                DeviceID = e.Device.ID,
+                                DeviceName = e.Device.DeviceName
+                            }))
+                            .ToList();
+
+            return producers;
+        }
+
+        public async Task<Boolean> AddConnectionToBattery(Guid batteryID, Guid deviceID)
+        {
+            var device = await _dbContext.Devices.FindAsync(deviceID);
+            var deviceCheck = await _dbContext.BatteryConnections.FirstOrDefaultAsync(d => d.Device.ID == deviceID);
+            if (deviceCheck != null)
+            {
+                return false;
+            }
+            
+            Guid deviceTypeID = _dbContext.Devices
+               .Where(d => d.ID == batteryID)
+               .Select(d => d.DeviceTypeID)
+               .FirstOrDefault();
+
+            string deviceGroupName = _dbContext.DeviceGroups
+                .Where(g => g.ID == _dbContext.DeviceTypes
+                    .Where(dt => dt.ID == deviceTypeID)
+                    .Select(dt => dt.GroupID)
+                    .FirstOrDefault())
+                .Select(g => g.Name)
+                .FirstOrDefault();
+            if (deviceGroupName == "Storage")
+            {
+                var newDevice = new BatteryConnections
+                {
+                    ConnectionID = new Guid(),
+                    BatteryID = batteryID,
+                    Device = device
+                };
+
+                _dbContext.BatteryConnections.Add(newDevice);
+                await _dbContext.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
+
+        public Task<BatteryInfo> GetBatteryInfo(Guid deviceID)
+        {
+            return _dbContext.Devices
+                .Include(d => d.DeviceType)
+                .ThenInclude(dt => dt.Manufacturer)
+                .Include(d => d.DeviceType)
+                .ThenInclude(dt => dt.Group)
+                .Where(d => d.ID == deviceID)
+                .Select(d => new BatteryInfo()
+                {
+                    deviceName = d.DeviceName,
+                    deviceId = d.ID,
+                    deviceTypeName = d.DeviceType.Name,
+                    macAdress = d.MacAdress,
+                    manufacturerName = d.DeviceType.Manufacturer.Name,
+                    groupName = d.DeviceType.Group.Name,
+                    capacity = d.DeviceType.Wattage
+                })
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<DeviceInfo>> GetDevicesConnectedToBattery(Guid batteryID)
+        {
+            var info = _dbContext.BatteryConnections
+                .Where(e => e.BatteryID == batteryID)
+                .Include(e => e.Device)
+                .Select(d => new DeviceInfo()
+                {
+                    deviceName = d.Device.DeviceName,
+                    deviceId = d.Device.ID,
+                    deviceTypeName = d.Device.DeviceType.Name,
+                    macAdress = d.Device.MacAdress,
+                    manufacturerName = d.Device.DeviceType.Manufacturer.Name,
+                    groupName = d.Device.DeviceType.Group.Name,
+                    wattage = d.Device.DeviceType.Wattage
+                })
+                .ToList();
+
+            return info;
+        }
     }
 
     public class DeviceInfo
@@ -343,6 +465,18 @@ namespace prosumerAppBack.DataAccess
         public double wattage { get; set; }
     }
 
+    public class BatteryInfo
+    {
+        public Guid deviceId { get; set; }
+        public string deviceTypeName { get; set; }
+        public string macAdress { get; set; }
+        public string manufacturerName { get; set; }
+        public string groupName { get; set; }
+        public string deviceName { get; set; }
+        public double capacity { get; set; }
+    }
+
+
     public class DeviceInfoWithType
     {
         public string deviceName { get; set; }
@@ -355,6 +489,11 @@ namespace prosumerAppBack.DataAccess
     {
         public Guid ManufacturerID { get; set; }
         public string ManufacturerName { get; set; }
+    }
+    public class DeviceDto
+    {
+        public Guid DeviceID { get; set; }
+        public string DeviceName { get; set; }
     }
 }
 

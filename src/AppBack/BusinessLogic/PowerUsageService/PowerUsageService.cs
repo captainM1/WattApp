@@ -579,4 +579,15 @@ public class PowerUsageService:IPowerUsageService
     {
         return 0;
     }
+
+    public async Task UpdateBatteries()
+    {
+        await _repository.UpdateBatteries();
+    }
+
+    public async Task<double> GetForUserBatteryPower(Guid userID)
+    {
+        var batteryPower = await _repository.GetForUserBatteryPower(userID);
+        return batteryPower;
+    }
 }
