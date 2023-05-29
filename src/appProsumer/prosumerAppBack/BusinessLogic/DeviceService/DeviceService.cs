@@ -24,17 +24,17 @@ public class DeviceService:IDeviceService
         }
         return devices;
     }
-    public async Task<Boolean> UpdateDevice(Guid id, UpdateDeviceDto deviceUpdateDto)
+    public async Task<Boolean> UpdateDevice(Guid id, string deviceName)
     {
         if(id == null)
         {
             throw new NullReferenceException("device not found");
         }
-        if (deviceUpdateDto == null)
+        if (deviceName == null)
         {
-            throw new NullReferenceException("device info required");
+            throw new NullReferenceException("device name required");
         }
-        var check = await _repository.UpdateDevice(id, deviceUpdateDto);
+        var check = await _repository.UpdateDevice(id, deviceName);
         if (!check)
         {
             throw new NotFoundException("device not updated");

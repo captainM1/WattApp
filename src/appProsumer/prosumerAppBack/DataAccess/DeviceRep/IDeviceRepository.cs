@@ -8,7 +8,7 @@ namespace prosumerAppBack.BusinessLogic
 {
 	public interface IDeviceRepository
 	{
-		Task<Boolean> UpdateDevice(Guid id,UpdateDeviceDto updateDeviceDto);    
+		Task<Boolean> UpdateDevice(Guid id,string deviceName);    
         List<Device> GetDevicesForUser(Guid userID);
         Task<Device> AddDevice(Models.Device.AddDeviceDto addDeviceDto);
         public IEnumerable<DeviceGroup> GetDeviceGroups();
