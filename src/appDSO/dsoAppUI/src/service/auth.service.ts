@@ -42,7 +42,7 @@ export class AuthService {
       password: password
     })
   }
-  
+
   getFullToken() {
     const jwtToken = this.cookie.get('jwtTokenDso');
     return jwtToken;
@@ -67,11 +67,17 @@ export class AuthService {
             break;
         }
       },
-      acceptButtonStyleClass: 'p-button-danger', 
+      acceptButtonStyleClass: 'p-button-danger',
       rejectButtonStyleClass: 'p-button-secondary'
     });
   }
-  
+
+  signOut2()
+  {
+    this.cookie.delete('jwtTokenDso');
+    this.router.navigate(['/signin']);
+  }
+
   getPagination(pageNumber : number, pageSize : number) : Observable<any>{
     return this.http.get<any>(environment.apiUrl + "/api/User/users", {
       params: {
@@ -88,7 +94,7 @@ export class AuthService {
   getWeather():Observable<any>{
     return this.http.get<any>('https://api.open-meteo.com/v1/forecast?latitude=44.02&longitude=20.91&hourly=temperature_2m,relativehumidity_2m&daily=temperature_2m_max,temperature_2m_min&current_weather=true&timezone=auto');
   }
-// DEVICES 
+// DEVICES
 
   getDevices(userID: string):Observable<Info>{
     return this.http.get<Info>(environment.apiUrl + "/api/Device/devices/info/"+userID);
@@ -120,7 +126,7 @@ export class AuthService {
   getDeviceGroupID(groupID: string):Observable<any>{
     return this.http.get<any>(environment.apiUrl + "/api/Device/groups/"+groupID);
   }
-  
+
 
 
 // USERS
@@ -140,7 +146,7 @@ export class AuthService {
     return this.http.get(environment.apiUrl + '/api/PowerUsage/power-usage/current/device/'+deviceID);
   }
 
-  
+
   currentProcustionSystem() : Observable<any>{
     return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/current-production/system");
   }
@@ -207,8 +213,8 @@ export class AuthService {
     return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/next24Hours/consumption/user-every-day-device-usage/"+userID);
 
   }
-  
-  
+
+
   consumptionPrevMonth(userID : string) : Observable<any>{
     return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/previousMonth/consumption/user-every-day-device-usage/"+userID);
   }
@@ -252,10 +258,10 @@ export class AuthService {
   getProductionPrevMonth(userID:any):Observable<any>{
     return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/previousMonth/production/user-every-day-device-usage/" +userID);
   }
-  
 
 
-  
+
+
 // SAVED ENERGY
   savedEnergyConsumption():Observable<any>{
     return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/saved-energy/consumer/system");
@@ -279,7 +285,7 @@ export class AuthService {
     return this.http.get(environment.apiUrl + "/api/Dispatcher/get-all-dispatchers");
   }
 
-  
+
   getDispecher(id:any):Observable<any>{
     return this.http.get(environment.apiUrl + "/api/Dispatcher/get-single/"+id);
   }
@@ -369,7 +375,7 @@ export class AuthService {
   userShareDataWithDSO(userID : any){
     return this.http.get(environment.apiUrl + "/api/User/user-shares-with-DSO/" + userID);
   }
-  
+
   dsoHasControl(deviceID : any){
     return this.http.get(environment.apiUrl +"/api/Device/DSO-has-control/"+deviceID);
   }

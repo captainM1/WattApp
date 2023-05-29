@@ -303,7 +303,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
         x: {
           title: {
             display: true,
-            text: 'Time (hour)',
+            text: 'Time [h]',
           },
           ticks: {
             font: {
@@ -403,7 +403,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
         x: {
           title: {
             display: true,
-            text: 'Time (hour)',
+            text: 'Time [h]',
           },
           ticks: {
             font: {
@@ -916,7 +916,7 @@ previousProduction24Graph(list:any, valueList:any){
       x: {
         title: {
           display: true,
-          text: 'Time (hour)',
+          text: 'Time [h]',
         },
         ticks: {
           font: {
@@ -1222,7 +1222,7 @@ nextProduction24Graph(list:any, valueList:any){
       x: {
         title: {
           display: true,
-          text: 'Time (hour)',
+          text: 'Time [h]',
         },
         ticks: {
           font: {

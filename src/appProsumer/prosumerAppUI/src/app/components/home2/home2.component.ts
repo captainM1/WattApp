@@ -18,7 +18,6 @@ export class Home2Component implements OnInit, AfterViewInit {
   userID!: any;
   token!:any;
   weather! : Root;
-  number!: any;
   devices!: any;
   id!:any;
   graph24prev!:any;
@@ -37,7 +36,6 @@ export class Home2Component implements OnInit, AfterViewInit {
 
 
   @ViewChild('myChart') myChart!: ElementRef;
-  @ViewChild('hourlyTemp') hourlyTemp!: ElementRef;
   @ViewChild('previous24ConsumptionGraph') previous24ConsumptionGraph!:ElementRef;
 
   ngAfterViewInit(): void {
@@ -49,21 +47,12 @@ export class Home2Component implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.getToken();
-    this.numberOfDevices();
 
     this.currentDate = timer(0,1000).pipe(
       map(()=>{
         return new Date();
       })
     )
-  }
-
-  numberOfDevices(){
-    this.auth.getDeviceData().subscribe(
-    (response:any)=>{
-      this.number = response.length;
-    }
-    );
   }
 
 
@@ -91,7 +80,10 @@ export class Home2Component implements OnInit, AfterViewInit {
     this.auth1.getElectricityBill(id, this.electricityRate).subscribe(
          (response: any) =>{
              this.electricityBill = response.toFixed(2);
-         }
+         },
+         (error) => {
+          this.electricityBill = 0;
+        }
     )
   }
 
@@ -100,7 +92,11 @@ export class Home2Component implements OnInit, AfterViewInit {
     this.auth1.getConsumptionSavedEnergyMonth(id).subscribe(
       (response:any)=>{
         this.savedEnergyMonthConsumption = response.toFixed(2);
-      }
+      },
+      (error) => {
+       this.savedEnergyMonthConsumption = 0;
+     }
+
     )
   }
 

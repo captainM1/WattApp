@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ConfirmPasswordValidator } from 'app/helpers/confirm-password.validator';
 import { User } from 'models/User';
-import { MessageService } from 'primeng/api';
+import { ConfirmEventType, ConfirmationService, MessageService } from 'primeng/api';
 import { AuthService } from 'service/auth.service';
 @Component({
   selector: 'app-profile',
@@ -59,9 +59,10 @@ export class ProfileComponent implements OnInit{
     private r:Router,
     private elementRef: ElementRef,
     private fb : FormBuilder,
-    private messageService : MessageService
+    private messageService : MessageService,
+    private confirmationService: ConfirmationService
   ){}
- 
+
   ngOnInit(): void {
     this.getToken();
     this.resetForm = this.fb.group({
@@ -72,7 +73,7 @@ export class ProfileComponent implements OnInit{
       validator: ConfirmPasswordValidator("password","confirmPassword")
     });
   }
-  
+
   getToken(){
     this.token = this.serv.getToken();
     this.serv.getDispecher(this.token).subscribe(
@@ -90,11 +91,11 @@ export class ProfileComponent implements OnInit{
        this.country = response.country;
        this.email = response.email;
        this.emailModal = response.email;
-     
+
       }
     )
   }
-  
+
   closeModal() {
     const modalElement = this.modalElementRef.nativeElement as HTMLElement;
     modalElement.classList.remove('modal');
@@ -103,7 +104,7 @@ export class ProfileComponent implements OnInit{
     this.r.navigate(['profile']);
   }
 
- 
+
   ngAfterViewInit(): void {
     this.exampleModal.nativeElement.addEventListener('hidden.bs.modal', () => {
       this.reset();
@@ -137,24 +138,39 @@ export class ProfileComponent implements OnInit{
     this.submitted = true;
     if(this.resetForm.valid && (this.resetForm.get('password')?.dirty || this.resetForm.get('confirmPassword')?.dirty)){
 
-      this.serv.updatePasswordForDispacher(this.idDisapcher, this.currentPassword, this.newPassword).subscribe(
-        (response) => {
-          console.log(response);
-          this.messageService.add({ severity: 'success', summary: 'Password updated successfully!'});
-          const buttonRef = document.getElementById('closeBtn');
-          buttonRef?.click();
-          this.serv.signOut();
+      this.confirmationService.confirm({
+        message: 'Are you sure you want to change your password? The action cannot be undone and you will need to re-login.',
+        header: 'Confirmation',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+          this.serv.updatePasswordForDispacher(this.idDisapcher, this.currentPassword, this.newPassword).subscribe(
+            (response) => {
+              this.messageService.add({ severity: 'success', summary: 'Password updated successfully!'});
+              const buttonRef = document.getElementById('closeBtn1');
+              buttonRef?.click();
+              this.serv.signOut2();
+            },
+            (error) => {
+              this.messageService.add({ severity: 'error', summary: 'Your current password is incorrect!'});
+            }
+          );
+          return;
         },
-        (error) => {
-          console.log(error);
-          console.log(this.newPassword, this.currentPassword);
-          this.messageService.add({ severity: 'error', summary: 'Your current password is incorrect!'});
-        }
-      );
-      return;
-    }else{
-    }
+        reject: (type: any) => {
+          switch (type) {
+            case ConfirmEventType.REJECT:
+              this.messageService.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected' });
+              break;
+            case ConfirmEventType.CANCEL:
+              this.messageService.add({ severity: 'warn', summary: 'Cancelled', detail: 'You have cancelled' });
+              break;
+          }
+        },
+        acceptButtonStyleClass: 'p-button-danger',
+        rejectButtonStyleClass: 'p-button-secondary'
+      });
   }
+}
 reset(){
     this.resetForm.reset();
     this.resetForm.clearValidators();

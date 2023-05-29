@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, OnChanges, OnInit, SimpleChanges,
 import * as L from 'leaflet';
 import { Device, ExportSelected, Info, Root, Root2, User } from 'models/User';
 import { AuthService } from 'service/auth.service';
-import { MatTableModule } from '@angular/material/table'; 
+import { MatTableModule } from '@angular/material/table';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { Chart, ChartOptions } from 'chart.js';
@@ -14,7 +14,7 @@ import {  NgxUiLoaderService } from 'ngx-ui-loader';
   selector: 'app-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css'],
-  
+
 })
 export class TableComponent implements OnInit, AfterViewInit {
 
@@ -36,7 +36,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   @ViewChild('productionNext7daysGraph')productionNext7daysGraph!:ElementRef;
   @ViewChild('productionNextMonthGraph') productionNextMonthGraph!:ElementRef;
   @ViewChild('allDevicesUserGraph') allDevicesUserGraph!:ElementRef;
-  
+
   // zelena, narandzasta, crvena, deep sky blue, zuta
 	backgroundColorsGraphs =  ['#62C370', '#EC7357', '#e3170a', '#30C5FF', '#ffc800'];
 	backgroundColorsRGB = ['rgb(98, 195, 112)','rgb(236, 115, 87)','rgb(227, 23, 10)', 'rgb(48, 197, 255)', 'rgb(255, 200, 0)'];
@@ -45,11 +45,11 @@ export class TableComponent implements OnInit, AfterViewInit {
 
   chartInstance!: Chart;
   subscription!: Subscription;
- 
+
   public deviceStatus!:boolean;
- 
+
   consumptionNext7days: any;
- 
+
   timestampConsumptionPrevious24h!:any[];
   powerusageConsumptionPrevious24h!: any[];
   chartPrev24h: any;
@@ -63,8 +63,8 @@ export class TableComponent implements OnInit, AfterViewInit {
 
  allUserDevices!: Info[];
  userIDCoords!: any[];
- 
-// export 
+
+// export
  filtered! : User[];
  activeItem:any;
  exportSelected: boolean = false;
@@ -84,7 +84,7 @@ export class TableComponent implements OnInit, AfterViewInit {
  private map!: L.Map;
  private markers: L.Marker[] = [];
  private latlng: L.LatLng[] = [];
- 
+
  selected: string = "";
  pageSizeOptions = [5, 10, 25, 50];
 
@@ -120,27 +120,27 @@ export class TableComponent implements OnInit, AfterViewInit {
  productionNextMonthUser = [];
  productionPrevMonthUser = [];
 
- 
+
 
  timestampListProductionPrev24h!:any[];
  powerUsageListProductionPrev24h!:any[];
- 
+
  graphProduction24prev!:any;
  chartProductionPrev24!:any;
-   
+
  timestampListProductionNext24h!:any[];
  powerUsageListProductionNext24h!:any[];
  graphProduction24next!:any;
- 
+
  id!:any;
 
  selectedDevice!: Device | any;
  device24h!:any[];
  valueDevice24h!:any[];
 
-  
- 
-  
+
+
+
   ngOnDestroy(): void {
     if (this.subscription) {
       this.subscription.unsubscribe();
@@ -155,13 +155,13 @@ export class TableComponent implements OnInit, AfterViewInit {
     private table: MatTableModule,
     private spinner: NgxSpinnerService,
     private loader : NgxUiLoaderService
-    
+
 
   ){}
   selectedGraphHistoryConsumption = '24h';
-  selectedGraphHistoryProduction = '24h'; 
+  selectedGraphHistoryProduction = '24h';
   selectedGraphFutureProduction = '24h';
-  selectedGraphFutureConsumption = '24h'; 
+  selectedGraphFutureConsumption = '24h';
   ngAfterViewInit(): void {
     this.showMeUsers(this.page,this.pageSize);
     this.popUp(this.id);
@@ -170,33 +170,33 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.HistoryProduction(this.selectedGraphHistoryProduction);
     this.FutureConsumption(this.selectedGraphFutureConsumption);
     this.FutureProduction(this.selectedGraphFutureProduction);
-   
+
   }
-  
+
   ngOnChanges(changes: SimpleChanges) {
-    
+
     if (changes) {
       const currentValue = changes.toString();
       this.HistoryConsumption(this.selectedGraphHistoryConsumption);
     }
   }
 
-  
+
   ngOnInit(): void {
-    
+
     this.spinner.show();
     setTimeout(() => {
       this.spinner.hide();
     }, 5000);
     this.onInitMap();
     this.showMeUsers(this.page,this.pageSize);
-    
+
     this.showCoordsForEveryUser();
     this.getDeviceGroup();
-    
-  
+
+
     this.savedEnergy(this.id);
-   
+
 
   }
 
@@ -214,7 +214,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.consumptionSortedUsers = [];
     this.currentSortOrder1 = this.currentSortOrder1 === 'asc' ? 'desc' : 'asc';
     if (sortBy === 'consumption') {
-      this.consumptionSortedUsers = this.allUsers.slice(); 
+      this.consumptionSortedUsers = this.allUsers.slice();
       this.consumptionSortedUsers.sort((a, b) => {
         if (a.consumption < b.consumption) {
           return this.currentSortOrder1 === 'asc' ? -1 : 1;
@@ -258,7 +258,7 @@ export class TableComponent implements OnInit, AfterViewInit {
       }
       this.makeDataForExportSelectedUsers(this.selectedUsers);
     }
-    
+
     makeDataForExportSelectedUsers(users: User[]){
       this.exportedUsers = users.map(user => {
         const exportUser: ExportSelected = {
@@ -314,7 +314,7 @@ export class TableComponent implements OnInit, AfterViewInit {
         };
         return exportUser;
       });
-    
+
   }
     activeColIndex: number = -1;
     setActiveCol(index: number): void {
@@ -346,7 +346,7 @@ export class TableComponent implements OnInit, AfterViewInit {
       const worksheet = XLSX.utils.json_to_sheet(this.exportedUsers);
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, 'Selected Data');
-  
+
       const fileBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
       const blob = new Blob([fileBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
       saveAs(blob, 'selected-data.xlsx');
@@ -354,14 +354,14 @@ export class TableComponent implements OnInit, AfterViewInit {
   }
 
   exportToExcelSelectedFutureConsumption(select : any): void {
- 
+
     const workbook = XLSX.utils.book_new();
     const worksheet = XLSX.utils.aoa_to_sheet([['Sample Data']]);
-  	
+
     const worksheetName = 'Custom Worksheet Name';
     XLSX.utils.book_append_sheet(workbook, worksheet, worksheetName);
-  
-   
+
+
     const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     const data = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
 	let fileNameFuture = 'Custom_File_Name.xlsx';
@@ -369,12 +369,12 @@ export class TableComponent implements OnInit, AfterViewInit {
 	this.saveFile(data, fileNameFuture);
   }
   exportToExcelSelectedHistoryConsumption(select : any): void {
- 
+
     const workbook = XLSX.utils.book_new();
     const worksheet = XLSX.utils.aoa_to_sheet([['Sample Data']]);
     const worksheetName = 'Custom Worksheet Name';
     XLSX.utils.book_append_sheet(workbook, worksheet, worksheetName);
-  
+
     const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     const data = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
 	let fileNameHistory = 'Custom_File_Name.xlsx';
@@ -383,14 +383,14 @@ export class TableComponent implements OnInit, AfterViewInit {
   }
 
   exportToExcelSelectedFutureProduction(select : any): void {
- 
+
     const workbook = XLSX.utils.book_new();
     const worksheet = XLSX.utils.aoa_to_sheet([['Sample Data']]);
-  	
+
     const worksheetName = 'Custom Worksheet Name';
     XLSX.utils.book_append_sheet(workbook, worksheet, worksheetName);
-  
-   
+
+
     const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     const data = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
 	let fileNameFuture = 'Custom_File_Name.xlsx';
@@ -398,19 +398,19 @@ export class TableComponent implements OnInit, AfterViewInit {
 	this.saveFile(data, fileNameFuture);
   }
   exportToExcelSelectedHistoryProduction(select : any): void {
- 
+
     const workbook = XLSX.utils.book_new();
     const worksheet = XLSX.utils.aoa_to_sheet([['Sample Data']]);
     const worksheetName = 'Custom Worksheet Name';
     XLSX.utils.book_append_sheet(workbook, worksheet, worksheetName);
-  
+
     const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     const data = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
 	let fileNameHistory = 'Custom_File_Name.xlsx';
 	fileNameHistory = "Production for the Previous "+select;
 	this.saveFile(data, fileNameHistory);
   }
-  
+
   saveFile(data: Blob, filename: string): void {
     const a = document.createElement('a');
     document.body.appendChild(a);
@@ -434,7 +434,7 @@ toggleFilterOptions(): void {
 }
 
 applyFilter(): void {
- 
+
   if(this.selectedFilterOption === "Consumers"){
     this.allUserDevices = this.devicesConsumers;
   }else if(this.selectedFilterOption === "Prosumers"){
@@ -466,8 +466,8 @@ applyFilter(): void {
     this.selectedUsersTable = [];
     this.selectedColumn = -1;
   }
-  
-  public showMeUsers(page:any, pageSize:any){ 
+
+  public showMeUsers(page:any, pageSize:any){
     this.auth.getPagination(this.page, this.pageSize).subscribe(
       (response : any)=> {
         this.allUsers = response;
@@ -481,7 +481,7 @@ applyFilter(): void {
               user.consumption = 0;
             }
           });
-      
+
       this.auth.UserProductionSummary(user.id).subscribe({
           next : (response : any)=>{
             user.production = response.toFixed(2);
@@ -494,7 +494,7 @@ applyFilter(): void {
     }
     );
   }
-  
+
   applyFilters(): void {
     this.filtered = this.allUsers.filter((user: User) => {
       const nameMatch = user.firstName.toLowerCase().includes(this._searchByName.toLowerCase());
@@ -502,14 +502,14 @@ applyFilter(): void {
       return nameMatch && addressMatch;
     });
   }
-  
+
   public onInitMap(){
     this.map = L.map('map').setView([44.0165,21.0069],10);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 20,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(this.map);
-  
+
   }
  marker!:any;
   public showCoordsForEveryUser(){
@@ -535,7 +535,7 @@ applyFilter(): void {
             const address = matchingUser.address;
             const latlng = L.latLng(JSON.parse(user.coordinates));
             let power:number = matchingUser.consumption;
-           
+
             if(power <= 300){
               this.marker  = L.marker(latlng, {icon : greenIcon}).addTo(this.map);
             }else if(power > 300 && power <= 750){
@@ -545,23 +545,23 @@ applyFilter(): void {
             }
             this.marker.bindPopup(`<b>${firstName} ${lastName} <br>${address}`);
             this.markers.push(this.marker);
-            
+
           }
         });
       });
-      
+
   }
 
   urlRED = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAACCElEQVR4nO2Wy2pUQRCGK+k6Y7LxtjTGbAIyp+pkkGyylPgIStZe9sGlqHmcmE2IASEovoFBFEUICFHQjRh0PF0zySLS0nEmE8J0d82FceMPDWfR1V9XdfV/GuC/AqrncFE4u2sJN4XMjiUUP1rfT4WzO/UCLsCw5BZgUggfCeMvYXTRQVgXwoc+ZiBo4ypcsmxeJYGnhmXzppnDlf6gBVy2hF97hR7DCb80ajDVE9QtwKQl87pfaAdutt0MTKjBrTONlBL3LWdzyg08UEH/dm+ikQhXjzaoARPWVd0ulN1LljA3i2qwH0V2Owk+uqfxc9t1AOO9gC3hRjpjNh8TpXvcmavMmMyOAoxlZOeHTYLpbnElVaoReJkuNeNBBLwViitzcysS19SAP4cW8IsH4wi3In3xKQ0m3AiCqVLtFuPL748hUup1RcbjS9qmaccI40psXknmZhLsZuGMMH7Xgv3V8lcscgu+uRwqSbDWRNpgW5gbA5tHWw5gTAhfasDC+CTYVIzP/VrHC2vk/VXYfIiB7VzG/ocRMI33P2twHvpRowZTQuadttk6mZq3/hEBg+jHPJyzjM/UUMLNvVk4C8OQAxizhPeDZW25k2Vc7vlMNfIG4l2oizPthsxlaGoU2bxl/H0i00OpZtdgFBLGtdOvkZHI5mbxRJmvjwzsfLMxvujLIP61/gAUUjTlemPA2QAAAABJRU5ErkJggg==';
-  urlGREEN = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAACDklEQVR4nO2Wz0tUURTHry1KN/1aarYPIoj+gbA/IceNoHPPiCAy75znptBi/hp1IyUIkrgY5x57RBFFFgiBCrqRNiZRLZSRM+Q46Lx7z/xg3PSFC2/xzvnce873nveM+a8U5ZL4NjACMC5aR5vA+EuWPFum19bFdoInbpl2KZPEPdbhDDj6CUxl37KMB+BoWmJagsL6ZC84eh8CXliOPo1zdLcp6Fgxfwcc7jUMrZ6edkeSuK8haCaJe4DxY7PQKtzhh9FioVsNrvTUmxT/5Fz0QHny5ypoxb0BI1mHs/KuDowHKrdbjnKhZNkSDWjBlVXCbBAs9zRQuq1CuXClIbDDV5r+fg/098XZJrUmo00N+NCT5ChbmuqvF5dbw3seTxyGwUx/00tGy+kbpkFPqX9rTrzjKdlgWpxsylOp7SBYjJCWQMpZL0bKL23wGHIhfGKmIa1pamJe+q9T9DQIzi/nr1nGH1qwXC25Yp7+7me+Fq4GwdohcgoGFz1peXhUVTZdwLiqAjPNed55I7nOEisk8xWYvnnhb6P78sFIuQEbo0W8aZrRSBL3AeMXrdlq+vpZfiJMKxpffXYDmJb0YFwcfpe/btqisumyjJRW1tPpZB1GDfdUo3/zeLvOgNhKGy5t0xhHj6zD4xrwEaxNPTSdkGWcP/830hFlSzRQnd+MjzsGNmI2hytNDYjL1gkX7ekz5cmu0gAAAABJRU5ErkJggg=='; 
+  urlGREEN = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAACDklEQVR4nO2Wz0tUURTHry1KN/1aarYPIoj+gbA/IceNoHPPiCAy75znptBi/hp1IyUIkrgY5x57RBFFFgiBCrqRNiZRLZSRM+Q46Lx7z/xg3PSFC2/xzvnce873nveM+a8U5ZL4NjACMC5aR5vA+EuWPFum19bFdoInbpl2KZPEPdbhDDj6CUxl37KMB+BoWmJagsL6ZC84eh8CXliOPo1zdLcp6Fgxfwcc7jUMrZ6edkeSuK8haCaJe4DxY7PQKtzhh9FioVsNrvTUmxT/5Fz0QHny5ypoxb0BI1mHs/KuDowHKrdbjnKhZNkSDWjBlVXCbBAs9zRQuq1CuXClIbDDV5r+fg/098XZJrUmo00N+NCT5ChbmuqvF5dbw3seTxyGwUx/00tGy+kbpkFPqX9rTrzjKdlgWpxsylOp7SBYjJCWQMpZL0bKL23wGHIhfGKmIa1pamJe+q9T9DQIzi/nr1nGH1qwXC25Yp7+7me+Fq4GwdohcgoGFz1peXhUVTZdwLiqAjPNed55I7nOEisk8xWYvnnhb6P78sFIuQEbo0W8aZrRSBL3AeMXrdlq+vpZfiJMKxpffXYDmJb0YFwcfpe/btqisumyjJRW1tPpZB1GDfdUo3/zeLvOgNhKGy5t0xhHj6zD4xrwEaxNPTSdkGWcP/830hFlSzRQnd+MjzsGNmI2hytNDYjL1gkX7ekz5cmu0gAAAABJRU5ErkJggg==';
   urlORANGE = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAACXBIWXMAAAsTAAALEwEAmpwYAAACB0lEQVR4nO2Wz0tUURTHry20Nlku09oLIYT/QOimnYu85zxy0a+1ju9cS0lj/ppqEyoIYvQfFFEUwVCgom7qnhlHkWphPLna2FBz7z3zZpg2feHu3rmf+Z5z3neeUv/lUTXVfUz6HhMsM2GJCQ5ODpbY4BIbuFudu3VRtUtbqT7HhPPWwB4bzELHElaZ8JGraQlqHySXmPBVDPjXIXxbmdVXckH54cSANbjTNPTUPWxzqvvztPdNXujvA683irfPyt0SzodbCd8rM8mQzDnOiaBue6OLRPDk+AfKwFXRtrPB+9HLTDIiBf9atjuCNsNyxMF6ViyeaQZsCRYljj9HFmah7lmp45LAMe77W4yHZcLLDesKOBgA70sc/wi0bNVfl4wHXH+Lgi3Bpv+CZDxQt+rvFGxIwItecAEHG9W49rsxBEb0PAouGw3SpanVMOHj4LMp3IyCP03e6LEGrBTsXi33ivkXC75kRd0dBUtDpAa2hKMth0dNmVJdlvClBMwGnwZmu+buOr1YIpevlvBjCFw2cNX9YTR+9fDDbmHsgsojTnW/Nfheumx1Tt+5jwjViiqzupcNrIjBLusnJ86rdihTqotnYNrX1lo6sUmmmp6pRC5AXAo1mOe6L1zaJmv0sCX4WTfPw6+UXFOdEBM++/NrpCOyJhmpc3y9Y+DsOGDgRa6A+Nc6AulDHXQUoZSqAAAAAElFTkSuQmCC';
   marker1!:any;
   public showMeOnMap(id: string) {
-   
+
     for (const mark of this.markers) {
       this.map.removeLayer(mark);
     }
-   
+
     var greenIcon = L.icon({
         iconUrl: this.urlGREEN,
     });
@@ -580,20 +580,20 @@ applyFilter(): void {
             const latlng = L.latLng(JSON.parse(response['coordinates']));
             let power = user.consumption;
             let marker= L.marker(latlng, { icon: greenIcon }).addTo(this.map);
-      
+
              if (power > 350 && power <= 750) {
               marker = L.marker(latlng, { icon: orangeIcon }).addTo(this.map);
             } else if (power > 750) {
               marker = L.marker(latlng, { icon: redIcon }).addTo(this.map);
             }
-      
+
             marker.bindPopup(`<b>${user.firstName} ${user.lastName} <br>${user.address}`).openPopup();
             this.markers.push(marker);
             this.map.setView(latlng, 8);
           });
         }
       } else {
-       
+
         this.auth.getCoordsByUserID(id).subscribe(
           (response: any) => {
             const latlng = L.latLng(JSON.parse(response['coordinates']));
@@ -607,30 +607,30 @@ applyFilter(): void {
                 this.marker1 = L.marker(latlng, {icon : orangeIcon}).addTo(this.map);
               }else if(power > 750){
                 this.marker1  = L.marker(latlng, {icon : redIcon}).addTo(this.map);
-              
+
               }
             this.marker1.bindPopup(`<b>${user?.firstName} ${user?.lastName} <br>${user?.address}`).openPopup();
             this.markers.push(this.marker1);
-            this.map.setView(latlng, 15); 
+            this.map.setView(latlng, 15);
           }
         );
       }
-     
+
      this.showMeDevices(id);
-    
+
     this.id = id;
     this.popUp(id);
-  }  
+  }
 
 
-  
+
   numberOfProsumers:number = 0;
   numberOfConsumers:number = 0;
   numberOfStorage:number = 0;
   devices!:Info;
   public status!:any;
   showMeDevices(id : string){
-    
+
     this.showDevGraph = !this.showDevGraph;
     this.getDeviceGroup();
     this.toggleTable = true;
@@ -645,7 +645,7 @@ applyFilter(): void {
             {
               next:(response : any)=>{
                 us.powerusage = response;
-                
+
               },
               error:(error : any)=>{
                 us.powerusage = 0;
@@ -658,7 +658,7 @@ applyFilter(): void {
             next: (response:any)=>{
               us.dsoHasControl = response;
               this.toggleDeviceStatus(us);
-              
+
             },
             error:(error : any)=>{
               this.deviceStatus = false;
@@ -697,12 +697,12 @@ applyFilter(): void {
           error : (err : any)=>{
             console.log("det device info by id" + err);
           }
-        }); 
+        });
       }
       }
     )
-   
-  
+
+
   }
    getDeviceGroup(){
       this.auth.getDeviceGroup().subscribe(
@@ -727,7 +727,7 @@ applyFilter(): void {
       )}
           }
         )}
-      
+
 
   toggleColumn(){
     this.toggleTable = !this.toggleTable;
@@ -752,13 +752,13 @@ applyFilter(): void {
       background!.style.opacity = '100%';
     }
   }
-  
+
   public userShareData : boolean = false;
   powerUsagePopUp!: number;
   productionNextMonthUserLoader = false;
   productionPrevMonthUserLoader = false;
   popUp(id: string){
-    
+
     this.auth.getUserInformation(id).subscribe(
       (response : any) => {
         this.userPopUp = response;
@@ -768,12 +768,12 @@ applyFilter(): void {
         }else{
           this.userPopUp.sharesDataWithDso = false;
         }
-        
+
         this.auth.UserConsumptionSummary(this.userPopUp.id).subscribe(
           (response:any) => {
             this.userPopUp.consumption = response.toFixed(2);
-            
-          
+
+
           });
 
         this.auth.UserProductionSummary(this.userPopUp.id).subscribe({
@@ -783,7 +783,7 @@ applyFilter(): void {
           error : (err:any)=>{
           this.userPopUp.production = 0;
           }
-          
+
         });
 
       this.savedEnergy(id);
@@ -793,20 +793,20 @@ applyFilter(): void {
       this.FutureProduction(this.selectedGraphFutureProduction);
       this.productionNextMonth(this.userPopUp.id);
       this.productionPrevMonth(this.userPopUp.id);
-      
+
       this.dsoShareData(this.userPopUp.id);
       }
     );
    }
 
- 
-  
-  
-  
-  isActiveUser = false; 
+
+
+
+
+  isActiveUser = false;
   isActiveDevice = true;
   isActiveSystem = false;
-  
+
   isActiveProsumer = false;
   isActioveConsumer = true;
    // buttons - popUP
@@ -815,11 +815,11 @@ applyFilter(): void {
  showMeGeneral = false;
 
  showMeConsumptionProduction = false;
- 
+
  public showMeConsumption = true;
  public showMeProduction = false;
- 
- 
+
+
  toggleActiveCP(button: string) {
     this.isActiveProsumer = button === 'prosumer';
     this.isActioveConsumer = button === 'consumer';
@@ -839,11 +839,11 @@ applyFilter(): void {
         this.showMeConsumption = false;
         this.HistoryProduction(this.selectedGraphHistoryProduction);
         this.FutureProduction(this.selectedGraphFutureProduction);
-        
+
       }
   }
 }
-  
+
   toggleActive(button: string) {
     if (button === 'user') {
       this.isActiveUser = true;
@@ -852,7 +852,7 @@ applyFilter(): void {
       this.showDevicePage = false;
       this.showSystemPage = false;
       this.showMeGeneral = true;
-    
+
     } else if (button === 'device') {
       this.isActiveUser = false;
       this.isActiveDevice = true;
@@ -860,7 +860,7 @@ applyFilter(): void {
       this.showDevicePage = true;
       this.showSystemPage = false;
       this.showMeGeneral = false;
-    
+
     } else if (button === 'system') {
       this.isActiveUser = false;
       this.isActiveDevice = false;
@@ -869,11 +869,11 @@ applyFilter(): void {
       this.showSystemPage = true;
       this.showMeGeneral = false;
       this.toggleActiveCP('consumption')
-    
+
     }
   }
-  
-  
+
+
 
   graph24prev!:any[];
   selectDevice = false;
@@ -910,9 +910,9 @@ applyFilter(): void {
     }
  }
   extractedDatesDevice24h!:string[];
-  
+
   deviceGraphPrev12(){
-    this.extractedDatesDevice24h = []; 
+    this.extractedDatesDevice24h = [];
     for(let i = 0; i < this.timeStampDevice24h.length; i++){
       this.extractedDatesDevice24h.push(this.timeStampDevice24h[i].split("T")[1].split(":00Z")[0]);
 
@@ -921,7 +921,7 @@ applyFilter(): void {
       if(this.chartInstance){
         this.chartInstance.destroy();
       }
-    
+
     const data = {
       labels: this.extractedDatesDevice24h,
       datasets: [{
@@ -982,7 +982,7 @@ applyFilter(): void {
           this.chartConsumptionNextMonthChart();
           this.spinner.hide();
           this.consumptionNextMonthLoader = false;
-         
+
         },
         error : (err : any) => {
           console.log("error consumption next month" + err);
@@ -1011,8 +1011,8 @@ applyFilter(): void {
 					};
 					this.dataconsumptionNextMonth.push(pair);
 				}
-			
-    
+
+
   }
 
 
@@ -1028,7 +1028,7 @@ applyFilter(): void {
           this.chartConsumptionPrevMonth();
           this.spinner.hide();
           this.consumptionPrevMonthLoader = false;
-          
+
           },
         error: (err: any) => {
           console.log("error consumption prev month" + err);
@@ -1038,7 +1038,7 @@ applyFilter(): void {
       }
     );
    }
-  
+
   timeStampConsumptionPrevMonth!:any[];
   powerUsageConsumptionPrevMonth!:any[];
   dataConsumptionPrevMonth:any[] = [];
@@ -1061,11 +1061,11 @@ applyFilter(): void {
 					};
 					this.dataConsumptionPrevMonth.push(pair);
 				}
-				
-    
+
+
   }
 
-  
+
   graphConsumptionPrevMonth!:any;
   chartConsumptionPrevMonth(){
     if (this.consumptionPrevMonthGraph){
@@ -1122,7 +1122,7 @@ applyFilter(): void {
   }
 }
 
- 
+
   chartConsumptionNextMonth!:any;
   chartConsumptionNextMonthChart(){
   if(this.consumptionNextMonthGraph){
@@ -1132,7 +1132,7 @@ applyFilter(): void {
     const data = {
       labels: this.timeStrampConsumptionNextMonth,
       datasets: [{
-        label: 'Power Consumption for the Next Month',
+        label: 'Energy Consumption for the Next Month',
         data: this.powerUsageConsumptionNextMonth,
         fill: true,
 					borderColor: this.backgroundColorsGraphs[0],
@@ -1236,7 +1236,7 @@ productionPreviousMonthUser(id : any){
       };
       this.dataProductionNextMonth.push(pair);
     }
-   
+
     }
     chartNextMonthProduction!:any;
   chartProductionNextMonthChart(){
@@ -1247,7 +1247,7 @@ productionPreviousMonthUser(id : any){
     const data = {
       labels: this.timestampListNextMonthProduction,
       datasets: [{
-        label: 'Power Production for the Next Month',
+        label: 'Energy Production for the Next Month',
         data: this.powerUsageListNextMonthProduction,
         fill: true,
         borderColor: this.backgroundColorsGraphs[4],
@@ -1265,7 +1265,7 @@ productionPreviousMonthUser(id : any){
         x: {
           title: {
             display: true,
-            text: 'Date (month & day)',
+            text: 'Date',
           },
           ticks: {
             font: {
@@ -1312,7 +1312,7 @@ productionPreviousMonthUser(id : any){
 					const pair = {
 						timestamp: this.timeStrampConsumptionPrev7days[i],
 						powerUsage: this.powerUsageConsumptionPrev7days[i].toFixed(2),
-						
+
 					};
 					this.data7daysHistoryConsumption.push(pair);
 				}
@@ -1338,11 +1338,11 @@ productionPreviousMonthUser(id : any){
       }
     })
   }
-  
+
   chartPrev7days:any;
   extractedDatesPrev7Days!:string[]
   chartConsumptionPrev7Days(){
-   
+
     if (this.consumptionPrev7DAYS){
 
       if (this.chartPrev7days) {
@@ -1395,7 +1395,7 @@ productionPreviousMonthUser(id : any){
   consumptionNext7DaysLoader = false;
   consumptionNext7Days(id : any){
     this.spinner.show();
-    this.consumptionNext7DaysLoader = true; 
+    this.consumptionNext7DaysLoader = true;
     this.auth.getConsumptionNext7days(id).subscribe({
       next:(response : any) => {
         this.consNext7Days = response[0]['timestampPowerPairs'];
@@ -1479,9 +1479,9 @@ productionPreviousMonthUser(id : any){
         }
       });
     }}
-    
-  
-       
+
+
+
        HistoryConsumption(graph:any) {
         switch (graph) {
           case '24h':
@@ -1493,12 +1493,12 @@ productionPreviousMonthUser(id : any){
           case '7days':
             this.consumptionPrev7Days(this.id);
             break;
-          
+
         }
       }
 
-    
-      
+
+
       FutureConsumption(graph : any) {
         switch (graph) {
           case 'month':
@@ -1576,12 +1576,12 @@ productionPreviousMonthUser(id : any){
       }]
     }
     const options: ChartOptions = {
-      
+
       scales: {
         x: {
           title: {
             display: true,
-            text: 'Time (hour)',
+            text: 'Time [h]',
           },
           ticks: {
             font: {
@@ -1677,7 +1677,7 @@ consumptionNext24hGraph(){
       x: {
         title: {
           display: true,
-          text: 'Time (hour)',
+          text: 'Time [h]',
         },
         ticks: {
           font: {
@@ -1724,15 +1724,15 @@ consumptionNext24hGraph(){
     }
   }
 
-  
+
       FutureProduction(graph:any) {
-     
+
       switch (graph) {
         case 'month':
           this.productionNextMonth(this.id);
         break;
         case '7days':
-          this.productionNext7Days(this.id);         
+          this.productionNext7Days(this.id);
         break;
         case '24h':
           this.productionNext24h(this.id);
@@ -1758,7 +1758,7 @@ consumptionNext24hGraph(){
     makeDataProductionPrevious24h(dataGraph:any){
       this.timestampListProductionPrev24h=[];
       this.powerUsageListProductionPrev24h=[];
-      
+
 			this.dataProduction24hPrevious = [];
 			for(let i = 0; i < dataGraph.length; i++){
 				const date = new Date(this.graphProduction24prev[i]['timestamp']);
@@ -1776,13 +1776,13 @@ consumptionNext24hGraph(){
 				this.dataProduction24hPrevious.push(pair);
 			}
     }
-    
+
     previousProduction24Graph(){
       if (this.previous24ProductionGraph){
         if (this.chartProductionPrev24) {
           this.chartProductionPrev24.destroy();
         }
-    
+
       const data = {
         labels: this.timestampListProductionPrev24h,
         datasets: [{
@@ -1804,7 +1804,7 @@ consumptionNext24hGraph(){
           x: {
             title: {
               display: true,
-              text: 'Time (hour)',
+              text: 'Time [h]',
             },
             ticks: {
               font: {
@@ -1835,8 +1835,8 @@ consumptionNext24hGraph(){
       });
     }
     }
-    
-    
+
+
     productionPrevMonthLoader = false;
     productionPrevMonth(id:any){
       this.spinner.show();
@@ -1872,7 +1872,7 @@ consumptionNext24hGraph(){
         this.timeStampProductionPrevMonth.push(dateString);
         this.powerUsageProductionPrevMonth.push(this.productionPrevMonthUser[i]['powerUsage']);
         }
-        
+
         for (let i = 0; i < this.timeStampProductionPrevMonth.length; i++) {
         const pair = {
           timestamp: this.timeStampProductionPrevMonth[i],
@@ -1909,7 +1909,7 @@ consumptionNext24hGraph(){
           x: {
             title: {
               display: true,
-              text: 'Date (month and day) ',
+              text: 'Date',
             },
             ticks: {
               font: {
@@ -1937,7 +1937,7 @@ consumptionNext24hGraph(){
       });
     }
     }
-    
+
     prodPrev7Days = [];
     productionPrev7DaysLoader = false;
 
@@ -1959,7 +1959,7 @@ consumptionNext24hGraph(){
         }
       })
     }
-    
+
     timestampListPrev7DaysProduction!:any;
     powerUsageListPrev7DaysProduction!:any;
     data7daysHistoryProduction:any[] = [];
@@ -1982,14 +1982,14 @@ consumptionNext24hGraph(){
         this.data7daysHistoryProduction.push(pair);
     }
   }
-   
+
     chartPrev7daysProduction!:any;
     chartProductionPrev7Days(){
       if (this.productionPrev7daysGraph){
         if (this.chartPrev7daysProduction) {
           this.chartPrev7daysProduction.destroy();
         }
-    
+
       const data = {
         labels: this.timestampListPrev7DaysProduction,
         datasets: [{
@@ -2003,10 +2003,10 @@ consumptionNext24hGraph(){
           pointBorderColor: this.backgroundColorsGraphs[3],
           borderRadius: 5,
       		borderSkipped: false,
-    
+
         }]
       }
-    
+
         this.chartPrev7daysProduction= new Chart(this.productionPrev7daysGraph.nativeElement, {
           type: 'bar',
           data: data,
@@ -2044,7 +2044,7 @@ consumptionNext24hGraph(){
           this.nextProduction24Graph();
           this.spinner.hide();
           this.productionNext24hLoader = false;
-          
+
         }
        );
     }
@@ -2098,7 +2098,7 @@ consumptionNext24hGraph(){
           x: {
             title: {
               display: true,
-              text: 'Time (hour and minutes)',
+              text: 'Time [h]',
             },
             ticks: {
               font: {
@@ -2148,7 +2148,7 @@ consumptionNext24hGraph(){
         }
       })
     }
-    
+
     timeStrampProductionNext7days!:any[];
     powerUsageProductionNext7days!:any[];
     dataProductionNext7days:any[] = [];
@@ -2171,7 +2171,7 @@ consumptionNext24hGraph(){
 					this.dataProductionNext7days.push(pair);
 				}
     }
-   
+
     chartNext7daysProduction!:any;
     chartProductionNext7Days(){
       if (this.productionNext7daysGraph){
@@ -2201,7 +2201,7 @@ consumptionNext24hGraph(){
               x: {
                 title: {
                   display: true,
-                  text: 'Week - day'
+                  text: ''
                 }
               },
               y: {
@@ -2218,7 +2218,7 @@ consumptionNext24hGraph(){
         });
     }
     }
-    
+
     productionNextMonthLoader = false;
     nextMonthProduction(id:any){
       this.spinner.show();
@@ -2261,11 +2261,11 @@ consumptionNext24hGraph(){
           powerUsage: this.powerUsageProductionNextMonth[i],
         };
         this.dataproductionNextMonth.push(pair);
-   
+
       }
-     
+
     }
-    
+
     chartProdNextMonth!:any;
     chartProductionNextMonth(){
       if (this.productionNextMonthGraph){
@@ -2292,7 +2292,7 @@ consumptionNext24hGraph(){
           x: {
             title: {
               display: true,
-              text: 'Date (month & day) ',
+              text: 'Date',
             },
             ticks: {
               font: {
@@ -2320,7 +2320,7 @@ consumptionNext24hGraph(){
       });
     }
     }
-    
+
    public savedEnergyUser!:any;
     savedEnergy(userID : any){
       this.auth.savedEnergyConsumptionUser(userID).subscribe({
@@ -2341,14 +2341,14 @@ consumptionNext24hGraph(){
       })
     }
 
-    
+
     sharedDataWithDSO:any;
     dsoShareData(userID : any){
       this.auth.userShareDataWithDSO(userID).subscribe({
         next:(response : any)=>{
-         
+
           this.sharedDataWithDSO = response;
-         
+
         },
         error:(error : any)=>{
           console.log(error);
@@ -2360,17 +2360,17 @@ consumptionNext24hGraph(){
     public btnStatus:boolean = false;
     toggleDeviceStatus(device:Info){
       if(device.dsoHasControl == true){
-         
+
             if (device.statusOfDevice === "OFF") {
               this.auth.changeStateOfDevice(device.deviceId,true).subscribe({
                 next:(response:any)=>{
-                  device.statusOfDevice = "ON"; 
+                  device.statusOfDevice = "ON";
                 },
                 error:(error:any)=>{
                   console.log(error);
                 }
               });
-              
+
             } else {
               this.auth.changeStateOfDevice(device.deviceId,false).subscribe({
                 next:(response:any)=>{
@@ -2386,11 +2386,11 @@ consumptionNext24hGraph(){
 }
 
 
-  
 
 
 
-  
+
+
 
 
 

@@ -25,12 +25,12 @@
                   <th style="width: 15%;"(click)="sortData2('production')"><i class="fa fa-arrow-down" aria-hidden="true" style = "color:white" *ngIf="currentSortOrder2 ==='asc'"></i><i class="fa fa-arrow-up"  style ="color:white" *ngIf="currentSortOrder2 === 'desc'"></i>Production</th>
                   <th style="width: 15%;"(click)="sortData1('consumption')"><i class="fa fa-arrow-down" aria-hidden="true" style = "color:white" *ngIf="currentSortOrder1 ==='asc'"></i><i class="fa fa-arrow-up"  style ="color:white" *ngIf="currentSortOrder1 === 'desc'"></i>Consumption</th>
                   <th style="width: 20%;"></th>
-                  
+
                 </tr>
               </thead>
               <tr *ngFor="let user of allUsers | filterName: _searchByName: _searchByAddress; let i = index;" (click)="showMeOnMap(user.id); selectedColumn = i;" [class.active-column]="selectedColumn === i || selectedUsers.includes(user)">
-                  <td *ngIf="user"><input [(ngModel)]="user.selected"  type = "checkbox" style="width: 20px;" (click) = "toggleExportSelected(user); toggleSelection(user, i)"></td>  
-                  <td >{{user.firstName}}</td> 
+                  <td *ngIf="user"><input [(ngModel)]="user.selected"  type = "checkbox" style="width: 20px;" (click) = "toggleExportSelected(user); toggleSelection(user, i)"></td>
+                  <td >{{user.firstName}}</td>
                   <td>{{user.lastName}}</td>
                   <td>{{user.address}}, {{user.city}}, {{user.country}}</td>
                   <td>{{user.production}} kWh</td>
@@ -43,7 +43,7 @@
               <p-paginator class="w-100" [rows]="pageSize" [totalRecords]="lengthOfUsers" [rowsPerPageOptions]="pageSizeOptions" (onPageChange)="onPageChange($event); deselectUsers();"></p-paginator>
             </tr>
           </div>
-        </div> 
+        </div>
     </div>
     <div class="col d-flex justify-content-end align-items-end flex-column">
         <div id = "map" class="w-100" style="height: 80%;">
@@ -61,7 +61,7 @@
 </div>
     </div>
  </div>
- 
+
  <div class="modal" id="myModal">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -74,21 +74,21 @@
           <h1 class="text-center">{{userPopUp.firstName}} {{userPopUp.lastName}}</h1>
           <div>
             <span [ngClass]="{'green':  userPopUp.sharesDataWithDso === true, 'red':  userPopUp.sharesDataWithDso === false}"><i class = "fa fa-check-square-o">   User share data with DSO</i></span>
-           
+
           </div>
         <div class="row" id = "cards-current">
           <div class="col" id = "col-popUp">
             <div class="card" id = "card-popUp">
-              <h3 class="card-title" id = "card-title-popUp">Current production:</h3>
+              <h3 class="card-title" id = "card-title-popUp">Current Production:</h3>
               <div class="card-body" id = "card-body-popUp">
                 {{userPopUp.production}} kWh
               </div>
             </div>
           </div>
-        
+
         <div class="col" id = "col-popUp">
           <div class="card" id = "card-popUp">
-            <h3 class="card-title" id = "card-title-popUp">Current consumption:</h3>
+            <h3 class="card-title" id = "card-title-popUp">Current Consumption:</h3>
             <div class="card-body" id = "card-body-popUp">
               {{userPopUp.consumption}} kWh
             </div>
@@ -109,7 +109,7 @@
               <button class = "my-button active" [class.active]="isActiveUser" (click)="toggleActive('user');" >About User</button>
               <button  class = "my-button active" [class.active]="isActiveDevice" (click)="toggleActive('device');">Devices</button>
               <button class="my-button active" [class.active]="isActiveSystem" (click)="toggleActive('system');">System</button>
-             
+
             </div>
             <div class="row" *ngIf="showMeGeneral" style="margin-left: 10px;">
               <div class="col-sm" id = "userInfo">
@@ -119,8 +119,8 @@
                 <p><span>City: </span>{{userPopUp.country}}, {{userPopUp.city}}</p>
                 <p><span>Address: </span>{{userPopUp.address}}</p>
               </div>
-              <div class="col-sm" id = "userInfo"> 
-                <h2 class="text-right">Device Details</h2>  
+              <div class="col-sm" id = "userInfo">
+                <h2 class="text-right">Device Details</h2>
                 <p><span>Total number of devices:</span> {{allUserDevices.length}} </p>
                 <p><span>Producers:</span> {{numberOfProsumers}}</p>
                 <p><span>Consumers: </span>{{numberOfConsumers}}</p>
@@ -174,7 +174,7 @@
                         </td>
                       </tr>
                     </tbody>
-                    
+
                   </table>
                 </div>
                 <!-- <div class="col" >
@@ -185,19 +185,19 @@
                 </div> -->
             </div>
             </div>
-           
+
             <div class="row" *ngIf="showSystemPage">
-             
+
               <div>
                 <div class="id-button-popUp" >
                   <button class = "my-button active"[class.active]="isActioveConsumer" (click)="toggleActiveCP('consumer');  ">Consumption</button>
                   <button  class = "my-button active" [class.active]="isActiveProsumer" (click)="toggleActiveCP('prosumer'); ">Production</button>
                 </div>
-               
+
                 <div class="row" id="graph-position" *ngIf="showMeConsumption">
-                  
+
                   <div class="col" id="graph" >
-                    
+
                     <label for="graphSelect">Select Graph:</label>
                     <div>
                       <select class = "select-modal" [(ngModel)]="selectedGraphHistoryConsumption" (ngModelChange)="HistoryConsumption(selectedGraphHistoryConsumption)">
@@ -209,7 +209,7 @@
                         <i class="fa fa-table"  aria-hidden="true"></i>
                       </button>
                     </div>
-                    
+
                     <div class="card" id = "style-card-next" *ngIf="selectedGraphHistoryConsumption === 'month'" >
                       <div class="card-body">
                           <div>
@@ -237,9 +237,9 @@
                       </div>
                     </div>
               </div>
-                  
-              
-              
+
+
+
             <div class="col" id="graph">
                   <label for="graphSelect">Select Graph:</label>
                   <div>
@@ -279,12 +279,12 @@
                       </div>
                   </div>
             </div>
-           
+
            </div>
-            
+
              <div class="row" id="graph-position" *ngIf="showMeProduction">
                 <div class="col" id="graph">
-                 
+
                     <label>Select Graph:</label>
                     <div>
                       <select class = "select-modal" [(ngModel)]="selectedGraphHistoryProduction" (ngModelChange)="HistoryProduction(selectedGraphHistoryProduction)">
@@ -321,9 +321,9 @@
                       </div>
                     </div>
                 </div>
-            
-                 
-                
+
+
+
                   <div class="col" id="graph">
                     <label for="graphSelect">Select Graph:</label>
                     <div>
@@ -332,7 +332,7 @@
                         <option value="7days">Next 7 days</option>
                         <option value="24h">Next 24 hours</option>
                     </select>
-                    
+
                   <button class="buttonOpenModal" style="margin-left: 5px;" mat-button data-bs-target="#FutureProduction" data-bs-toggle="modal">
                     <i class="fa fa-table"  aria-hidden="true"></i>
                   </button>
@@ -365,13 +365,13 @@
                     </div>
                   </div>
               </div>
-            
+
             </div>
           </div>
         </div>
       </div>
       </div>
-      
+
     </div>
   </div>
   <div class="modal fade " id="HistoryConsumption" tabindex="-1" aria-hidden="true">

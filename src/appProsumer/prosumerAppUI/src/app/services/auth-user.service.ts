@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import { environment } from 'src/environments/environment';
-import { Observable } from 'rxjs';
+import { Observable, catchError, map, throwError } from 'rxjs';
 import { AuthService } from './auth.service';
 import { CookieService } from 'ngx-cookie-service';
 import { ImageUpdate } from '../models/user';
@@ -125,23 +125,25 @@ export class AuthUserService {
     return this.http.put(environment.apiUrl + `/api/User/update-password/${userID}?oldPassword=`+password.oldPassword+`&newPassword=`+password.newPassword,  { headers: new HttpHeaders().set('Authorization', `Bearer ${this.cookie.get('jwtToken')}`) });
   }
 
-  uploadImage(imageData: Uint8Array, id: any): void {
-    
-    // Convert the image data to a Base64 string
+  uploadImage(imageData: Uint8Array, id: any): Observable<string> {
     const base64Image = this.convertToBase64(imageData);
-    
-    // Create an object with the ID and the Base64 image string
+
     const updateImageViewModel = {
       Id: id,
       imagePicture: base64Image
     };
-    
-    this.http.put(environment.apiUrl + '/api/User/update-user-image', updateImageViewModel)
-      .subscribe(
-        () => console.log('Image uploaded successfully'),
-        error => console.error('Error uploading image:', error)
+
+    return this.http.put(environment.apiUrl + '/api/User/update-user-image', updateImageViewModel)
+      .pipe(
+        map(() => 'data:image/jpeg;base64,' + base64Image),
+        catchError((error) => {
+          console.error('Error uploading image:', error);
+          return throwError(error);
+        })
       );
   }
+
+
   convertToBase64(imageData: Uint8Array): string {
     const binary = [];
     const length = imageData.byteLength;

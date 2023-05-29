@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'service/auth.service';
-import { MessageService } from 'primeng/api';
+import { ConfirmEventType, ConfirmationService, MessageService } from 'primeng/api';
 import { CookieService } from "ngx-cookie-service";
 import { ConfirmPasswordValidator } from 'app/helpers/confirm-password.validator';
 import { Role } from 'models/User';
@@ -34,7 +34,8 @@ export class SignupComponent implements OnInit {
     private fb: FormBuilder,
     private router : Router,
     private auth: AuthService,private cookie: CookieService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private confirmationService: ConfirmationService
     ){}
 
     ngOnInit(): void {
@@ -50,20 +51,20 @@ export class SignupComponent implements OnInit {
       }
       )
       this.getAllDispachers();
-      
+
     }
 
     getAllDispachers(){
       this.auth.getAllDispechers().subscribe(
         (response) => {
           this.allWorkers = response;
-        
+
         }
       )
-      
+
     }
 
-   
+
     get fields(){
       return this.signupForm.controls;
     }
@@ -97,24 +98,51 @@ export class SignupComponent implements OnInit {
         .subscribe((message) =>
           {
               this.signupForm.reset();
-              this.messageService.add({ severity: 'success', summary: 'Register success', detail: "Welcome  "+this.firstName+ " "+this.lastName});
-              this.router.navigate(['signin'])
+              this.messageService.add({ severity: 'success', summary: 'Register success'});
+              this.router.navigate(['/home'],{skipLocationChange:false}).then(()=>{
+
+                this.router.navigate(['/signup']);
+
+              });
           }
         );
       }
     }
     deleteDispecher(id : any){
-      if (confirm('Are you sure you want to delete this record?')) {
-      this.auth.deleteDispathcer(id).subscribe({
-        next:(response : any) => {
-          this.messageService.add({ severity: 'success', summary: 'Register deleted'});
-          location.reload();
-        },
-        error:(err : any)=>{
-          console.log("ERRROR delete" + err);
+
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to delete this record?',
+      header: 'Confirmation',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.auth.deleteDispathcer(id).subscribe({
+          next:(response : any) => {
+            this.messageService.add({ severity: 'success', summary: 'Register deleted'});
+            this.router.navigate(['/home'],{skipLocationChange:false}).then(()=>{
+
+              this.router.navigate(['/signup']);
+
+            });
+          },
+          error:(err : any)=>{
+            console.log("ERRROR delete" + err);
+          }
+        })
+      },
+      reject: (type: any) => {
+        switch (type) {
+          case ConfirmEventType.REJECT:
+            this.messageService.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected' });
+            break;
+          case ConfirmEventType.CANCEL:
+            this.messageService.add({ severity: 'warn', summary: 'Cancelled', detail: 'You have cancelled' });
+            break;
         }
-      })
-    }
+      },
+      acceptButtonStyleClass: 'p-button-danger',
+      rejectButtonStyleClass: 'p-button-secondary'
+    });
+
     }
     giveMeWorker(id : any){
       this.auth.getDispacher(id).subscribe({
@@ -130,5 +158,5 @@ export class SignupComponent implements OnInit {
         }
       })
     }
- 
+
 }
