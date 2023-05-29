@@ -38,7 +38,7 @@
                     </div>
                 </form>
             </div>
-            
+
             <div class="row-2"id = "btn-save">
                 <div class="col-sm-6" id="col-img-btn-main" >
                     <button class="buttonOpenModal" style="margin-left: 5px;" mat-button data-bs-target="#editProfileDispacher" data-bs-toggle="modal">
@@ -73,11 +73,11 @@
             <div class="modal-header">
               <p class="modal-title" id="exampleModalLabel">
                 <span style="color: #026670; padding-left: 10px; font-size: 22px; font-weight: bold"> Change password </span><br>
-      
+
               </p>
-      
-              <button type="button" id="closeBtn" class="btn-close" (click)="reset()" data-bs-dismiss="modal" aria-label="Close"></button>
-      
+
+              <button type="button" id="closeBtn1" class="btn-close" (click)="reset()" data-bs-dismiss="modal" aria-label="Close"></button>
+
             </div>
             <div class="modal-body">
               <form [formGroup] = "resetForm">
@@ -96,7 +96,7 @@
                     </ng-container>
                   </div>
                 </div>
-      
+
                   <div class="input-group form-group" style=" padding-top: 15px; padding-bottom: 15px;">
                     <span class="input-group-addon addon-icon" [ngClass]="{'is-invalid invalid-icon': fields['password'].errors && (fields['password'].dirty || fields['password'].touched || submitted)}" >
                     <input style = "display: inline;
@@ -112,8 +112,8 @@
                       </ng-container>
                     </div>
                   </div>
-      
-      
+
+
                   <div class="input-group form-group  " style=" padding-top: 15px; padding-bottom: 15px;">
                     <span class="input-group-addon addon-icon" [ngClass]="{'is-invalid invalid-icon': fields['confirmPassword'].errors && (fields['confirmPassword'].dirty || fields['confirmPassword'].touched || submitted)}" >
                     <input style = "display: inline;
