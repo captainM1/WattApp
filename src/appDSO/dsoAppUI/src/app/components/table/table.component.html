@@ -3,16 +3,6 @@
   <div class="row w-100" id="row-page" id="myBack">
     <div class="col-lg-7">
       <div class="input-div">
-        <div>
-          <p>Search user by name:</p>
-          <input type="text" [(ngModel)]="_searchByName"
-            placeholder="Filip Filipovic" (input)="applyFilters()">
-        </div>
-        <div>
-          <p>Search user by address:</p>
-          <input type="text" [(ngModel)]="_searchByAddress"
-            placeholder="Bulevar Kraljice Marije" (input)="applyFilters()">
-        </div>
         <button (click)="exportToExcel()">Export all</button>
         <button (click)="exportSelectedData()">Export selected</button>
       </div>
@@ -51,31 +41,47 @@
           #dt
           [value]="allUsers"
           [rows]="5"
+          [(selection)]="selectedUsersTable"
           [paginator]="true"
-          [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
-          [tableStyle]="{ 'min-width': '75rem' }"
+          [globalFilterFields]="['firstName','lastName','address']"
           [rowHover]="true"
-          dataKey="id"
+          [filterDelay]="0"
           currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
           [showCurrentPageReport]="true">
+          <ng-template pTemplate="caption">
+            <div class="table-header">
+                <span class="p-input-icon-right">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="Global Search"/>
+                </span>
+            </div>
+        </ng-template>
           <ng-template pTemplate="header">
             <tr>
               <th style="width: 4rem">
                 <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
               </th>
-              <th pSortableColumn="name" style="min-width:5rem">FirstName
-                <p-sortIcon field="name"></p-sortIcon></th>
-              <th pSortableColumn="price">LastName <p-sortIcon field="price"></p-sortIcon></th>
-              <th pSortableColumn="category" style="min-width:5rem">Address
-                <p-sortIcon field="category"></p-sortIcon></th>
-              <th pSortableColumn="rating">Production <p-sortIcon field="rating"></p-sortIcon></th>
-              <th pSortableColumn="inventoryStatus" style="min-width:5rem">Consumption
-                <p-sortIcon field="inventoryStatus"></p-sortIcon></th>
+              <th pSortableColumn="firstName">FirstName
+                <p-sortIcon field="firstName"></p-sortIcon>
+                <p-columnFilter type="text" field="firstName" display="menu" class="ml-auto"></p-columnFilter></th>
+              <th pSortableColumn="lastName">LastName 
+                <p-sortIcon field="lastName"></p-sortIcon>
+                <p-columnFilter type="text" field="lastName" display="menu" class="ml-auto"></p-columnFilter></th>
+              <th pSortableColumn="address">Address
+                <p-sortIcon field="address"></p-sortIcon>
+                <p-columnFilter type="text" field="address" display="menu" class="ml-auto"></p-columnFilter></th>
+              <th pSortableColumn="production">Production 
+                <p-sortIcon field="production"></p-sortIcon></th>
+              <th pSortableColumn="consumption">Consumption
+                <p-sortIcon field="consumption"></p-sortIcon></th>
               <th>User Profile</th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-user>
-            <tr>
+            <tr (click)="showMeOnMap(user.id)">
+              <td>
+                <p-tableCheckbox [value]="user"></p-tableCheckbox>
+              </td>
               <!-- <td *ngIf="user"><input [(ngModel)]="user.selected"  type = "checkbox" style="width: 20px;" (click) = "toggleExportSelected(user); toggleSelection(user, i)"></td>   -->
               <td >{{user.firstName}}</td>
               <td>{{user.lastName}}</td>
@@ -199,7 +205,7 @@
               <div class="row" id="table">
                 <div class="col-sm-6"
                   style="width: 65%; overflow-y: scroll; scrollbar-color: #026670; scrollbar-width: thin; padding-right:0px">
-                  <table class="tableDevices">
+                  <table>
                     <thead>
                       <tr>
                         <th>Device name</th>

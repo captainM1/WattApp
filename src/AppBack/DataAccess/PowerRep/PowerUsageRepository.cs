@@ -15,6 +15,7 @@ namespace prosumerAppBack.DataAccess;
 public class PowerUsageRepository : IPowerUsageRepository
 {
     private readonly IMongoCollection<PowerUsage> mongoCollection;
+    private readonly IMongoCollection<PowerUsage> mongoCollectionPrediction;
     private readonly DataContext _dataContext;
     private readonly IDeviceRepository _deviceRepository;
 

@@ -454,7 +454,6 @@ export class TableComponent implements OnInit, AfterViewInit {
       maxZoom: 20,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(this.map);
-
   }
   marker!: any;
   public showCoordsForEveryUser() {

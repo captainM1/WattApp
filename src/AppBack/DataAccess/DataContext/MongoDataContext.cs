@@ -13,6 +13,7 @@ namespace prosumerAppBack.DataAccess
             _mongoDatabase = mongoDatabase;
         }
         public IMongoCollection<PowerUsage> PowerUsage => _mongoDatabase.GetCollection<PowerUsage>("powerusage");
+        public IMongoCollection<PowerUsage> PowerUsagePrediction => _mongoDatabase.GetCollection<PowerUsage>("powerusage_prediction");
     }
 }
 
