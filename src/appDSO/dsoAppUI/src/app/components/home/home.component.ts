@@ -429,11 +429,29 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		this.auth.currentConsumptionDay().subscribe({
 			next:(response:any)=>{
 				this.currentDataC = response['timestampPowerPairs'];
-				this.consumptionCurrentDifference(this.currentDataC);
 				this.makeDataForConsumptionDay(this.currentDataC);
 				this.lineChartConsumptionProduction(this.powerusageCurrentDayProduction, this.powerusageCurrentConsumptionDay, this.timestampCurrentConsumptionDay);
 				this.spinner.hide();
 				this.currentConsumptionDayLoader = false;
+			},
+			error:(error:any)=>{
+				console.log(error);
+			}
+		})
+	}
+	differenceForPreviousHour(){
+		this.auth.differenceForPreviousHourConsumption().subscribe({
+			next:(response:any)=>{
+				this.razlikaConsumption = response;
+			},
+			error:(error : any)=>{
+				console.log(error);
+			}
+		})
+
+		this.auth.differenceForPreviousHourProduction().subscribe({
+			next:(response:any)=>{
+				this.razlikaProduction = response;
 			},
 			error:(error:any)=>{
 				console.log(error);
@@ -450,7 +468,6 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		if(this.razlikaConsumption < 0){
 			this.text = " less then previous hour";
 		}
-	}
 
 	makeDataForConsumptionDay(dataGraph : any){
 		this.timestampCurrentConsumptionDay = [];
@@ -485,7 +502,6 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			this.auth.currentProductionDay().subscribe(
 				(response:any)=>{
 					this.currentDataP = response['timestampPowerPairs'];
-					this.currentProductionDifference(this.currentDataP);
 					this.makeDataForProductionDay(this.currentDataP);
 					//this.lineChartConsumptionProduction(this.powerusageCurrentDayProduction, this.powerusageCurrentConsumptionDay, this.timestampCurrentConsumptionDay);
 					this.spinner.hide();

@@ -408,4 +408,12 @@ export class AuthService {
     }
     return this.http.put(environment.apiUrl+'/api/Dispatcher/update-password-for-dispatcher/'+dispID, data)
   }
+
+  differenceForPreviousHourConsumption():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/percentage-difference-for-previous-hour/consumption/system");
+  }
+
+  differenceForPreviousHourProduction():Observable<any>{
+    return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/percentage-difference-for-previous-hour/production/system");
+  }
 }

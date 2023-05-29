@@ -178,6 +178,19 @@ export class EditProfileComponent implements OnInit{
     this.checkValidEmail();
   }
 
+  onFileSelected(event: any): void {
+    const file: File = event.target.files[0];
+    const reader: FileReader = new FileReader();
+  
+    reader.onloadend = () => {
+      const byteArray = new Uint8Array(reader.result as ArrayBuffer);
+      this.auth.uploadImage(byteArray,this.userID);
+    };
+  
+    reader.readAsArrayBuffer(file);
+    this.getToken();
+  }
+
   checkValidPhoneNumber(): void {
     const pattern = /^(\+381(\s?|-?))?0?[\d]{2}[\d]{3,4}[\d]{3,4}$/;
     this.isValidPhoneNumber = pattern.test(this.phoneNumber);

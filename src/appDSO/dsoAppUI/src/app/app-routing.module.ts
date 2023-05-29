@@ -11,7 +11,7 @@ import { NotauthGuard } from './guards/notauth.guard';
 import { AuthGuard } from './guards/auth.guard';
 import { ErrorPageComponent } from './components/error-page/error-page.component';
 import { ProfileComponent } from './components/profile/profile.component';
-import { ModalEditProfileComponent } from './components/modal-edit-profile/modal-edit-profile.component';
+
 
 
 const routes: Routes = [
@@ -45,9 +45,7 @@ const routes: Routes = [
   {
     path:'error-page', component:ErrorPageComponent
   },
-  {
-    path:'edit-profile', component:ModalEditProfileComponent
-  }
+ 
 ]
 
 
