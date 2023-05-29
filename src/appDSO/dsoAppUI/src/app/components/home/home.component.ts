@@ -429,7 +429,6 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		this.auth.currentConsumptionDay().subscribe({
 			next:(response:any)=>{
 				this.currentDataC = response['timestampPowerPairs'];
-				this.consumptionCurrentDifference(this.currentDataC);
 				this.makeDataForConsumptionDay(this.currentDataC);
 				this.lineChartConsumptionProduction(this.powerusageCurrentDayProduction, this.powerusageCurrentConsumptionDay, this.timestampCurrentConsumptionDay);
 				this.spinner.hide();
@@ -440,17 +439,27 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			}
 		})
 	}
+	differenceForPreviousHour(){
+		this.auth.differenceForPreviousHourConsumption().subscribe({
+			next:(response:any)=>{
+				this.razlikaConsumption = response;
+			},
+			error:(error : any)=>{
+				console.log(error);
+			}
+		})
 
-	consumptionCurrentDifference(currentDataC:any[]){
-		const length = currentDataC.length;
-		const prevHour = currentDataC[length-2]['powerUsage'];
-		const currentHour = currentDataC[length-1]['powerUsage'];
-		this.razlikaConsumption = (((currentHour - prevHour)/prevHour)*100).toFixed(2);
-		this.text = " more then previous hour";
-		if(this.razlikaConsumption < 0){
-			this.text = " less then previous hour";
-		}				
+		this.auth.differenceForPreviousHourProduction().subscribe({
+			next:(response:any)=>{
+				this.razlikaProduction = response;
+			},
+			error:(error:any)=>{
+				console.log(error);
+			}
+		})
 	}
+
+	
 
 	makeDataForConsumptionDay(dataGraph : any){
 		this.timestampCurrentConsumptionDay = [];
@@ -485,30 +494,13 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			this.auth.currentProductionDay().subscribe(
 				(response:any)=>{
 					this.currentDataP = response['timestampPowerPairs'];
-					this.currentProductionDifference(this.currentDataP);
 					this.makeDataForProductionDay(this.currentDataP);
 					//this.lineChartConsumptionProduction(this.powerusageCurrentDayProduction, this.powerusageCurrentConsumptionDay, this.timestampCurrentConsumptionDay);
 					this.spinner.hide();
 					this.currentProductionDayLoader = false;
 				}
 			)
-			
 		}
-		currentProductionDifference(data : []){
-			const length = this.currentDataP.length;
-			let prevHour1 = data[length-2]['powerUsage'];
-			const currentHour1 = data[length-1]['powerUsage'];
-			if(prevHour1 === 0)
-				this.razlikaProduction = (((currentHour1 - 0)/1)).toFixed(2);
-			else
-				this.razlikaProduction = (((currentHour1 - prevHour1)/prevHour1)*100).toFixed(2);
-			
-			this.text = " more then previous hour";
-			if(this.razlikaProduction < 0){
-				this.text = " less then previous hour";
-			}	
-		}
-
 		
 		makeDataForProductionDay(dataGraph:any){
 			this.powerusageCurrentDayProduction = [];
