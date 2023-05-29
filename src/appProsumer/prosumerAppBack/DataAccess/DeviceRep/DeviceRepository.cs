@@ -411,6 +411,47 @@ namespace prosumerAppBack.DataAccess
             }
             return false;
         }
+
+        public Task<BatteryInfo> GetBatteryInfo(Guid deviceID)
+        {
+            return _dbContext.Devices
+                .Include(d => d.DeviceType)
+                .ThenInclude(dt => dt.Manufacturer)
+                .Include(d => d.DeviceType)
+                .ThenInclude(dt => dt.Group)
+                .Where(d => d.ID == deviceID)
+                .Select(d => new BatteryInfo()
+                {
+                    deviceName = d.DeviceName,
+                    deviceId = d.ID,
+                    deviceTypeName = d.DeviceType.Name,
+                    macAdress = d.MacAdress,
+                    manufacturerName = d.DeviceType.Manufacturer.Name,
+                    groupName = d.DeviceType.Group.Name,
+                    capacity = d.DeviceType.Wattage
+                })
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<DeviceInfo>> GetDevicesConnectedToBattery(Guid batteryID)
+        {
+            var info = _dbContext.BatteryConnections
+                .Where(e => e.BatteryID == batteryID)
+                .Include(e => e.Device)
+                .Select(d => new DeviceInfo()
+                {
+                    deviceName = d.Device.DeviceName,
+                    deviceId = d.Device.ID,
+                    deviceTypeName = d.Device.DeviceType.Name,
+                    macAdress = d.Device.MacAdress,
+                    manufacturerName = d.Device.DeviceType.Manufacturer.Name,
+                    groupName = d.Device.DeviceType.Group.Name,
+                    wattage = d.Device.DeviceType.Wattage
+                })
+                .ToList();
+
+            return info;
+        }
     }
 
     public class DeviceInfo
@@ -423,6 +464,18 @@ namespace prosumerAppBack.DataAccess
         public string deviceName { get; set; }
         public double wattage { get; set; }
     }
+
+    public class BatteryInfo
+    {
+        public Guid deviceId { get; set; }
+        public string deviceTypeName { get; set; }
+        public string macAdress { get; set; }
+        public string manufacturerName { get; set; }
+        public string groupName { get; set; }
+        public string deviceName { get; set; }
+        public double capacity { get; set; }
+    }
+
 
     public class DeviceInfoWithType
     {

@@ -68,4 +68,5 @@ public interface IPowerUsageService
     object? electricityBillForCurrentMonth(Guid userId, double electricityRate);
     object? electricityEarningsForCurrentMonth(Guid userId, double electricityRate);
     Task UpdateBatteries();
+    Task<double> GetForUserBatteryPower(Guid userID);
 }

@@ -291,4 +291,20 @@ public class DeviceService:IDeviceService
         }
         return true;
     }
+
+    public Task<BatteryInfo> GetBatteryInfo(Guid batteryID)
+    {
+        var check = _repository.GetBatteryInfo(batteryID);
+        if (check == null)
+        {
+            throw new NotFoundException("No battery with given ID");
+        }
+        return check;
+    }
+
+    public Task<IEnumerable<DeviceInfo>> GetDevicesConnectedToBattery(Guid batteryID)
+    {
+        var check = _repository.GetDevicesConnectedToBattery(batteryID);        
+        return check;
+    }
 }

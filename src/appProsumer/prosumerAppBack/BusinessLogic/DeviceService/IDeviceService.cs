@@ -32,4 +32,6 @@ public interface IDeviceService
     Task<IEnumerable<DeviceDto>> GetProducersThatAreNotAttachedToABattery(Guid userID);
     Task<IEnumerable<DeviceDto>> GetConsumersThatAreNotAttachedToABattery(Guid userID);
     Task<Boolean> AddConnectionToBattery(Guid batteryID, Guid deviceID);
+    Task<BatteryInfo> GetBatteryInfo(Guid batteryID);
+    Task<IEnumerable<DeviceInfo>> GetDevicesConnectedToBattery(Guid batteryID);
 }

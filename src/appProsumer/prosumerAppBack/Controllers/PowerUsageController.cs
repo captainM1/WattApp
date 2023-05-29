@@ -701,4 +701,11 @@ public class PowerUsageController : ControllerBase
             throw new ArgumentException(ex.Message);
         }
     }
+
+    [HttpGet("power-usage/get-current-user-battery-power-available/{userID}")]
+    public async Task<ActionResult<double>> GetForUserBatteryPower(Guid userID)
+    {
+        var powerUsages = await _powerUsageService.GetForUserBatteryPower(userID);
+        return Ok(powerUsages);
+    }
 }
