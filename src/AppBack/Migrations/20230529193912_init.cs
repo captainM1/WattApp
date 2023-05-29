@@ -8,11 +8,24 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace prosumerAppBack.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "BatteryStatuses",
+                columns: table => new
+                {
+                    Date = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    ID = table.Column<Guid>(type: "TEXT", nullable: false),
+                    BatteryPercent = table.Column<double>(type: "REAL", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BatteryStatuses", x => x.Date);
+                });
+
             migrationBuilder.CreateTable(
                 name: "DeviceGroups",
                 columns: table => new
@@ -185,6 +198,25 @@ namespace prosumerAppBack.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "BatteryConnections",
+                columns: table => new
+                {
+                    ConnectionID = table.Column<Guid>(type: "TEXT", nullable: false),
+                    BatteryID = table.Column<Guid>(type: "TEXT", nullable: false),
+                    DeviceID = table.Column<Guid>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BatteryConnections", x => x.ConnectionID);
+                    table.ForeignKey(
+                        name: "FK_BatteryConnections_Devices_DeviceID",
+                        column: x => x.DeviceID,
+                        principalTable: "Devices",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "DeviceGroups",
                 columns: new[] { "ID", "Name" },
@@ -223,12 +255,12 @@ namespace prosumerAppBack.Migrations
             migrationBuilder.InsertData(
                 table: "Dispatchers",
                 columns: new[] { "ID", "Email", "FirstName", "LastName", "PasswordHash", "PhoneNumber", "Role", "Salt" },
-                values: new object[] { new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f53"), "admin@gmail.com", "Adminovic", "Adminovski", new byte[] { 167, 29, 10, 9, 188, 65, 128, 15, 67, 206, 185, 28, 182, 12, 89, 92, 64, 185, 184, 207, 202, 179, 76, 129, 235, 143, 16, 213, 179, 42, 216, 9 }, null, "Admin", new byte[] { 243, 78, 71, 236, 60, 243, 113, 131, 101, 226, 57, 11, 74, 166, 182, 210 } });
+                values: new object[] { new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f53"), "admin@gmail.com", "Adminovic", "Adminovski", new byte[] { 192, 136, 153, 95, 96, 127, 76, 51, 132, 25, 151, 24, 188, 118, 178, 197, 134, 182, 85, 185, 223, 57, 226, 97, 76, 48, 56, 103, 2, 206, 130, 246 }, null, "Admin", new byte[] { 193, 27, 0, 27, 226, 173, 179, 36, 6, 229, 191, 248, 0, 226, 232, 243 } });
 
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "ID", "Address", "City", "Country", "Email", "FirstName", "LastName", "PasswordHash", "PasswordResetToken", "PasswordResetTokenExpires", "PhoneNumber", "Role", "Salt", "profilePicture", "sharesDataWithDso" },
-                values: new object[] { new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f52"), "Radoja Domanovica 6", "Kragujevac", "Serbia", "petarsimic@gmail.com", "Petar", "Simic", new byte[] { 123, 152, 101, 126, 5, 177, 90, 239, 211, 238, 176, 202, 45, 29, 102, 191, 112, 21, 110, 176, 228, 88, 0, 83, 164, 74, 15, 166, 185, 98, 182, 142 }, null, null, "064-316-15-81", "UnapprovedUser", new byte[] { 175, 174, 252, 227, 236, 52, 36, 57, 2, 214, 2, 35, 171, 186, 76, 214 }, null, false });
+                values: new object[] { new Guid("6bce51ea-9824-4393-b9a5-732b5a9b7f52"), "Radoja Domanovica 6", "Kragujevac", "Serbia", "petarsimic@gmail.com", "Petar", "Simic", new byte[] { 248, 118, 52, 146, 101, 66, 156, 144, 130, 235, 221, 39, 68, 32, 222, 68, 37, 87, 190, 164, 255, 134, 31, 23, 214, 106, 250, 233, 126, 1, 89, 171 }, null, null, "064-316-15-81", "UnapprovedUser", new byte[] { 237, 13, 94, 157, 248, 217, 196, 138, 219, 91, 144, 134, 234, 5, 160, 118 }, null, false });
 
             migrationBuilder.InsertData(
                 table: "DeviceTypes",
@@ -267,6 +299,11 @@ namespace prosumerAppBack.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_BatteryConnections_DeviceID",
+                table: "BatteryConnections",
+                column: "DeviceID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Devices_DeviceTypeID",
                 table: "Devices",
                 column: "DeviceTypeID");
@@ -291,19 +328,25 @@ namespace prosumerAppBack.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "BatteryConnections");
+
+            migrationBuilder.DropTable(
+                name: "BatteryStatuses");
+
+            migrationBuilder.DropTable(
                 name: "DeviceRequirements");
 
             migrationBuilder.DropTable(
                 name: "DeviceRules");
 
             migrationBuilder.DropTable(
-                name: "Devices");
-
-            migrationBuilder.DropTable(
                 name: "Dispatchers");
 
             migrationBuilder.DropTable(
                 name: "UsersAppliedToDSO");
+
+            migrationBuilder.DropTable(
+                name: "Devices");
 
             migrationBuilder.DropTable(
                 name: "DeviceTypes");
