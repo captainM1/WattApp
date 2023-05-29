@@ -103,7 +103,7 @@
           </div>
         </div>
       </div>
-        <div class="row" *ngIf="userPopUp.sharesDataWithDso">
+        <div class="row" >
           <div class="col">
             <div class="id-button-popUp" >
               <button class = "my-button active" [class.active]="isActiveUser" (click)="toggleActive('user');" >About User</button>
@@ -132,7 +132,7 @@
             <div *ngIf="showDevicePage">
               <div class="row" id = "table">
                 <div class="col-sm-6" style = "width:100%; overflow:auto; height: 300px; scrollbar-color: #026670; scrollbar-width: thin; padding-right:0px">
-                  <table class="tableDevices">
+                  <table class="tableDevices" >
                     <thead style="position: sticky; top :0; z-index: 1px;">
                       <tr >
                         <th>Device name</th>
@@ -375,8 +375,8 @@
     </div>
   </div>
   <div class="modal fade " id="HistoryConsumption" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" >
-      <div class="modal-content">
+    <div class="modal-dialog modal-dialog-centered modal-lg" id = "modal-dialog-style" >
+      <div class="modal-content" >
         <div class="modal-header">
           <p class="modal-title" id="exampleModalLabel">
             <span *ngIf="selectedGraphHistoryConsumption === '24h'" style="color: #026670; font-size: 20px; font-weight: 700;"> Consumption For Previous 24h </span>
@@ -402,8 +402,8 @@
   </div>
 
   <div class="modal fade " id="FutureConsumption" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" >
-      <div class="modal-content">
+    <div class="modal-dialog modal-dialog-centered modal-lg"id = "modal-dialog-style" >
+      <div class="modal-content" >
         <div class="modal-header">
           <p class="modal-title" id="exampleModalLabel">
             <span *ngIf="selectedGraphFutureConsumption === '24h'" style="color: #026670; font-size: 20px; font-weight: 700;"> Consumption for Next 24h </span>
@@ -429,8 +429,8 @@
   </div>
 
   <div class="modal fade " id="HistoryProduction" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" >
-      <div class="modal-content">
+    <div class="modal-dialog modal-dialog-centered modal-lg" id = "modal-dialog-style">
+      <div class="modal-content" >
         <div class="modal-header">
           <p class="modal-title" id="exampleModalLabel">
             <span *ngIf="selectedGraphHistoryProduction === '24h'" style="color: #026670; font-size: 20px; font-weight: 700;"> Production For Previous 24h </span>
@@ -456,8 +456,8 @@
   </div>
 
   <div class="modal fade " id="FutureProduction" tabindex="-1" aria-hidden="true" #tableTable>
-    <div class="modal-dialog modal-dialog-centered modal-lg" >
-      <div class="modal-content">
+    <div class="modal-dialog modal-dialog-centered modal-lg" id = "modal-dialog-style" >
+      <div class="modal-content" >
         <div class="modal-header">
           <p class="modal-title" id="exampleModalLabel">
             <span *ngIf="selectedGraphFutureProduction === '24h'" style="color: #026670; font-size: 20px; font-weight: 700;"> Production For Next 24h </span>

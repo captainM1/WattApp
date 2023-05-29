@@ -431,10 +431,12 @@ allUserDevicesPOM:Info[] = [];
 devicesStorage:Info[] = [];
 toggleFilterOptions(): void {
   this.showFilterOptions = !this.showFilterOptions;
+  
+  
 }
 
 applyFilter(): void {
- 
+  
   if(this.selectedFilterOption === "Consumers"){
     this.allUserDevices = this.devicesConsumers;
   }else if(this.selectedFilterOption === "Prosumers"){
@@ -447,6 +449,8 @@ applyFilter(): void {
     this.allUserDevices = this.allUserDevicesPOM;
   }
   this.showFilterOptions = false;
+  this.selectedFilterOption = "All Devices";
+  
 }
   selectedColumn:any = null;
   selectedColumn1:any = null;
@@ -634,12 +638,11 @@ applyFilter(): void {
     this.showDevGraph = !this.showDevGraph;
     this.getDeviceGroup();
     this.toggleTable = true;
-
+    console.log("SHOW ME DEVICE pozivam!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     this.auth.getDeviceInfoUserByID(id).subscribe(
       (response : any) => {
         this.allUserDevices = response;
         this.allUserDevicesPOM = response;
-        console.log("All user devices",this.allUserDevices);
         for(let us of this.allUserDevices){
           this.auth.currentPowerUsageDeviceID(us.deviceId).subscribe(
             {
@@ -680,6 +683,9 @@ applyFilter(): void {
           this.numberOfConsumers = 0;
           this.numberOfProsumers = 0;
           this.numberOfStorage = 0;
+          this.devicesConsumers = [];
+          this.devicesProducers = [];
+          this.devicesStorage = [];
         this.auth.getDevicesInfoByID(us.deviceId).subscribe({
           next: (response:any)=>{
             us.typeOfDevice = response.groupName;
@@ -762,6 +768,7 @@ applyFilter(): void {
     this.auth.getUserInformation(id).subscribe(
       (response : any) => {
         this.userPopUp = response;
+        this.userPopUp.profilePicture = "";
         console.log("REPSONSE", response);
         if(this.userPopUp['sharesDataWithDso'] === true){
           this.userPopUp.sharesDataWithDso = true;
@@ -1581,7 +1588,7 @@ productionPreviousMonthUser(id : any){
         x: {
           title: {
             display: true,
-            text: 'Time (hour)',
+            text: 'Time [h]',
           },
           ticks: {
             font: {
@@ -1677,7 +1684,7 @@ consumptionNext24hGraph(){
       x: {
         title: {
           display: true,
-          text: 'Time (hour)',
+          text: 'Time [h]',
         },
         ticks: {
           font: {
@@ -1804,7 +1811,7 @@ consumptionNext24hGraph(){
           x: {
             title: {
               display: true,
-              text: 'Time (hour)',
+              text: 'Time [h]',
             },
             ticks: {
               font: {
@@ -2086,6 +2093,7 @@ consumptionNext24hGraph(){
             borderColor: this.backgroundColorsGraphs[4],
             backgroundColor: this.backgroundColorsRGBA4[4],
             pointBackgroundColor: 	this.backgroundColorsRGBA7[4],
+            
             borderWidth: 1,
             pointBorderColor:this.backgroundColorsGraphs[4],
             pointStyle: 'circle',
@@ -2098,7 +2106,7 @@ consumptionNext24hGraph(){
           x: {
             title: {
               display: true,
-              text: 'Time (hour and minutes)',
+              text: 'Time [h]',
             },
             ticks: {
               font: {

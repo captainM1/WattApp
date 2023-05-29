@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { deviceGroup, deviceGroupManifacturers, deviceManifacturers, deviceTypeInformation, eachDevice } from 'models/Devices';
 import { AuthService } from 'service/auth.service';
-import { Chart } from 'chart.js';
+import { Chart, Plugin } from 'chart.js';
 import { ChartOptions } from 'chart.js';
 import { User } from 'models/User';
 import { Root } from 'models/weather';
@@ -201,7 +201,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
   @ViewChild('consumptionNext24hGraph') consumptionNext24hGraph!:ElementRef;
   @ViewChild('consumptionNext7daysGraph') consumptionNext7daysGraph!:ElementRef;
   @ViewChild('consumptionNextMonthGraph') consumptionNextMonthGraph!:ElementRef;
- 
+
  
   exportToExcel(): void {
     const workbook = XLSX.utils.book_new();
@@ -215,6 +215,8 @@ export class HomeComponent implements OnInit, AfterViewInit{
 	fileNameHistory = "Consumption and Production for the Previous 12h";
 	this.saveFile(data, fileNameHistory);
   }
+
+
 
   exportToExcelSelectedFuture(select : any): void {
  
@@ -317,7 +319,8 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		  x: {
 			title: {
 			  display: true,
-			  text: 'Time (hours)',
+			  text: 'Time [h]',
+
 			},
 			ticks: {
 			  font: {
@@ -615,7 +618,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 						x: {
 						title: {
 							display: true,
-							text: 'Time (hour)',
+							text: 'Time [h]',
 						},
 						ticks: {
 							font: {
@@ -626,7 +629,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 						y: {
 						title: {
 							display: true,
-							text: 'Current power consumption and production (kW)',
+							text: 'Current energy consumption and production [kWh]',
 							font:{
 							size: 10,
 							}
@@ -1182,6 +1185,8 @@ export class HomeComponent implements OnInit, AfterViewInit{
 						pointBackgroundColor: 	this.backgroundColorsRGBA7[0],
 						borderWidth: 1,
 						pointBorderColor:this.backgroundColorsGraphs[0],
+						scaleID: 'y',
+						value: data1.datasets[0].data.reduce((a:any, b:any) => a + b) / data1.datasets[0].data.length,
 						pointStyle: 'circle',
 						pointRadius: 3,
 						pointHoverRadius: 5,
@@ -1220,7 +1225,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 						x: {
 						title: {
 							display: true,
-							text: 'Time (hour)',
+							text: 'Time [h]',
 						},
 						ticks: {
 							font: {
@@ -1231,7 +1236,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 						y: {
 						title: {
 							display: true,
-							text: 'Power consumption and production (kW)',
+							text: 'Energy consumption and production [kW]',
 							font:{
 							size: 10,
 							}
@@ -1380,7 +1385,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 					y: {
 					  title: {
 						display: true,
-						text: 'Power consumption and production (kW)',
+						text: 'Energy consumption and production [kWh]',
 						font:{
 						  size: 10,
 						}
@@ -1531,7 +1536,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 					y: {
 					  title: {
 						display: true,
-						text: 'Power consumption and production (kW)',
+						text: 'Energy consumption and production [kWh]',
 						font:{
 						  size: 10,
 						}
@@ -1671,7 +1676,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			x: {
 			  title: {
 				display: true,
-				text: 'Time (hours)',
+				text: 'Time [h]',
 			  },
 			  ticks: {
 				font: {
@@ -1682,7 +1687,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			y: {
 			  title: {
 				display: true,
-				text: 'Power consumption and production (kW)',
+				text: 'Energy consumption and production [kWh]',
 				font:{
 				  size: 10,
 				}
@@ -1776,7 +1781,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			y: {
 			  title: {
 				display: true,
-				text: 'Power consumption and production (kW)',
+				text: 'Energy consumption and production [kWh]',
 				font:{
 				  size: 10,
 				}
@@ -1838,6 +1843,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 				console.log("consumptionNextMonth error" + err);
 				this.spinner.hide();
 				this.consumptionNextMonthLoader = false;
+				this.consumptionNextMonthData = 0;
 			}
 		})
 	}
@@ -1912,7 +1918,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			y: {
 			  title: {
 				display: true,
-				text: 'Power consumption and production (kW)',
+				text: 'Energy consumption and production [kWh]',
 				font:{
 				  size: 10,
 				}
@@ -1974,6 +1980,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			error: (err : any) => {
 				console.log("productionNext7Days error" + err);
 				this.spinner.hide();
+				this.productionNext7DaysData = [];
 				this.productionNext7DaysLoader = false;
 			}
 		})
