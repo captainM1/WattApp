@@ -34,15 +34,20 @@ export class DeviceDetailsComponent implements OnInit {
   last24HoursDate: any = [];
   next24HoursPower: any = [];
   next24HoursDate: any = [];
+  pastday: any = [];
+  pastweek: any = [];
+  pastmonth: any = [];
   hours: any = [];
   hourly: any = [];
   data: any = [];
   data1: any = [];
+  data2: any = [];
   formattedLabels: any = [];
   deviceToday: any = 0;
   chart:any;
   label1: string = '';
   label2: string = '';
+  label3: string = '';
   showSpinner: boolean = true;
   allowAccess: boolean = false;
   data24h: any[]=[];
@@ -182,6 +187,15 @@ export class DeviceDetailsComponent implements OnInit {
       error => {
          console.error('Error fetching months history info:', error);
       })
+
+      this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/pastweek/prediction${this.deviceId}`)
+      .subscribe((data:any) =>{
+        this.pastweek = data.timestampPowerPairs.map((item: any) => item.powerUsage);
+
+      },
+      error => {
+         console.error('Error fetching months history prediction info:', error);
+      })
   }
 
   updateDeviceName() {
@@ -251,8 +265,6 @@ export class DeviceDetailsComponent implements OnInit {
     );
   }
 
-
-
   showPermissions(){
     this.router.navigate(['/permissions', this.deviceId]);
   }
@@ -309,8 +321,10 @@ export class DeviceDetailsComponent implements OnInit {
     });
     this.data = [...this.deviceHistoryWeekPower, this.deviceToday];
     this.data1 = [null, null, null, null, null, null, null, null, ...this.deviceFutureWeekPower];
+    this.data2 = [...this.pastweek, null, null, null, null, null, null, null, null];
     this.label1 = "History From Last Week";
-    this.label2 = "Prediction For Next Week"
+    this.label2 = "Prediction For Next Week";
+    this.label3 = "Prediction For Last Week";
     this.col1 = 'rgba(255, 136, 17, 0.91)';
     this.col2 = 'rgba(2, 102, 112, 1)';
     this.isLineChart = false;
@@ -369,10 +383,10 @@ export class DeviceDetailsComponent implements OnInit {
       gradient.addColorStop(1, '#9FEDD7');
       const chartType = this.isLineChart ? 'line' : 'bar';
       this.chart = new Chart(ctx, {
-        type: chartType,
         data: {
           labels: this.formattedLabels,
           datasets: [{
+            type: chartType,
             label: this.label1,
             data: this.data,
             fill: true,
@@ -381,11 +395,21 @@ export class DeviceDetailsComponent implements OnInit {
             tension: 0.1
           },
           {
+            type: chartType,
             label: this.label2,
             data: this.data1,
             fill: true,
             borderColor: 'rgba(2, 102, 112, 1)',
             backgroundColor: this.col2,
+            tension: 0.1
+          },
+          {
+            type: 'line',
+            label: this.label3,
+            data: this.data2,
+            fill: true,
+            borderColor: 'rgba(2, 102, 112, 1)',
+            borderDash: [5, 5],
             tension: 0.1
           }]
         },
