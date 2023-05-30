@@ -214,7 +214,9 @@ export class AuthService {
 
   }
 
-
+  getBatteryPre(deviceID : any):Observable<any>{
+    return this.http.get<any[]>(environment.apiUrl+"/api/PowerUsage/power-usage/get-current-user-battery-percentage/"+deviceID);
+  }
   consumptionPrevMonth(userID : string) : Observable<any>{
     return this.http.get(environment.apiUrl + "/api/PowerUsage/power-usage/previousMonth/consumption/user-every-day-device-usage/"+userID);
   }

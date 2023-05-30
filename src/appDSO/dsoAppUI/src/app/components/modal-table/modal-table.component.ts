@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { TableExport } from 'tableexport';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
@@ -8,7 +8,7 @@ import { saveAs } from 'file-saver';
   styleUrls: ['./modal-table.component.css']
 })
 export class ModalTableComponent {
-  @ViewChild('tableTable')
+  @ViewChild('tableTable') tablee!:ElementRef;
   table!: TableExport;
   constructor(
   ){}
@@ -18,22 +18,15 @@ export class ModalTableComponent {
   @Input() time!: string;
   @Input() type!: string;
 
-  tableExport!:any;
-  tablee!:any;
-  sheetName!:string;
-  // exportToExcel(): void {
-  //   const worksheet = XLSX.utils.table_to_sheet(document.querySelector('#tableTable'));
-  //   const workbook = XLSX.utils.book_new();
-   
-    
-  //   this.sheetName= 'power consumption and production.xlsx';
-  //   XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-  
-  //   const fileBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-  //   const blob = new Blob([fileBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-   
-  //   saveAs(blob, 'this.sheetName.xlsx');
-    
-  // }
+ 
+  exportToExcel(tableData: string): void {
+    const worksheet = XLSX.utils.table_to_sheet(this.tablee.nativeElement);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+    const fileBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([fileBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    saveAs(blob, tableData + '.xlsx');
+  }
+
 
 }
