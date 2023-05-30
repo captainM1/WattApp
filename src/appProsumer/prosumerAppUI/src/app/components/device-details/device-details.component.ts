@@ -58,7 +58,7 @@ export class DeviceDetailsComponent implements OnInit {
   col1: string = '';
   col2: string = '';
   isStorage: boolean = false;
-  percentage: any = 0;
+  percentage: any = 50;
 
   @ViewChild('myTable') myTable!: ElementRef;
   @ViewChild('ModalTableComponent') modalTableComponent!: ModalTableComponent;
@@ -105,7 +105,7 @@ export class DeviceDetailsComponent implements OnInit {
           this.fetchConsumptionData();
         }
         else{
-          this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/get-current-user-battery-percentage/${this.deviceId}`)
+          /*this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/get-current-user-battery-percentage/${this.deviceId}`)
           .subscribe(data => {
             this.percentage = data;
             this.showSpinner = false;
@@ -113,8 +113,9 @@ export class DeviceDetailsComponent implements OnInit {
           },
           error => {
             console.error('Error fetching device information:', error);
-          });
-
+          })*/
+          this.showSpinner = false;
+          this.spinner.hide();
         }
       },
       error => {
