@@ -9,8 +9,9 @@
                 </button>
             </div>
             <div class="col centriranje pb-3">
-              <button class="buttonOpenModal ime centriranje" style="margin-left: 5px;
+              <button class="buttonOpenModal ime centriranje w-100" style="margin-left: 5px;
               color:#026670;
+              margin-top:10px;
               filter:none;
               border:none;" mat-button data-bs-target="#editDevice" data-bs-toggle="modal">
                 {{ deviceName }}
@@ -70,9 +71,36 @@
                     </button>
                 </div>
             </div>
-            <div class="align-center chart">
+            <div class="align-center chart" *ngIf="isStorage">
                 <ngx-spinner bdColor = "rgba(0, 0, 0, 0.5)" size = "medium" color = "#fff" type = "ball-spin" [showSpinner]="showSpinner" [fullScreen]="false" *ngIf="showSpinner"><span style="color: #fff; font-weight: normal; margin-top: 60px;" > Please wait... </span></ngx-spinner>
                 <canvas #chart></canvas>
+            </div><div class="row">
+            <div *ngIf="!isStorage" class="col-6 centriranje">
+              <div *ngIf="percentage <= 100 && percentage >=90" class="battery">
+                <div class="battery-level" style="height:100%;"></div>
+              </div>
+
+              <div *ngIf="percentage >= 75 && percentage <=89" class="battery">
+                <div class="battery-level" style="height:75%;"></div>
+              </div>
+
+              <div *ngIf="percentage >= 50 && percentage <=74" class="battery">
+                <div class="battery-level" style="height:50%;"></div>
+              </div>
+
+              <div *ngIf="percentage >= 21 && percentage <=49" class="battery">
+                <div class="battery-level" style="height:25%;"></div>
+              </div>
+
+              <div *ngIf="percentage >= 11 && percentage <=20" class="battery">
+                <div class="battery-level warn" style="height:18%;"></div>
+              </div>
+
+              <div *ngIf="percentage <= 10 " class="battery">
+                <div class="battery-level red" style="height:10%;"></div>
+              </div>
+            </div>
+            <div class="col-6 centriranje"><h1 style="color:#026670; font-weight:bold; font-size:30px;">{{percentage}}%</h1></div>
             </div>
         </div>
     </div>
