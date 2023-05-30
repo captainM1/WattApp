@@ -580,6 +580,21 @@ public class PowerUsageService:IPowerUsageService
         return 0;
     }
 
+    public Task<double> GetPowerUsageForDayPrediction(Guid deviceID, DateTime today)
+    {
+        return _repository.GetPowerUsageForDayPrediction(deviceID, today);
+    }
+
+    public Task<PowerUsage> GetPowerUsageFor7DaysPrediction(Guid deviceId, int direction)
+    {
+        return _repository.GetPowerUsageFor7DaysPrediction(deviceId,-1);
+    }
+
+    public Task<PowerUsage> GetPowerUsageForAMonthPrediction(Guid deviceId, int direction)
+    {
+        return _repository.GetPowerUsageForAMonthPrediction(deviceId,-1);
+    }
+
     public async Task UpdateBatteries()
     {
         await _repository.UpdateBatteries();
@@ -589,5 +604,12 @@ public class PowerUsageService:IPowerUsageService
     {
         var batteryPower = await _repository.GetForUserBatteryPower(userID);
         return batteryPower;
+    }
+
+    public async Task<double> GetBatteryPercentage(Guid deviceID)
+    {
+        var battPerc = await _repository.GetBatteryPercentage(deviceID);
+
+        return battPerc;
     }
 }

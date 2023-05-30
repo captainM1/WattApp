@@ -688,6 +688,24 @@ public class PowerUsageController : ControllerBase
         var powerUsages = _powerUsageService.GetPowerUsageForDevicesProduction(userID, 1, 1);
         return Ok(powerUsages.Result);
     }
+    [HttpGet("power-usage/past24h/prediction{deviceID}")]
+    public ActionResult<List<PowerUsage>> GetPowerUsageForDayPrediction(Guid deviceID)
+    {
+        var powerUsages = _powerUsageService.GetPowerUsageForDayPrediction(deviceID, DateTime.Today.AddDays(-1));
+        return Ok(powerUsages.Result);
+    }
+    [HttpGet("power-usage/pastweek/prediction{deviceID}")]
+    public ActionResult<List<PowerUsage>> GetPowerUsageFor7DaysPrediction(Guid deviceID)
+    {
+        var powerUsages = _powerUsageService.GetPowerUsageFor7DaysPrediction(deviceID, -1);
+        return Ok(powerUsages.Result);
+    }
+    [HttpGet("power-usage/pastmonth/prediction{deviceID}")]
+    public ActionResult<List<PowerUsage>> GetPowerUsageForAMonthPrediction(Guid deviceID)
+    {
+        var powerUsages = _powerUsageService.GetPowerUsageForAMonthPrediction(deviceID, -1);
+        return Ok(powerUsages.Result);
+    }
 
     [HttpGet("update-batteries")]
     public async Task UpdateBatteries()
@@ -706,6 +724,12 @@ public class PowerUsageController : ControllerBase
     public async Task<ActionResult<double>> GetForUserBatteryPower(Guid userID)
     {
         var powerUsages = await _powerUsageService.GetForUserBatteryPower(userID);
+        return Ok(powerUsages);
+    }
+    [HttpGet("power-usage/get-current-user-battery-percentage/{userID}")]
+    public async Task<ActionResult<double>> GetPercentage(Guid deviceID)
+    {
+        var powerUsages = await _powerUsageService.GetBatteryPercentage(deviceID);
         return Ok(powerUsages);
     }
 }

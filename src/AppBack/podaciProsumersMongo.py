@@ -117,7 +117,7 @@ for appliance in average_power_usages['power']:
     power_usage_data.append({"device_id": appliance['id'],"timestamp_power_pairs": timestamp_power_pairs})
 
 # Write the power usage data to a JSON file
-with open("power_usage_data.json", "w") as f:
+with open("power_usage_data_prediction.json", "w") as f:
     json.dump(power_usage_data, f, indent=2)
 
 print("Power usage data generated and saved to power_usage_data.json")

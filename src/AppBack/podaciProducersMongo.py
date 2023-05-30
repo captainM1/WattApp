@@ -75,7 +75,7 @@ for device in average_power_productions['power']:
     power_production_data.append({"device_id": device['id'],"timestamp_power_pairs": timestamp_power_pairs})
 
 # Write the power production data to a JSON file
-with open("power_production_data.json", "w") as f:
+with open("power_production_data_prediction.json", "w") as f:
     json.dump(power_production_data, f, indent=2)
 
-print("Power production data generated and saved to power_production_data.json")
+print("Power production data generated and saved to power_production_data_prediction.json")
