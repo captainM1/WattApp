@@ -9,7 +9,12 @@
                 </button>
             </div>
             <div class="col centriranje pb-3">
-                <h3>{{ device?.deviceName }}</h3>
+              <button class="buttonOpenModal ime centriranje" style="margin-left: 5px;
+              color:#026670;
+              filter:none;
+              border:none;" mat-button data-bs-target="#editDevice" data-bs-toggle="modal">
+                {{ deviceName }}
+            </button>
             </div>
             <div class="col align-center">
                 <p-confirmDialog></p-confirmDialog>
@@ -53,7 +58,7 @@
                   <h5 *ngIf="groupName === 'Producer'">Production</h5>
                   <h5 *ngIf="groupName === 'Storage'">Storage</h5>
                 </div>
-                <div class="col centriranje">
+                <div class="col centriranje" *ngIf="isStorage">
                     <select [(ngModel)]="selectedOption" (ngModelChange)="onOptionSelect()">
                         <option value="Today">Today</option>
                         <option value="Week">Week</option>
@@ -98,6 +103,37 @@
         <button  *ngIf="selectedOption === 'Today'" type="button" (click)="modalTableComponent.exportToExcel('history_and_prediction_24h_'+ device.deviceName)"  class="btn export" >EXPORT DATA</button>
         <button  *ngIf="selectedOption === 'Month'" type="button" (click)="modalTableComponent.exportToExcel('history_and_prediction_month_'+device.deviceName)"  class="btn export" >EXPORT DATA</button>
         <button  *ngIf="selectedOption === 'Week'" type="button" (click)="modalTableComponent.exportToExcel('history_and_prediction_7days_'+device.deviceName)"  class="btn export" >EXPORT DATA</button>
+      </div>
+    </div>
+  </div>
+  </div>
+
+
+  <div class="modal fade " id="editDevice" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" >
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 mat-dialog-title style="color:#026670;">Edit Device Name</h2>
+          <button type="button" id="closeBtn" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+      <mat-dialog-content>
+        <form [formGroup]="deviceForm" class="align-center">
+          <mat-form-field  class="align-center">
+            <input matInput formControlName="deviceName" type="text" class="align-center" style="border:2px solid #026670;
+            border-radius: 5px;
+            font-style: italic;
+            font-size: 16px;
+            text-align: center;
+            height: 40px;
+            width:100%;
+            outline:none;">
+            <mat-error *ngIf="deviceForm.controls['deviceName'].hasError('required')">Device Name is required</mat-error>
+          </mat-form-field>
+        </form>
+      </mat-dialog-content>
+
+      <div class="modal-footer">
+        <button type="button" (click)="updateDeviceName()"  class="btn export">Save</button>
       </div>
     </div>
   </div>

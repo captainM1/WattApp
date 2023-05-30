@@ -7,7 +7,7 @@ namespace prosumerAppBack.BusinessLogic.DeviceService;
 public interface IDeviceService
 {
     IEnumerable<Device> GetDevicesForUser(Guid userID);
-    Task<Boolean> UpdateDevice(Guid id, UpdateDeviceDto deviceUpdateDto);
+    Task<Boolean> UpdateDevice(Guid id, string deviceName);
     Task<Device> AddDevice(AddDeviceDto addDeviceDto);
     IEnumerable<object> GetDevicesInfoForUser(Guid userID);
     IEnumerable<DeviceGroup> GetDeviceGroups();

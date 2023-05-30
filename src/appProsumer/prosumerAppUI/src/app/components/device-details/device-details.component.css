@@ -14,7 +14,7 @@
         display: none;
     }
   }
-  
+
   @media(min-width: 481px){
     .mobile{
         display: none;
@@ -26,7 +26,7 @@
 
 
 @media (max-width: 280px) /*Fold*/
-{ 
+{
     .container{
         width: 90%;
         background-color: white;
@@ -37,7 +37,7 @@
         margin-bottom: 10%;
         margin-top:15px;
     }
-    
+
     h3{
         color: #026670;
         text-transform: none;
@@ -66,11 +66,15 @@
     mat-icon{
         color:#026670;
     }
-    
+
     .chart{
         height: 300px;
     }
-    
+
+    .ime, .ime:active, .ime:hover{
+      background-color: white !important;
+    }
+
 }
 
 @media (min-width: 281px) and (max-width: 480px) /*Phones*/
@@ -128,15 +132,19 @@
         height: 300px;
     }
 
+    .ime, .ime:active, .ime:hover{
+      background-color: white !important;
+    }
+
 }
- 
+
 @media (min-width: 481px) and (max-width: 1023px)  /*Tablet*/
 {
     .container{
         width: 60%;
     }
 
-    .outer{ 
+    .outer{
         margin-top: 80px;
     }
 
@@ -146,7 +154,7 @@
         margin: 25px 0;
         padding-top:15px;
     }
-    
+
 
     .simple{
         margin-bottom: 20px;
@@ -168,7 +176,11 @@
     .chart{
         height: 400px;
     }
-    
+
+    .ime, .ime:active, .ime:hover{
+      background-color: #EDEAE5 !important;
+    }
+
 }
 
 @media (min-width: 1024px) /*Laptops and Desktops */
@@ -177,7 +189,7 @@
         width: 50%;
     }
 
-    .outer{ 
+    .outer{
         margin-top: 40px;
     }
 
@@ -204,11 +216,14 @@
     mat-icon{
         color:#026670;
     }
-    
+
     .chart{
         height: 400px;
     }
-    
+
+    .ime, .ime:active, .ime:hover{
+      background-color: #EDEAE5 !important;
+    }
 }
 
 mat-toolbar {
@@ -252,7 +267,7 @@ h5{
 
 .simple:hover {
     background-color: #0394a2;
-    color:white;    
+    color:white;
 }
 
 .simple:focus{
@@ -321,7 +336,7 @@ button:disabled{
 
 .buttonOpenModal
 {
-  background-color: #026670 !important;
+  background-color: #026670;
   height: 50px;
   border-radius: 10px;
   font-size: 25px;
@@ -330,7 +345,7 @@ button:disabled{
 
 .buttonOpenModal:hover
 {
-  background-color: #38b4bf !important;
+  background-color: #38b4bf;
 }
 
 .fa-table
@@ -347,4 +362,15 @@ button:disabled{
     font-weight: bold;
     border: none;
     padding: 5px 25px;
+}
+
+.ime{
+  background-color: white;
+  color:#026670;
+  filter:none;
+  border:none;
+}
+
+.ime:hover, .ime:active{
+  background-color: none;
 }

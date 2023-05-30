@@ -25,6 +25,7 @@
     "bootstrap": "^5.2.3",
     "bootstrap-icons": "^1.10.3",
     "chart.js": "^4.2.1",
+    "chartjs": "^0.3.24",
     "file-saver": "^2.0.5",
     "font-awesome": "^4.7.0",
     "install": "^0.13.0",

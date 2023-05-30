@@ -19,17 +19,16 @@ namespace prosumerAppBack.DataAccess
             _userService = userService;
         }
         
-        public async Task<Boolean> UpdateDevice(Guid id, UpdateDeviceDto deviceUpdateDto)
+        public async Task<Boolean> UpdateDevice(Guid id, string deviceName)
         {
             var updatedDevice = await _dbContext.Devices.FirstOrDefaultAsync(d => d.ID == id);
-            if (deviceUpdateDto == null)
+            if (updatedDevice == null)
             {
                 return false;
             }
-            updatedDevice.MacAdress = deviceUpdateDto.MacAdress;
-            updatedDevice.IsOn = deviceUpdateDto.IsOn;
-            updatedDevice.DeviceName = deviceUpdateDto.DeviceName;
-            updatedDevice.MacAdress = deviceUpdateDto.MacAdress;
+            
+            updatedDevice.DeviceName = deviceName;
+            
 
             _dbContext.Devices.Update(updatedDevice);
             await _dbContext.SaveChangesAsync();

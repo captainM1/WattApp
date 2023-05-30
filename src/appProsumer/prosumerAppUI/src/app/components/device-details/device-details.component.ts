@@ -1,17 +1,16 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { Router } from '@angular/router';
-import Chart from 'chart.js/auto';
+import {Chart, Plugin } from 'chart.js/auto';
 import { ViewChild, ElementRef } from '@angular/core';
 import { ConfirmationService, MessageService, ConfirmEventType } from 'primeng/api';
-import { DeviceEditPopupComponent } from '../device-edit-popup/device-edit-popup.component';
-import { MatDialog } from '@angular/material/dialog';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { SettingsService } from 'src/app/services/settings.service';
 import { ModalTableComponent } from '../modal-table/modal-table.component';
-
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { DeviceDialogComponent } from '../device-dialog/device-dialog.component';
 
 @Component({
   selector: 'app-device-details',
@@ -49,9 +48,16 @@ export class DeviceDetailsComponent implements OnInit {
   data24h: any[]=[];
   dataMonth: any[]=[];
   data7days: any[]=[];
+  deviceName: string = '';
+  isLineChart: boolean = true;
+  col1: string = '';
+  col2: string = '';
+  isStorage: boolean = false;
 
   @ViewChild('myTable') myTable!: ElementRef;
   @ViewChild('ModalTableComponent') modalTableComponent!: ModalTableComponent;
+  @ViewChild('ModalTableComponentEditDevice') modalTableComponentEditDevice!: ModalTableComponent;
+
 
   constructor(
     private route: ActivatedRoute,
@@ -60,9 +66,14 @@ export class DeviceDetailsComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
     private spinner: NgxSpinnerService,
-    private settings: SettingsService
-  )
-  {}
+    private settings: SettingsService,
+    private dialog: MatDialog,
+    private formBuilder: FormBuilder
+  ) {}
+
+  deviceForm: FormGroup = this.formBuilder.group({
+    deviceName: ['', Validators.required]
+  });
 
   ngOnInit() {
     this.spinner.show();
@@ -81,12 +92,24 @@ export class DeviceDetailsComponent implements OnInit {
       .subscribe(data => {
         this.device = data;
         this.groupName = this.device.groupName;
+        this.deviceForm.patchValue({ deviceName: this.device.deviceName });
+        this.deviceName = this.device.deviceName;
+        if(this.device.groupName==='Consumer' || this.device.groupName==='Producer'){
+          this.isStorage = true;
+          this.fetchConsumptionData();
+        }
+        else{
+          this.showSpinner = false;
+          this.spinner.hide();
+        }
       },
       error => {
         console.error('Error fetching device information:', error);
       });
+  }
 
-      this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/current/device/${this.deviceId}`)
+  fetchConsumptionData(){
+    this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/current/device/${this.deviceId}`)
       .subscribe(data => {
         this.deviceCurrent = data;
       },
@@ -161,6 +184,33 @@ export class DeviceDetailsComponent implements OnInit {
       })
   }
 
+  updateDeviceName() {
+    if(this.deviceForm.valid){
+    const deviceName = this.deviceForm.get('deviceName')?.value;
+    const headers = new HttpHeaders().set('Content-Type', 'text/json');
+    this.http.put(`${environment.apiUrl}/api/Device/update/${this.deviceId}`, JSON.stringify(deviceName), { headers })
+    .subscribe((response) => {
+      console.log("Success");
+      this.deviceName = deviceName;
+    },
+    (error) => {
+      console.log("Fail");
+    });}
+    else{
+      this.messageService.add({ severity: 'error', summary: 'Please add device name!'});
+    }
+  }
+
+  openDialog() {
+    const dialogRef = this.dialog.open(DeviceDialogComponent);
+
+    dialogRef.afterClosed().subscribe(newDeviceName => {
+      if (newDeviceName) {
+        // Perform your logic to update the deviceName using the newDeviceName value
+      }
+    });
+  }
+
   goBack(){
     this.router.navigate(['/home']);
   }
@@ -230,8 +280,11 @@ export class DeviceDetailsComponent implements OnInit {
       const minutes = parsedDate.getMinutes();
       return `${hours < 10 ? '0' + hours : hours}:00`;
     });
-    this.label1 = "24 hour history";
-    this.label2 = "24 hour prediction";
+    this.label1 = "24 Hour History";
+    this.label2 = "24 Hour Prediction";
+    this.col1 = 'rgba(0, 0, 0, 0)';
+    this.col2 = 'rgba(0, 0, 0, 0)';
+    this.isLineChart = true;
     this.data24h=[];
     const pom = [...this.last24HoursPower, this.deviceCurrent, ...this.next24HoursPower];
     for (let i = 0; i < this.formattedLabels.length; i++) {
@@ -254,10 +307,13 @@ export class DeviceDetailsComponent implements OnInit {
       const day = parsedDate.getDate();
       return `${month} ${day}`;
     });
-    this.data = [...this.deviceHistoryWeekPower, this.deviceToday, null, null, null, null, null, null];
-    this.data1 = [null, null, null, null, null, null, null, this.deviceToday, ...this.deviceFutureWeekPower];
-    this.label1 = "Last Week's History";
-    this.label2 = "Next Week's Prediction";
+    this.data = [...this.deviceHistoryWeekPower, this.deviceToday];
+    this.data1 = [null, null, null, null, null, null, null, null, ...this.deviceFutureWeekPower];
+    this.label1 = "History From Last Week";
+    this.label2 = "Prediction For Next Week"
+    this.col1 = 'rgba(255, 136, 17, 0.91)';
+    this.col2 = 'rgba(2, 102, 112, 1)';
+    this.isLineChart = false;
     this.data7days=[];
     const pom = [...this.deviceHistoryWeekPower, this.deviceToday, ...this.deviceFutureWeekPower];
     for (let i = 0; i < this.formattedLabels.length; i++) {
@@ -284,7 +340,10 @@ export class DeviceDetailsComponent implements OnInit {
     this.data1 = [null, null, null, null, null,null, null, null, null, null,null, null, null, null, null,null, null, null, null, null,null, null, null, null, null,null, null, null, null, null, null, this.deviceToday, ...this.deviceFutureMonthPower];
     this.label1 = "Last Month's History";
     this.label2 = "Next Month's Prediction";
+    this.col1 = 'rgba(0, 0, 0, 0)';
+    this.col2 = 'rgba(0, 0, 0, 0)';
     this.dataMonth=[];
+    this.isLineChart = true;
     const pom = [...this.deviceHistoryMonthPower, this.deviceToday, ...this.deviceFutureMonthPower];
     for (let i = 0; i < this.formattedLabels.length; i++) {
       const pair = {
@@ -308,8 +367,9 @@ export class DeviceDetailsComponent implements OnInit {
       gradient.addColorStop(0, '#FF8811');
       gradient.addColorStop(0.5,'#9747FF');
       gradient.addColorStop(1, '#9FEDD7');
+      const chartType = this.isLineChart ? 'line' : 'bar';
       this.chart = new Chart(ctx, {
-        type: 'line',
+        type: chartType,
         data: {
           labels: this.formattedLabels,
           datasets: [{
@@ -317,6 +377,7 @@ export class DeviceDetailsComponent implements OnInit {
             data: this.data,
             fill: true,
             borderColor: 'rgba(255, 136, 17, 0.91)',
+            backgroundColor: this.col1,
             tension: 0.1
           },
           {
@@ -324,6 +385,7 @@ export class DeviceDetailsComponent implements OnInit {
             data: this.data1,
             fill: true,
             borderColor: 'rgba(2, 102, 112, 1)',
+            backgroundColor: this.col2,
             tension: 0.1
           }]
         },
@@ -344,6 +406,8 @@ export class DeviceDetailsComponent implements OnInit {
                 text: 'Date'
               }
             },
+
+
           }
         }
 

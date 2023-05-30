@@ -27,11 +27,11 @@ namespace prosumerAppBack.Controllers
 
         [HttpPut("update/{id}")]
         // [Authorize(Roles = "UnapprovedUser,RegularUser")]
-        public async Task<IActionResult> UpdateDevice(Guid id, [FromBody] UpdateDeviceDto updateDeviceDto)
+        public async Task<IActionResult> UpdateDevice(Guid id, [FromBody] string deviceName)
         {
             try
             {
-                var check = await _deviceService.UpdateDevice(id, updateDeviceDto);
+                var check = await _deviceService.UpdateDevice(id, deviceName);
 
                 return Ok(new { message = "Device updated" });
             }

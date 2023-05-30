@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import { CookieService } from 'ngx-cookie-service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConfirmPasswordValidator } from 'src/app/helpers/confirm-password.validator';
 import { AuthService } from 'src/app/services/auth.service';
