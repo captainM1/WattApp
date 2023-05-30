@@ -246,7 +246,7 @@ public class PowerUsageRepository : IPowerUsageRepository
     
     public async Task<IEnumerable<TimestampPowerPair>> GetForDeviceByHourPrediction(Guid deviceID)
     {
-        DateTime currentDay = DateTime.Today;
+        DateTime back = DateTime.Now.AddHours(-24);
         DateTime currentHour = DateTime.Now.AddHours(-1);
 
         Guid deviceTypeID = _dataContext.Devices
@@ -258,7 +258,7 @@ public class PowerUsageRepository : IPowerUsageRepository
         var powerUsageData = mongoCollectionPrediction.AsQueryable()
             .FirstOrDefault(p => p.ID.ToString() == deviceTypeID.ToString().ToUpper())
             ?.TimestampPowerPairs
-            .Where(t => t.Timestamp.Date == currentDay && t.Timestamp <= currentHour);
+            .Where(t => t.Timestamp >= back && t.Timestamp <= currentHour);
 
         return powerUsageData;
     }
