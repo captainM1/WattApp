@@ -3,7 +3,6 @@ import * as L from 'leaflet';
 import { Device, ExportSelected, Info, Root, Root2, User } from 'models/User';
 import { AuthService } from 'service/auth.service';
 import { MatTableModule } from '@angular/material/table';
-import { MatTableModule } from '@angular/material/table';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { Chart, ChartOptions } from 'chart.js';
@@ -158,9 +157,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   ) { }
   selectedGraphHistoryConsumption = '24h';
   selectedGraphHistoryProduction = '24h';
-  selectedGraphHistoryProduction = '24h';
   selectedGraphFutureProduction = '24h';
-  selectedGraphFutureConsumption = '24h';
   selectedGraphFutureConsumption = '24h';
   ngAfterViewInit(): void {
     this.popUp(this.id);
@@ -387,7 +384,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   devicesConsumers: Info[] = [];
   devicesProducers: Info[]  = [];
   allUserDevicesPOM: Info[]  = [];
-devicesStorage:Info[] = [];
+  devicesStorage:Info[] = [];
   toggleFilterOptions(): void {
     this.showFilterOptions = !this.showFilterOptions;
   }
@@ -579,7 +576,6 @@ devicesStorage:Info[] = [];
     this.popUp(id);
   }
 
-  devicesStorage: Info[] = [];
 
   numberOfProsumers: number = 0;
   numberOfConsumers: number = 0;
@@ -771,7 +767,6 @@ devicesStorage:Info[] = [];
 
 
 
-  isActiveUser = false;
 
 
 

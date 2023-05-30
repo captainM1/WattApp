@@ -77,4 +77,6 @@ public interface IPowerUsageService
     Task<double> GetForUserBatteryPower(Guid userID);
     
     public Task<double> GetBatteryPercentage(Guid deviceID);
+    
+    public Task<IEnumerable<TimestampPowerPair>> GetForDeviceByHourPrediction(Guid deviceID);
 }

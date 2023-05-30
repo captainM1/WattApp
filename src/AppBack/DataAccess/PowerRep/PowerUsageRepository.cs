@@ -244,6 +244,25 @@ public class PowerUsageRepository : IPowerUsageRepository
         return totalPowerUsage;
     }
     
+    public async Task<IEnumerable<TimestampPowerPair>> GetForDeviceByHourPrediction(Guid deviceID)
+    {
+        DateTime currentDay = DateTime.Today;
+        DateTime currentHour = DateTime.Now.AddHours(-1);
+
+        Guid deviceTypeID = _dataContext.Devices
+            .Where(d => d.ID == deviceID)
+            .Select(d => d.DeviceTypeID)
+            .FirstOrDefault();
+
+
+        var powerUsageData = mongoCollectionPrediction.AsQueryable()
+            .FirstOrDefault(p => p.ID.ToString() == deviceTypeID.ToString().ToUpper())
+            ?.TimestampPowerPairs
+            .Where(t => t.Timestamp.Date == currentDay && t.Timestamp <= currentHour);
+
+        return powerUsageData;
+    }
+    
     public async Task<PowerUsage> GetPowerUsageFor7DaysPrediction(Guid deviceId, int direction)
     {
         Guid deviceTypeID = _dataContext.Devices

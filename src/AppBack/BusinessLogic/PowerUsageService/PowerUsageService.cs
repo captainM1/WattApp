@@ -612,4 +612,11 @@ public class PowerUsageService:IPowerUsageService
 
         return battPerc;
     }
+
+    public async Task<IEnumerable<TimestampPowerPair>> GetForDeviceByHourPrediction(Guid deviceID)
+    {
+        var hour = await _repository.GetForDeviceByHourPrediction(deviceID);
+
+        return hour;
+    }
 }
