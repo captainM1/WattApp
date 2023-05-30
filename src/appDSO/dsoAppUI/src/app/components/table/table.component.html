@@ -212,7 +212,7 @@
                         <th>Device manifacture</th>
                         <th>Mac Address</th>
                         <th *ngIf="!showFilterOptions"
-                          style="display: block ruby; width: 20px;">Type of
+                          style="text-align: center;">Type of
                           Device <i class="fa fa-filter" aria-hidden="true"
                             style="color:white" (click)="toggleFilterOptions()"></i></th>
                         <th class="filter-options" *ngIf="showFilterOptions">
@@ -240,7 +240,7 @@
                         <td>{{device.typeOfDevice}}</td>
                         <td
                           [ngClass]="{'green': device.statusOfDevice === 'ON', 'red': device.statusOfDevice === 'OFF'}">{{device.statusOfDevice}}</td>
-                        <td>{{device.powerusage.toFixed(2)}}</td>
+                        <td>{{this.device.powerusage?.toFixed(2) || 0}}</td>
                         <td *ngIf="device.dsoHasControl === true">
                           <label class="switch">
                             <input type="checkbox"

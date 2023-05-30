@@ -189,7 +189,7 @@ export class TableComponent implements OnInit, AfterViewInit {
 
     this.showCoordsForEveryUser();
     this.getDeviceGroup();
-    this.savedEnergy(this.id);
+    // this.savedEnergy(this.id);
 
 
 
@@ -293,15 +293,28 @@ export class TableComponent implements OnInit, AfterViewInit {
   }
 
   exportSelectedData(): void {
-    if (this.exportedUsers && this.exportedUsers.length > 0) {
-      const worksheet = XLSX.utils.json_to_sheet(this.exportedUsers);
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, 'Selected Data');
+   
+  if (this.selectedUsersTable && this.selectedUsersTable.length > 0) {
+    const modifiedData = this.selectedUsersTable.map(user => {
+      return {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        address: user.address,
+        city: user.city,
+        country: user.country,
+        consumption: user.consumption,
+        production: user.production
+      };
+    });
 
-      const fileBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-      const blob = new Blob([fileBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-      saveAs(blob, 'selected-data.xlsx');
-    }
+    const worksheet = XLSX.utils.json_to_sheet(modifiedData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Selected Data');
+
+    const fileBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([fileBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    saveAs(blob, 'selected-data.xlsx');
+  }
   }
 
   exportToExcelSelectedFutureConsumption(select: any): void {
@@ -387,10 +400,11 @@ export class TableComponent implements OnInit, AfterViewInit {
   devicesStorage:Info[] = [];
   toggleFilterOptions(): void {
     this.showFilterOptions = !this.showFilterOptions;
+    
   }
 
   applyFilter(): void {
-
+   
     if (this.selectedFilterOption === "Consumers") {
       this.allUserDevices = this.devicesConsumers;
     } else if (this.selectedFilterOption === "Prosumers") {
@@ -401,8 +415,13 @@ export class TableComponent implements OnInit, AfterViewInit {
       this.allUserDevices = this.devicesStorage;
     }else{
     this.allUserDevices = this.allUserDevicesPOM;
+    this.selectedFilterOption = "All Devices";
   }
+  
     this.showFilterOptions = false;
+    if(this.showFilterOptions == false){
+      this.selectedFilterOption = "All Devices";
+    }
   }
   selectedColumn: any = null;
   selectedColumn1: any = null;
@@ -573,7 +592,8 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.showMeDevices(id);
 
     this.id = id;
-    this.popUp(id);
+    if(id)
+      this.popUp(id);
   }
 
 
@@ -592,7 +612,7 @@ export class TableComponent implements OnInit, AfterViewInit {
       (response: any) => {
         this.allUserDevices = response;
         this.allUserDevicesPOM = response;
-        // console.log("All user devices",this.allUserDevices);
+
         for (let us of this.allUserDevices) {
           this.auth.currentPowerUsageDeviceID(us.deviceId).subscribe(
             {
@@ -641,6 +661,9 @@ export class TableComponent implements OnInit, AfterViewInit {
           this.numberOfConsumers = 0;
           this.numberOfProsumers = 0;
           this.numberOfStorage = 0;
+          this.devicesConsumers = [];
+          this.devicesProducers = [];
+          this.devicesStorage = [];
           this.auth.getDevicesInfoByID(us.deviceId).subscribe({
             next: (response: any) => {
               us.typeOfDevice = response.groupName;
@@ -722,7 +745,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.auth.getUserInformation(id).subscribe(
       (response: any) => {
         this.userPopUp = response;
-        console.log("REPSONSE", response);
+      
         if (this.userPopUp['sharesDataWithDso'] === true) {
           this.userPopUp.sharesDataWithDso = true;
         } else {
@@ -733,11 +756,7 @@ export class TableComponent implements OnInit, AfterViewInit {
         this.auth.UserConsumptionSummary(this.userPopUp.id).subscribe(
           (response: any) => {
             this.userPopUp.consumption = response.toFixed(2);
-
-
-
-
-          });
+        });
 
         this.auth.UserProductionSummary(this.userPopUp.id).subscribe({
           next: (response: any) => {
@@ -757,8 +776,11 @@ export class TableComponent implements OnInit, AfterViewInit {
         this.FutureProduction(this.selectedGraphFutureProduction);
         this.productionNextMonth(this.userPopUp.id);
         this.productionPrevMonth(this.userPopUp.id);
-
+        
         this.dsoShareData(this.userPopUp.id);
+      },
+      (error : any)=>{
+        console.log(error);
       }
     );
   }
@@ -861,15 +883,24 @@ export class TableComponent implements OnInit, AfterViewInit {
     }
     this.spinner.show();
     this.graphDeviceLoader = true;
-    this.auth.devicePrevious24h(this.selectedDevice.deviceId).subscribe(
-      (response: any) => {
-        this.graph24prev = response['timestampPowerPairs'];
-        this.makeDataGraph12(this.graph24prev);
-        this.deviceGraphPrev12();
-        this.spinner.hide();
-        this.graphDeviceLoader = false;
-      }
-    )
+    if(this.selectedDevice){
+      this.auth.devicePrevious24h(this.selectedDevice.deviceId).subscribe(
+        {
+          next:(reposnse:any)=>{
+            
+              this.graph24prev = reposnse['timestampPowerPairs'];
+              this.makeDataGraph12(this.graph24prev);
+              this.deviceGraphPrev12();
+              this.spinner.hide();
+              this.graphDeviceLoader = false;
+            
+          },
+          error:(error:any)=>{
+            console.log(error);
+          }
+        }
+      )
+    }
   }
   deselectDevice() {
     this.selectedDevice = null;
@@ -1503,6 +1534,9 @@ export class TableComponent implements OnInit, AfterViewInit {
         this.previous24Graph();
         this.spinner.hide();
         this.consumptionPrevious24hLoader = false;
+      },
+      (error : any)=>{
+        console.log(error);
       }
     );
   }
@@ -1602,6 +1636,9 @@ export class TableComponent implements OnInit, AfterViewInit {
         this.consumptionNext24hGraph();
         this.spinner.hide();
         this.consumptionNext24hLoader = false;
+      },
+      (error:any)=>{
+        console.log(error);
       }
     );
   }
@@ -2300,7 +2337,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   savedEnergy(userID: any) {
     this.auth.savedEnergyConsumptionUser(userID).subscribe({
       next: (response: any) => {
-        this.savedEnergyUser = response.toFixed(2);
+        this.savedEnergyUser = (response).toFixed(2);
       },
       error: (err: any) => {
         this.savedEnergyUser = 0;
@@ -2321,7 +2358,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   dsoShareData(userID: any) {
     this.auth.userShareDataWithDSO(userID).subscribe({
       next: (response: any) => {
-        console.log("dsoShareData", response);
+      
         this.sharedDataWithDSO = response;
 
       },
@@ -2339,7 +2376,7 @@ export class TableComponent implements OnInit, AfterViewInit {
         if (device.statusOfDevice === "OFF") {
           this.auth.changeStateOfDevice(device.deviceId, true).subscribe({
             next: (response: any) => {
-              console.log(response);
+             
 
             },
             error: (error: any) => {
@@ -2349,11 +2386,11 @@ export class TableComponent implements OnInit, AfterViewInit {
           );
           device.statusOfDevice = "ON";
 
-          console.log(device);
+         
         } else {
           this.auth.changeStateOfDevice(device.deviceId, false).subscribe({
             next: (response: any) => {
-              console.log(response);
+           
 
             },
             error: (error: any) => {
@@ -2366,7 +2403,7 @@ export class TableComponent implements OnInit, AfterViewInit {
 
         }
       }
-      console.log(device);
+    
 
     }
 
