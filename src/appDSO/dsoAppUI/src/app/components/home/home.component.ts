@@ -73,7 +73,7 @@ export class HomeComponent implements OnInit, AfterViewInit{
 	prevMonextMonthConsumptionSys!:any;
 
 // weather
-	weather! : Root;
+	weather!:Root;
 	today!:Date;
 	dateForWeater!:any;
 	currHour!:number;
@@ -154,7 +154,10 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		this.displayGraphConsumption(this.selectedGraph);
 		this.displayGraphProduction(this.selectedGraph);
 		this.currentProductionDay();
-		this.currentConsumptionDay();
+		setTimeout(() => {
+			this.currentConsumptionDay();
+		  }, 5000);
+		this.differenceForPreviousHour();
 	}
 
 	ngAfterViewInit(): void {
@@ -271,13 +274,16 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		this.auth.getWeather().subscribe({
 			next:(response :any)=>{
 				this.weather = response;
-				this.timezone = this.weather.timezone;
-				this.temperature = this.weather.current_weather.temperature;
-				this.maxTemperature = this.weather.daily.temperature_2m_max[0];
-				this.minTemperature = this.weather.daily.temperature_2m_min[0];
-				this.windSpeed = this.weather.current_weather.windspeed;
-				this.humidity = this.weather.hourly.relativehumidity_2m[0];
-				this.giveMeChartForTemperatureDaily()
+				if(this.weather){
+					this.timezone = this.weather.timezone;
+					this.temperature = this.weather.current_weather.temperature;
+					this.maxTemperature = this.weather.daily.temperature_2m_max[0];
+					this.minTemperature = this.weather.daily.temperature_2m_min[0];
+					this.windSpeed = this.weather.current_weather.windspeed;
+					this.humidity = this.weather.hourly.relativehumidity_2m[0];
+					this.giveMeChartForTemperatureDaily();
+				}
+				
 				this.spinner.hide();
 				this.weatherLoader = false;
 			},
@@ -288,22 +294,26 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			}
 		})
 	}
-
+	timeSlice!:any;
+	time!:any;
+	temp2m:any;
 	giveMeChartForTemperatureDaily(){
-		const timeSlice = this.weather?.hourly?.time.slice(0,24);
-		const time = timeSlice?.map((time)=>{
+		if(this.weather && this.weather.hourly)
+			this.timeSlice = this.weather?.hourly.time.slice(0,24);
+			this.temp2m = this.weather.hourly?.temperature_2m;
+		 	this.time = this.timeSlice?.map((time:any)=>{
 			const date = new Date(time);
 			const hours = date.getHours().toString().padStart(2,"0");
 			const minutes = date.getMinutes().toString().padStart(2,"0");
 			return hours+":"+minutes;
 		})
 
-		const labels = time;
+		const labels = this.time;
 		const data = {
 		labels: labels,
 		datasets: [{
 			label: 'Temperature by hour',
-			data: this.weather.hourly.temperature_2m,
+			data: this.temp2m,
 			fill: true,
 			borderColor: 'rgb(98, 183, 254)',
 			backgroundColor:'rgba(98, 183, 254,0.4)',
@@ -443,23 +453,33 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		this.auth.differenceForPreviousHourConsumption().subscribe({
 			next:(response:any)=>{
 				this.razlikaConsumption = response;
+				console.log(this.razlikaConsumption);
 			},
 			error:(error : any)=>{
+				console.log(error);
+			}
+		});
+		this.auth.differenceForPreviousHourProduction().subscribe({
+			next:(response : any)=>{
+				this.razlikaProduction = response;
+				console.log(this.razlikaProduction);
+			},
+			error:(error:any)=>{
 				console.log(error);
 			}
 		})
 	}
 
-	consumptionCurrentDifference(currentDataC:any[]){
-		const length = currentDataC.length;
-		const prevHour = currentDataC[length-2]['powerUsage'];
-		const currentHour = currentDataC[length-1]['powerUsage'];
-		this.razlikaConsumption = (((currentHour - prevHour)/prevHour)*100).toFixed(2);
-		this.text = " more then previous hour";
-		if(this.razlikaConsumption < 0){
-			this.text = " less then previous hour";
-		}				
-	}
+	// consumptionCurrentDifference(currentDataC:any[]){
+	// 	const length = currentDataC.length;
+	// 	const prevHour = currentDataC[length-2]['powerUsage'];
+	// 	const currentHour = currentDataC[length-1]['powerUsage'];
+	// 	this.razlikaConsumption = (((currentHour - prevHour)/prevHour)*100).toFixed(2);
+	// 	this.text = " more then previous hour";
+	// 	if(this.razlikaConsumption < 0){
+	// 		this.text = " less then previous hour";
+	// 	}				
+	// }
 
 	
 
@@ -504,20 +524,20 @@ export class HomeComponent implements OnInit, AfterViewInit{
 			)
 			
 		}
-		currentProductionDifference(data : []){
-			const length = this.currentDataP.length;
-			let prevHour1 = data[length-2]['powerUsage'];
-			const currentHour1 = data[length-1]['powerUsage'];
-			if(prevHour1 === 0)
-				this.razlikaProduction = (((currentHour1 - 0)/1)).toFixed(2);
-			else
-				this.razlikaProduction = (((currentHour1 - prevHour1)/prevHour1)*100).toFixed(2);
+		// currentProductionDifference(data : []){
+		// 	const length = this.currentDataP.length;
+		// 	let prevHour1 = data[length-2]['powerUsage'];
+		// 	const currentHour1 = data[length-1]['powerUsage'];
+		// 	if(prevHour1 === 0)
+		// 		this.razlikaProduction = (((currentHour1 - 0)/1)).toFixed(2);
+		// 	else
+		// 		this.razlikaProduction = (((currentHour1 - prevHour1)/prevHour1)*100).toFixed(2);
 			
-			this.text = " more then previous hour";
-			if(this.razlikaProduction < 0){
-				this.text = " less then previous hour";
-			}	
-		}
+		// 	this.text = " more then previous hour";
+		// 	if(this.razlikaProduction < 0){
+		// 		this.text = " less then previous hour";
+		// 	}	
+		// }
 
 		
 		makeDataForProductionDay(dataGraph:any){
@@ -1575,7 +1595,10 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		switch (graph) {
 			case '24h':
 				this.productionPrev24h();
-				this.consumptionPrev24h();
+				setTimeout(() => {
+					this.consumptionPrev24h();
+				  }, 5000);
+				
 			break;
 			case '7days':
 				this.productionPrev7Days();
@@ -1592,7 +1615,10 @@ export class HomeComponent implements OnInit, AfterViewInit{
 		switch (graph) {
 			case '24h':
 				this.productionNext24h();
-				this.consumptionNext24h();
+				setTimeout(() => {
+					this.consumptionNext24h();
+				  }, 5000);
+				
 			break;
 			case '7days':
 				this.productionNext7Days();

@@ -202,9 +202,15 @@
               </div>
             </div>
             <div *ngIf="showDevicePage">
+              <ngx-spinner bdColor="rgba(0, 0, 0, 0.5)" size="medium"
+                      color="#fff" type="ball-spin"
+                      [showSpinner]="showMeDevicesLoader " [fullScreen]="false"
+                      *ngIf="showMeDevicesLoader"><p
+                        style="color: #fff; margin-top:60px;"> Please wait...
+                      </p></ngx-spinner>
               <div class="row" id="table">
-                <div class="col-sm-6"
-                  style="width:100%; overflow:auto; height: 300px; scrollbar-color: #026670; scrollbar-width: thin; padding-right:0px">
+                <div class="col-sm"
+                  style="overflow:auto; height: 300px; scrollbar-color: #026670; scrollbar-width: thin; padding-right:0px">
                   <table>
                     <thead style="position: sticky; top :0; z-index: 1px;">
                       <tr >
@@ -212,7 +218,7 @@
                         <th>Device manifacture</th>
                         <th>Mac Address</th>
                         <th *ngIf="!showFilterOptions"
-                          style="display: block ruby; width: 20px;">Type of
+                          style="text-align: center;">Type of
                           Device <i class="fa fa-filter" aria-hidden="true"
                             style="color:white" (click)="toggleFilterOptions()"></i></th>
                         <th class="filter-options" *ngIf="showFilterOptions">
@@ -232,7 +238,7 @@
                     <tbody>
                       <tr *ngFor="let device of allUserDevices; let j = index;"
                         [(ngModel)]="selectedDevice"
-                        (click)="displayGraph(device); selectedColumn1 = j;"
+                        (click)="selectedColumn1 = j;"
                         [class.active-column]="selectedColumn1 === j && selectedDevice">
                         <td>{{device.deviceTypeName}}</td>
                         <td>{{device.manufacturerName}}</td>
@@ -240,7 +246,7 @@
                         <td>{{device.typeOfDevice}}</td>
                         <td
                           [ngClass]="{'green': device.statusOfDevice === 'ON', 'red': device.statusOfDevice === 'OFF'}">{{device.statusOfDevice}}</td>
-                        <td>{{device.powerusage.toFixed(2)}}</td>
+                        <td>{{this.device.powerusage}}</td>
                         <td *ngIf="device.dsoHasControl === true">
                           <label class="switch">
                             <input type="checkbox"
@@ -257,11 +263,12 @@
                         </td>
                       </tr>
                     </tbody>
-
+                    
                   </table>
+                  
                 </div>
-                <!-- <div class="col">
-                  <div>
+                <!-- <div class="col-sm-4">
+                  <div *ngIf="deviceDETAILID?.typeOfDevice != 'Storage'">
                     <ngx-spinner bdColor="rgba(0, 0, 0, 0.5)" size="medium"
                       color="#fff" type="ball-spin"
                       [showSpinner]="graphDeviceLoader " [fullScreen]="false"
@@ -269,6 +276,36 @@
                         style="color: #fff; margin-top:60px;"> Please wait...
                       </p></ngx-spinner>
                     <canvas #prev24DeviceID></canvas>
+                  </div>
+                  
+                    <div *ngIf="deviceDETAILID?.typeOfDevice== 'Storage'" class="col-6 centriranje">
+                      <div *ngIf="percentage <= 100 && percentage >=90" class="battery">
+                        <div class="battery-level" style="height:100%;"></div>
+                      </div>
+        
+                      <div *ngIf="percentage >= 75 && percentage <=89" class="battery">
+                        <div class="battery-level" style="height:75%;"></div>
+                      </div>
+        
+                      <div *ngIf="percentage >= 50 && percentage <=74" class="battery">
+                        <div class="battery-level" style="height:50%;"></div>
+                      </div>
+        
+                      <div *ngIf="percentage >= 21 && percentage <=49" class="battery">
+                        <div class="battery-level" style="height:25%;"></div>
+                      </div>
+        
+                      <div *ngIf="percentage >= 11 && percentage <=20" class="battery">
+                        <div class="battery-level warn" style="height:18%;"></div>
+                      </div>
+        
+                      <div *ngIf="percentage <= 10 " class="battery">
+                        <div class="battery-level red" style="height:10%;"></div>
+                      </div>
+                    
+                      <div class="col-6 centriranje">
+                        <h1 style="color:#026670; font-weight:bold; font-size:30px;">{{percentage}}%</h1>
+                      </div>
                   </div>
                 </div> -->
               </div>
