@@ -691,7 +691,7 @@ public class PowerUsageController : ControllerBase
     [HttpGet("power-usage/past24h/prediction{deviceID}")]
     public ActionResult<List<PowerUsage>> GetPowerUsageForDayPrediction(Guid deviceID)
     {
-        var powerUsages = _powerUsageService.GetPowerUsageForDayPrediction(deviceID, DateTime.Today.AddDays(-1));
+        var powerUsages = _powerUsageService.GetForDeviceByHourPrediction(deviceID);
         return Ok(powerUsages.Result);
     }
     [HttpGet("power-usage/pastweek/prediction{deviceID}")]
