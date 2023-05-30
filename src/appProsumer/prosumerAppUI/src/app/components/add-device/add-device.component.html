@@ -15,48 +15,48 @@
                     <div class="row red1">
                         <div class="custom-select col-sm">
                             <div class="pt-3">
-                                <label for="type">Device Type:</label>
+                                <label >Device Type:</label>
                                 <select name="type" formControlName="type" (change)="onGroupSelected($event)">
                                   <option value="">-- Select Type --</option>
                                   <option *ngFor="let group of groups" [value]="group.id">{{ group.name }}</option>
                                 </select>
                               </div>
-                              
+
                               <div class="pt-3">
-                                <label for="manufacturer">Manufacturer:</label>
+                                <label >Manufacturer:</label>
                                 <select id="manufacturer" formControlName="manufacturer" (change)="onManufacturerChange($event)">
                                   <option value="">-- Select Manufacturer --</option>
                                   <option *ngFor="let manufacturer of manufacturers" [value]="manufacturer.manufacturerID">{{ manufacturer.manufacturerName }}</option>
                                 </select>
                               </div>
-                              
+
                               <div class="pt-3">
-                                <label for="device">Device:</label>
+                                <label >Device:</label>
                                 <select id="device" formControlName="device" (change)="onDeviceChange($event)">
                                   <option value="">-- Select Device --</option>
                                   <option *ngFor="let device of devices" [value]="device.id">{{ device.name }}</option>
                                 </select>
                               </div>
                         </div>
-                        <div class="col-sm">   
+                        <div class="col-sm">
                             <div class="inputi">
                                 <div class="form-group pt-3">
-                                    <label for="deviceName">Device Name</label>
+                                    <label >Device Name</label>
                                     <input class = "form-control" formControlName = "deviceName" type="text" placeholder="Insert Device Name">
                                 </div>
                                 <div class="form-group pt-3">
-                                    <label for="macAddress">Device Mac Address</label>
+                                    <label >Device Mac Address</label>
                                     <input class = "form-control" formControlName = "macAddress" type="text" placeholder="Insert Device Mac Address">
                                     <div>
                                         <span class = "text-danger" *ngIf="fields['macAddress'].errors?.['pattern']">*Please provide a valid mac address</span>
                                     </div>
                                 </div>
                                 <div class="form-group pt-3">
-                                    <label for="watage">Wattage:</label>
+                                    <label > Wattage:</label>
                                     <input disabled  class = "form-control" type="text" [value]="selectedWattage?.wattage" placeholder="0.50">
                                 </div>
                             </div>
-                        </div> 
+                        </div>
                     </div>
                     <button type="submit" class="dodavanje btn btn-primary font-weight-bold btn-lock mt-4 mt-2"><img src="assets/icons/moreb.png" alt="icon" style="width:20px; margin-right: 10px;">Add Device</button>
                 </form>

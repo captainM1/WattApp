@@ -261,9 +261,6 @@ export class DashboardComponent implements OnInit, AfterViewInit{
       this.powerUsageListPrev24h.push(this.consumption24prev[i]['powerUsage']);
       }
 
-    this.timestampListPrev24h.sort((a: string, b: string) => {
-      return parseInt(a) - parseInt(b);
-    });
 
 
     this.data24h=[];
@@ -306,7 +303,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
         x: {
           title: {
             display: true,
-            text: 'Time (hour)',
+            text: 'Time [h]',
           },
           ticks: {
             font: {
@@ -366,10 +363,6 @@ export class DashboardComponent implements OnInit, AfterViewInit{
       }
 
 
-    this.timestampListNext24h.sort((a: string, b: string) => {
-      return parseInt(a) - parseInt(b);
-    });
-
     this.dataNext24h=[];
     for (let i = 0; i < this.timestampListNext24h.length; i++) {
       const pair = {
@@ -410,7 +403,7 @@ export class DashboardComponent implements OnInit, AfterViewInit{
         x: {
           title: {
             display: true,
-            text: 'Time (hour)',
+            text: 'Time [h]',
           },
           ticks: {
             font: {
@@ -880,9 +873,7 @@ makeDataProduction24(dataGraph:any){
     this.powerUsageListProductionPrev24h.push(this.graphProduction24prev[i]['powerUsage']);
     }
 
-    this.timestampListProductionPrev24h.sort((a: string, b: string) => {
-      return parseInt(a) - parseInt(b);
-    });
+
 
   this.data24hProd=[];
   for (let i = 0; i < this.timestampListProductionPrev24h.length; i++) {
@@ -925,7 +916,7 @@ previousProduction24Graph(list:any, valueList:any){
       x: {
         title: {
           display: true,
-          text: 'Time (hour)',
+          text: 'Time [h]',
         },
         ticks: {
           font: {
@@ -1189,9 +1180,6 @@ makeDataProductionNext24(dataGraph:any){
     this.powerUsageListProductionNext24h.push(this.graphProduction24next[i]['powerUsage']);
     }
 
-  this.timestampListProductionNext24h.sort((a: string, b: string) => {
-    return parseInt(a) - parseInt(b);
-  });
 
   this.dataNext24hProd=[];
   for (let i = 0; i < this.timestampListProductionNext24h.length; i++) {
@@ -1234,7 +1222,7 @@ nextProduction24Graph(list:any, valueList:any){
       x: {
         title: {
           display: true,
-          text: 'Time (hour)',
+          text: 'Time [h]',
         },
         ticks: {
           font: {

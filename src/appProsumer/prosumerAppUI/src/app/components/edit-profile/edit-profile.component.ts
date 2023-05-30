@@ -7,6 +7,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { ConfirmPasswordValidator } from 'src/app/helpers/confirm-password.validator';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'app-edit-profile',
   templateUrl: './edit-profile.component.html',
@@ -26,9 +27,13 @@ export class EditProfileComponent implements OnInit{
   email!: string;
   resetForm!: FormGroup;
   submitted = false;
-  dsoHasControl !: boolean;
   sharesDataWithDSO !: boolean;
+  isValidEmail: boolean = true;
+  isEmailModified: boolean = false;
+  isValidPhoneNumber: boolean = true;
+  isPhoneNumberModified: boolean = false;
   image: any;
+  defaultImage: string = 'assets/icons/images.jpg';
 
 
   @ViewChild('exampleModal') exampleModal!: ElementRef;
@@ -45,11 +50,11 @@ export class EditProfileComponent implements OnInit{
     this.getToken();
   }
 
-  getToken(){
+  getToken(): void {
     this.token = this.serv.getToken();
     this.auth.getThisUser(this.token).subscribe(
-      (response :any)=>{
-       this.userID = response.id;
+      (response: any) => {
+        this.userID = response.id;
         this.firstName = response.firstName;
         this.lastName = response.lastName;
         this.phoneNumber = response.phoneNumber;
@@ -57,13 +62,65 @@ export class EditProfileComponent implements OnInit{
         this.city = response.city;
         this.country = response.country;
         this.email = response.email;
-        this.image = response.profilePicture;
         this.sharesData(this.userID);
-        this.hasControl(this.userID);
 
+        if (response.profilePicture) {
+          this.convertBase64ToImage(response.profilePicture)
+            .then((imageUrl: string) => {
+              this.image = imageUrl;
+            })
+            .catch((error) => {
+              console.error('Error converting Base64 to image:', error);
+              this.image = this.defaultImage;
+            });
+        } else {
+          this.image = this.defaultImage;
+        }
       }
-    )
+      );
+
   }
+
+  convertBase64ToImage(base64String: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        resolve(img.src);
+      };
+      img.onerror = (error) => {
+        reject(error);
+      };
+      img.src = 'data:image/jpeg;base64,' + base64String;
+    });
+  }
+
+  onFileSelected(event: any): Observable<string> {
+    const file: File = event.target.files[0];
+    const reader: FileReader = new FileReader();
+
+    return new Observable((observer) => {
+      reader.onloadend = () => {
+        const byteArray = new Uint8Array(reader.result as ArrayBuffer);
+        this.auth.uploadImage(byteArray, this.userID)
+          .subscribe(
+            (imageUrl: string) => {
+              this.image = imageUrl;
+              observer.next(imageUrl);
+              observer.complete();
+
+            },
+            (error) => {
+              observer.error(error);
+            }
+          );
+      };
+
+      reader.readAsArrayBuffer(file);
+
+    });
+  }
+
+
 
   get fields(){
     return this.resetForm.controls;
@@ -73,13 +130,6 @@ export class EditProfileComponent implements OnInit{
   {
     this.auth.getUserSharesWithDSO(id).subscribe((response)=>{
       this.sharesDataWithDSO = response;
-    })
-  }
-
-  hasControl(id:any)
-  {
-    this.auth.getDsoHasControl(id).subscribe((response)=>{
-      this.dsoHasControl = response;
     })
   }
 
@@ -93,32 +143,48 @@ export class EditProfileComponent implements OnInit{
       firstName: this.firstName,
       lastName: this.lastName,
       sharesDataWithDso: this.sharesDataWithDSO,
-      dsoHasControl: this.dsoHasControl,
       city: this.city,
     };
 
-    this.auth.putUpdateUser(this.userID, profileData).subscribe(
-      (response) => {
-        this.messageService.add({ severity: 'success', summary: 'Profile updated successfully!'});
-        this.router.navigate(['profile-prosumer']);
-      },
-      (error) => {
-        this.messageService.add({ severity: 'error', summary: 'Error updating profile!'});
-      }
-    );
+    if (!this.isValidPhoneNumber || !this.isValidEmail)
+    {
+       this.messageService.add({ severity: 'error', summary: 'Error updating profile!'});
+    }
+    else
+    {
+      this.auth.putUpdateUser(this.userID, profileData).subscribe(
+        (response) => {
+          this.messageService.add({ severity: 'success', summary: 'Profile updated successfully!'});
+          this.router.navigate(['profile-prosumer']);
+        },
+        (error) => {
+          this.messageService.add({ severity: 'error', summary: 'Error updating profile!'});
+        }
+      );
+    }
   }
 
-  onFileSelected(event: any): void {
-    const file: File = event.target.files[0];
-    const reader: FileReader = new FileReader();
-  
-    reader.onloadend = () => {
-      const byteArray = new Uint8Array(reader.result as ArrayBuffer);
-      this.auth.uploadImage(byteArray,this.userID);
-    };
-  
-    reader.readAsArrayBuffer(file);
-    this.getToken();
+
+
+
+  checkValidEmail(): void {
+    const pattern = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,3}$/;
+    this.isValidEmail = pattern.test(this.email);
+  }
+
+  onEmailInput(): void {
+    this.isEmailModified = true;
+    this.checkValidEmail();
+  }
+
+  checkValidPhoneNumber(): void {
+    const pattern = /^(\+381(\s?|-?))?0?[\d]{2}[\d]{3,4}[\d]{3,4}$/;
+    this.isValidPhoneNumber = pattern.test(this.phoneNumber);
+  }
+
+  onPhoneNumberInput(): void {
+    this.isPhoneNumberModified = true;
+    this.checkValidPhoneNumber();
   }
 
 }

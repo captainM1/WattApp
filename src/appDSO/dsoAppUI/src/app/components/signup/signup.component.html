@@ -40,6 +40,7 @@
                         <span class="input-group-addon addon-icon" [ngClass]="{'invalid-icon': submitted && fields['phonenumber'].errors}"><i class="fa fa-phone"></i></span>
                         <div class="invalid-feedback">
                             <span class="text-danger" *ngIf="submitted && fields['phonenumber'].errors?.['required']">*Phone number is required!</span>
+                            <span class="text-danger" *ngIf="submitted && fields['phonenumber'].errors?.['pattern']">*Please provide a valid phone number!</span>
                         </div>
                     </div>
 
@@ -87,11 +88,12 @@
                     <td>{{ worker.lastName }}</td>
                     <td>{{ worker.role }}</td>
                     <td>{{ worker.email }}</td>
-                    <td><button class="modalBtn" (click) = "giveMeWorker(worker.id)"  mat-button data-bs-target="#profile" data-bs-toggle="modal">
+                    <td><button class="modalBtn" (click)="giveMeWorker(worker.id)"  mat-button data-bs-target="#profile" data-bs-toggle="modal">
                         Show Profile
                     </button>
                     </td>
                     <td><button id = "deleteBtn" (click)="deleteDispecher(worker.id)">Delete</button></td>
+
                 </tr>
             </table>
             <h1 *ngIf="allWorkers.length == 0" class="justify-content-center align-items-center d-flex">There are no employees</h1>
@@ -110,7 +112,7 @@
           <button type="button" id="closeBtn" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
             <div class="modal-body" style="overflow-y: auto; overflow-x: hidden; width: 100%;">
-                <app-model-profile #profileDispacher [firstName]="firstNameModal" [lastName]="lastNameModal" [email]="emailModal" [phoneNumber]="mobileModal" [role]="roleModal"></app-model-profile>
+                <app-model-profile #profileDispacher [firstName]="firstNameModal" [lastName]="lastNameModal" [email]="emailModal" [phoneNumber]="mobileModal" [role]="roleModal" [id]="id" ></app-model-profile>
             </div>
         </div>
     </div>

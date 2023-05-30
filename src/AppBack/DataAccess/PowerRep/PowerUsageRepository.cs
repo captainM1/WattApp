@@ -61,25 +61,54 @@ public class PowerUsageRepository : IPowerUsageRepository
             .Select(d => d.DeviceTypeID)
             .FirstOrDefault();
 
-        var powerUsageData = mongoCollection.AsQueryable()
-            .FirstOrDefault(d => d.ID.ToString().ToUpper() == deviceTypeID.ToString().ToUpper());
+        string deviceGroupName = _dataContext.DeviceGroups
+                .Where(g => g.ID == _dataContext.DeviceTypes
+                    .Where(dt => dt.ID == deviceTypeID)
+                    .Select(dt => dt.GroupID)
+                    .FirstOrDefault())
+                .Select(g => g.Name)
+                .FirstOrDefault();
+        if(deviceGroupName == "Storage")
+        {
+            var baterry = await _dataContext.BatteryStatuses.FirstOrDefaultAsync(e => e.ID == deviceID && e.Date == currentHourTimestamp);
+            if (baterry == null)
+            {
+                return 0;
+            }
+            var batteryCapacity = await _dataContext.Devices
+                                    .Include(d => d.DeviceType)
+                                    .ThenInclude(dt => dt.Manufacturer)
+                                    .Include(d => d.DeviceType)
+                                    .ThenInclude(dt => dt.Group)
+                                    .Where(d => d.ID == baterry.ID)
+                                    .Select(d => d.DeviceType.Wattage)
+                                    .FirstOrDefaultAsync();
+            var batteryPercent = _dataContext.BatteryStatuses.FirstOrDefaultAsync(e => e.ID == baterry.ID && e.Date == currentHourTimestamp).Result.BatteryPercent;
+            double batteryPower = batteryCapacity * (batteryPercent / 100);
+            return batteryPower;
+        }
+        else 
+        {
+            var powerUsageData = mongoCollection.AsQueryable()
+                .FirstOrDefault(d => d.ID.ToString().ToUpper() == deviceTypeID.ToString().ToUpper());
 
-        var data = powerUsageData.TimestampPowerPairs.Find(p => p.Timestamp == currentHourTimestamp);
+            var data = powerUsageData.TimestampPowerPairs.Find(p => p.Timestamp == currentHourTimestamp);
 
-        bool isOn = _dataContext.Devices
-            .Where(d => d.ID == deviceID)
-            .Select(ison => ison.IsOn)
-            .FirstOrDefault();
+            bool isOn = _dataContext.Devices
+                .Where(d => d.ID == deviceID)
+                .Select(ison => ison.IsOn)
+                .FirstOrDefault();
 
-        var current = data.PowerUsage;
+            var current = data.PowerUsage;
 
-        if (isOn && current == 0)
-            return await GetForDeviceAverage(deviceID); // Add await keyword here
+            if (isOn && current == 0)
+                return await GetForDeviceAverage(deviceID); // Add await keyword here
 
-        if (isOn && current != 0)
-            return current;
+            if (isOn && current != 0)
+                return current;
 
-        return 0;
+            return 0;
+        }        
     }
 
 
@@ -2724,5 +2753,194 @@ public class PowerUsageRepository : IPowerUsageRepository
         var consumes = await savedEnergyForUserProducer(userID, 2);
 
         return consumes * electricityRate;
+    }
+
+    public async Task UpdateBatteries()
+    {
+        var batteries = _dataContext.BatteryConnections
+                        .Select(e => e.BatteryID)
+                        .Distinct()
+                        .ToList();
+        
+        foreach (var battery in batteries)
+        {
+            double sumProduction = 0;
+            double sumConsumption = 0;
+            var devices = _dataContext.BatteryConnections
+                            .Where(e => e.BatteryID == battery)
+                            .Select(e => e.Device.ID)
+                            .ToList();
+
+            
+            foreach (var device in devices)
+            {
+                Guid deviceTypeID = _dataContext.Devices
+               .Where(d => d.ID == device)
+               .Select(d => d.DeviceTypeID)
+               .FirstOrDefault();
+
+                string deviceGroupName = _dataContext.DeviceGroups
+                    .Where(g => g.ID == _dataContext.DeviceTypes
+                        .Where(dt => dt.ID == deviceTypeID)
+                        .Select(dt => dt.GroupID)
+                        .FirstOrDefault())
+                    .Select(g => g.Name)
+                    .FirstOrDefault();
+
+                if(deviceGroupName == "Producer")
+                {
+                    var deviceStatus = _dataContext.Devices.FirstOrDefaultAsync(u => u.ID == device).Result.IsOn;
+                    if(deviceStatus == true)
+                    {
+                        sumProduction += await this.GetCurrentPowerProduction(device);
+                    }                    
+                }
+                else if(deviceGroupName == "Consumer")
+                {
+                    var deviceStatus = _dataContext.Devices.FirstOrDefaultAsync(u => u.ID == device).Result.IsOn;
+                    if (deviceStatus == true)
+                    {
+                        sumConsumption += await this.GetCurrentPowerConsumption(device);
+                    }
+                }                
+            }
+
+            var batteryTemp = _dataContext.Devices
+                              .Include(e => e.DeviceType)
+                              .Where(e => e.ID == battery)
+                              .Select(d => d.DeviceType.Wattage)
+                              .First();                           
+                              
+
+            BatteryStatus temp = await _dataContext.BatteryStatuses
+                                       .Where(e => e.Date == DateTime.Now.Date.AddHours(DateTime.Now.Hour-1))
+                                       .FirstOrDefaultAsync(b => b.ID == battery);
+
+            double percentChange= (((sumProduction-sumConsumption) * 1000) * 100) / batteryTemp;
+
+            if(temp == null)
+            {
+                temp = new BatteryStatus();
+                temp.ID = battery;
+                temp.Date = DateTime.Now.Date.AddHours(DateTime.Now.Hour);
+                temp.BatteryPercent = 0;
+            }
+            temp.BatteryPercent += percentChange;
+            temp.Date = DateTime.Now.Date.AddHours(DateTime.Now.Hour);
+
+            _dataContext.BatteryStatuses.Add(temp);
+            await _dataContext.SaveChangesAsync();
+            
+        }
+    }
+
+    public async Task<double> GetCurrentPowerProduction(Guid deviceID)
+    {
+        double powerUsages = 0;
+        var startOfAnHour = DateTime.Now.AddHours(-1);
+        var endOfAnHour = DateTime.Now;
+
+        var device = _dataContext.Devices.FirstOrDefaultAsync(e => e.ID == deviceID);        
+        
+        string deviceGroupName = _dataContext.DeviceGroups
+                    .Where(g => g.ID == _dataContext.DeviceTypes
+                        .Where(dt => dt.ID == device.Result.DeviceTypeID)
+                        .Select(dt => dt.GroupID)
+                        .FirstOrDefault())
+                    .Select(g => g.Name)
+                    .FirstOrDefault();
+
+        var userID = _dataContext.Devices
+                    .Where(d => d.DeviceTypeID == device.Result.DeviceTypeID)
+                    .Select(u => u.OwnerID)
+                    .FirstOrDefault();
+                
+        if (deviceGroupName == "Producer")
+        {
+            powerUsages += mongoCollection.AsQueryable().ToList()
+                .Where(d => d.ID.ToString().ToUpper() == device.Result.DeviceTypeID.ToString().ToUpper())
+                .Sum(p => p.TimestampPowerPairs.Where(t => t.Timestamp >= startOfAnHour && t.Timestamp < endOfAnHour).Sum(p => p.PowerUsage));
+        }
+        
+
+        return powerUsages;
+    }
+
+    public async Task<double> GetCurrentPowerConsumption(Guid deviceID)
+    {
+        double powerUsages = 0;
+        var startOfAnHour = DateTime.Now.AddHours(-1);
+        var endOfAnHour = DateTime.Now;
+
+        var device = _dataContext.Devices.FirstOrDefaultAsync(e => e.ID == deviceID);
+
+        string deviceGroupName = _dataContext.DeviceGroups
+                    .Where(g => g.ID == _dataContext.DeviceTypes
+                        .Where(dt => dt.ID == device.Result.DeviceTypeID)
+                        .Select(dt => dt.GroupID)
+                        .FirstOrDefault())
+                    .Select(g => g.Name)
+                    .FirstOrDefault();
+
+        var userID = _dataContext.Devices
+                    .Where(d => d.DeviceTypeID == device.Result.DeviceTypeID)
+                    .Select(u => u.OwnerID)
+                    .FirstOrDefault();
+
+        if (deviceGroupName == "Consumer")
+        {
+            powerUsages += mongoCollection.AsQueryable().ToList()
+                .Where(d => d.ID.ToString().ToUpper() == device.Result.DeviceTypeID.ToString().ToUpper())
+                .Sum(p => p.TimestampPowerPairs.Where(t => t.Timestamp >= startOfAnHour && t.Timestamp < endOfAnHour).Sum(p => p.PowerUsage));
+        }
+
+
+        return powerUsages;
+    }
+
+    public async Task<double> GetForUserBatteryPower(Guid userID)
+    {
+        DateTime currentHourTimestamp = DateTime.Now.Date.AddHours(DateTime.Now.Hour);
+        double batteryPower = 0;
+        var devices = _dataContext.Devices
+                        .Where(d => d.OwnerID == userID)
+                        .ToList();
+
+        foreach (var device in devices)
+        {
+            Guid deviceTypeID = _dataContext.Devices
+               .Where(d => d.ID == device.ID)
+               .Select(d => d.DeviceTypeID)
+               .FirstOrDefault();
+
+            string deviceGroupName = _dataContext.DeviceGroups
+           .Where(g => g.ID == _dataContext.DeviceTypes
+               .Where(dt => dt.ID == deviceTypeID)
+               .Select(dt => dt.GroupID)
+               .FirstOrDefault())
+           .Select(g => g.Name)
+           .FirstOrDefault();
+
+            if (deviceGroupName == "Storage")
+            {
+                var battery = await _dataContext.BatteryStatuses.FirstOrDefaultAsync(e => e.ID == device.ID && e.Date == currentHourTimestamp);
+                if (battery == null)
+                {
+                    return 0;
+                }
+                var batteryCapacity = await _dataContext.Devices
+                                    .Include(d => d.DeviceType)
+                                    .ThenInclude(dt => dt.Manufacturer)
+                                    .Include(d => d.DeviceType)
+                                    .ThenInclude(dt => dt.Group)
+                                    .Where(d => d.ID == device.ID)
+                                    .Select(d => d.DeviceType.Wattage)
+                                    .FirstOrDefaultAsync();
+                var batteryPercent = _dataContext.BatteryStatuses.FirstOrDefaultAsync(e => e.ID == device.ID && e.Date == currentHourTimestamp).Result.BatteryPercent;
+                batteryPower += batteryCapacity * (batteryPercent / 100);
+            }
+        }
+        return batteryPower;
+
     }
 }

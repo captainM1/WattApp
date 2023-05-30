@@ -706,4 +706,24 @@ public class PowerUsageController : ControllerBase
         var powerUsages = _powerUsageService.GetPowerUsageForAMonthPrediction(deviceID, -1);
         return Ok(powerUsages.Result);
     }
+
+    [HttpGet("update-batteries")]
+    public async Task UpdateBatteries()
+    {
+        try
+        {
+            await _powerUsageService.UpdateBatteries();
+        }
+        catch (ArgumentNullException ex)
+        {
+            throw new ArgumentException(ex.Message);
+        }
+    }
+
+    [HttpGet("power-usage/get-current-user-battery-power-available/{userID}")]
+    public async Task<ActionResult<double>> GetForUserBatteryPower(Guid userID)
+    {
+        var powerUsages = await _powerUsageService.GetForUserBatteryPower(userID);
+        return Ok(powerUsages);
+    }
 }

@@ -17,12 +17,12 @@
                   <th style="width: 15%;"(click)="sortData2('production')"><i class="fa fa-arrow-down" aria-hidden="true" style = "color:white" *ngIf="currentSortOrder2 ==='asc'"></i><i class="fa fa-arrow-up"  style ="color:white" *ngIf="currentSortOrder2 === 'desc'"></i>Production</th>
                   <th style="width: 15%;"(click)="sortData1('consumption')"><i class="fa fa-arrow-down" aria-hidden="true" style = "color:white" *ngIf="currentSortOrder1 ==='asc'"></i><i class="fa fa-arrow-up"  style ="color:white" *ngIf="currentSortOrder1 === 'desc'"></i>Consumption</th>
                   <th style="width: 20%;"></th>
-                  
+
                 </tr>
               </thead>
               <tr *ngFor="let user of allUsers | filterName: _searchByName: _searchByAddress; let i = index;" (click)="showMeOnMap(user.id); selectedColumn = i;" [class.active-column]="selectedColumn === i || selectedUsers.includes(user)">
-                  <td *ngIf="user"><input [(ngModel)]="user.selected"  type = "checkbox" style="width: 20px;" (click) = "toggleExportSelected(user); toggleSelection(user, i)"></td>  
-                  <td >{{user.firstName}}</td> 
+                  <td *ngIf="user"><input [(ngModel)]="user.selected"  type = "checkbox" style="width: 20px;" (click) = "toggleExportSelected(user); toggleSelection(user, i)"></td>
+                  <td >{{user.firstName}}</td>
                   <td>{{user.lastName}}</td>
                   <td>{{user.address}}, {{user.city}}, {{user.country}}</td>
                   <td>{{user.production}} kWh</td>
@@ -204,10 +204,10 @@
             <div *ngIf="showDevicePage">
               <div class="row" id="table">
                 <div class="col-sm-6"
-                  style="width: 65%; overflow-y: scroll; scrollbar-color: #026670; scrollbar-width: thin; padding-right:0px">
+                  style="width:100%; overflow:auto; height: 300px; scrollbar-color: #026670; scrollbar-width: thin; padding-right:0px">
                   <table>
-                    <thead>
-                      <tr>
+                    <thead style="position: sticky; top :0; z-index: 1px;">
+                      <tr >
                         <th>Device name</th>
                         <th>Device manifacture</th>
                         <th>Mac Address</th>
@@ -225,7 +225,7 @@
                           <button class="apply" (click)="applyFilter()">Apply</button>
                         </th>
                         <th>Device Status</th>
-                        <th>Power Usage</th>
+                        <th>Energy [kWh]</th>
                         <th>Control Device</th>
                       </tr>
                     </thead>
@@ -240,7 +240,7 @@
                         <td>{{device.typeOfDevice}}</td>
                         <td
                           [ngClass]="{'green': device.statusOfDevice === 'ON', 'red': device.statusOfDevice === 'OFF'}">{{device.statusOfDevice}}</td>
-                        <td>{{device.powerusage}} kw/h</td>
+                        <td>{{device.powerusage.toFixed(2)}}</td>
                         <td *ngIf="device.dsoHasControl === true">
                           <label class="switch">
                             <input type="checkbox"
@@ -260,7 +260,7 @@
 
                   </table>
                 </div>
-                <div class="col">
+                <!-- <div class="col">
                   <div>
                     <ngx-spinner bdColor="rgba(0, 0, 0, 0.5)" size="medium"
                       color="#fff" type="ball-spin"
@@ -270,7 +270,7 @@
                       </p></ngx-spinner>
                     <canvas #prev24DeviceID></canvas>
                   </div>
-                </div>
+                </div> -->
               </div>
             </div>
 
@@ -285,6 +285,7 @@
                     [class.active]="isActiveProsumer"
                     (click)="toggleActiveCP('prosumer'); ">Production</button>
                 </div>
+
 
                 <div class="row" id="graph-position" *ngIf="showMeConsumption">
 

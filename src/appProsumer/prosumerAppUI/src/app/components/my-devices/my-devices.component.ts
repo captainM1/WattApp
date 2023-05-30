@@ -9,6 +9,7 @@ import { Observable, catchError, forkJoin, map, of, tap } from 'rxjs';
 import { ConfirmEventType, ConfirmationService, MessageService } from 'primeng/api';
 import { AuthUserService } from 'src/app/services/auth-user.service';
 import { Info } from 'src/app/models/user';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-my-devices',
@@ -20,14 +21,18 @@ export class MyDevicesComponent implements OnInit {
   deviceToday: {[key: string]: any} = {};
   searchName: string = '';
   typeOfDevices: {[key: string]: any} = {};
+  selectedGroups: string[] = [];
+
   @ViewChild('myTable') myTable!: ElementRef;
+
 
   constructor(
     private auth: AuthService,
     private cookie: CookieService,
     private http: HttpClient,
     private confirmationService: ConfirmationService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -49,6 +54,7 @@ export class MyDevicesComponent implements OnInit {
           () => {
             this.devices = data;
             this.devices.forEach((device: any) => {
+              device.filtered = true;
               this.http
                 .get<any[]>(
                   `${environment.apiUrl}/api/PowerUsage/power-usage/current/device/${device.deviceId}`)
@@ -68,6 +74,7 @@ export class MyDevicesComponent implements OnInit {
                 .subscribe(
                   (response:any) => {
                     this.typeOfDevices[device.deviceId] = response.groupName;
+                    this.filterDevices();
                   },
                   (error) => {
                   }
@@ -85,6 +92,44 @@ export class MyDevicesComponent implements OnInit {
       }
     );
   }
+
+  isSelectedGroup(device: any): boolean {
+    const groupName = this.typeOfDevices[device.deviceId];
+    return this.selectedGroups.includes(groupName);
+  }
+
+
+
+  updateSelectedGroups(event: any, group: string) {
+    const checked = event.target.checked;
+    if (checked) {
+      this.selectedGroups.push(group);
+    } else {
+      const index = this.selectedGroups.indexOf(group);
+      if (index > -1) {
+        this.selectedGroups.splice(index, 1);
+      }
+    }
+    this.filterDevices();
+  }
+
+
+
+  filteredDevices: any[] = [];
+
+
+
+  filterDevices() {
+    if (this.selectedGroups.length === 0) {
+      this.filteredDevices = this.devices;
+    } else {
+      this.filteredDevices = this.devices.filter((device: any) => {
+        const groupName = this.typeOfDevices[device.deviceId];
+        return this.selectedGroups.includes(groupName);
+      });
+    }
+  }
+
 
   exportToExcel(): void {
     const tableData = this.myTable.nativeElement.cloneNode(true);
@@ -123,14 +168,29 @@ export class MyDevicesComponent implements OnInit {
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         this.changeState(device.deviceId);
+        this.router.navigate(['/dashboard'],{skipLocationChange:true}).then(()=>{
+
+          this.router.navigate(['/home']);
+
+        });
       },
       reject: (type: any) => {
         switch (type) {
           case ConfirmEventType.REJECT:
             this.messageService.add({ severity: 'error', summary: 'Rejected', detail: 'You have rejected' });
+            this.router.navigate(['/dashboard'],{skipLocationChange:true}).then(()=>{
+
+              this.router.navigate(['/home']);
+
+            });
             break;
           case ConfirmEventType.CANCEL:
             this.messageService.add({ severity: 'warn', summary: 'Cancelled', detail: 'You have cancelled' });
+            this.router.navigate(['/dashboard'],{skipLocationChange:true}).then(()=>{
+
+              this.router.navigate(['/home']);
+
+            });
             break;
         }
       },
@@ -141,7 +201,7 @@ export class MyDevicesComponent implements OnInit {
 
   changeState(id: any) {
     this.auth.changeState(id).subscribe(() => {
-      
+
     });
   }
 

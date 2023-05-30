@@ -17,6 +17,7 @@
     .container-fluid{
       width: 30%;
       height: 100%;
+      
 
     }
     .col{
@@ -31,13 +32,13 @@
 
     #edit-profile{
       margin-top: 50px;
-      border-radius: 10px;
+      border-radius: 5px;
       background-color: #FFFFFF;
       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
       margin: 0;
       background-color: #026670;
     }
-    #top{
+    #top{border: 2px solid #026670;
       display: block;
       justify-content: center;
       text-align: center;
@@ -117,7 +118,7 @@
       font-style: italic;
       font-size: 12px;
       opacity: 0.8;
-      border: 2px solid #026670;
+      
     }
 
     #form-user-enter{
@@ -132,7 +133,6 @@
    
 
 
-
     img{
       border-radius: 8px;
       border: 2px solid white;
@@ -145,8 +145,6 @@
       background-color: white;
       margin: 0;
       margin-top: 0px;
-      margin-top: 6px;
-      padding-top: 14px;
       padding-bottom: 10px;
 
     }
@@ -240,7 +238,7 @@
   max-width: 600px;
 }
 .modal-body{
-  background-color: #026670;
+  /* background-color: #026670; */
   padding-top: 30px;
 }
 
@@ -270,6 +268,88 @@
   font-size: 18px;
   color: #026670;
   font-weight: 500;
+}
+.input-group
+{
+  background-color: #fff;
+}
+
+.modal-content
+{
+  border-radius: 17px !important;
+}
+
+.inputChange{
+  border:2px solid #026670;
+  border-radius: 5px;
+  font-style: italic;
+  font-size: 12px;
+  height: 40px !important;
+  width: 80% !important;
+  border-right: none !important;
+  background-color: #fff;
+  box-shadow: none !important;
+}
+
+.inputChange::placeholder{
+  color:rgba(2, 102, 112, 0.5);
+}
+
+
+.addon-icon {
+  display: flex;
+  align-items: center !important;
+  justify-content: center !important;
+  background-color: #fff;
+  padding-top: 5px;
+  padding-right: 5px;
+  margin-left: -1px;
+  border: 2px solid #026670;
+  border-left: none !important;
+  transition: all 0.2s ease-in-out;
+  border-radius:0 5px 5px 0 !important;
+  height: 40px;
+}
+
+.addon-icon i {
+  color: #6c757d;
+  margin-top: -10px;
+}
+
+.form-control {
+  position:relative;
+  transition: all 0.2s ease-in-out;
+  border-right: none !important;
+  padding-right: 20px;
+}
+
+.form-control::before {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+.form-control:focus {
+  border:2px solid #026670;
+  border-right: none;
+  box-shadow: none;
+}
+.form-control:focus + .addon-icon {
+  border:2px solid #026670;
+  border-left:none;
+  border-radius: 5px;
+}
+
+.invalid-input {
+  border: 2px solid #dc3545 !important;
+  border-right: none !important;
+}
+
+.invalid-icon {
+  border: 2px solid #dc3545 !important;
+  border-left: none !important;
+  border-color: #dc3545 !important;
 }
   @media(max-width:740px){
     .container-fluid{

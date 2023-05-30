@@ -13,7 +13,7 @@
                 <div class="toggle-switch"></div>
             </label>
             </div>
-            
+
             <div *ngIf="requestStatus == 'no'" class="row d-flex justify-content-center">
               <button (click)="sendReq()">Send request</button>
             </div>
@@ -23,7 +23,7 @@
               </div>
               <div class="col-6">
                 <button class="w-100 pending" (click)="cancelReq()">Cancel request</button>
-              </div>  
+              </div>
             </div>
             <div *ngIf="requestStatus == 'accepted'" class="row">
               <div class="col-6">
@@ -41,7 +41,7 @@
     </div>
 </div>
 
-<div class="modal fade"#exampleModal id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabe" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+<div class="modal fade" #exampleModal id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabe" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">

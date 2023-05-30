@@ -23,6 +23,8 @@ namespace prosumerAppBack.DataAccess
         public DbSet<DeviceManufacturers> DeviceManufacturers { get; set; }
         public DbSet<DeviceRule> DeviceRules { get; set; }
         public DbSet<DeviceRequirement> DeviceRequirements { get; set; }
+        public DbSet<BatteryConnections> BatteryConnections { get; set; }
+        public DbSet<BatteryStatus> BatteryStatuses { get; set; }
         public DbSet<Dispatcher> Dispatchers { get; set; }
         private const int SaltSize = 16;
         private const int HashSize = 32;

@@ -594,4 +594,15 @@ public class PowerUsageService:IPowerUsageService
     {
         return _repository.GetPowerUsageForAMonthPrediction(deviceId,-1);
     }
+
+    public async Task UpdateBatteries()
+    {
+        await _repository.UpdateBatteries();
+    }
+
+    public async Task<double> GetForUserBatteryPower(Guid userID)
+    {
+        var batteryPower = await _repository.GetForUserBatteryPower(userID);
+        return batteryPower;
+    }
 }

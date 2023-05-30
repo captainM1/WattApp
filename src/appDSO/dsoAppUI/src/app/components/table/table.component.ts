@@ -3,6 +3,7 @@ import * as L from 'leaflet';
 import { Device, ExportSelected, Info, Root, Root2, User } from 'models/User';
 import { AuthService } from 'service/auth.service';
 import { MatTableModule } from '@angular/material/table';
+import { MatTableModule } from '@angular/material/table';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { Chart, ChartOptions } from 'chart.js';
@@ -120,6 +121,7 @@ export class TableComponent implements OnInit, AfterViewInit {
 
 
 
+
   timestampListProductionPrev24h!: any[];
   powerUsageListProductionPrev24h!: any[];
 
@@ -156,7 +158,9 @@ export class TableComponent implements OnInit, AfterViewInit {
   ) { }
   selectedGraphHistoryConsumption = '24h';
   selectedGraphHistoryProduction = '24h';
+  selectedGraphHistoryProduction = '24h';
   selectedGraphFutureProduction = '24h';
+  selectedGraphFutureConsumption = '24h';
   selectedGraphFutureConsumption = '24h';
   ngAfterViewInit(): void {
     this.popUp(this.id);
@@ -189,6 +193,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     this.showCoordsForEveryUser();
     this.getDeviceGroup();
     this.savedEnergy(this.id);
+
 
 
   }
@@ -307,6 +312,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     const workbook = XLSX.utils.book_new();
     const worksheet = XLSX.utils.aoa_to_sheet([['Sample Data']]);
 
+
     const worksheetName = 'Custom Worksheet Name';
     XLSX.utils.book_append_sheet(workbook, worksheet, worksheetName);
 
@@ -323,6 +329,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     const worksheetName = 'Custom Worksheet Name';
     XLSX.utils.book_append_sheet(workbook, worksheet, worksheetName);
 
+
     const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     const data = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     let fileNameHistory = 'Custom_File_Name.xlsx';
@@ -335,8 +342,11 @@ export class TableComponent implements OnInit, AfterViewInit {
     const workbook = XLSX.utils.book_new();
     const worksheet = XLSX.utils.aoa_to_sheet([['Sample Data']]);
 
+
     const worksheetName = 'Custom Worksheet Name';
     XLSX.utils.book_append_sheet(workbook, worksheet, worksheetName);
+
+
 
 
     const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
@@ -351,6 +361,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     const worksheet = XLSX.utils.aoa_to_sheet([['Sample Data']]);
     const worksheetName = 'Custom Worksheet Name';
     XLSX.utils.book_append_sheet(workbook, worksheet, worksheetName);
+
 
     const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     const data = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
@@ -374,8 +385,9 @@ export class TableComponent implements OnInit, AfterViewInit {
   showFilterOptions = false;
   selectedFilterOption: string = "All Devices";
   devicesConsumers: Info[] = [];
-  devicesProducers: Info[] = [];
-  allUserDevicesPOM: Info[] = [];
+  devicesProducers: Info[]  = [];
+  allUserDevicesPOM: Info[]  = [];
+devicesStorage:Info[] = [];
   toggleFilterOptions(): void {
     this.showFilterOptions = !this.showFilterOptions;
   }
@@ -388,9 +400,11 @@ export class TableComponent implements OnInit, AfterViewInit {
       this.allUserDevices = this.devicesProducers;
     } else if (this.selectedFilterOption === "All Devices") {
       this.allUserDevices = this.allUserDevicesPOM;
-    } else if (this.selectedFilterOption === "Energy Store") {
+    } else if (this.selectedFilterOption === "Storages") {
       this.allUserDevices = this.devicesStorage;
-    }
+    }else{
+    this.allUserDevices = this.allUserDevicesPOM;
+  }
     this.showFilterOptions = false;
   }
   selectedColumn: any = null;
@@ -598,6 +612,7 @@ export class TableComponent implements OnInit, AfterViewInit {
                 }
               },
               error: (error: any) => {
+                us.powerusage = 0;
                 console.log(error)
               }
             }
@@ -605,14 +620,26 @@ export class TableComponent implements OnInit, AfterViewInit {
 
           this.auth.dsoHasControl(us.deviceId).subscribe({
             next: (response: any) => {
-              // console.log("DEVICE STATUS",response);
               us.dsoHasControl = response;
               this.toggleDeviceStatus(us);
+
 
             },
             error: (error: any) => {
               this.deviceStatus = false;
               console.log(error);
+            }
+          })
+          this.auth.stateOfDevice(us.deviceId).subscribe({
+            next:(response:any)=>{
+              if(response === true){
+                us.statusOfDevice = "ON"
+              }else{
+                us.statusOfDevice = "OFF"
+              }
+            },
+            error:(err:any)=>{
+              console.log(err);
             }
           })
           this.numberOfConsumers = 0;
@@ -706,9 +733,12 @@ export class TableComponent implements OnInit, AfterViewInit {
           this.userPopUp.sharesDataWithDso = false;
         }
 
+
         this.auth.UserConsumptionSummary(this.userPopUp.id).subscribe(
           (response: any) => {
             this.userPopUp.consumption = response.toFixed(2);
+
+
 
 
           });
@@ -720,6 +750,7 @@ export class TableComponent implements OnInit, AfterViewInit {
           error: (err: any) => {
             this.userPopUp.production = 0;
           }
+
 
         });
 
@@ -741,8 +772,14 @@ export class TableComponent implements OnInit, AfterViewInit {
 
 
   isActiveUser = false;
+
+
+
+
+  isActiveUser = false;
   isActiveDevice = true;
   isActiveSystem = false;
+
 
   isActiveProsumer = false;
   isActioveConsumer = true;
@@ -777,6 +814,7 @@ export class TableComponent implements OnInit, AfterViewInit {
         this.HistoryProduction(this.selectedGraphHistoryProduction);
         this.FutureProduction(this.selectedGraphFutureProduction);
 
+
       }
     }
   }
@@ -790,6 +828,7 @@ export class TableComponent implements OnInit, AfterViewInit {
       this.showSystemPage = false;
       this.showMeGeneral = true;
 
+
     } else if (button === 'device') {
       this.isActiveUser = false;
       this.isActiveDevice = true;
@@ -797,6 +836,7 @@ export class TableComponent implements OnInit, AfterViewInit {
       this.showDevicePage = true;
       this.showSystemPage = false;
       this.showMeGeneral = false;
+
 
     } else if (button === 'system') {
       this.isActiveUser = false;
@@ -807,8 +847,11 @@ export class TableComponent implements OnInit, AfterViewInit {
       this.showMeGeneral = false;
       this.toggleActiveCP('consumption')
 
+
     }
   }
+
+
 
 
 
@@ -919,6 +962,7 @@ export class TableComponent implements OnInit, AfterViewInit {
           this.chartConsumptionNextMonthChart();
           this.spinner.hide();
           this.consumptionNextMonthLoader = false;
+
 
         },
         error: (err: any) => {
@@ -1316,7 +1360,7 @@ export class TableComponent implements OnInit, AfterViewInit {
             y: {
               title: {
                 display: true,
-                text: 'Power Consumption (kW)',
+                text: 'Energy Consumption [kWh]',
                 font: {
                   size: 9,
                 },
@@ -1332,6 +1376,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   consumptionNext7DaysLoader = false;
   consumptionNext7Days(id: any) {
     this.spinner.show();
+    this.consumptionNext7DaysLoader = true;
     this.consumptionNext7DaysLoader = true;
     this.auth.getConsumptionNext7days(id).subscribe({
       next: (response: any) => {
@@ -1406,7 +1451,7 @@ export class TableComponent implements OnInit, AfterViewInit {
             y: {
               title: {
                 display: true,
-                text: 'Power Consumption (kW)',
+                text: 'Energy Consumption [kWh]',
                 font: {
                   size: 9,
                 },
@@ -1614,7 +1659,7 @@ export class TableComponent implements OnInit, AfterViewInit {
           x: {
             title: {
               display: true,
-              text: 'Time (hour)',
+              text: 'Time [h]',
             },
             ticks: {
               font: {
@@ -1625,7 +1670,7 @@ export class TableComponent implements OnInit, AfterViewInit {
           y: {
             title: {
               display: true,
-              text: 'Power consumption (kW)',
+              text: 'Energy Consumption [kWh]',
               font: {
                 size: 10
               }
@@ -1740,7 +1785,7 @@ export class TableComponent implements OnInit, AfterViewInit {
           x: {
             title: {
               display: true,
-              text: 'Time (hour)',
+              text: 'Time [h]',
             },
             ticks: {
               font: {
@@ -1751,7 +1796,7 @@ export class TableComponent implements OnInit, AfterViewInit {
           y: {
             title: {
               display: true,
-              text: 'Power production (kW)',
+              text: 'Energy Production [kWh]',
               font: {
                 size: 10,
               }
@@ -1845,7 +1890,7 @@ export class TableComponent implements OnInit, AfterViewInit {
           x: {
             title: {
               display: true,
-              text: 'Date (month and day) ',
+              text: 'Date',
             },
             ticks: {
               font: {
@@ -1856,7 +1901,7 @@ export class TableComponent implements OnInit, AfterViewInit {
           y: {
             title: {
               display: true,
-              text: 'Power Production (kW)'
+              text: 'Energy Production [kWh]'
             },
             ticks: {
               font: {
@@ -2033,7 +2078,7 @@ export class TableComponent implements OnInit, AfterViewInit {
           x: {
             title: {
               display: true,
-              text: 'Time (hour and minutes)',
+              text: 'Time [h]',
             },
             ticks: {
               font: {
@@ -2044,7 +2089,7 @@ export class TableComponent implements OnInit, AfterViewInit {
           y: {
             title: {
               display: true,
-              text: 'Power production (kW)',
+              text: 'Energy Production [kWh]',
               font: {
                 size: 10,
               }
@@ -2136,13 +2181,13 @@ export class TableComponent implements OnInit, AfterViewInit {
             x: {
               title: {
                 display: true,
-                text: 'Week - day'
+                text: ''
               }
             },
             y: {
               title: {
                 display: true,
-                text: 'Power Production (kW)',
+                text: 'Energy Production [kWh]',
                 font: {
                   size: 9,
                 },
@@ -2227,7 +2272,7 @@ export class TableComponent implements OnInit, AfterViewInit {
           x: {
             title: {
               display: true,
-              text: 'Date (month & day) ',
+              text: 'Date',
             },
             ticks: {
               font: {
@@ -2238,7 +2283,7 @@ export class TableComponent implements OnInit, AfterViewInit {
           y: {
             title: {
               display: true,
-              text: 'Power Production (kW)'
+              text: 'Energy Production [kWh]'
             },
             ticks: {
               font: {

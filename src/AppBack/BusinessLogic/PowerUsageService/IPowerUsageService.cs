@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using prosumerAppBack.Models;
 
 namespace prosumerAppBack.BusinessLogic.PowerUsageService;
@@ -72,4 +73,6 @@ public interface IPowerUsageService
     public Task<PowerUsage> GetPowerUsageFor7DaysPrediction(Guid deviceId, int direction);
 
     public Task<PowerUsage> GetPowerUsageForAMonthPrediction(Guid deviceId, int direction);
+    Task UpdateBatteries();
+    Task<double> GetForUserBatteryPower(Guid userID);
 }

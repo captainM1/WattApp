@@ -70,5 +70,7 @@ namespace prosumerAppBack.BusinessLogic
         public Task<PowerUsage> GetPowerUsageFor7DaysPrediction(Guid deviceId, int direction);
 
         public Task<PowerUsage> GetPowerUsageForAMonthPrediction(Guid deviceId, int direction);
+        Task UpdateBatteries();
+        Task<double> GetForUserBatteryPower(Guid userID);
     }
 }

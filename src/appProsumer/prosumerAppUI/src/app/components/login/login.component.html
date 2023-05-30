@@ -18,7 +18,7 @@
                                 <span class="input-group-addon addon-icon" [ngClass]="{'invalid-icon': submitted && fields['email'].errors}"><i class="fa fa-user"></i></span>
                                     <div class="invalid-feedback">
                                         <span class= "text-danger" *ngIf="submitted && fields['email'].errors?.['required']">*Email is required!</span>
-                                        <span class = "text-danger" *ngIf="fields['email'].errors?.['email']">*Please prvoide a valid email address (example: name@example.com)!</span>
+                                        <span class = "text-danger" *ngIf="fields['email'].errors?.['email']">*Please prvoide a valid email address!</span>
                                     </div>
                             </div>
 
@@ -28,7 +28,7 @@
                                     <span  class="input-group-addon addon-icon" [ngClass]="{'invalid-icon': submitted && fields['password'].errors}" style="cursor:pointer"><i (click) = "hideShowPass()" class="fa {{eyeIcon}}"></i></span>
                                     <div class="invalid-feedback">
                                         <span class= "text-danger" *ngIf="submitted && fields['password'].errors?.['required']">*Password is required!</span>
-                                        <span class = "text-danger" *ngIf="fields['password'].errors?.['minlength']">*Please provide a valid password! Password must be at least 6 characters long!</span>
+                                        <span class = "text-danger" *ngIf="fields['password'].errors?.['minlength']">*Password must be at least 6 characters long!</span>
                                     </div>
                             </div>
 

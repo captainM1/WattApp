@@ -18,7 +18,6 @@ export class Home2Component implements OnInit, AfterViewInit {
   userID!: any;
   token!:any;
   weather! : Root;
-  number!: any;
   devices!: any;
   id!:any;
   graph24prev!:any;
@@ -30,11 +29,6 @@ export class Home2Component implements OnInit, AfterViewInit {
   electricityBill!: number;
   electricityRate = 7.584;
 
-  isSunny!: boolean;
-  isCloudy!: boolean;
-  isRainy!: boolean;
-  isSnowy!: boolean;
-
   constructor(
 		private auth : AuthService,
     private auth1 : AuthUserService
@@ -42,7 +36,6 @@ export class Home2Component implements OnInit, AfterViewInit {
 
 
   @ViewChild('myChart') myChart!: ElementRef;
-  @ViewChild('hourlyTemp') hourlyTemp!: ElementRef;
   @ViewChild('previous24ConsumptionGraph') previous24ConsumptionGraph!:ElementRef;
 
   ngAfterViewInit(): void {
@@ -54,21 +47,12 @@ export class Home2Component implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.getToken();
-    this.numberOfDevices();
 
     this.currentDate = timer(0,1000).pipe(
       map(()=>{
         return new Date();
       })
     )
-  }
-
-  numberOfDevices(){
-    this.auth.getDeviceData().subscribe(
-    (response:any)=>{
-      this.number = response.length;
-    }
-    );
   }
 
 
@@ -96,7 +80,10 @@ export class Home2Component implements OnInit, AfterViewInit {
     this.auth1.getElectricityBill(id, this.electricityRate).subscribe(
          (response: any) =>{
              this.electricityBill = response.toFixed(2);
-         }
+         },
+         (error) => {
+          this.electricityBill = 0;
+        }
     )
   }
 
@@ -105,7 +92,11 @@ export class Home2Component implements OnInit, AfterViewInit {
     this.auth1.getConsumptionSavedEnergyMonth(id).subscribe(
       (response:any)=>{
         this.savedEnergyMonthConsumption = response.toFixed(2);
-      }
+      },
+      (error) => {
+       this.savedEnergyMonthConsumption = 0;
+     }
+
     )
   }
 
@@ -133,10 +124,6 @@ showWeatherDetails()
   this.auth.getWeather().subscribe(
     (response: any) => {
       this.weather = response;
-      this.isSunny = this.weather.current_weather.temperature > 15 && this.weather.hourly.relativehumidity_2m[0] < 30;
-      this.isCloudy = (this.weather.current_weather.temperature <= 15 || this.weather.current_weather.temperature > 0)  && (this.weather.hourly.relativehumidity_2m[0] >= 30 || this.weather.hourly.relativehumidity_2m[0] < 90)
-      this.isRainy =  this.weather.hourly.relativehumidity_2m[0] >= 90;
-      this.isSnowy = this.weather.current_weather.temperature <= 0;
       });
 }
 
@@ -150,9 +137,7 @@ makeData(dataGraph:any){
     });
   });
 
-  this.timestampList.sort((a: string, b: string) => {
-    return parseInt(a) - parseInt(b);
-  });
+
   this.previous24Graph(this.timestampList, this.powerUsageList);
 }
 

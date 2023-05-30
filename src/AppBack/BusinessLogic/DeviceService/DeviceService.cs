@@ -3,6 +3,7 @@ using prosumerAppBack.DataAccess;
 using prosumerAppBack.Models;
 using prosumerAppBack.Models.Device;
 using SendGrid.Helpers.Errors.Model;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
 namespace prosumerAppBack.BusinessLogic.DeviceService;
@@ -259,5 +260,51 @@ public class DeviceService:IDeviceService
             throw new BadRequestException("Device dso control consumption time permission has failed to update");
         }
         return true;
+    }
+
+    public async Task<IEnumerable<DeviceDto>> GetProducersThatAreNotAttachedToABattery(Guid userID)
+    {
+        var producers = await _repository.GetProducersThatAreNotAttachedToABattery(userID);
+        if (producers == null)
+        {
+            throw new NotFoundException();
+        }
+        return producers;
+    }
+
+    public async Task<IEnumerable<DeviceDto>> GetConsumersThatAreNotAttachedToABattery(Guid userID)
+    {
+        var producers = await _repository.GetConsumersThatAreNotAttachedToABattery(userID);
+        if (producers == null)
+        {
+            throw new NotFoundException();
+        }
+        return producers;
+    }
+
+    public async Task<Boolean> AddConnectionToBattery(Guid batteryID, Guid deviceID)
+    {
+        var producers = await _repository.AddConnectionToBattery(batteryID, deviceID);
+        if (producers == false)
+        {
+            throw new BadRequestException("device is already connected to battery");
+        }
+        return true;
+    }
+
+    public Task<BatteryInfo> GetBatteryInfo(Guid batteryID)
+    {
+        var check = _repository.GetBatteryInfo(batteryID);
+        if (check == null)
+        {
+            throw new NotFoundException("No battery with given ID");
+        }
+        return check;
+    }
+
+    public Task<IEnumerable<DeviceInfo>> GetDevicesConnectedToBattery(Guid batteryID)
+    {
+        var check = _repository.GetDevicesConnectedToBattery(batteryID);        
+        return check;
     }
 }
