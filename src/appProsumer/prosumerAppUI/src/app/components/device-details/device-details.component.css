@@ -71,6 +71,10 @@
         height: 300px;
     }
 
+    .ime, .ime:active, .ime:hover{
+      background-color: white !important;
+    }
+
 }
 
 @media (min-width: 281px) and (max-width: 480px) /*Phones*/
@@ -128,6 +132,10 @@
         height: 300px;
     }
 
+    .ime, .ime:active, .ime:hover{
+      background-color: white !important;
+    }
+
 }
 
 @media (min-width: 481px) and (max-width: 1023px)  /*Tablet*/
@@ -167,6 +175,10 @@
 
     .chart{
         height: 400px;
+    }
+
+    .ime, .ime:active, .ime:hover{
+      background-color: #EDEAE5 !important;
     }
 
 }
@@ -209,6 +221,9 @@
         height: 400px;
     }
 
+    .ime, .ime:active, .ime:hover{
+      background-color: #EDEAE5 !important;
+    }
 }
 
 mat-toolbar {
@@ -321,7 +336,7 @@ button:disabled{
 
 .buttonOpenModal
 {
-  background-color: #026670 !important;
+  background-color: #026670;
   height: 50px;
   border-radius: 10px;
   font-size: 25px;
@@ -330,7 +345,7 @@ button:disabled{
 
 .buttonOpenModal:hover
 {
-  background-color: #38b4bf !important;
+  background-color: #38b4bf;
 }
 
 .fa-table

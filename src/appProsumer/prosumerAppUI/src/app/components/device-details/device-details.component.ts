@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import Chart from 'chart.js/auto';
+import {Chart, Plugin } from 'chart.js/auto';
 import { ViewChild, ElementRef } from '@angular/core';
 import { ConfirmationService, MessageService, ConfirmEventType } from 'primeng/api';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -48,9 +48,10 @@ export class DeviceDetailsComponent implements OnInit {
   data24h: any[]=[];
   dataMonth: any[]=[];
   data7days: any[]=[];
-  deviceForm!: FormGroup;
   deviceName: string = '';
-  tip: string = '';
+  isLineChart: boolean = true;
+  col1: string = '';
+  col2: string = '';
 
   @ViewChild('myTable') myTable!: ElementRef;
   @ViewChild('ModalTableComponentHistoryConsumption') modalTableComponentHistoryConsumption!: ModalTableComponent;
@@ -69,14 +70,15 @@ export class DeviceDetailsComponent implements OnInit {
     private formBuilder: FormBuilder
   ) {}
 
+  deviceForm: FormGroup = this.formBuilder.group({
+    deviceName: ['', Validators.required]
+  });
 
   ngOnInit() {
     this.spinner.show();
     this.deviceId = this.route.snapshot.paramMap.get('id');
 
-    this.deviceForm = this.formBuilder.group({
-      deviceName: ['', Validators.required]
-    });
+
 
     this.settings.getShareInfo().subscribe(
       (data) => {
@@ -174,15 +176,20 @@ export class DeviceDetailsComponent implements OnInit {
   }
 
   updateDeviceName() {
+    if(this.deviceForm.valid){
     const deviceName = this.deviceForm.get('deviceName')?.value;
     const headers = new HttpHeaders().set('Content-Type', 'text/json');
-    this.http.put(`${environment.apiUrl}/api/Device/update/${this.deviceId}`, deviceName, { headers })
+    this.http.put(`${environment.apiUrl}/api/Device/update/${this.deviceId}`, JSON.stringify(deviceName), { headers })
     .subscribe((response) => {
       console.log("Success");
+      this.deviceName = deviceName;
     },
     (error) => {
       console.log("Fail");
-    });
+    });}
+    else{
+      this.messageService.add({ severity: 'error', summary: 'Please add device name!'});
+    }
   }
 
   openDialog() {
@@ -264,9 +271,11 @@ export class DeviceDetailsComponent implements OnInit {
       const minutes = parsedDate.getMinutes();
       return `${hours < 10 ? '0' + hours : hours}:00`;
     });
-    this.tip='line';
-    this.label1 = "24 hour history";
-    this.label2 = "24 hour prediction";
+    this.label1 = "24 Hour History";
+    this.label2 = "24 Hour Prediction";
+    this.col1 = 'rgba(0, 0, 0, 0)';
+    this.col2 = 'rgba(0, 0, 0, 0)';
+    this.isLineChart = true;
     this.data24h=[];
     const pom = [...this.last24HoursPower, this.deviceCurrent, ...this.next24HoursPower];
     for (let i = 0; i < this.formattedLabels.length; i++) {
@@ -289,11 +298,13 @@ export class DeviceDetailsComponent implements OnInit {
       const day = parsedDate.getDate();
       return `${month} ${day}`;
     });
-    this.data = [...this.deviceHistoryWeekPower, this.deviceToday, null, null, null, null, null, null];
-    this.data1 = [null, null, null, null, null, null, null, this.deviceToday, ...this.deviceFutureWeekPower];
-    this.label1 = "Last Week's History";
-    this.label2 = "Next Week's Prediction";
-    this.tip = 'bar';
+    this.data = [...this.deviceHistoryWeekPower, this.deviceToday];
+    this.data1 = [null, null, null, null, null, null, null, null, ...this.deviceFutureWeekPower];
+    this.label1 = "History From Last Week";
+    this.label2 = "Prediction For Next Week"
+    this.col1 = 'rgba(255, 136, 17, 0.91)';
+    this.col2 = 'rgba(2, 102, 112, 1)';
+    this.isLineChart = false;
     this.data7days=[];
     const pom = [...this.deviceHistoryWeekPower, this.deviceToday, ...this.deviceFutureWeekPower];
     for (let i = 0; i < this.formattedLabels.length; i++) {
@@ -320,8 +331,10 @@ export class DeviceDetailsComponent implements OnInit {
     this.data1 = [null, null, null, null, null,null, null, null, null, null,null, null, null, null, null,null, null, null, null, null,null, null, null, null, null,null, null, null, null, null, null, this.deviceToday, ...this.deviceFutureMonthPower];
     this.label1 = "Last Month's History";
     this.label2 = "Next Month's Prediction";
+    this.col1 = 'rgba(0, 0, 0, 0)';
+    this.col2 = 'rgba(0, 0, 0, 0)';
     this.dataMonth=[];
-    this.tip = 'line';
+    this.isLineChart = true;
     const pom = [...this.deviceHistoryMonthPower, this.deviceToday, ...this.deviceFutureMonthPower];
     for (let i = 0; i < this.formattedLabels.length; i++) {
       const pair = {
@@ -345,8 +358,9 @@ export class DeviceDetailsComponent implements OnInit {
       gradient.addColorStop(0, '#FF8811');
       gradient.addColorStop(0.5,'#9747FF');
       gradient.addColorStop(1, '#9FEDD7');
+      const chartType = this.isLineChart ? 'line' : 'bar';
       this.chart = new Chart(ctx, {
-        type: 'line',
+        type: chartType,
         data: {
           labels: this.formattedLabels,
           datasets: [{
@@ -354,6 +368,7 @@ export class DeviceDetailsComponent implements OnInit {
             data: this.data,
             fill: true,
             borderColor: 'rgba(255, 136, 17, 0.91)',
+            backgroundColor: this.col1,
             tension: 0.1
           },
           {
@@ -361,6 +376,7 @@ export class DeviceDetailsComponent implements OnInit {
             data: this.data1,
             fill: true,
             borderColor: 'rgba(2, 102, 112, 1)',
+            backgroundColor: this.col2,
             tension: 0.1
           }]
         },
@@ -381,6 +397,8 @@ export class DeviceDetailsComponent implements OnInit {
                 text: 'Date'
               }
             },
+
+
           }
         }
 
