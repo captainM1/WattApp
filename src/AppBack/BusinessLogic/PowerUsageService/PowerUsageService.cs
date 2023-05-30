@@ -605,4 +605,11 @@ public class PowerUsageService:IPowerUsageService
         var batteryPower = await _repository.GetForUserBatteryPower(userID);
         return batteryPower;
     }
+
+    public async Task<double> GetBatteryPercentage(Guid deviceID)
+    {
+        var battPerc = await _repository.GetBatteryPercentage(deviceID);
+
+        return battPerc;
+    }
 }

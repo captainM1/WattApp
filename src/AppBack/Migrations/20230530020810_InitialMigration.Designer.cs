@@ -11,8 +11,8 @@ using prosumerAppBack.DataAccess;
 namespace prosumerAppBack.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230529193912_init")]
-    partial class init
+    [Migration("20230530020810_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -545,9 +545,9 @@ namespace prosumerAppBack.Migrations
                             Email = "admin@gmail.com",
                             FirstName = "Adminovic",
                             LastName = "Adminovski",
-                            PasswordHash = new byte[] { 192, 136, 153, 95, 96, 127, 76, 51, 132, 25, 151, 24, 188, 118, 178, 197, 134, 182, 85, 185, 223, 57, 226, 97, 76, 48, 56, 103, 2, 206, 130, 246 },
+                            PasswordHash = new byte[] { 10, 145, 26, 134, 206, 101, 75, 110, 56, 55, 189, 44, 244, 31, 165, 31, 141, 100, 50, 34, 76, 77, 172, 125, 90, 29, 194, 107, 111, 211, 162, 53 },
                             Role = "Admin",
-                            Salt = new byte[] { 193, 27, 0, 27, 226, 173, 179, 36, 6, 229, 191, 248, 0, 226, 232, 243 }
+                            Salt = new byte[] { 32, 249, 199, 248, 126, 13, 68, 147, 245, 138, 149, 43, 227, 126, 26, 189 }
                         });
                 });
 
@@ -615,10 +615,10 @@ namespace prosumerAppBack.Migrations
                             Email = "petarsimic@gmail.com",
                             FirstName = "Petar",
                             LastName = "Simic",
-                            PasswordHash = new byte[] { 248, 118, 52, 146, 101, 66, 156, 144, 130, 235, 221, 39, 68, 32, 222, 68, 37, 87, 190, 164, 255, 134, 31, 23, 214, 106, 250, 233, 126, 1, 89, 171 },
+                            PasswordHash = new byte[] { 245, 201, 224, 175, 173, 23, 137, 153, 55, 169, 153, 215, 70, 80, 198, 28, 91, 157, 247, 237, 208, 176, 63, 161, 79, 211, 169, 117, 139, 45, 248, 75 },
                             PhoneNumber = "064-316-15-81",
                             Role = "UnapprovedUser",
-                            Salt = new byte[] { 237, 13, 94, 157, 248, 217, 196, 138, 219, 91, 144, 134, 234, 5, 160, 118 },
+                            Salt = new byte[] { 214, 146, 57, 149, 91, 215, 7, 34, 151, 173, 167, 167, 255, 222, 145, 113 },
                             sharesDataWithDso = false
                         });
                 });

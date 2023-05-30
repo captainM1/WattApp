@@ -2834,6 +2834,17 @@ public class PowerUsageRepository : IPowerUsageRepository
         }
     }
 
+    public async Task<double> GetBatteryPercentage(Guid deviceID)
+    {
+        var currentHourTimestamp = DateTime.UtcNow;
+        var batteryPercent = await _dataContext.BatteryStatuses.FirstOrDefaultAsync(e => e.ID == deviceID && e.Date == currentHourTimestamp);
+        if(batteryPercent == null)
+        {
+            return 0;
+        }
+        return batteryPercent.BatteryPercent;
+    }
+    
     public async Task<double> GetCurrentPowerProduction(Guid deviceID)
     {
         double powerUsages = 0;
