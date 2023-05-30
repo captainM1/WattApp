@@ -726,7 +726,7 @@ public class PowerUsageController : ControllerBase
         var powerUsages = await _powerUsageService.GetForUserBatteryPower(userID);
         return Ok(powerUsages);
     }
-    [HttpGet("power-usage/get-current-user-battery-percentage/{userID}")]
+    [HttpGet("power-usage/get-current-user-battery-percentage/{deviceID}")]
     public async Task<ActionResult<double>> GetPercentage(Guid deviceID)
     {
         var powerUsages = await _powerUsageService.GetBatteryPercentage(deviceID);

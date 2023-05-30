@@ -39,9 +39,9 @@
         <div class="card-body">
           <h5 class="card-title">{{ device.deviceName }}</h5>
           <p class="card-text manufacturer" ><span style="font-weight: bold;">Manufacturer:</span><br> {{ device.manufacturerName }}</p>
-          <p *ngIf = "this.typeOfDevices[device.deviceId]=='Consumer'" class="card-text current"><span style="font-weight: bold;">Current Consumption:</span><br> {{ this.deviceToday[device.deviceId].toFixed(2) }} [kWh]</p>
-          <p *ngIf = "this.typeOfDevices[device.deviceId]=='Producer'" class="card-text current"><span style="font-weight: bold;">Current Production:</span><br> {{ this.deviceToday[device.deviceId].toFixed(2) }} [kWh]</p>
-          <p  *ngIf = "this.typeOfDevices[device.deviceId]=='Storage'" class="card-text current"><span style="font-weight: bold;">Energy Level:</span><br> {{ this.deviceToday[device.deviceId].toFixed(2) }} [kWh]</p>
+          <p ngIf="this.typeOfDevices[device.deviceId] === 'Consumer'" class="card-text current"><span style="font-weight: bold;">Current Consumption:</span><br> {{ this.deviceToday[device.deviceId]?.toFixed(2) || 0 }} [kWh]</p>
+          <p ngIf="this.typeOfDevices[device.deviceId] === 'Producer'" class="card-text current"><span style="font-weight: bold;">Current Production:</span><br> {{ this.deviceToday[device.deviceId]?.toFixed(2) || 0 }} [kWh]</p>
+          <p *ngIf="this.typeOfDevices[device.deviceId] === 'Storage'" class="card-text current"><span style="font-weight: bold;">Energy Level:</span><br> {{ this.deviceToday[device.deviceId]?.toFixed(2) || 0 }} [kWh]</p>
          </div>
       </div>
     </div>
@@ -77,7 +77,7 @@
               <td><img [src]="'/assets/icons-devices/' + device.deviceTypeName.toLowerCase().trim() + '.png'" class="img-tabela" alt="{{ device.deviceTypeName }}"></td>
               <td> {{ device.deviceName }} </td>
               <td> {{ device.manufacturerName }}</td>
-              <td>{{this.deviceToday[device.deviceId].toFixed(2)}}</td>
+              <td>{{this.deviceToday[device.deviceId]?.toFixed(2) || 0}}</td>
               <td *ngIf = device.isToggled> On </td>
               <td *ngIf = !device.isToggled> Off </td>
           </tr>
