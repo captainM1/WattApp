@@ -18,6 +18,7 @@ export class ModalTableProfileComponent {
   @Input() time!: string;
   @Input() type!: string;
 
+
   tableExport!:any;
   tablee!:any;
   exportToExcel(): void {

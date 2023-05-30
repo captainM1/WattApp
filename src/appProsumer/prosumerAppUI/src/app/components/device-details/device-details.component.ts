@@ -55,7 +55,7 @@ export class DeviceDetailsComponent implements OnInit {
   isStorage: boolean = false;
 
   @ViewChild('myTable') myTable!: ElementRef;
-  @ViewChild('ModalTableComponentHistoryConsumption') modalTableComponentHistoryConsumption!: ModalTableComponent;
+  @ViewChild('ModalTableComponent') modalTableComponent!: ModalTableComponent;
   @ViewChild('ModalTableComponentEditDevice') modalTableComponentEditDevice!: ModalTableComponent;
 
 
@@ -397,7 +397,7 @@ export class DeviceDetailsComponent implements OnInit {
             y: {
               title: {
                 display: true,
-                text: 'Power Amount [kWh]'
+                text: 'Energy [kWh]'
               }
             },
             x: {

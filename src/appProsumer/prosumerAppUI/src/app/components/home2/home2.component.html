@@ -8,10 +8,7 @@
         <div class="col-sm mt-2" *ngIf="weather">
           <div class="vreme">
             <div class="icon-wrapper">
-              <img *ngIf="isSunny" src="../../../assets/weather-icons/brightness.png">
-              <img *ngIf="isCloudy" src="../../../assets/weather-icons/cloudy.png">
-              <img *ngIf="isRainy" src="../../../assets/weather-icons/weather.png">
-              <img *ngIf="isSnowy" src="../../../assets/weather-icons/snowflake.png">
+              <img src="../../../assets/weather-icons/partialy-cloudy.png">
             </div>
             <div class="text-wrapper">
               <p class="time">{{ currentDate | async | date:'HH:mm:ss' }}</p>
@@ -19,10 +16,6 @@
             </div>
             <div class="temperature-wrapper">
               <p class="temperature">{{ weather.current_weather.temperature }}&deg;C</p>
-              <p *ngIf="isSunny" class="description">Sunny</p>
-              <p *ngIf="isCloudy" class="description">Cloudy</p>
-              <p *ngIf="isRainy" class="description">Rainy</p>
-              <p *ngIf="isSnowy" class="description">Snowy</p>
             </div>
           </div>
 
