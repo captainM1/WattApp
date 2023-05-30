@@ -6,11 +6,7 @@
     <projectFile profileName="https">prosumerAppBack.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f313a119-e6ad-452c-ad91-ff346c67fe62" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.prosumerAppBack/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.prosumerAppBack/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DataAccess/PowerRep/PowerUsageRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DataAccess/PowerRep/PowerUsageRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/LocalDatabase.db" beforeDir="false" afterPath="$PROJECT_DIR$/LocalDatabase.db" afterDir="false" />
-    </list>
+    <list default="true" id="f313a119-e6ad-452c-ad91-ff346c67fe62" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -98,6 +94,7 @@
       <workItem from="1685406824715" duration="3826000" />
       <workItem from="1685415204110" duration="425000" />
       <workItem from="1685417569522" duration="127000" />
+      <workItem from="1685417822387" duration="629000" />
     </task>
     <servers />
   </component>

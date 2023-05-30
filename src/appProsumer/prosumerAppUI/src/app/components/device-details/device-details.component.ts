@@ -209,8 +209,8 @@ export class DeviceDetailsComponent implements OnInit {
 
       this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/past24h/prediction${this.deviceId}`)
       .subscribe((data:any) =>{
+        data.timestampPowerPairs = []
         this.pastday = data.timestampPowerPairs.map((item: any) => item.powerUsage);
-        console.log(data);
       },
       error => {
          console.error('Error fetching days history prediction info:', error);
