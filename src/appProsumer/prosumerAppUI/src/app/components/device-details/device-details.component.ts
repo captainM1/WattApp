@@ -58,6 +58,7 @@ export class DeviceDetailsComponent implements OnInit {
   col1: string = '';
   col2: string = '';
   isStorage: boolean = false;
+  percentage: any = 0;
 
   @ViewChild('myTable') myTable!: ElementRef;
   @ViewChild('ModalTableComponent') modalTableComponent!: ModalTableComponent;
@@ -104,8 +105,16 @@ export class DeviceDetailsComponent implements OnInit {
           this.fetchConsumptionData();
         }
         else{
-          this.showSpinner = false;
-          this.spinner.hide();
+          this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/get-current-user-battery-percentage/${this.deviceId}`)
+          .subscribe(data => {
+            this.percentage = data;
+            this.showSpinner = false;
+            this.spinner.hide();
+          },
+          error => {
+            console.error('Error fetching device information:', error);
+          });
+
         }
       },
       error => {
@@ -192,6 +201,23 @@ export class DeviceDetailsComponent implements OnInit {
       .subscribe((data:any) =>{
         this.pastweek = data.timestampPowerPairs.map((item: any) => item.powerUsage);
 
+      },
+      error => {
+         console.error('Error fetching weeks history prediction info:', error);
+      })
+
+      this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/past24h/prediction${this.deviceId}`)
+      .subscribe((data:any) =>{
+        this.pastday = data.timestampPowerPairs.map((item: any) => item.powerUsage);
+        console.log(data);
+      },
+      error => {
+         console.error('Error fetching days history prediction info:', error);
+      })
+
+      this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/pastmonth/prediction${this.deviceId}`)
+      .subscribe((data:any) =>{
+        this.pastmonth = data.timestampPowerPairs.map((item: any) => item.powerUsage);
       },
       error => {
          console.error('Error fetching months history prediction info:', error);
@@ -282,6 +308,7 @@ export class DeviceDetailsComponent implements OnInit {
   if (this.selectedOption === 'Today') {
     this.data = [...this.last24HoursPower, this.deviceCurrent, null, null, null, null, null, null, null, null, null, null, null, null,null, null, null, null, null, null,null, null, null, null, null, null];
     this.data1 = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, this.deviceCurrent, ...this.next24HoursPower];
+    this.data2 = [...this.pastday, null, null, null, null, null, null, null, null, null, null, null, null, null,null, null, null, null, null, null,null, null, null, null, null, null];
     const currentDate = new Date();
     const offset = currentDate.getTimezoneOffset() * 60000;
     const adjustedDate = new Date(currentDate.getTime() - offset).toISOString();
@@ -294,6 +321,7 @@ export class DeviceDetailsComponent implements OnInit {
     });
     this.label1 = "24 Hour History";
     this.label2 = "24 Hour Prediction";
+    this.label3 = "Prediction of Last 24 Hours";
     this.col1 = 'rgba(0, 0, 0, 0)';
     this.col2 = 'rgba(0, 0, 0, 0)';
     this.isLineChart = true;
@@ -352,8 +380,10 @@ export class DeviceDetailsComponent implements OnInit {
     });
     this.data = [...this.deviceHistoryMonthPower, this.deviceToday,null, null, null, null, null,null, null, null, null, null,null, null, null, null, null,null, null, null, null, null,null, null, null, null, null,null, null, null, null, null,null];
     this.data1 = [null, null, null, null, null,null, null, null, null, null,null, null, null, null, null,null, null, null, null, null,null, null, null, null, null,null, null, null, null, null, null, this.deviceToday, ...this.deviceFutureMonthPower];
+    this.data2 = [...this.pastmonth, null ,null, null, null, null, null,null, null, null, null, null,null, null, null, null, null,null, null, null, null, null,null, null, null, null, null,null, null, null, null, null,null];
     this.label1 = "Last Month's History";
     this.label2 = "Next Month's Prediction";
+    this.label3 = "Last Month's Prediction";
     this.col1 = 'rgba(0, 0, 0, 0)';
     this.col2 = 'rgba(0, 0, 0, 0)';
     this.dataMonth=[];
