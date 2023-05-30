@@ -52,30 +52,35 @@
             </div>
         </div>
         <div class="part">
-            <div class="row">
-                <div class="col hide-on-mobile"></div>
-                <div class="col">
-                  <h5 *ngIf="groupName === 'Consumer'">Consumption</h5>
-                  <h5 *ngIf="groupName === 'Producer'">Production</h5>
-                  <h5 *ngIf="groupName === 'Storage'">Storage</h5>
-                </div>
-                <div class="col centriranje" *ngIf="isStorage">
-                    <select [(ngModel)]="selectedOption" (ngModelChange)="onOptionSelect()">
-                        <option value="Today">Today</option>
-                        <option value="Week">Week</option>
-                        <option value="Month">Month</option>
-                    </select>
-
-                    <button class="buttonOpenModal" style="margin-left: 5px;" mat-button data-bs-target="#consumptionHistory" data-bs-toggle="modal">
-                        <i class="fa fa-table" aria-hidden="true"></i>
-                    </button>
-                </div>
+          <div class="row">
+            <div class="col hide-on-mobile"></div>
+            <div class="col">
+              <h5 *ngIf="groupName === 'Consumer'">Consumption</h5>
+              <h5 *ngIf="groupName === 'Producer'">Production</h5>
+              <h5 *ngIf="groupName === 'Storage'">Storage</h5>
             </div>
-            <div class="align-center chart" *ngIf="isStorage">
-                <ngx-spinner bdColor = "rgba(0, 0, 0, 0.5)" size = "medium" color = "#fff" type = "ball-spin" [showSpinner]="showSpinner" [fullScreen]="false" *ngIf="showSpinner"><span style="color: #fff; font-weight: normal; margin-top: 60px;" > Please wait... </span></ngx-spinner>
-                <canvas #chart></canvas>
-            </div><div class="row">
-            <div *ngIf="!isStorage" class="col-6 centriranje">
+            <div class="col centriranje" *ngIf="!isStorage">
+              <select [(ngModel)]="selectedOption" (ngModelChange)="onOptionSelect()">
+                <option value="Today">Today</option>
+                <option value="Week">Week</option>
+                <option value="Month">Month</option>
+              </select>
+        
+              <button class="buttonOpenModal" style="margin-left: 5px;" mat-button data-bs-target="#consumptionHistory"
+                data-bs-toggle="modal">
+                <i class="fa fa-table" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+          <div class="align-center chart" [class.hidden]="isStorage">
+            <ngx-spinner bdColor="rgba(0, 0, 0, 0.5)" size="medium" color="#fff" type="ball-spin" [showSpinner]="showSpinner"
+              [fullScreen]="false" *ngIf="showSpinner">
+              <span style="color: #fff; font-weight: normal; margin-top: 60px;">Please wait...</span>
+            </ngx-spinner>
+            <canvas #chart></canvas>
+          </div>
+          <div class="row">
+            <div *ngIf="isStorage" class="col-6 centriranje">
               <div *ngIf="percentage <= 100 && percentage >=90" class="battery">
                 <div class="battery-level" style="height:100%;"></div>
               </div>
@@ -99,11 +104,10 @@
               <div *ngIf="percentage <= 10 " class="battery">
                 <div class="battery-level red" style="height:10%;"></div>
               </div>
+              <div class="col-6 centriranje"><h1 style="color:#026670; font-weight:bold; font-size:30px;">{{percentage}}%</h1></div>
             </div>
-            <div class="col-6 centriranje"><h1 style="color:#026670; font-weight:bold; font-size:30px;">{{percentage}}%</h1></div>
             </div>
         </div>
-    </div>
 </div>
 
 <div class="modal fade " id="consumptionHistory" tabindex="-1" aria-hidden="true">

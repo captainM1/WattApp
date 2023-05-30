@@ -101,10 +101,10 @@ export class DeviceDetailsComponent implements OnInit {
         this.deviceForm.patchValue({ deviceName: this.device.deviceName });
         this.deviceName = this.device.deviceName;
         if(this.device.groupName==='Consumer' || this.device.groupName==='Producer'){
-          this.isStorage = true;
+          this.isStorage = false;
           this.fetchConsumptionData();
         }
-        else{
+        else if(this.device.groupName==='Storage'){
           /*this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/get-current-user-battery-percentage/${this.deviceId}`)
           .subscribe(data => {
             this.percentage = data;
@@ -114,6 +114,7 @@ export class DeviceDetailsComponent implements OnInit {
           error => {
             console.error('Error fetching device information:', error);
           })*/
+          this.isStorage = true
           this.showSpinner = false;
           this.spinner.hide();
         }

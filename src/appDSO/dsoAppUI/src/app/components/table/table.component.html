@@ -238,31 +238,28 @@
                     <tbody>
                       <tr *ngFor="let device of allUserDevices; let j = index;"
                         [(ngModel)]="selectedDevice"
-                        (click)="selectedColumn1 = j;"
+                        (click)="selectedColumn1 = j; toggleDeviceStatus(device);"
                         [class.active-column]="selectedColumn1 === j && selectedDevice">
                         <td>{{device.deviceTypeName}}</td>
                         <td>{{device.manufacturerName}}</td>
                         <td>{{device.macAdress}}</td>
                         <td>{{device.typeOfDevice}}</td>
-                        <td
-                          [ngClass]="{'green': device.statusOfDevice === 'ON', 'red': device.statusOfDevice === 'OFF'}">{{device.statusOfDevice}}</td>
-                        <td>{{this.device.powerusage}}</td>
+                        <td [ngClass]="{'green': device.statusOfDevice === 'ON', 'red': device.statusOfDevice === 'OFF'}">{{device.statusOfDevice}}</td>
+                        <td>{{device.powerusage}}</td>
                         <td *ngIf="device.dsoHasControl === true">
                           <label class="switch">
-                            <input type="checkbox"
-                              [checked]="device.statusOfDevice === 'ON'"
-                              (click)="toggleDeviceStatus(device)">
+                            <input type="checkbox" [checked]="device.statusOfDevice === 'ON'">
                             <span class="slider round"></span>
                           </label>
                         </td>
                         <td *ngIf="device.dsoHasControl === false">
                           <span>
-                            <i class="fa fa-minus-square" style="color:red"
-                              aria-hidden="true"> Access denied!</i>
+                            <i class="fa fa-minus-square" style="color:red" aria-hidden="true"> Access denied!</i>
                           </span>
                         </td>
                       </tr>
                     </tbody>
+                    
                     
                   </table>
                   

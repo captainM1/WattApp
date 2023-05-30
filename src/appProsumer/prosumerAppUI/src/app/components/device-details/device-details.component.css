@@ -429,3 +429,9 @@ button:disabled{
   transform: rotate(90deg);
   transform-origin: top left;
 }
+.hidden {
+    display: none;
+}
+.display{
+    display: block;
+}

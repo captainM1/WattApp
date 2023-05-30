@@ -598,7 +598,6 @@ export class TableComponent implements OnInit, AfterViewInit {
     }
 
     this.showMeDevices(id);
-
     this.id = id;
     if(id)
       this.popUp(id);
@@ -612,7 +611,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   public status!: any;
   showMeDevicesLoader = false;
   showMeDevices(id: string) {
-
+    
     this.showDevGraph = !this.showDevGraph;
     this.getDeviceGroup();
     this.toggleTable = true;
@@ -659,8 +658,7 @@ export class TableComponent implements OnInit, AfterViewInit {
             next: (response: any) => {
               us.dsoHasControl = response;
               
-          
-              this.toggleDeviceStatus(us);
+
               this.router.navigate(['/table'],{skipLocationChange:false}).then(()=>{
 
                 this.router.navigate(['/table']);
@@ -2422,21 +2420,21 @@ export class TableComponent implements OnInit, AfterViewInit {
         if (device.statusOfDevice === "OFF") {
           this.auth.changeStateOfDevice(device.deviceId, true).subscribe({
            next:(repose:any)=>{
-            
+              device.statusOfDevice = "ON";
+              console.log("menjam")
+              this.showMeDevices(this.userPopUp.id)
             },
             error: (error: any) => {
               console.log(error);
             }
           }
           );
-          device.statusOfDevice = "ON";
-          
-
-         
         } else {
           this.auth.changeStateOfDevice(device.deviceId, false).subscribe({
             next: (response: any) => {
-             
+              device.statusOfDevice = "OFF";
+              console.log("menjam")
+              this.showMeDevices(this.userPopUp.id)
             },
             error: (error: any) => {
               console.log(error);
@@ -2444,16 +2442,12 @@ export class TableComponent implements OnInit, AfterViewInit {
           }
 
           );
-         
-          device.statusOfDevice = "OFF";
           
         }
       }
-    
+      
 
     }
-
-
   }
   
 }

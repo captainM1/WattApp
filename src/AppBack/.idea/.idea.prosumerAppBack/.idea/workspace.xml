@@ -6,7 +6,15 @@
     <projectFile profileName="https">prosumerAppBack.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f313a119-e6ad-452c-ad91-ff346c67fe62" name="Changes" comment="" />
+    <list default="true" id="f313a119-e6ad-452c-ad91-ff346c67fe62" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.prosumerAppBack/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.prosumerAppBack/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LocalDatabase.db" beforeDir="false" afterPath="$PROJECT_DIR$/LocalDatabase.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/LocalDatabase.db-wal" beforeDir="false" afterPath="$PROJECT_DIR$/LocalDatabase.db-wal" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../appDSO/dsoAppUI/src/app/components/table/table.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../appDSO/dsoAppUI/src/app/components/table/table.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../appDSO/dsoAppUI/src/app/components/table/table.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../appDSO/dsoAppUI/src/app/components/table/table.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../appProsumer/prosumerAppUI/src/app/components/device-details/device-details.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../appProsumer/prosumerAppUI/src/app/components/device-details/device-details.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../appProsumer/prosumerAppUI/src/app/components/device-details/device-details.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../appProsumer/prosumerAppUI/src/app/components/device-details/device-details.component.ts" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -94,7 +102,7 @@
       <workItem from="1685406824715" duration="3826000" />
       <workItem from="1685415204110" duration="425000" />
       <workItem from="1685417569522" duration="127000" />
-      <workItem from="1685417822387" duration="629000" />
+      <workItem from="1685417822387" duration="1367000" />
     </task>
     <servers />
   </component>
