@@ -171,22 +171,22 @@ export class ProfileComponent implements OnInit{
       });
   }
 }
-reset(){
-    this.resetForm.reset();
-    this.resetForm.clearValidators();
-    this.resetForm.markAsPristine();
-    this.resetForm.markAsUntouched();
-    this.type = "password";
-    this.type2 = "password";
-    this.type3 = "password";
-    this.eyeIcon = "fa-eye-slash";
-    this.eyeIcon2 = "fa-eye-slash";
-    this.eyeIcon3 = "fa-eye-slash";
-    this.isText =false;
-    this.isText2 = false;
-    this.isText3 = false;
+    reset(){
+      this.resetForm.reset();
+      this.resetForm.clearValidators();
+      this.resetForm.markAsPristine();
+      this.resetForm.markAsUntouched();
+      this.type = "password";
+      this.type2 = "password";
+      this.type3 = "password";
+      this.eyeIcon = "fa-eye-slash";
+      this.eyeIcon2 = "fa-eye-slash";
+      this.eyeIcon3 = "fa-eye-slash";
+      this.isText =false;
+      this.isText2 = false;
+      this.isText3 = false;
 
-    this.clearErrorMessages();
+      this.clearErrorMessages();
   }
 
   clearErrorMessages() {
