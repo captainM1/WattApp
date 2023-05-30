@@ -22,6 +22,7 @@ public class PowerUsageRepository : IPowerUsageRepository
     public PowerUsageRepository(MongoDataContext mongoDataContext, DataContext dataContext, IDeviceRepository deviceRepository)
     {
         mongoCollection = mongoDataContext.PowerUsage;
+        mongoCollectionPrediction = mongoDataContext.PowerUsagePrediction;
         _dataContext = dataContext;
         _deviceRepository = deviceRepository;
     }
@@ -190,10 +191,86 @@ public class PowerUsageRepository : IPowerUsageRepository
                 .Where(pair => pair.Timestamp.Date == today)
                 .Sum(pair => pair.PowerUsage);
             return totalPowerUsage;
-
     }
+    
+    public async Task<double> GetPowerUsageForDayPrediction(Guid deviceID, DateTime today)
+    {
+        Guid deviceTypeID = _dataContext.Devices
+            .Where(d => d.ID == deviceID)
+            .Select(d => d.DeviceTypeID)
+            .FirstOrDefault();
 
+        var powerUsageData = mongoCollectionPrediction
+            .AsQueryable()
+            .FirstOrDefault(p => p.ID.ToString() == deviceTypeID.ToString().ToUpper());
 
+        if (powerUsageData == null)
+        {
+            return 0;
+        }
+
+        double totalPowerUsage = powerUsageData.TimestampPowerPairs
+            .Where(pair => pair.Timestamp.Date == today)
+            .Sum(pair => pair.PowerUsage);
+        return totalPowerUsage;
+    }
+    
+    public async Task<PowerUsage> GetPowerUsageFor7DaysPrediction(Guid deviceId, int direction)
+    {
+        Guid deviceTypeID = _dataContext.Devices
+            .Where(d => d.ID == deviceId)
+            .Select(d => d.DeviceTypeID)
+            .FirstOrDefault();
+
+        var powerUsage = new PowerUsage();
+        powerUsage.TimestampPowerPairs = new List<TimestampPowerPair>();
+        var today = DateTime.Today;
+
+        for (int i = 1; i <= 7; i++)
+        {
+            var day = today.AddDays(i * direction);
+            var powerUsageD = await GetPowerUsageForDay(deviceId, day);
+            var ts = new TimestampPowerPair();
+            ts.PowerUsage = powerUsageD;
+            ts.Timestamp = day;
+            powerUsage.TimestampPowerPairs.Add(ts);
+
+        }
+
+        if (direction == -1)
+            powerUsage.TimestampPowerPairs.Reverse();
+
+        return powerUsage;
+    }
+    
+    public async Task<PowerUsage> GetPowerUsageForAMonthPrediction(Guid deviceId, int direction)
+    {
+        Guid deviceTypeID = _dataContext.Devices
+            .Where(d => d.ID == deviceId)
+            .Select(d => d.DeviceTypeID)
+            .FirstOrDefault();
+
+        var powerUsage = new PowerUsage();
+        powerUsage.TimestampPowerPairs = new List<TimestampPowerPair>();
+        var today = DateTime.Today;
+
+        for (int i = 1; i <= 31; i++)
+        {
+            var day = today.AddDays(i * direction);
+            var powerUsageD = await GetPowerUsageForDay(deviceId, day);
+            var ts = new TimestampPowerPair();
+            ts.PowerUsage = powerUsageD;
+            ts.Timestamp = day;
+            powerUsage.TimestampPowerPairs.Add(ts);
+
+        }
+
+        if (direction == -1)
+            powerUsage.TimestampPowerPairs.Reverse();
+
+        return powerUsage;
+    }
+    
     public async Task<PowerUsage> GetPowerUsageFor7Days(Guid deviceId, int direction)
     {
         Guid deviceTypeID = _dataContext.Devices
