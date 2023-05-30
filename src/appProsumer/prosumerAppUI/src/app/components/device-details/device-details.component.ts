@@ -52,6 +52,7 @@ export class DeviceDetailsComponent implements OnInit {
   isLineChart: boolean = true;
   col1: string = '';
   col2: string = '';
+  isStorage: boolean = false;
 
   @ViewChild('myTable') myTable!: ElementRef;
   @ViewChild('ModalTableComponentHistoryConsumption') modalTableComponentHistoryConsumption!: ModalTableComponent;
@@ -78,8 +79,6 @@ export class DeviceDetailsComponent implements OnInit {
     this.spinner.show();
     this.deviceId = this.route.snapshot.paramMap.get('id');
 
-
-
     this.settings.getShareInfo().subscribe(
       (data) => {
         this.allowAccess = data;
@@ -95,12 +94,22 @@ export class DeviceDetailsComponent implements OnInit {
         this.groupName = this.device.groupName;
         this.deviceForm.patchValue({ deviceName: this.device.deviceName });
         this.deviceName = this.device.deviceName;
+        if(this.device.groupName==='Consumer' || this.device.groupName==='Producer'){
+          this.isStorage = true;
+          this.fetchConsumptionData();
+        }
+        else{
+          this.showSpinner = false;
+          this.spinner.hide();
+        }
       },
       error => {
         console.error('Error fetching device information:', error);
       });
+  }
 
-      this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/current/device/${this.deviceId}`)
+  fetchConsumptionData(){
+    this.http.get<any[]>(`${environment.apiUrl}/api/PowerUsage/power-usage/current/device/${this.deviceId}`)
       .subscribe(data => {
         this.deviceCurrent = data;
       },

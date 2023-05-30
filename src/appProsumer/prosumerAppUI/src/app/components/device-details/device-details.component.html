@@ -58,7 +58,7 @@
                   <h5 *ngIf="groupName === 'Producer'">Production</h5>
                   <h5 *ngIf="groupName === 'Storage'">Storage</h5>
                 </div>
-                <div class="col centriranje">
+                <div class="col centriranje" *ngIf="isStorage">
                     <select [(ngModel)]="selectedOption" (ngModelChange)="onOptionSelect()">
                         <option value="Today">Today</option>
                         <option value="Week">Week</option>
